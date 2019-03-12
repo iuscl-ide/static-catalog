@@ -6,6 +6,9 @@ var initPage = () => {
 		$.getJSON("data/data1.json").done( jsonData => {
 			alert(jsonData);
 		});		
+	});
+}
+
 //		$.ajax({
 //			  url: "data/data1.json",
 //			  cache: false,
@@ -41,6 +44,3 @@ var initPage = () => {
 //		// Send the request to send-ajax-data.php
 //		xhr.send(null);
 //	  // alert( "Handler for .click() called." );
-	});
-}
-
