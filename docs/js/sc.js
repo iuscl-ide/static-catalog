@@ -3,15 +3,18 @@ var initPage = () => {
 	
 	$("#btnHere").click(() => {
 	
-		$.ajax({
-			  url: "data/data1.json",
-			  cache: false,
-			  dataType: "text"
-			}).done( json => {
-				  alert(json);
-			    // $( "#results" ).append( html );
-			  });
-		
+		$.getJSON("data/data1.json").done( jsonData => {
+			alert(jsonData);
+		});		
+//		$.ajax({
+//			  url: "data/data1.json",
+//			  cache: false,
+//			  dataType: "text"
+//			}).done( json => {
+//				  alert(json);
+//			    // $( "#results" ).append( html );
+//			  });
+//		
 		
 //		// This is the client-side script.
 //
