@@ -1,28 +1,42 @@
 /* EHA Viewer Desktop Application - Copyright 2016 ehaviewer.com */
 package org.static_catalog.ui;
 
+import java.io.File;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.static_catalog.main.L;
 import org.static_catalog.main.S;
+
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 /** Viewer main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -112,6 +126,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 	private Grid bookmarksGrid;
 
+	private Composite viewCsvTabComposite;
 	
 	/** Main application loop in the window */
 	public void runMainWindow() {
@@ -329,16 +344,15 @@ public class StaticCatalogGeneratorMainWindow {
 //		});
 	    
 	    mainShell.setMenuBar(mainMenuBar);
-
-		/* Components */
-	    GridData gridData;
-
 	    mainShell.setLayout(createGridLayout(0, 0, 0, 0, 1));
+
+	    createViewCsvTab();
+
 	    
-	    Composite mainComposite = new Composite(mainShell, SWT.NONE);
-	    mainComposite.setBackground(new Color(display, 0, 0, 255));
-	    mainComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1));
-	    mainComposite.setLayout(createGridLayout(8, 8, 0, 0, 1));
+//	    Composite mainComposite = new Composite(mainShell, SWT.NONE);
+//	    mainComposite.setBackground(new Color(display, 0, 0, 255));
+//	    mainComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1));
+//	    mainComposite.setLayout(createGridLayout(8, 8, 0, 0, 1));
 	    
 //	    Composite topComposite = new Composite(mainShell, SWT.NONE);
 //	    //topComposite.setBackground(new Color(display, 0, 0, 255));
@@ -1459,6 +1473,99 @@ public class StaticCatalogGeneratorMainWindow {
 		display.dispose();
 	}
 
+	/** View a CSV file in a grid */
+	private void createViewCsvTab() {
+		
+		viewCsvTabComposite = new Composite(mainShell, SWT.NONE);
+		viewCsvTabComposite.setBackground(new Color(display, 0, 255, 255));
+		viewCsvTabComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1, -1));
+		viewCsvTabComposite.setLayout(createGridLayout(8, 8, 0, 8, 1));
+
+		final Label viewCsvTabLabel = new Label(viewCsvTabComposite, SWT.NONE);
+		viewCsvTabLabel.setText("View .csv");
+		
+		
+		final Composite csvFileComposite = new Composite(viewCsvTabComposite, SWT.NONE);
+		csvFileComposite.setBackground(new Color(display, 255, 255, 0));
+		csvFileComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
+		csvFileComposite.setLayout(createGridLayout(0, 0, 8, 0, 3));
+		
+		final Label csvFileLabel = new Label(csvFileComposite, SWT.NONE);
+		csvFileLabel.setText("File");
+		csvFileLabel.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		
+		final Text csvFileText = new Text(csvFileComposite, SWT.SINGLE | SWT.BORDER);
+		csvFileText.setText("C:\\Iustin\\Programming\\_static-catalog\\tools\\datas\\big.csv");
+		csvFileText.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
+		
+		final Button csvFileButton = new Button(csvFileComposite, SWT.NONE);
+		csvFileButton.setText("Browse");
+		csvFileButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+
+		
+		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
+		csvButtonsComposite.setBackground(new Color(display, 255, 255, 0));
+		csvButtonsComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
+		csvButtonsComposite.setLayout(createGridLayout(0, 0, 8, 0, 5));
+		
+		final Button csvLoadButton = new Button(csvButtonsComposite, SWT.NONE);
+		csvLoadButton.setText("Load");
+		csvLoadButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+
+		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.V_SCROLL | SWT.H_SCROLL);
+		csvFileGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		//csvFileGrid.setAutoHeight(true);
+		csvFileGrid.setLinesVisible(true);
+
+//	    GridColumn columnImage = new GridColumn(searchResultsGrid, SWT.NONE);
+//	    columnImage.setWidth(32);
+//	    GridColumn columnText = new GridColumn(csvFileGrid, SWT.NONE);
+//	    columnText.setWordWrap(true);
+//	    columnText.setWidth(500);
+		
+		/* Events */
+		
+		csvLoadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				CsvParser csvParser = new CsvParser(new CsvParserSettings());
+				csvParser.beginParsing(new File(csvFileText.getText()));
+				
+				String[] csvLine = csvParser.parseNext();
+				long csvLineIndex = 0;
+				while (csvLine != null) {
+					
+					csvLineIndex++;
+					if (csvLineIndex % 100000 == 0) {
+						L.p("csvLineIndex = " + csvLineIndex);
+					}
+
+					if (csvLineIndex == 1) {
+						for (int index = 0; index < csvLine.length + 1; index++) {
+							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+						    fieldGridColumn.setWordWrap(true);
+						    fieldGridColumn.setWidth(150);
+						}
+					}
+					
+					//L.p(Arrays.toString(csvLine));
+					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+					csvGridItem.setText(0, csvLineIndex + "");
+					for (int index = 0; index < csvLine.length; index++) {
+					
+						csvGridItem.setText(index + 1, csvLine[index] + "");
+					}
+					
+					
+					
+					csvLine = csvParser.parseNext();
+				}
+				 
+			}
+		});
+	}
+	
 	/** Create grid layout */
 	public static GridLayout createGridLayout(int marginWidth, int marginHeight, int horizontalSpacing, int verticalSpacing, int numColumns) {
 		
@@ -1473,7 +1580,8 @@ public class StaticCatalogGeneratorMainWindow {
 	}
 
 	/** Create grid data */
-	public static GridData createGridData(int horizontalAlignment, int verticalAlignment, boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace, int heightHint) {
+	public static GridData createGridData(int horizontalAlignment, int verticalAlignment,
+			boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace, int widthHint, int heightHint) {
 		
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = horizontalAlignment;
@@ -1481,6 +1589,7 @@ public class StaticCatalogGeneratorMainWindow {
 		gridData.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
 		gridData.grabExcessVerticalSpace = grabExcessVerticalSpace;
 		gridData.heightHint = heightHint;
+		gridData.widthHint = widthHint;
 	    
 	    return gridData;
 	}
