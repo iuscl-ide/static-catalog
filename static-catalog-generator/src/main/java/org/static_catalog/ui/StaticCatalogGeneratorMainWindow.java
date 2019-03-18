@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.eclipse.nebula.widgets.grid.DataVisualizer;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -1477,7 +1478,7 @@ public class StaticCatalogGeneratorMainWindow {
 	private void createViewCsvTab() {
 		
 		viewCsvTabComposite = new Composite(mainShell, SWT.NONE);
-		viewCsvTabComposite.setBackground(new Color(display, 0, 255, 255));
+		//viewCsvTabComposite.setBackground(new Color(display, 0, 255, 255));
 		viewCsvTabComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1, -1));
 		viewCsvTabComposite.setLayout(createGridLayout(8, 8, 0, 8, 1));
 
@@ -1486,7 +1487,7 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		
 		final Composite csvFileComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		csvFileComposite.setBackground(new Color(display, 255, 255, 0));
+		//csvFileComposite.setBackground(new Color(display, 255, 255, 0));
 		csvFileComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
 		csvFileComposite.setLayout(createGridLayout(0, 0, 8, 0, 3));
 		
@@ -1504,7 +1505,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 		
 		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		csvButtonsComposite.setBackground(new Color(display, 255, 255, 0));
+		//csvButtonsComposite.setBackground(new Color(display, 255, 255, 0));
 		csvButtonsComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
 		csvButtonsComposite.setLayout(createGridLayout(0, 0, 8, 0, 5));
 		
@@ -1512,11 +1513,35 @@ public class StaticCatalogGeneratorMainWindow {
 		csvLoadButton.setText("Load");
 		csvLoadButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
 
+		final Text csvLoadLinesText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		csvLoadLinesText.setText("2000000");
+		csvLoadLinesText.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+
+		final Button csvExtractButton = new Button(csvButtonsComposite, SWT.NONE);
+		csvExtractButton.setText("Extract");
+		csvExtractButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+
+		
+		final Composite csvStatusComposite = new Composite(viewCsvTabComposite, SWT.NONE);
+		csvStatusComposite.setBackground(new Color(display, 255, 255, 255));
+		csvStatusComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
+		csvStatusComposite.setLayout(createGridLayout(0, 0, 8, 0, 5));
+
+		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
+		csvStatusLabel.setBackground(new Color(display, 255, 255, 255));
+		csvStatusLabel.setLayoutData(createGridData(GridData.FILL, GridData.BEGINNING, true, false, -1, -1));
+		csvStatusLabel.setText("Status");
+
+		
 		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.V_SCROLL | SWT.H_SCROLL);
 		csvFileGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		//csvFileGrid.setAutoHeight(true);
 		csvFileGrid.setLinesVisible(true);
 
+		//csvFileGrid.setAutoWidth(true);
+		
+		//csvFileGrid.
+		
 //	    GridColumn columnImage = new GridColumn(searchResultsGrid, SWT.NONE);
 //	    columnImage.setWidth(32);
 //	    GridColumn columnText = new GridColumn(csvFileGrid, SWT.NONE);
@@ -1529,6 +1554,11 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
+				csvFileGrid.clearItems();
+				
+				long start = System.currentTimeMillis();
+				
+				long maxLines = Long.parseLong(csvLoadLinesText.getText());
 				CsvParser csvParser = new CsvParser(new CsvParserSettings());
 				csvParser.beginParsing(new File(csvFileText.getText()));
 				
@@ -1536,34 +1566,141 @@ public class StaticCatalogGeneratorMainWindow {
 				long csvLineIndex = 0;
 				while (csvLine != null) {
 					
+					int lineLength = csvLine.length;
+					
 					csvLineIndex++;
-					if (csvLineIndex % 100000 == 0) {
-						L.p("csvLineIndex = " + csvLineIndex);
+					if (csvLineIndex % 5000 == 0) {
+						//L.p("csvLineIndex = " + csvLineIndex);
+						csvStatusLabel.setText(csvLineIndex + " lines...");
 					}
-
+					
 					if (csvLineIndex == 1) {
-						for (int index = 0; index < csvLine.length + 1; index++) {
+						for (int index = 0; index < lineLength + 1; index++) {
 							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
 						    fieldGridColumn.setWordWrap(true);
 						    fieldGridColumn.setWidth(150);
 						}
 					}
 					
-					//L.p(Arrays.toString(csvLine));
 					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
 					csvGridItem.setText(0, csvLineIndex + "");
-					for (int index = 0; index < csvLine.length; index++) {
-					
+					for (int index = 0; index < lineLength; index++) {
+//					for (int index = 0; index < 1; index++) {						
 						csvGridItem.setText(index + 1, csvLine[index] + "");
 					}
-					
-					
-					
+
+					if (csvLineIndex == maxLines) {
+						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+						return;
+					}
+
 					csvLine = csvParser.parseNext();
 				}
 				 
+				//csvStatusLabel.setText("Done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				//L.p("Done = " + ((System.currentTimeMillis() - start) / 1000));
 			}
 		});
+		
+		csvExtractButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				csvFileGrid.clearItems();
+				
+				long start = System.currentTimeMillis();
+				
+				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
+				ArrayList<String> fieldNames = new ArrayList<>();
+				
+				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+			    fieldGridColumn.setWordWrap(true);
+			    fieldGridColumn.setWidth(250);
+
+			    fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+			    fieldGridColumn.setWordWrap(true);
+			    fieldGridColumn.setWidth(150);
+
+			    fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+			    fieldGridColumn.setWordWrap(true);
+			    fieldGridColumn.setWidth(300);
+
+			    fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+			    fieldGridColumn.setWordWrap(true);
+			    fieldGridColumn.setWidth(300);
+
+				
+				long maxLines = Long.parseLong(csvLoadLinesText.getText());
+				CsvParser csvParser = new CsvParser(new CsvParserSettings());
+				csvParser.beginParsing(new File(csvFileText.getText()));
+				
+				String[] csvLine = csvParser.parseNext();
+				long csvLineIndex = 0;
+				while (csvLine != null) {
+					
+					int lineLength = csvLine.length;
+					
+					csvLineIndex++;
+					if (csvLineIndex % 500000 == 0) {
+						//L.p("csvLineIndex = " + csvLineIndex);
+						csvStatusLabel.setText(csvLineIndex + " lines...");
+					}
+					
+					if (csvLineIndex == 1) {
+						for (int index = 0; index < lineLength; index++) {
+							fields.add(index, new HashMap<String, Long>());
+							fieldNames.add(index, csvLine[index]);
+						}
+					}
+					else {
+						for (int index = 0; index < lineLength; index++) {
+							long cnt = 0;
+							if (fields.get(index).containsKey(csvLine[index])) {
+								cnt = fields.get(index).get(csvLine[index]);
+							}
+							cnt++;
+							fields.get(index).put(csvLine[index], cnt);
+						}
+					}
+
+					csvLine = csvParser.parseNext();
+					
+					if ((csvLineIndex == maxLines) || (csvLine == null)) {
+						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, for " + csvLineIndex + " lines.");
+						
+						for (int index = 0; index < lineLength; index++) {
+							GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+							csvGridItem.setText(0, fieldNames.get(index));
+							int diff = fields.get(index).keySet().size(); 
+							csvGridItem.setText(1, diff + "");
+							
+							if (diff < 100) {
+								String distrib = "";
+								String sep = "";
+								for (long lo : fields.get(index).values()) {
+									distrib = distrib + sep + lo;
+									sep = " - ";
+								}
+								csvGridItem.setText(2, distrib);
+								
+								String distribNames = "";
+								sep = "";
+								for (String key : fields.get(index).keySet()) {
+									distribNames = distribNames + sep + key;
+									sep = " - ";
+								}
+								csvGridItem.setText(3, distribNames);
+							}
+						}
+
+						return;
+					}
+
+					//csvLine = csvParser.parseNext();
+				}
+			}
+		});
+		
 	}
 	
 	/** Create grid layout */
