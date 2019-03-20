@@ -2,12 +2,10 @@
 package org.static_catalog.ui;
 
 import java.io.File;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.eclipse.nebula.widgets.grid.DataVisualizer;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -15,7 +13,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
@@ -33,7 +30,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -1538,6 +1534,10 @@ public class StaticCatalogGeneratorMainWindow {
 		//csvFileGrid.setAutoHeight(true);
 		csvFileGrid.setLinesVisible(true);
 
+//		NatTable natTable = new NatTable(viewCsvTabComposite);
+//		natTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		
 		//csvFileGrid.setAutoWidth(true);
 		
 		//csvFileGrid.
@@ -1558,6 +1558,9 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				long start = System.currentTimeMillis();
 				
+				//ArrayList<String> arrayList = new ArrayList<>(500_000);
+				ArrayList<String> arrayList = new ArrayList<>();
+				
 				long maxLines = Long.parseLong(csvLoadLinesText.getText());
 				CsvParser csvParser = new CsvParser(new CsvParserSettings());
 				csvParser.beginParsing(new File(csvFileText.getText()));
@@ -1569,25 +1572,47 @@ public class StaticCatalogGeneratorMainWindow {
 					int lineLength = csvLine.length;
 					
 					csvLineIndex++;
-					if (csvLineIndex % 5000 == 0) {
+					if (csvLineIndex % 10000 == 0) {
 						//L.p("csvLineIndex = " + csvLineIndex);
 						csvStatusLabel.setText(csvLineIndex + " lines...");
 					}
 					
-					if (csvLineIndex == 1) {
-						for (int index = 0; index < lineLength + 1; index++) {
-							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-						    fieldGridColumn.setWordWrap(true);
-						    fieldGridColumn.setWidth(150);
-						}
+//					String s = "";
+//					StringBuilder sb = new StringBuilder();
+//					for (int index1 = 0; index1 < 5; index1++) {
+//						s = s + String.join(",", csvLine);
+//						//s = s + csvLineIndex + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+//						//arrayList.add(String.join(",", csvLine));
+//					}
+
+					for (int index1 = 0; index1 < 10; index1++) {
+//						s = s + String.join(",", csvLine);
+//						s = s + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+						//arrayList.add(String.join(",", csvLine));
+						arrayList.add(csvLineIndex + index1 + "qsfq");
+						//arrayList.add("qsfq");
 					}
+//					arrayList.add(s);
+
+//					arrayList.add("aa");
 					
-					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
-					csvGridItem.setText(0, csvLineIndex + "");
-					for (int index = 0; index < lineLength; index++) {
-//					for (int index = 0; index < 1; index++) {						
-						csvGridItem.setText(index + 1, csvLine[index] + "");
-					}
+					
+					//arrayList.add(String.join(",", csvLine));
+					
+//					if (csvLineIndex == 1) {
+//						for (int index = 0; index < lineLength + 1; index++) {
+//							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+//						    fieldGridColumn.setWordWrap(true);
+//						    fieldGridColumn.setWidth(150);
+//						}
+//					}
+//					
+//					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+//					csvGridItem.setText(0, csvLineIndex + "");
+//					for (int index = 0; index < lineLength; index++) {
+////					for (int index = 0; index < 1; index++) {						
+//						csvGridItem.setText(index + 1, csvLine[index] + "");
+//					}
 
 					if (csvLineIndex == maxLines) {
 						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
@@ -1597,7 +1622,7 @@ public class StaticCatalogGeneratorMainWindow {
 					csvLine = csvParser.parseNext();
 				}
 				 
-				//csvStatusLabel.setText("Done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				csvStatusLabel.setText("Done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds. al = " + arrayList.size());
 				//L.p("Done = " + ((System.currentTimeMillis() - start) / 1000));
 			}
 		});
