@@ -2,9 +2,12 @@
 package org.static_catalog.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -1562,6 +1565,44 @@ public class StaticCatalogGeneratorMainWindow {
 				ArrayList<String> arrayList = new ArrayList<>();
 				
 				long maxLines = Long.parseLong(csvLoadLinesText.getText());
+
+//				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+//				fieldGridColumn.setWordWrap(true);
+//				fieldGridColumn.setWidth(500);
+				
+//				try {
+//					Scanner scanner = new Scanner(new File(csvFileText.getText()));
+//					
+//					long csvLineIndex = 0;
+////					while (scanner.hasNextLine()) {
+//					String line = scanner.nextLine();					
+//					while (line != null) {
+//						
+////						String line = scanner.nextLine();
+//						
+//						csvLineIndex++;
+//						if (csvLineIndex % 10000 == 0) {
+//							//L.p("csvLineIndex = " + csvLineIndex);
+//							csvStatusLabel.setText(csvLineIndex + " lines...");
+//						}
+//						
+////						GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+////						csvGridItem.setText(0, line);
+//						
+//						line = scanner.nextLine();
+//					}
+//					
+//					scanner.close();
+//				} catch (FileNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				catch (NoSuchElementException noSuchElementException) {
+//					// TODO: handle exception
+//				}
+				
+				// vendezvotrevoiture.fr
+
 				CsvParser csvParser = new CsvParser(new CsvParserSettings());
 				csvParser.beginParsing(new File(csvFileText.getText()));
 				
@@ -1577,55 +1618,153 @@ public class StaticCatalogGeneratorMainWindow {
 						csvStatusLabel.setText(csvLineIndex + " lines...");
 					}
 					
-//					String s = "";
-//					StringBuilder sb = new StringBuilder();
-//					for (int index1 = 0; index1 < 5; index1++) {
-//						s = s + String.join(",", csvLine);
-//						//s = s + csvLineIndex + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-//						//arrayList.add(String.join(",", csvLine));
-//					}
-
-					for (int index1 = 0; index1 < 10; index1++) {
-//						s = s + String.join(",", csvLine);
-//						s = s + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-						//arrayList.add(String.join(",", csvLine));
-						arrayList.add(csvLineIndex + index1 + "qsfq");
-						//arrayList.add("qsfq");
-					}
-//					arrayList.add(s);
-
-//					arrayList.add("aa");
-					
-					
-					//arrayList.add(String.join(",", csvLine));
-					
-//					if (csvLineIndex == 1) {
-//						for (int index = 0; index < lineLength + 1; index++) {
-//							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-//						    fieldGridColumn.setWordWrap(true);
-//						    fieldGridColumn.setWidth(150);
-//						}
-//					}
-//					
-//					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
-//					csvGridItem.setText(0, csvLineIndex + "");
-//					for (int index = 0; index < lineLength; index++) {
-////					for (int index = 0; index < 1; index++) {						
-//						csvGridItem.setText(index + 1, csvLine[index] + "");
-//					}
-
-					if (csvLineIndex == maxLines) {
-						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-						return;
-					}
-
 					csvLine = csvParser.parseNext();
 				}
+				
+				
+//				CsvParser csvParser = new CsvParser(new CsvParserSettings());
+//				csvParser.beginParsing(new File(csvFileText.getText()));
+//				
+//				String[] csvLine = csvParser.parseNext();
+//				long csvLineIndex = 0;
+//				while (csvLine != null) {
+//					
+//					int lineLength = csvLine.length;
+//					
+//					csvLineIndex++;
+//					if (csvLineIndex % 10000 == 0) {
+//						//L.p("csvLineIndex = " + csvLineIndex);
+//						csvStatusLabel.setText(csvLineIndex + " lines...");
+//					}
+//					
+////					String s = "";
+////					StringBuilder sb = new StringBuilder();
+////					for (int index1 = 0; index1 < 5; index1++) {
+////						s = s + String.join(",", csvLine);
+////						//s = s + csvLineIndex + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+////						//arrayList.add(String.join(",", csvLine));
+////					}
+//
+//					for (int index1 = 0; index1 < 10; index1++) {
+////						s = s + String.join(",", csvLine);
+////						s = s + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+//						//arrayList.add(String.join(",", csvLine));
+//						arrayList.add(csvLineIndex + index1 + "qsfq");
+//						//arrayList.add("qsfq");
+//					}
+////					arrayList.add(s);
+//
+////					arrayList.add("aa");
+//					
+//					
+//					//arrayList.add(String.join(",", csvLine));
+//					
+////					if (csvLineIndex == 1) {
+////						for (int index = 0; index < lineLength + 1; index++) {
+////							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+////						    fieldGridColumn.setWordWrap(true);
+////						    fieldGridColumn.setWidth(150);
+////						}
+////					}
+////					
+////					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+////					csvGridItem.setText(0, csvLineIndex + "");
+////					for (int index = 0; index < lineLength; index++) {
+//////					for (int index = 0; index < 1; index++) {						
+////						csvGridItem.setText(index + 1, csvLine[index] + "");
+////					}
+//
+//					if (csvLineIndex == maxLines) {
+//						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+//						return;
+//					}
+//
+//					csvLine = csvParser.parseNext();
+//				}
 				 
 				csvStatusLabel.setText("Done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds. al = " + arrayList.size());
 				//L.p("Done = " + ((System.currentTimeMillis() - start) / 1000));
 			}
 		});
+		
+		
+		
+//		csvLoadButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent selectionEvent) {
+//				
+//				csvFileGrid.clearItems();
+//				
+//				long start = System.currentTimeMillis();
+//				
+//				//ArrayList<String> arrayList = new ArrayList<>(500_000);
+//				ArrayList<String> arrayList = new ArrayList<>();
+//				
+//				long maxLines = Long.parseLong(csvLoadLinesText.getText());
+//				CsvParser csvParser = new CsvParser(new CsvParserSettings());
+//				csvParser.beginParsing(new File(csvFileText.getText()));
+//				
+//				String[] csvLine = csvParser.parseNext();
+//				long csvLineIndex = 0;
+//				while (csvLine != null) {
+//					
+//					int lineLength = csvLine.length;
+//					
+//					csvLineIndex++;
+//					if (csvLineIndex % 10000 == 0) {
+//						//L.p("csvLineIndex = " + csvLineIndex);
+//						csvStatusLabel.setText(csvLineIndex + " lines...");
+//					}
+//					
+////					String s = "";
+////					StringBuilder sb = new StringBuilder();
+////					for (int index1 = 0; index1 < 5; index1++) {
+////						s = s + String.join(",", csvLine);
+////						//s = s + csvLineIndex + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+////						//arrayList.add(String.join(",", csvLine));
+////					}
+//
+//					for (int index1 = 0; index1 < 10; index1++) {
+////						s = s + String.join(",", csvLine);
+////						s = s + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+//						//arrayList.add(String.join(",", csvLine));
+//						arrayList.add(csvLineIndex + index1 + "qsfq");
+//						//arrayList.add("qsfq");
+//					}
+////					arrayList.add(s);
+//
+////					arrayList.add("aa");
+//					
+//					
+//					//arrayList.add(String.join(",", csvLine));
+//					
+////					if (csvLineIndex == 1) {
+////						for (int index = 0; index < lineLength + 1; index++) {
+////							GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+////						    fieldGridColumn.setWordWrap(true);
+////						    fieldGridColumn.setWidth(150);
+////						}
+////					}
+////					
+////					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+////					csvGridItem.setText(0, csvLineIndex + "");
+////					for (int index = 0; index < lineLength; index++) {
+//////					for (int index = 0; index < 1; index++) {						
+////						csvGridItem.setText(index + 1, csvLine[index] + "");
+////					}
+//
+//					if (csvLineIndex == maxLines) {
+//						csvStatusLabel.setText("Load done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+//						return;
+//					}
+//
+//					csvLine = csvParser.parseNext();
+//				}
+//				 
+//				csvStatusLabel.setText("Done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds. al = " + arrayList.size());
+//				//L.p("Done = " + ((System.currentTimeMillis() - start) / 1000));
+//			}
+//		});
 		
 		csvExtractButton.addSelectionListener(new SelectionAdapter() {
 			@Override
