@@ -130,6 +130,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 	private Composite viewCsvTabComposite;
 	
+	
 	/** Main application loop in the window */
 	public void runMainWindow() {
 
@@ -173,6 +174,9 @@ public class StaticCatalogGeneratorMainWindow {
 
 		fontNormal = mainShell.getFont();
 //		fontBold = newFont(mainShell.getFont(), SWT.BOLD);
+	
+		
+		
 		
 		
 		/* Images */
@@ -275,57 +279,6 @@ public class StaticCatalogGeneratorMainWindow {
 //			}
 //		});
 //
-//	    MenuItem removeMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
-//	    removeMenuItem.setText("Remove");
-//	    
-//	    removeMenuItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				
-//				if (contentsTree.getSelectionCount() == 0) {
-//					
-//					return;
-//				}
-//				
-//				TreeItem treeItem = contentsTree.getSelection()[0];
-//				
-//				while (treeItem.getParentItem() != null) {
-//					
-//					treeItem = treeItem.getParentItem();
-//				}
-//				
-//				XMLPlugin removePlugin = plugins.get(contentsTree.indexOf(treeItem));
-//				
-//				MessageBox messageBox = new MessageBox(mainShell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-//				messageBox.setMessage("Do you want to remove \"" + treeItem.getText() + "\"?");
-//				messageBox.setText("Remove plugin \"" + removePlugin.getPluginName() + "\"");
-//				int response = messageBox.open();
-//				
-//				if (response == SWT.YES) {
-//					
-//					plugins.remove(removePlugin);
-//					treeItem.dispose();
-//					loadStartHTML();
-//
-//					int index = -1;
-//					
-//					for (EHAViewerCache ehaViewerCache : EHAViewerCache.getEhaCaches()) {
-//						
-//						if (ehaViewerCache.getPluginId().equalsIgnoreCase(removePlugin.getPluginID())) {
-//							
-//							index = EHAViewerCache.getEhaCaches().indexOf(ehaViewerCache);
-//						}
-//					}
-//					
-//					EHAViewerCache.getEhaCaches().remove(index);
-//					EHAViewerCache.save();
-//
-//					S.deleteFolder(new File(removePlugin.getCacheFolderPluginPath()));
-//				}
-//			}
-//		});
-//	    
 //	    
 //	    @SuppressWarnings("unused")
 //		MenuItem fileSeparatorMenuItem = new MenuItem(fileMenu, SWT.SEPARATOR);
@@ -346,1118 +299,35 @@ public class StaticCatalogGeneratorMainWindow {
 //		});
 	    
 	    mainShell.setMenuBar(mainMenuBar);
-	    mainShell.setLayout(createGridLayout(0, 0, 0, 0, 1));
+	    mainShell.setLayout(createNoMarginsColumns(1));
 
+	    Composite topComposite = new Composite(mainShell, SWT.NONE);
+	    topComposite.setBackground(colorBlue);
+	    topComposite.setLayoutData(createFillHorizontal());
+	    topComposite.setLayout(createMarginsColumns(1));
+	    
+	    Composite topButtonsComposite = new Composite(topComposite, SWT.NONE);
+	    //topButtonsComposite.setBackground(colorBlue);
+	    topButtonsComposite.setLayoutData(createCenterHorizontal());
+	    topButtonsComposite.setLayout(createNoMarginsColumns(2));
+
+	    Button buttonViewCsvTab = new Button(topButtonsComposite, SWT.TOGGLE);
+	    buttonViewCsvTab.setText("View CSV");
+	    buttonViewCsvTab.setLayoutData(createWidth(200));
+	    
+	    Button buttonAnalyzeCsvTab = new Button(topButtonsComposite, SWT.TOGGLE);
+	    buttonAnalyzeCsvTab.setText("Analyze CSV");
+	    buttonAnalyzeCsvTab.setLayoutData(createWidth(200));
+
+	    Label separator = new Label(topComposite, SWT.HORIZONTAL | SWT.SEPARATOR);
+	    topComposite.setBackground(colorWhite);
+	    separator.setLayoutData(createFillHorizontal());
+
+	    
+	    
 	    createViewCsvTab();
 
 	    
-//	    Composite mainComposite = new Composite(mainShell, SWT.NONE);
-//	    mainComposite.setBackground(new Color(display, 0, 0, 255));
-//	    mainComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1));
-//	    mainComposite.setLayout(createGridLayout(8, 8, 0, 0, 1));
-	    
-//	    Composite topComposite = new Composite(mainShell, SWT.NONE);
-//	    //topComposite.setBackground(new Color(display, 0, 0, 255));
-//	    gridData = new GridData();
-//	    //gridData.heightHint = 32;
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    topComposite.setLayoutData(gridData);
-//	    
-//	    GridLayout topGridLayout = new GridLayout();
-//	    topGridLayout.marginWidth = 4;
-//	    topGridLayout.marginHeight = 8;
-//	    topGridLayout.verticalSpacing = 0;
-//	    topGridLayout.horizontalSpacing = 4;
-//	    topGridLayout.numColumns = 5;
-//	    topComposite.setLayout(topGridLayout);
-//	    
-//	    Label topSearchLabel = new Label(topComposite, SWT.NONE);
-//	    topSearchLabel.setText("Search:");
-//	    
-//	    final Text topSearchText = new Text(topComposite, SWT.SINGLE | SWT.BORDER);
-//	    topSearchText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-//	    ((GridData) topSearchText.getLayoutData()).widthHint = 200;
-//	    topSearchText.setText("");
-////	    L.p(" " + topSearchText.getFont().getFontData()[0].getHeight());
-//	    topSearchText.addKeyListener(new KeyAdapter() {
-//
-//			@Override
-//			public void keyPressed(KeyEvent keyEvent) {
-//				
-//				if (keyEvent.keyCode == SWT.CR) {
-//
-//					keyEvent.doit = false;
-//					lastSearchPhrase = topSearchText.getText();
-//					loadSearchResults();
-//				}
-//			}
-//		});
-//
-//	    Button topSearchButton = newGrayButton(topComposite, "Go");
-//	    topSearchButton.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//
-//				lastSearchPhrase = topSearchText.getText();
-//				loadSearchResults();
-//			}
-//		});
-//	    
-////	    ((GridData) topSearchButton.getLayoutData()).heightHint = ((GridData) topSearchText.getLayoutData()).heightHint;
-////	    ((GridData) topSearchText.getLayoutData()).heightHint = ((GridData) topSearchButton.getLayoutData()).heightHint - (3 * topSearchText.getBorderWidth());
-//	    
-//	    topComposite.pack();
-//	    
-//	    Composite middleComposite = new Composite(mainShell, SWT.NONE);
-//	    //middleComposite.setBackground(new Color(display, 0, 255, 0));
-//	    gridData = new GridData();
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    gridData.verticalAlignment = GridData.FILL;
-//	    gridData.grabExcessVerticalSpace = true;
-//	    middleComposite.setLayoutData(gridData);
-//	    middleComposite.setLayout(new FillLayout());
-//	    
-//	    middleSashForm = new SashFormMin(middleComposite, SWT.HORIZONTAL | SWT.SMOOTH);
-//	    middleSashForm.SASH_WIDTH = 5;
-//	    middleSashForm.DRAG_MINIMUM_1 = 200;
-//	    middleSashForm.DRAG_MINIMUM_2 = 400;
-//	    
-//	    final Composite leftComposite = new Composite(middleSashForm, SWT.NONE | SWT.DOUBLE_BUFFERED);
-//	    
-//	    //leftComposite.setBackground(new Color(display, 255, 255, 0));
-//	    GridLayout leftGridLayout = new GridLayout();
-//	    leftGridLayout.marginWidth = 2;
-//	    leftGridLayout.marginHeight = 2;
-//	    leftGridLayout.verticalSpacing = 2;
-//	    leftGridLayout.numColumns = 1;
-//	    leftComposite.setLayout(leftGridLayout);
-//
-//	    //Composite leftToolbarComposite = new Composite(leftComposite, SWT.BORDER);
-//	    final Composite leftHeaderComposite = new Composite(leftComposite, SWT.NONE);
-//	    gridData = new GridData();
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    leftHeaderComposite.setLayoutData(gridData);
-//	    
-//	    GridLayout leftHeaderGridLayout = new GridLayout();
-//	    leftHeaderGridLayout.marginWidth = 4;
-//	    leftHeaderGridLayout.marginHeight = 4;
-//	    leftHeaderGridLayout.verticalSpacing = 0;
-//	    leftHeaderGridLayout.horizontalSpacing = 0;
-//	    leftHeaderGridLayout.numColumns = 2;
-//	    leftHeaderComposite.setLayout(leftHeaderGridLayout);
-//
-//	    tabNameLabel = new Label(leftHeaderComposite, SWT.NONE);
-//		tabNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
-//		changeFont(tabNameLabel, SWT.BOLD);
-//		tabNameLabel.setText("Contents");
-//		
-//		
-//		ToolItem toolItem;
-//		
-//		final ToolBar contentToolbar = new ToolBar(leftHeaderComposite, SWT.FLAT | SWT.WRAP | SWT. HORIZONTAL);
-//		contentToolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-//		activeTabToolbar = contentToolbar;
-//		
-////		toolItem = newToolItem(contentToolbar, SWT.DROP_DOWN, "e_print_topic", "Print Topics");
-////
-////		toolItem = newToolItem(contentToolbar, SWT.DROP_DOWN, "e_search_results_view", "Search Topics");
-//		
-//		toolItem = newToolItem(contentToolbar, "e_collapseall", "Collapse All");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//
-//				for (TreeItem treeItem : contentsTree.getItems()) {
-//					
-//					collapseAll(treeItem);
-//				}
-//			}
-//		});
-//		
-//		toolItem = newToolItem(contentToolbar, SWT.CHECK, "e_auto_synch_toc", "Link with Contents");
-//		toolItem.setSelection(false);
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				
-//				alwaysSyncContents = !alwaysSyncContents;
-//				
-//				ToolItem toolItem = (ToolItem) selectionEvent.widget;
-//				toolItem.setSelection(alwaysSyncContents);
-//				
-//				if (alwaysSyncContents) {
-//					
-//					syncContents(false);
-//				}
-//			}
-//		});
-//
-//		toolItem = newToolItem(contentToolbar, "maximize", "Maximize");
-//		toolItem.addSelectionListener(newMaximizeSelectionAdapter(leftComposite));
-//
-//		leftHeaderComposite.pack();
-//
-//		
-//		final ToolBar indexToolbar = new ToolBar(leftHeaderComposite, SWT.FLAT | SWT.WRAP | SWT. HORIZONTAL);
-//		indexToolbar.setVisible(false);
-//		indexToolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-//		((GridData) indexToolbar.getLayoutData()).exclude = true;
-//
-//		toolItem = newToolItem(indexToolbar, "maximize", "Maximize");
-//		toolItem.addSelectionListener(newMaximizeSelectionAdapter(leftComposite));
-//		
-//		
-//		searchResultsToolbar = new ToolBar(leftHeaderComposite, SWT.FLAT | SWT.WRAP | SWT. HORIZONTAL);
-//		searchResultsToolbar.setVisible(false);
-//		searchResultsToolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-//		((GridData) searchResultsToolbar.getLayoutData()).exclude = true;
-//		
-//		toolItem = newToolItem(searchResultsToolbar, SWT.CHECK, "e_show_categories", "Group by Categories");
-//		toolItem.setSelection(true);
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				
-//				groupSearchByCategories = !groupSearchByCategories;
-//
-//				ToolItem toolItem = (ToolItem) selectionEvent.widget;
-//				toolItem.setSelection(groupSearchByCategories);
-//
-//				loadSearchResults();
-//			}
-//		});
-//		
-//		toolItem = newToolItem(searchResultsToolbar, SWT.CHECK, "e_show_descriptions", "Show Descriptions");
-//		toolItem.setSelection(true);
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				
-//				showSearchDescriptions = !showSearchDescriptions;
-//
-//				ToolItem toolItem = (ToolItem) selectionEvent.widget;
-//				toolItem.setSelection(showSearchDescriptions);
-//
-//				loadSearchResults();
-//			}
-//		});
-//		
-//		toolItem = newToolItem(searchResultsToolbar, "maximize", "Maximize");
-//		toolItem.addSelectionListener(newMaximizeSelectionAdapter(leftComposite));
-//
-//		
-//		final ToolBar bookmarksToolbar = new ToolBar(leftHeaderComposite, SWT.FLAT | SWT.WRAP | SWT. HORIZONTAL);
-//		bookmarksToolbar.setVisible(false);
-//		bookmarksToolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-//		((GridData) bookmarksToolbar.getLayoutData()).exclude = true;
-//		
-//		toolItem = newToolItem(bookmarksToolbar, "e_bookmark_rem", "Delete Selected Bookmark");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//
-//				int index = bookmarksGrid.getSelectionIndex();
-//				
-//				if (index > -1) {
-//					
-//					GridItem gridItem = bookmarksGrid.getItem(index);
-//					UIBookmarkItem uiBookmarkItem = (UIBookmarkItem) gridItem.getData();
-//					
-//					EHAViewerProperties.deleteBookmark(uiBookmarkItem);
-//					
-//					uiBookmarkItems.clear();
-//					for (XMLPlugin plugin : plugins) {
-//						
-//						plugin.loadUIBookmarkItems(uiBookmarkItems);
-//					}
-//					loadBookmarksGrid();
-//				}
-//			}
-//		});
-//		
-//		toolItem = newToolItem(bookmarksToolbar, "e_bookmark_remall", "Delete All Bookmarks");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//
-//				ArrayList<String> pluginIDs = new ArrayList<>();
-//				
-//				for (XMLPlugin plugin : plugins) {
-//					
-//					pluginIDs.add(plugin.getPluginID());
-//				}
-//				
-//				EHAViewerProperties.deleteAllBookmarks(pluginIDs);
-//					
-//				uiBookmarkItems.clear();
-//				loadBookmarksGrid();
-//			}
-//		});
-//		
-//		toolItem = newToolItem(bookmarksToolbar, "maximize", "Maximize");
-//		toolItem.addSelectionListener(newMaximizeSelectionAdapter(leftComposite));
-//		
-//
-//	    final Composite leftContentComposite = new Composite(leftComposite, SWT.NONE);
-//	    leftContentComposite.setLayoutData(newGridDataFILLFILLtruetrue());
-//	    leftContentComposite.setLayout(newGridLayout00001());
-//
-//	    
-//	    final Composite contentComposite = new Composite(leftContentComposite, SWT.NONE);
-//	    contentComposite.setLayoutData(newGridDataFILLFILLtruetrue());
-//	    contentComposite.setLayout(newGridLayout00001());
-//	    activeComposite = contentComposite;
-//	    
-//		contentsTree = new Tree(contentComposite, SWT.NONE);
-//		contentsTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		contentsTree.addTreeListener(new TreeListener() {
-//			
-//			@Override
-//			public void treeExpanded(TreeEvent treeEvent) {
-//				
-//				 TreeItem treeItem = (TreeItem) treeEvent.item;
-//				 if (treeItem.getParentItem() == null) {
-//					 
-//					 treeItem.setImage(uiImages.get("toc_open"));
-//				 }
-//			}
-//			
-//			@Override
-//			public void treeCollapsed(TreeEvent treeEvent) {
-//
-//				 TreeItem treeItem = (TreeItem) treeEvent.item;
-//				 if (treeItem.getParentItem() == null) {
-//					 
-//					 treeItem.setImage(uiImages.get("toc_closed"));
-//				 }
-//				 
-//				 if (osNameProperty.contains("mac")) {
-//					 
-//					 contentsTree.setSelection(treeItem);
-//				 }
-//			}
-//		});
-//		
-//		contentsTree.addMouseTrackListener(new MouseTrackAdapter() {
-//			
-//			@Override
-//			public void mouseHover(MouseEvent mouseEvent) {
-//
-//				TreeItem treeItem = contentsTree.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//				
-//				if (treeItem != null) {
-//				
-//					UITocItem tocItem = (UITocItem) treeItem.getData();
-//					String ref = tocItem.getRef();
-//					//String ref = tocItem.getBaseUrl();
-//					if (ref != null) {
-//						
-//						bottomLeftLabel.setText(ref);
-//					}
-//					else {
-//						
-//						bottomLeftLabel.setText("");
-//					}
-//					
-//					//bottomLeftLabel.setText(tocItem.getBaseUrl());
-//				}
-//				else {
-//					
-//					bottomLeftLabel.setText("");
-//				}
-//			}
-//			
-//			@Override
-//			public void mouseExit(MouseEvent mouseEvent) {
-//				
-//				bottomLeftLabel.setText("");
-//			}
-//		});
-//		
-//		contentsTree.addSelectionListener(new SelectionAdapter() {
-//			
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				
-//				TreeItem treeItem = (TreeItem) selectionEvent.item;
-//				UITocItem tocItem = (UITocItem) treeItem.getData();
-//
-//				String baseUrl = tocItem.getBaseUrl();
-//				
-//				loadHTML(baseUrl);
-//			}
-//		});
-//
-//		/* goto index */
-//		
-//	    final Composite indexComposite = new Composite(leftContentComposite, SWT.NONE);
-//	    indexComposite.setBackground(colorWhite);
-//	    indexComposite.setVisible(false);
-//	    indexComposite.setLayoutData(newGridDataFILLFILLtruetrue());
-//	    ((GridData) indexComposite.getLayoutData()).exclude = true;
-//	    indexComposite.setLayout(newGridLayout00001());
-//
-//	    Composite indexHeaderComposite = new Composite(indexComposite, SWT.NONE);
-//	    gridData = new GridData();
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    indexHeaderComposite.setLayoutData(gridData);
-//	    
-//	    GridLayout indexHeaderGridLayout = new GridLayout();
-//	    indexHeaderGridLayout.marginWidth = 4;
-//	    indexHeaderGridLayout.marginHeight = 4;
-//	    indexHeaderGridLayout.verticalSpacing = 4;
-//	    indexHeaderGridLayout.horizontalSpacing = 0;
-//	    indexHeaderGridLayout.numColumns = 1;
-//	    indexHeaderComposite.setLayout(indexHeaderGridLayout);
-//
-//	    Label indexHeaderLabel = new Label(indexHeaderComposite, SWT.NONE);
-//	    indexHeaderLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true));
-//	    indexHeaderLabel.setText("Type in the word to find:");
-//
-//	    
-//	    Composite indexHeaderSearchComposite = new Composite(indexHeaderComposite, SWT.NONE);
-//	    gridData = new GridData();
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    indexHeaderSearchComposite.setLayoutData(gridData);
-//	    
-//	    GridLayout indexHeaderSearchGridLayout = new GridLayout();
-//	    indexHeaderSearchGridLayout.marginWidth = 0;
-//	    indexHeaderSearchGridLayout.marginHeight = 0;
-//	    indexHeaderSearchGridLayout.verticalSpacing = 0;
-//	    indexHeaderSearchGridLayout.horizontalSpacing = 4;
-//	    indexHeaderSearchGridLayout.numColumns = 2;
-//	    indexHeaderSearchComposite.setLayout(indexHeaderSearchGridLayout);
-//
-//	    final Text indexHeaderDisplayWordText = new Text(indexHeaderSearchComposite, SWT.SINGLE | SWT.BORDER);
-//		indexHeaderDisplayWordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-//		indexHeaderDisplayWordText.setText("");
-//
-//		indexHeaderDisplayWordText.addKeyListener(new KeyAdapter() {
-//
-//			@Override
-//			public void keyPressed(KeyEvent keyEvent) {
-//				
-//				if (keyEvent.keyCode == SWT.CR) {
-//
-//					keyEvent.doit = false;
-//					lastIndexDisplayWord = indexHeaderDisplayWordText.getText();
-//					loadIndexGrid();
-//				}
-//			}
-//		});
-//
-//		
-//	    Button indexHeaderSearchButton = newGrayButton(indexHeaderSearchComposite, "Display");
-//	    indexHeaderSearchButton.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//
-//				lastIndexDisplayWord = indexHeaderDisplayWordText.getText();
-//				loadIndexGrid();
-//			}
-//		});
-//	    
-//	    indexHeaderSearchComposite.pack();
-//	    
-//	    indexComposite.addControlListener(new ControlAdapter() {
-//
-//			@Override
-//			public void controlResized(ControlEvent controlEvent) {
-//
-//				indexGrid.getColumn(0).setWidth(indexComposite.getClientArea().width - indexGrid.getVerticalBar().getSize().x);
-//			}
-//		});
-//
-//	    
-//	    indexGrid = new Grid(indexComposite, SWT.V_SCROLL | SWT.H_SCROLL);
-//	    indexGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    indexGrid.setAutoHeight(true);
-//	    indexGrid.setLinesVisible(false);
-//
-//	    indexGrid.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseDown(MouseEvent mouseEvent) {
-//
-//				GridItem gridItem = indexGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//				
-//				if ((gridItem != null) && (gridItem.getData() != null)) {
-//
-//					UIIndexItem uiIndexItem = (UIIndexItem) gridItem.getData();
-//					
-//					String baseUrl = uiIndexItem.getBaseUrl();
-//					
-//					if (baseUrl != null) {
-//						
-//						loadHTML(baseUrl);
-//					}
-//				}
-//			}
-//		});
-//	    
-//	    indexGrid.addMouseMoveListener(new MouseMoveListener() {
-//			
-//			@Override
-//			public void mouseMove(MouseEvent mouseEvent) {
-//				
-//				GridItem gridItem = indexGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//
-//				if ((gridItem == null) || (gridItem.getData() == null)) {
-//					
-//					indexGrid.setCursor(null);
-//					bottomLeftLabel.setText("");
-//					return;
-//				}
-//				
-//				UIIndexItem uiIndexItem = (UIIndexItem) gridItem.getData();
-//				
-//				if (uiIndexItem.getRef() != null) {
-//
-//					bottomLeftLabel.setText(uiIndexItem.getRef());
-//				}
-//				else {
-//
-//					bottomLeftLabel.setText("");
-//				}
-//				
-//				if (uiIndexItem.getBaseUrl() != null) {
-//
-//					indexGrid.setCursor(cursorHand);
-//				}
-//				else {
-//
-//					indexGrid.setCursor(null);
-//				}
-//
-//			}
-//		});
-//	    
-//	    indexGrid.addMouseTrackListener(new MouseTrackAdapter() {
-//
-//			@Override
-//			public void mouseEnter(MouseEvent mouseEvent) {
-//
-//				indexGrid.setCursor(null);
-//			}
-//
-//			@Override
-//			public void mouseExit(MouseEvent mouseEvent) {
-//
-//				indexGrid.setCursor(null);
-//				bottomLeftLabel.setText("");
-//			}
-//		});
-//
-//	    GridColumn indexGridColumn = new GridColumn(indexGrid, SWT.NONE);
-//	    indexGridColumn.setWidth(300);
-//	    indexGridColumn.setWordWrap(true);
-//	    
-//		
-//	    /* goto search results */
-//	    
-//	    searchResultsComposite = new Composite(leftContentComposite, SWT.NONE);
-//	    searchResultsComposite.setVisible(false);
-//	    searchResultsComposite.setLayoutData(newGridDataFILLFILLtruetrue());
-//	    ((GridData) searchResultsComposite.getLayoutData()).exclude = true;
-//	    searchResultsComposite.setLayout(newGridLayout00001());
-//
-//	    searchResultsComposite.addControlListener(new ControlAdapter() {
-//
-//			@Override
-//			public void controlResized(ControlEvent controlEvent) {
-//
-//				searchResultsGrid.getColumn(1).setWidth(searchResultsComposite.getClientArea().width - 
-//						(searchResultsGrid.getColumn(0).getWidth() +  searchResultsGrid.getVerticalBar().getSize().x));
-//			}
-//		});
-//
-//	    
-//	    searchResultsGrid = new Grid(searchResultsComposite, SWT.V_SCROLL | SWT.H_SCROLL);
-//	    searchResultsGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    searchResultsGrid.setAutoHeight(true);
-//	    searchResultsGrid.setLinesVisible(false);
-////	    searchResultsGrid.setSelectionEnabled(false);
-//	    
-//	    searchResultsGrid.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseDown(MouseEvent mouseEvent) {
-//
-//				GridItem gridItem = searchResultsGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//				
-//				if ((gridItem != null) && (gridItem.getData("baseUrl") != null)) {
-//
-//					loadHTML((String) gridItem.getData("baseUrl"));
-//				}
-//			}
-//		});
-//	    
-//	    searchResultsGrid.addMouseMoveListener(new MouseMoveListener() {
-//			
-//			@Override
-//			public void mouseMove(MouseEvent mouseEvent) {
-//				
-//				GridItem gridItem = searchResultsGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//
-//				if (gridItem == null) {
-//					
-//					searchResultsGrid.setCursor(null);
-//					bottomLeftLabel.setText("");
-//					return;
-//				}
-//				
-//				if (gridItem.getData("ref") != null) {
-//
-//					bottomLeftLabel.setText((String) gridItem.getData("ref"));
-//				}
-//				else {
-//
-//					bottomLeftLabel.setText("");
-//				}
-//				
-//				if (gridItem.getData("baseUrl") != null) {
-//
-//					searchResultsGrid.setCursor(cursorHand);
-//				}
-//				else {
-//
-//					searchResultsGrid.setCursor(null);
-//				}
-//
-//			}
-//		});
-//	    
-//	    searchResultsGrid.addMouseTrackListener(new MouseTrackAdapter() {
-//
-//			@Override
-//			public void mouseEnter(MouseEvent mouseEvent) {
-//
-//				searchResultsGrid.setCursor(null);
-//			}
-//
-//			@Override
-//			public void mouseExit(MouseEvent mouseEvent) {
-//
-//				searchResultsGrid.setCursor(null);
-//				bottomLeftLabel.setText("");
-//			}
-//		});
-//	    
-//	    GridColumn columnImage = new GridColumn(searchResultsGrid, SWT.NONE);
-//	    columnImage.setWidth(32);
-//	    GridColumn columnText = new GridColumn(searchResultsGrid, SWT.NONE);
-//	    columnText.setWordWrap(true);
-//	    columnText.setWidth(100);
-//	    
-//
-//	    /* goto bookmarks */
-//	    
-//	    final Composite bookmarksComposite = new Composite(leftContentComposite, SWT.NONE);
-//	    bookmarksComposite.setVisible(false);
-//	    bookmarksComposite.setLayoutData(newGridDataFILLFILLtruetrue());
-//	    ((GridData) bookmarksComposite.getLayoutData()).exclude = true;
-//	    bookmarksComposite.setLayout(newGridLayout00001());
-//
-//	    bookmarksComposite.addControlListener(new ControlAdapter() {
-//
-//			@Override
-//			public void controlResized(ControlEvent controlEvent) {
-//
-//				bookmarksGrid.getColumn(1).setWidth(bookmarksComposite.getClientArea().width - 
-//						(bookmarksGrid.getColumn(0).getWidth() +  bookmarksGrid.getVerticalBar().getSize().x));
-//			}
-//		});
-//	    
-//	    bookmarksGrid = new Grid(bookmarksComposite, SWT.V_SCROLL | SWT.H_SCROLL);
-//	    bookmarksGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    bookmarksGrid.setAutoHeight(true);
-//	    bookmarksGrid.setLinesVisible(false);
-//
-//	    bookmarksGrid.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseDown(MouseEvent mouseEvent) {
-//
-//				GridItem gridItem = bookmarksGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//				
-//				if ((gridItem != null) && (gridItem.getData() != null)) {
-//
-//					UIBookmarkItem uiBookmarkItem = (UIBookmarkItem) gridItem.getData();
-//					
-//					String baseUrl = uiBookmarkItem.getBaseUrl();
-//					
-//					if (baseUrl != null) {
-//						
-//						loadHTML(baseUrl);
-//					}
-//				}
-//			}
-//		});
-//	    
-//	    bookmarksGrid.addMouseMoveListener(new MouseMoveListener() {
-//			
-//			@Override
-//			public void mouseMove(MouseEvent mouseEvent) {
-//				
-//				GridItem gridItem = bookmarksGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
-//
-//				if ((gridItem == null) || (gridItem.getData() == null)) {
-//					
-//					bookmarksGrid.setCursor(null);
-//					bottomLeftLabel.setText("");
-//					return;
-//				}
-//				
-//				UIBookmarkItem uiBookmarkItem = (UIBookmarkItem) gridItem.getData();
-//				
-//				if (uiBookmarkItem.getRef() != null) {
-//
-//					bottomLeftLabel.setText(uiBookmarkItem.getRef());
-//				}
-//				else {
-//
-//					bottomLeftLabel.setText("");
-//				}
-//				
-//				if (uiBookmarkItem.getBaseUrl() != null) {
-//
-//					bookmarksGrid.setCursor(cursorHand);
-//				}
-//				else {
-//
-//					bookmarksGrid.setCursor(null);
-//				}
-//
-//			}
-//		});
-//	    
-//	    bookmarksGrid.addMouseTrackListener(new MouseTrackAdapter() {
-//
-//			@Override
-//			public void mouseEnter(MouseEvent mouseEvent) {
-//
-//				bookmarksGrid.setCursor(null);
-//			}
-//
-//			@Override
-//			public void mouseExit(MouseEvent mouseEvent) {
-//
-//				bookmarksGrid.setCursor(null);
-//				bottomLeftLabel.setText("");
-//			}
-//		});
-//
-//	    GridColumn bookmarksGridColumnImage = new GridColumn(bookmarksGrid, SWT.NONE);
-//	    bookmarksGridColumnImage.setWidth(32);
-//	    GridColumn bookmarksGridColumnText = new GridColumn(bookmarksGrid, SWT.NONE);
-//	    bookmarksGridColumnText.setWordWrap(true);
-//	    bookmarksGridColumnText.setWidth(100);
-//	    
-//	    final Composite leftTabsComposite = new Composite(leftComposite, SWT.NONE);
-//	    gridData = new GridData();
-//	    gridData.heightHint = 24;
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    leftTabsComposite.setLayoutData(gridData);
-//	    //leftTabsComposite.setBackground(EHAViewerUtils.getShadowColor(leftTabsComposite.getBackground()));
-//	    
-//	    GridLayout leftTabsGridLayout = new GridLayout();
-//	    leftTabsGridLayout.marginWidth = 0;
-//	    leftTabsGridLayout.marginHeight = 0;
-//	    //leftTabsGridLayout.marginTop = 1;
-//	    leftTabsGridLayout.verticalSpacing = 0;
-//	    leftTabsGridLayout.horizontalSpacing = 0;
-//	    leftTabsGridLayout.numColumns = 4;
-//	    leftTabsGridLayout.makeColumnsEqualWidth = true;
-//	    leftTabsComposite.setLayout(leftTabsGridLayout);
-//
-//	    
-//	    final Composite contentsTabComposite = new Composite(leftTabsComposite, SWT.DOUBLE_BUFFERED);
-//	    contentsTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    contentsTabComposite.setBackground(colorGrayHighlight);
-//	    contentsTabComposite.addPaintListener(drawTabImagePaintListener(contentsTabComposite, "e_contents_view"));
-//	    contentsTabComposite.setToolTipText("Contents");
-//	    activeTabComposite = contentsTabComposite;
-//	    
-//	    final Composite indexTabComposite = new Composite(leftTabsComposite, SWT.DOUBLE_BUFFERED);
-//	    indexTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    indexTabComposite.addPaintListener(newMarginLeftPaintListener(indexTabComposite));
-//	    indexTabComposite.addPaintListener(drawTabImagePaintListener(contentsTabComposite, "e_index_view"));
-//	    indexTabComposite.setToolTipText("Index");
-//	    
-//	    searchResultsTabComposite = new Composite(leftTabsComposite, SWT.DOUBLE_BUFFERED);
-//	    searchResultsTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    searchResultsTabComposite.addPaintListener(newMarginLeftPaintListener(searchResultsTabComposite));
-//	    searchResultsTabComposite.addPaintListener(drawTabImagePaintListener(contentsTabComposite, "e_search_results_view"));
-//	    searchResultsTabComposite.setToolTipText("Search Results");
-//	    
-//	    final Composite bookmarksTabComposite = new Composite(leftTabsComposite, SWT.DOUBLE_BUFFERED);
-//	    bookmarksTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//	    bookmarksTabComposite.addPaintListener(newMarginLeftPaintListener(bookmarksTabComposite));
-//	    bookmarksTabComposite.addPaintListener(drawTabImagePaintListener(contentsTabComposite, "e_bookmarks_view"));
-//	    bookmarksTabComposite.setToolTipText("Bookmarks");
-//
-//	    contentsTabComposite.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseDown(MouseEvent e) {
-//				
-//				changeTabComposite("Contents", contentsTabComposite, contentComposite, contentToolbar);
-//			}
-//		});
-//
-//	    indexTabComposite.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseDown(MouseEvent e) {
-//
-//				changeTabComposite("Index", indexTabComposite, indexComposite, indexToolbar);
-//			}
-//		});
-//
-//	    searchResultsTabComposite.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseDown(MouseEvent e) {
-//
-//				changeTabComposite("Search Results", searchResultsTabComposite, searchResultsComposite, searchResultsToolbar);
-//			}
-//		});
-//
-//	    bookmarksTabComposite.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseDown(MouseEvent e) {
-//
-//				changeTabComposite("Bookmarks", bookmarksTabComposite, bookmarksComposite, bookmarksToolbar);
-//			}
-//		});
-//
-//	    leftComposite.addPaintListener(drawMarginPaintListener(leftComposite, leftHeaderComposite, leftTabsComposite));
-//
-//
-//	    /* Right part */
-//	    final Composite rightComposite = new Composite(middleSashForm, SWT.NONE);
-//
-//	    //rightComposite.setBackground(new Color(display, 0, 255, 255));
-//	    rightComposite.setLayout(leftGridLayout);	    
-//	    
-//	    final Composite rightToolbarComposite = new Composite(rightComposite, SWT.NONE);
-//	    gridData = new GridData();
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    rightToolbarComposite.setLayoutData(gridData);
-//
-//	    GridLayout rightToolbarGridLayout = new GridLayout();
-//	    rightToolbarGridLayout.marginWidth = 4;
-//	    rightToolbarGridLayout.marginHeight = 4;
-//	    rightToolbarGridLayout.verticalSpacing = 0;
-//	    rightToolbarGridLayout.horizontalSpacing = 0;
-//	    rightToolbarGridLayout.numColumns = 1;
-//	    rightToolbarComposite.setLayout(rightToolbarGridLayout);
-//	    
-//		ToolBar rightToolbar = new ToolBar(rightToolbarComposite, SWT.FLAT | SWT.WRAP | SWT. HORIZONTAL);
-//		rightToolbar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true));
-//		
-//		// "e_forward", "e_home", "e_synch_toc_nav", "e_add_bkmrk", "e_print_topic", "maximize"
-//
-//		toolItem = newToolItem(rightToolbar, "e_back", "Go Back");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				if (baseUrlHistoryIndex > 0) {
-//					
-//					baseUrlHistoryIndex--;
-//					loadHTML(baseUrlHistory.get(baseUrlHistoryIndex));
-//				}
-//			}
-//		});
-//
-//		toolItem = newToolItem(rightToolbar, "e_forward", "Go Forward");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				if (baseUrlHistoryIndex < baseUrlHistory.size() - 1) {
-//					
-//					baseUrlHistoryIndex++;
-//					loadHTML(baseUrlHistory.get(baseUrlHistoryIndex));
-//				}
-//			}
-//		});
-//
-//		toolItem = newToolItem(rightToolbar, "e_home", "Home");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				if (contentsTree.getSelectionCount() == 0) {
-//					
-//					return;
-//				}
-//				
-//				TreeItem treeItem = contentsTree.getSelection()[0];
-//				
-//				while (treeItem.getParentItem() != null) {
-//					
-//					treeItem = treeItem.getParentItem();
-//				}
-//				
-//				contentsTree.setSelection(treeItem);
-//				UITocItem tocItem = (UITocItem) treeItem.getData();
-//				loadHTML(tocItem.getBaseUrl());
-//			}
-//		});
-//
-//	    toolItem = new ToolItem(rightToolbar, SWT.SEPARATOR);
-//		
-//	    toolItem = newToolItem(rightToolbar, "e_synch_toc_nav", "Show in Table of Contents");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				syncContents(true);
-//			}
-//		});
-//
-//	    toolItem = newToolItem(rightToolbar, "e_add_bkmrk", "Bookmark Document");
-//		toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				for (XMLPlugin plugin : plugins) {
-//					
-//					String cacheFolderPluginPath = plugin.getCacheFolderPluginPath().replace("\\", "/");
-//					
-//					if (activeBaseUrl.contains(cacheFolderPluginPath)) {
-//						
-//						String theRef = activeBaseUrl.substring(activeBaseUrl.indexOf(cacheFolderPluginPath) + cacheFolderPluginPath.length() + 1);
-//
-//						String theName = "Title not found";
-//						
-//						URL url = getUrl(activeBaseUrl);
-//						if (url == null) {
-//							
-//							return;
-//						}
-//
-//						TreeItem treeItem = findToc(url.toString());
-//						
-//						if (treeItem != null) {
-//							
-//							UITocItem uiTocItem = (UITocItem) treeItem.getData();
-//							theName = uiTocItem.getName();
-//						}
-//						else {
-//							
-//							String theHtml = browser.getText();
-//							
-//							int indexStart = theHtml.indexOf("<title>");
-//							int indexEnd = theHtml.indexOf("</title>");
-//
-//							if (indexStart == -1) {
-//								
-//								indexStart = theHtml.indexOf("<TITLE>");
-//								indexEnd = theHtml.indexOf("</TITLE>");
-//							}
-//							
-//							if (indexStart != -1) {
-//								
-//								theName = theHtml.substring(indexStart + 7, indexEnd);
-//							}
-//						}
-//						
-//						EHAViewerProperties.addBookmark(theName, plugin.getPluginID() + "/" + theRef);
-//						
-//						uiBookmarkItems.clear();
-//						for (XMLPlugin thePlugin : plugins) {
-//							
-//							thePlugin.loadUIBookmarkItems(uiBookmarkItems);
-//						}
-//						loadBookmarksGrid();
-//					}
-//				}
-//
-//			}
-//		});
-//
-//	    toolItem = newToolItem(rightToolbar, "e_print_topic", "Print Page");
-//	    toolItem.addSelectionListener(new SelectionAdapter() {
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//
-//				browser.execute("javascript:window.print();");
-//			}
-//		});
-//	    
-//	    toolItem = newToolItem(rightToolbar, "maximize", "Maximize");
-//		toolItem.addSelectionListener(newMaximizeSelectionAdapter(rightComposite));
-//		
-//		rightToolbarComposite.pack();
-//
-//	    rightComposite.addPaintListener(drawMarginPaintListener(rightComposite, rightToolbarComposite, null));
-//
-//
-//		browser = new Browser(rightComposite, SWT.NONE);
-//		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		
-//		browser.addLocationListener(new LocationAdapter() {
-//
-//			@Override
-//			public void changing(LocationEvent locationEvent) {
-//
-//				String location = locationEvent.location;
-////				L.p("changing = " + location);
-////				L.p("changingu = " + browser.getUrl());
-//				
-//				if (location.startsWith("javascript:")) {
-//
-//					browser.execute(location);
-//					locationEvent.doit = false;
-//					return;
-//				}
-//				
-//				URL url = getUrl(location);
-//
-//				if (url != null) {
-//					
-//					if (location.startsWith("http:/") || location.startsWith("https:/")) {
-//						
-//						locationEvent.doit = false;
-//						location = "file:/" + location;
-//					}
-//
-//					loadHTML(location);
-//				}
-//				else {
-//
-//					if (!location.startsWith("about:blank")) {
-//					
-//						locationEvent.doit = false;
-//					}
-//				}
-//			}
-//		});
-//		
-//		browser.addOpenWindowListener(new OpenWindowListener() {
-//			
-//			@Override
-//			public void open(WindowEvent windowEvent) {
-//
-////				L.p("OpenWindowListener");
-//
-//				windowEvent.browser = browser;
-//			}
-//		});
-//		
-//		browser.addStatusTextListener(new StatusTextListener() {
-//			
-//			@Override
-//			public void changed(StatusTextEvent statusTextEvent) {
-//
-//				URL url = getUrl(statusTextEvent.text);
-//
-//				if (url != null) {
-//					
-//					String strUrl = url.toString();
-//					
-//					for (XMLPlugin xmlPlugin : plugins) {
-//						
-//						String prefix = "file:/" + xmlPlugin.getCacheFolderPluginPath().replace("\\", "/") + "/";
-//						
-//						if (strUrl.startsWith(prefix)) {
-//							
-//							strUrl = strUrl.replace(prefix, "");
-//							
-//							if (strUrl.startsWith("help/nav/")) {
-//								
-//								strUrl = "";
-//							}
-//						}
-//					}
-//					
-//					bottomLeftLabel.setText(strUrl);	
-//				}
-//				else {
-//					
-//					bottomLeftLabel.setText("");
-//				}
-//			}
-//		});
-//		
-//	    middleSashForm.setWeights(new int[] {10, 25});
-//
-//	    Composite bottomComposite = new Composite(mainShell, SWT.NONE);
-//	    //bottomComposite.setBackground(new Color(display, 255, 0, 0));
-//	    gridData = new GridData();
-//	    gridData.heightHint = 24;
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    bottomComposite.setLayoutData(gridData);
-//	    
-//	    GridLayout bottomGridLayout = new GridLayout();
-//	    bottomGridLayout.marginWidth = 4;
-//	    bottomGridLayout.marginHeight = 4;
-//	    bottomGridLayout.verticalSpacing = 0;
-//	    bottomGridLayout.horizontalSpacing = 4;
-//	    bottomGridLayout.numColumns = 2;
-//	    bottomComposite.setLayout(bottomGridLayout);
-//	    
-//	    bottomLeftLabel = new Label(bottomComposite, SWT.NONE);
-//	    //bottomLeftLabel.setText("Glkmn sqmogj lgjeaipgj eoig");
-//	    //bottomLeftLabel.setBackground(new Color(display, 255, 0, 0));
-//	    gridData = new GridData();
-//	    gridData.heightHint = 16;
-//	    gridData.horizontalAlignment = GridData.FILL;
-//	    gridData.grabExcessHorizontalSpace = true;
-//	    bottomLeftLabel.setLayoutData(gridData);
-//	    
-////		browser.setUrl("about:blank");
-//		loadStartHTML();
-//	    
-//	    /* Load all cache */
-//		EHAViewerCache.load(LoadSortType.firstUsedAsc);
-//		
-//		ArrayList<String> pluginPaths = new ArrayList<>();
-//		
-//		for (EHAViewerCache ehaViewerCache : EHAViewerCache.getEhaCaches()) {
-//
-//			pluginPaths.add(ehaViewerCache.getCompleteFilePath());
-//		}
-//		
-//		for (String pluginPath : pluginPaths) {
-//
-//			XMLPlugin xmlPlugin = EHAViewerEngine.loadPluginFile(pluginPath);
-//			
-//			plugins.add(xmlPlugin);
-//			
-//			/* TOC */
-//			UITocItem primaryTocItem = xmlPlugin.loadUITocItems();
-//			loadContentsTree(primaryTocItem);
-//			
-//			/* Index */
-//			xmlPlugin.loadUIIndexItems(uiIndexItems);
-//
-//			/* Bookmarks */
-//			xmlPlugin.loadUIBookmarkItems(uiBookmarkItems);
-//			loadBookmarksGrid();
-//		}
 		
 	    
 		/* Run */
@@ -1475,13 +345,74 @@ public class StaticCatalogGeneratorMainWindow {
 		display.dispose();
 	}
 
+	/** */
+	private GridData createWidth(int widthHint) {
+		
+		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
+		gridData.widthHint = widthHint;
+		return gridData;
+	}
+	
+	private GridData createFillHorizontal() {
+		
+		return new GridData(SWT.FILL, SWT.CENTER, true, false);
+	}
+
+	private GridData createCenterHorizontal() {
+		
+		return new GridData(SWT.CENTER, SWT.CENTER, false, false);
+	}
+
+	private GridData createFillBoth() {
+		
+		return new GridData(SWT.FILL, SWT.FILL, true, true);
+	}
+	
+	private GridLayout createNoMarginsColumns(int numColumns) {
+		
+		GridLayout gridLayout = new GridLayout();
+		
+		gridLayout.marginBottom = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginLeft = 0;
+		gridLayout.marginRight = 0;
+		gridLayout.marginTop = 0;
+		gridLayout.marginWidth = 0;
+		
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		
+		gridLayout.numColumns = numColumns;
+		
+		return gridLayout;
+	}
+
+	private GridLayout createMarginsColumns(int numColumns) {
+		
+		GridLayout gridLayout = new GridLayout();
+		
+		gridLayout.marginBottom = 8;
+		gridLayout.marginHeight = 8;
+		gridLayout.marginLeft = 8;
+		gridLayout.marginRight = 8;
+		gridLayout.marginTop = 8;
+		gridLayout.marginWidth = 8;
+		
+		gridLayout.horizontalSpacing = 8;
+		gridLayout.verticalSpacing = 8;
+		
+		gridLayout.numColumns = numColumns;
+		
+		return gridLayout;
+	}
+
 	/** View a CSV file in a grid */
 	private void createViewCsvTab() {
 		
 		viewCsvTabComposite = new Composite(mainShell, SWT.NONE);
 		//viewCsvTabComposite.setBackground(new Color(display, 0, 255, 255));
-		viewCsvTabComposite.setLayoutData(createGridData(GridData.FILL, GridData.FILL, true, true, -1, -1));
-		viewCsvTabComposite.setLayout(createGridLayout(8, 8, 0, 8, 1));
+		viewCsvTabComposite.setLayoutData(createFillBoth());
+		viewCsvTabComposite.setLayout(createMarginsColumns(1));
 
 		final Label viewCsvTabLabel = new Label(viewCsvTabComposite, SWT.NONE);
 		viewCsvTabLabel.setText("View .csv");
@@ -1489,53 +420,53 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		final Composite csvFileComposite = new Composite(viewCsvTabComposite, SWT.NONE);
 		//csvFileComposite.setBackground(new Color(display, 255, 255, 0));
-		csvFileComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
-		csvFileComposite.setLayout(createGridLayout(0, 0, 8, 0, 3));
+		csvFileComposite.setLayoutData(createFillHorizontal());
+		csvFileComposite.setLayout(createNoMarginsColumns(3));
 		
 		final Label csvFileLabel = new Label(csvFileComposite, SWT.NONE);
 		csvFileLabel.setText("File");
-		csvFileLabel.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		csvFileLabel.setLayoutData(createWidth(120));
 		
 		final Text csvFileText = new Text(csvFileComposite, SWT.SINGLE | SWT.BORDER);
 		csvFileText.setText("C:\\Iustin\\Programming\\_static-catalog\\tools\\datas\\big.csv");
-		csvFileText.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
+		csvFileText.setLayoutData(createFillHorizontal());
 		
 		final Button csvFileButton = new Button(csvFileComposite, SWT.NONE);
 		csvFileButton.setText("Browse");
-		csvFileButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
-
+		//csvFileButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		csvFileButton.setLayoutData(createWidth(120));
 		
 		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
 		//csvButtonsComposite.setBackground(new Color(display, 255, 255, 0));
-		csvButtonsComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
-		csvButtonsComposite.setLayout(createGridLayout(0, 0, 8, 0, 5));
+		csvButtonsComposite.setLayoutData(createFillHorizontal());
+		csvButtonsComposite.setLayout(createNoMarginsColumns(5));
 		
 		final Button csvLoadButton = new Button(csvButtonsComposite, SWT.NONE);
 		csvLoadButton.setText("Load");
-		csvLoadButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		csvLoadButton.setLayoutData(createWidth(120));
 
 		final Text csvLoadLinesText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
-		csvLoadLinesText.setText("2000000");
-		csvLoadLinesText.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		csvLoadLinesText.setText("100");
+		csvLoadLinesText.setLayoutData(createWidth(120));
 
 		final Button csvExtractButton = new Button(csvButtonsComposite, SWT.NONE);
 		csvExtractButton.setText("Extract");
-		csvExtractButton.setLayoutData(createGridData(GridData.BEGINNING, GridData.CENTER, false, false, 120, -1));
+		csvExtractButton.setLayoutData(createWidth(120));
 
 		
 		final Composite csvStatusComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		csvStatusComposite.setBackground(new Color(display, 255, 255, 255));
-		csvStatusComposite.setLayoutData(createGridData(GridData.FILL, GridData.CENTER, true, false, -1, -1));
-		csvStatusComposite.setLayout(createGridLayout(0, 0, 8, 0, 5));
+		csvStatusComposite.setBackground(colorWhite);
+		csvStatusComposite.setLayoutData(createFillHorizontal());
+		csvStatusComposite.setLayout(createNoMarginsColumns(5));
 
 		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
 		csvStatusLabel.setBackground(new Color(display, 255, 255, 255));
-		csvStatusLabel.setLayoutData(createGridData(GridData.FILL, GridData.BEGINNING, true, false, -1, -1));
+		csvStatusLabel.setLayoutData(createFillHorizontal());
 		csvStatusLabel.setText("Status");
 
 		
 		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.V_SCROLL | SWT.H_SCROLL);
-		csvFileGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		csvFileGrid.setLayoutData(createFillBoth());
 		//csvFileGrid.setAutoHeight(true);
 		csvFileGrid.setLinesVisible(true);
 
@@ -1738,6 +669,7 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
 				csvFileGrid.clearItems();
+				csvFileGrid.disposeAllItems();
 				
 				long start = System.currentTimeMillis();
 				
@@ -1915,33 +847,33 @@ public class StaticCatalogGeneratorMainWindow {
 		
 	}
 	
-	/** Create grid layout */
-	public static GridLayout createGridLayout(int marginWidth, int marginHeight, int horizontalSpacing, int verticalSpacing, int numColumns) {
-		
-	    GridLayout gridLayout = new GridLayout();
-	    gridLayout.marginWidth = marginWidth;
-	    gridLayout.marginHeight = marginHeight;
-	    gridLayout.horizontalSpacing = horizontalSpacing;
-	    gridLayout.verticalSpacing = verticalSpacing;
-	    gridLayout.numColumns = numColumns;
-	    
-	    return gridLayout;
-	}
-
-	/** Create grid data */
-	public static GridData createGridData(int horizontalAlignment, int verticalAlignment,
-			boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace, int widthHint, int heightHint) {
-		
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = horizontalAlignment;
-		gridData.verticalAlignment = verticalAlignment;
-		gridData.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
-		gridData.grabExcessVerticalSpace = grabExcessVerticalSpace;
-		gridData.heightHint = heightHint;
-		gridData.widthHint = widthHint;
-	    
-	    return gridData;
-	}
+//	/** Create grid layout */
+//	public static GridLayout createGridLayout(int marginWidth, int marginHeight, int horizontalSpacing, int verticalSpacing, int numColumns) {
+//		
+//	    GridLayout gridLayout = new GridLayout();
+//	    gridLayout.marginWidth = marginWidth;
+//	    gridLayout.marginHeight = marginHeight;
+//	    gridLayout.horizontalSpacing = horizontalSpacing;
+//	    gridLayout.verticalSpacing = verticalSpacing;
+//	    gridLayout.numColumns = numColumns;
+//	    
+//	    return gridLayout;
+//	}
+//
+//	/** Create grid data */
+//	public static GridData createGridData(int horizontalAlignment, int verticalAlignment,
+//			boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace, int widthHint, int heightHint) {
+//		
+//		GridData gridData = new GridData();
+//		gridData.horizontalAlignment = horizontalAlignment;
+//		gridData.verticalAlignment = verticalAlignment;
+//		gridData.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
+//		gridData.grabExcessVerticalSpace = grabExcessVerticalSpace;
+//		gridData.heightHint = heightHint;
+//		gridData.widthHint = widthHint;
+//	    
+//	    return gridData;
+//	}
 
 //    gridData = new GridData();
 //    //gridData.heightHint = 32;
