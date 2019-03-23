@@ -4,7 +4,7 @@ package org.static_catalog.main;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import org.static_catalog.ui.StaticCatalogGeneratorMainWindow;
+import org.static_catalog.ui.StaticCatalogGeneratorMainWindow2;
 
 /** Main class, launch main window */
 public class StaticCatalogGeneratorMain {
@@ -42,7 +42,7 @@ public class StaticCatalogGeneratorMain {
 	    Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
 		/* Start main window */
-	    StaticCatalogGeneratorMainWindow mainWindow = new StaticCatalogGeneratorMainWindow();
+	    StaticCatalogGeneratorMainWindow2 mainWindow = new StaticCatalogGeneratorMainWindow2();
 		mainWindow.runMainWindow();
 
 		/* JVM bug */
