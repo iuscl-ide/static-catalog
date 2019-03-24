@@ -2,12 +2,16 @@
 package org.static_catalog.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 import org.static_catalog.ui.UI1.L;
@@ -23,20 +27,35 @@ public class UI {
 
 	/** Own display */
 	private final Display display;
+
+	/** */
+	private UI(Display display) {
+		
+		this.display = display;
+	}
 	
 	/** Application */
-	public UI(String applicationName) {
-		super();
+	public static UI createApplication(String applicationName) {
 		
+		UI ui = new UI(new Display());
 		Display.setAppName(applicationName);
-		display = new Display();
+		
+		return ui;
 	}
 
+	/** Events */
+	public class Event {
+		
+		public void onClickOrEnterKey(Component senderComponent) {
+			/* ILB */
+		}; 
+	}
+	
 	/** Base */
 	public class Component {
 		
 		/** */
-		private Widget swtWidget;
+		private Control swtControl;
 
 		/** */
 		private final GridData positionInParentGridData;
@@ -114,13 +133,18 @@ public class UI {
 				case "exclude":
 					positionInParentGridData.exclude = Boolean.parseBoolean(value);
 					break;
-				
-				case "horizontalFill":
+
+				case "fillCenter":
+					positionInParentGridData.horizontalAlignment = GridData.CENTER;
+					positionInParentGridData.grabExcessHorizontalSpace = true;
+					break;
+
+				case "fillHorizontal":
 					positionInParentGridData.horizontalAlignment = GridData.FILL;
 					positionInParentGridData.grabExcessHorizontalSpace = true;
 					break;
 
-				case "bothFill":
+				case "fillBoth":
 					positionInParentGridData.horizontalAlignment = GridData.FILL;
 					positionInParentGridData.grabExcessHorizontalSpace = true;
 
@@ -131,15 +155,32 @@ public class UI {
 			}
 		}
 
-		public Widget getSwtWidget() {
-			return swtWidget;
+		public Widget getSwtControl() {
+			return swtControl;
 		}
-		protected void setSwtWidget(Widget swtWidget) {
-			this.swtWidget = swtWidget;
+		protected void setSwtControl(Control swtControl) {
+			this.swtControl = swtControl;
+			this.swtControl.setData("ui_control", this);
 		}
 
 		public GridData getPositionInParentGridData() {
 			return positionInParentGridData;
+		}
+		
+		/** Show and take place */
+		public void show() {
+			
+			swtControl.setVisible(true);
+			positionInParentGridData.exclude = false;
+			swtControl.requestLayout();
+		}
+
+		/** Hide and free place */
+		public void hide() {
+			
+			swtControl.setVisible(false);
+			positionInParentGridData.exclude = true;
+			swtControl.requestLayout();
 		}
 	}
 	
@@ -265,30 +306,10 @@ public class UI {
 	public class Panel extends ParentComponent {
 
 		/** */
-		public Panel(Form parentForm, String positionInParent, String positionForChildren) {
-			this((ParentComponent) parentForm, positionInParent, positionForChildren);
-		}
-
-		/** */
-		public Panel(Panel parentPanel) {
-			this((ParentComponent) parentPanel, "", "");
-		}
-		
-		/** */
-		public Panel(Panel parentPanel, String positionInParent) {
-			this((ParentComponent) parentPanel, positionInParent, "");
-		}
-		
-		/** */
-		public Panel(Panel parentPanel, String positionInParent, String positionForChildren) {
-			this((ParentComponent) parentPanel, positionInParent, positionForChildren);
-		}
-		
-		/** */
 		private Panel(ParentComponent parentComponent, String positionInParent, String positionForChildren) {
 			super(positionInParent, positionForChildren);
 			
-			Composite swtComposite = new Composite((Composite) parentComponent.getSwtWidget(), SWT.NONE);
+			Composite swtComposite = new Composite((Composite) parentComponent.getSwtControl(), SWT.NONE);
 			swtComposite.setLayoutData(getPositionInParentGridData());
 			swtComposite.setLayout(getPositionForChildrenGridLayout());
 			
@@ -296,51 +317,98 @@ public class UI {
 				swtComposite.setBackground(randomColor());
 			}
 			
-			setSwtWidget(swtComposite);
+			setSwtControl(swtComposite);
 		}
 
 		/** */
 		public Composite getComposite() {
-			return (Composite) getSwtWidget();
+			return (Composite) getSwtControl();
 		}
 	}
 
+	/** */
+	public Panel createPanel(Form parentForm, String positionInParent, String positionForChildren) {
+		
+		return new Panel(parentForm, positionInParent, positionForChildren);
+	}
+
+	/** */
+	public Panel createPanel(Panel parentPanel, String positionInParent, String positionForChildren) {
+		
+		return new Panel(parentPanel, positionInParent, positionForChildren);
+	}
+	
+	/** */
+	public Panel createPanel(Panel parentPanel, String positionInParent) {
+		
+		return new Panel(parentPanel, positionInParent, "");
+	}
+
+	/** */
+	public Panel createPanel(Panel parentPanel) {
+		
+		return new Panel(parentPanel, "", "");
+	}
+
+	
 	/** Form */
 	public class Form extends ParentComponent {
 
 		/** */
-		public Form(String caption, String positionForChildren) {
+		private Form(String caption, String positionForChildren) {
 			super("", positionForChildren);
 			
 			Shell swtShell = new Shell(display);
 			swtShell.setText(caption);
 			swtShell.setLayout(getPositionForChildrenGridLayout());
 			
-			setSwtWidget(swtShell);
+			setSwtControl(swtShell);
 		}
 
 		/** */
 		public Shell getShell() {
-			return (Shell) getSwtWidget();
+			return (Shell) getSwtControl();
 		}
 	}
 	
+	/** */
+	public Form createForm(String caption, String positionForChildren) {
+		
+		Form form = new Form(caption, positionForChildren);
+		
+		return form;
+	}
+	
+	
 	/** Button component */
-	public class ButtonComponent extends Component {
+	private class ButtonComponent extends Component {
 
 		/** */
-		public ButtonComponent(Panel panel, int swtStyle, String positionInParent) {
+		public ButtonComponent(Panel panel, int swtStyle, String caption, String positionInParent) {
 			super(positionInParent);
 			
-			Button swtButton = new Button((Composite) panel.getSwtWidget(), swtStyle);
+			Button swtButton = new Button((Composite) panel.getSwtControl(), swtStyle);
 			swtButton.setLayoutData(getPositionInParentGridData());
+			swtButton.setText(caption);
 			
-			setSwtWidget(swtButton);
+			setSwtControl(swtButton);
 		}
 
 		/** */
 		public Button getButton() {
-			return (Button) getSwtWidget();
+			return (Button) getSwtControl();
+		}
+		
+		/** */
+		public void onClickOrEnterKey(Event event) {
+			
+			((Button) getSwtControl()).addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent selectionEvent) {
+					
+					event.onClickOrEnterKey((Component) selectionEvent.widget.getData("ui_control"));
+				}
+			});
 		}
 	}
 	
@@ -348,35 +416,119 @@ public class UI {
 	public class PushButton extends ButtonComponent {
 
 		/** */
-		public PushButton(Panel panel) {
-			super(panel, SWT.PUSH, "");
-		}
-		
-		/** */
-		public PushButton(Panel panel, String positionInParent) {
-			super(panel, SWT.PUSH, positionInParent);
+		private PushButton(Panel panel, String caption, String positionInParent) {
+			super(panel, SWT.PUSH, caption, positionInParent);
 		}
 	}
+	
+	/** */
+	public PushButton createPushButton(Panel parentPanel, String caption) {
+		
+		return new PushButton(parentPanel, caption, "");
+	}
+
+	/** */
+	public PushButton createPushButton(Panel parentPanel, String caption, String positionInParent) {
+		
+		return new PushButton(parentPanel, caption, positionInParent);
+	}
+
 	
 	/** Toggle button */
 	public class ToggleButton extends ButtonComponent {
 
 		/** */
-		public ToggleButton(Panel panel) {
-			super(panel, SWT.TOGGLE, "");
+		private ToggleButton(Panel panel, String caption, String positionInParent) {
+			super(panel, SWT.TOGGLE, caption, positionInParent);
 		}
-
+		
 		/** */
-		public ToggleButton(Panel panel, String positionInParent) {
-			super(panel, SWT.TOGGLE, positionInParent);
+		public boolean isDown() {
+			
+			return getButton().getSelection(); 
+		}
+		
+		/** */
+		public void setDown(boolean down) {
+			
+			getButton().setSelection(down); 
 		}
 	}
 	
+	/** */
+	public ToggleButton createToggleButton(Panel parentPanel, String caption) {
+		
+		return new ToggleButton(parentPanel, caption, "");
+	}
 
+	/** */
+	public ToggleButton createToggleButton(Panel parentPanel, String caption, String positionInParent) {
+		
+		return new ToggleButton(parentPanel, caption, positionInParent);
+	}
+
+	/** Label component */
+	private class LabelComponent extends Component {
+
+		/** */
+		public LabelComponent(Panel panel, int swtStyle, String caption, String positionInParent) {
+			super(positionInParent);
+			
+			Label swtLabel = new Label((Composite) panel.getSwtControl(), swtStyle);
+			swtLabel.setLayoutData(getPositionInParentGridData());
+			swtLabel.setText(caption);
+			
+			setSwtControl(swtLabel);
+		}
+
+		/** */
+		public Label getLabel() {
+			return (Label) getSwtControl();
+		}
+	}
+
+	/** Text label */
+	public class TextLabel extends LabelComponent {
+
+		/** */
+		private TextLabel(Panel panel, String caption, String positionInParent) {
+			super(panel, SWT.NONE, caption, positionInParent);
+		}
+	}
+
+	/** */
+	public TextLabel createTextLabel(Panel parentPanel, String caption) {
+		
+		return new TextLabel(parentPanel, caption, "");
+	}
+
+	/** */
+	public TextLabel createTextLabel(Panel parentPanel, String caption, String positionInParent) {
+		
+		return new TextLabel(parentPanel, caption, positionInParent);
+	}
+	
+	/** Horizontal separator */
+	public class HorizontalSeparator extends LabelComponent {
+
+		/** */
+		private HorizontalSeparator(Panel panel) {
+			super(panel, SWT.HORIZONTAL | SWT.SEPARATOR, "", "fillHorizontal");
+		}
+	}
+
+	/** */
+	public HorizontalSeparator createHorizontalSeparator(Panel parentPanel) {
+		
+		return new HorizontalSeparator(parentPanel);
+	}
+	
 //	/** Separator */
 //	public class Separator extends Component {
 //		
 //	}
+	
+	
 	
 
 	
