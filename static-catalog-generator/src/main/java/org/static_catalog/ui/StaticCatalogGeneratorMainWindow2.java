@@ -71,7 +71,7 @@ public class StaticCatalogGeneratorMainWindow2 {
 	    mainShell.setMenuBar(mainMenuBar);
 	    
 	    
-	    UI ui = new UI();
+	    UI1 ui = new UI1();
 	    
 	    ui.setDebug(true);
 	    
@@ -97,7 +97,7 @@ public class StaticCatalogGeneratorMainWindow2 {
 	    		ui.l("numColumns: 3"));
 	    
 	    
-	    UI.E topCenterButtonsClick = ui.new E() {
+	    UI1.E topCenterButtonsClick = ui.new E() {
 			@Override
 			public void onClick(SelectionEvent selectionEvent) {
 				L.p("is there");
@@ -116,8 +116,11 @@ public class StaticCatalogGeneratorMainWindow2 {
 	    
 	    Composite analyseComposite = ui.c(mainShell, ui.d("bothFill"), ui.l());
 	    analyseComposite.setVisible(false);
+	    ((GridData) analyseComposite.getLayoutData()).exclude = true;
+	    
 	    Composite extractComposite = ui.c(mainShell, ui.d("bothFill"), ui.l());
 	    extractComposite.setVisible(false);
+	    ((GridData) extractComposite.getLayoutData()).exclude = true;
 	    
 	    mainShell.layout(true, true);
 	    

@@ -1,297 +1,385 @@
-/* 2019 */
+/* 2019 */ 
 package org.static_catalog.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.static_catalog.ui.UI1.L;
 
-/** UI */
+/** UI over SWT */
 public class UI {
 
-	public abstract class E {
-		
-		public void onClick(SelectionEvent selectionEvent) {
-			
-		}
-	}
-	
-	/** GridLayout values */
-	public class L {
-		
-		public static final String noMargins = "noMargins";
-		public static final String margins = "margins";
-
-		public static final String noSpacing = "noSpacing";
-		public static final String spacing = "spacing";
-
-	}
-	
 	/** debug */
 	private boolean isDebug = false;
 
 	/** Default margin and spacing */
 	private String defaultMarginSpacing = "8";
+
+	/** Own display */
+	private final Display display;
 	
-	
-	/** GridLayout */
-	public GridLayout l(String... properties) {
-
-		/*
-		horizontalSpacing	5	
-		makeColumnsEqualWidth	false	
-		marginBottom	0	
-		marginHeight	5	
-		marginLeft	0	
-		marginRight	0	
-		marginTop	0	
-		marginWidth	5	
-		numColumns	1	
-		verticalSpacing	5	
-		*/
+	/** Application */
+	public UI(String applicationName) {
+		super();
 		
-		GridLayout gridLayout = new GridLayout();
+		Display.setAppName(applicationName);
+		display = new Display();
+	}
 
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
+	/** Base */
+	public class Component {
 		
-		for (String property : properties) {
-			
-			String[] nameValue = property.split(":");
-			String name = nameValue[0].trim();
-			String value = defaultMarginSpacing;
-			if (nameValue.length > 1) {
-				value = nameValue[1].trim();	
-			}
-			
-			switch (name) {
-			case "numColumns":
-				gridLayout.numColumns = Integer.parseInt(value);
-				break;
-			case "makeColumnsEqualWidth":
-				gridLayout.makeColumnsEqualWidth = Boolean.parseBoolean(value);
-				break;
-			case "marginWidth":
-				gridLayout.marginWidth = Integer.parseInt(value);
-				break;
-			case "marginHeight":
-				gridLayout.marginHeight = Integer.parseInt(value);
-				break;
-			case "marginLeft":
-				gridLayout.marginLeft = Integer.parseInt(value);
-				break;
-			case "marginTop":
-				gridLayout.marginTop = Integer.parseInt(value);
-				break;
-			case "marginRight":
-				gridLayout.marginRight = Integer.parseInt(value);
-				break;
-			case "marginBottom":
-				gridLayout.marginBottom = Integer.parseInt(value);
-				break;
-			case "horizontalSpacing":
-				gridLayout.horizontalSpacing = Integer.parseInt(value);
-				break;
-			case "verticalSpacing":
-				gridLayout.verticalSpacing = Integer.parseInt(value);
-				break;
+		/** */
+		private Widget swtWidget;
 
-			case "noMargins":
-				gridLayout.marginWidth = 0;
-				gridLayout.marginHeight = 0;
-				
-				gridLayout.marginLeft = 0;
-				gridLayout.marginTop = 0;
-				gridLayout.marginRight = 0;
-				gridLayout.marginBottom = 0;
-				break;
-			case "margins":
-				int margin = Integer.parseInt(value);
-				
-				gridLayout.marginWidth = 0;
-				gridLayout.marginHeight = 0;
-				
-				gridLayout.marginLeft = margin;
-				gridLayout.marginTop = margin;
-				gridLayout.marginRight = margin;
-				gridLayout.marginBottom = margin;
-				break;
+		/** */
+		private final GridData positionInParentGridData;
+		
+		/** */
+		public Component(String positionInParent) {
+			super();
+			
+			positionInParentGridData = new GridData();
 
-			case L.noSpacing:
-				gridLayout.horizontalSpacing = 0;
-				gridLayout.verticalSpacing = 0;
-				break;
-			case L.spacing:
-				int spacing = Integer.parseInt(value);
+			/*
+			exclude	false	
+			grabExcessHorizontalSpace	false	
+			grabExcessVerticalSpace	false	
+			heightHint	-1	
+			horizontalAlignment	1	
+			horizontalIndent	0	
+			horizontalSpan	1	
+			minimumHeight	0	
+			minimumWidth	0	
+			verticalAlignment	2	
+			verticalIndent	0	
+			verticalSpan	1	
+			widthHint	-1	
+			*/
+
+			String[] propertiesValues = positionInParent.split(","); 
+			for (String propertyValue : propertiesValues) {
 				
-				gridLayout.horizontalSpacing = spacing;
-				gridLayout.verticalSpacing = spacing;
-				break;
+				String[] nameValue = propertyValue.split(":");
+				String name = nameValue[0].trim();
+				String value = defaultMarginSpacing;
+				if (nameValue.length > 1) {
+					value = nameValue[1].trim();	
+				}
+				
+				switch (name) {
+
+				case "verticalAlignment":
+					positionInParentGridData.verticalAlignment = Integer.parseInt(value);
+					break;
+				case "horizontalAlignment":
+					positionInParentGridData.horizontalAlignment = Integer.parseInt(value);
+					break;
+				case "widthHint":
+					positionInParentGridData.widthHint = Integer.parseInt(value);
+					break;
+				case "heightHint":
+					positionInParentGridData.heightHint = Integer.parseInt(value);
+					break;
+				case "horizontalIndent":
+					positionInParentGridData.horizontalIndent = Integer.parseInt(value);
+					break;
+				case "verticalIndent":
+					positionInParentGridData.verticalIndent = Integer.parseInt(value);
+					break;
+				case "horizontalSpan":
+					positionInParentGridData.horizontalSpan = Integer.parseInt(value);
+					break;
+				case "verticalSpan":
+					positionInParentGridData.verticalSpan = Integer.parseInt(value);
+					break;
+				case "grabExcessHorizontalSpace":
+					positionInParentGridData.grabExcessHorizontalSpace = Boolean.parseBoolean(value);
+					break;
+				case "grabExcessVerticalSpace":
+					positionInParentGridData.grabExcessVerticalSpace = Boolean.parseBoolean(value);
+					break;
+				case "minimumWidth":
+					positionInParentGridData.minimumWidth = Integer.parseInt(value);
+					break;
+				case "minimumHeight":
+					positionInParentGridData.minimumHeight = Integer.parseInt(value);
+					break;
+				case "exclude":
+					positionInParentGridData.exclude = Boolean.parseBoolean(value);
+					break;
+				
+				case "horizontalFill":
+					positionInParentGridData.horizontalAlignment = GridData.FILL;
+					positionInParentGridData.grabExcessHorizontalSpace = true;
+					break;
+
+				case "bothFill":
+					positionInParentGridData.horizontalAlignment = GridData.FILL;
+					positionInParentGridData.grabExcessHorizontalSpace = true;
+
+					positionInParentGridData.verticalAlignment = GridData.FILL;
+					positionInParentGridData.grabExcessVerticalSpace = true;
+					break;
+				}
 			}
 		}
-		
-		return gridLayout;
+
+		public Widget getSwtWidget() {
+			return swtWidget;
+		}
+		protected void setSwtWidget(Widget swtWidget) {
+			this.swtWidget = swtWidget;
+		}
+
+		public GridData getPositionInParentGridData() {
+			return positionInParentGridData;
+		}
 	}
 	
-	/** GridData */
-	public GridData d(String... properties) {
+	/** Panel */
+	public class ParentComponent extends Component {
 		
-		/*
-		exclude	false	
-		grabExcessHorizontalSpace	false	
-		grabExcessVerticalSpace	false	
-		heightHint	-1	
-		horizontalAlignment	1	
-		horizontalIndent	0	
-		horizontalSpan	1	
-		minimumHeight	0	
-		minimumWidth	0	
-		verticalAlignment	2	
-		verticalIndent	0	
-		verticalSpan	1	
-		widthHint	-1	
-		*/
-		
-		GridData gridData = new GridData();
-		
-		for (String property : properties) {
+		private final GridLayout positionForChildrenGridLayout;
+
+		/** */
+		public ParentComponent(String positionInParent) {
 			
-			String[] nameValue = property.split(":");
-			String name = nameValue[0].trim();
-			String value = defaultMarginSpacing;
-			if (nameValue.length > 1) {
-				value = nameValue[1].trim();	
+			this(positionInParent, "");
+		}
+
+		/** */
+		public ParentComponent(String positionInParent, String positionForChildren) {
+			super(positionInParent);
+			
+			positionForChildrenGridLayout = new GridLayout();
+			
+			/*
+			horizontalSpacing	5	
+			makeColumnsEqualWidth	false	
+			marginBottom	0	
+			marginHeight	5	
+			marginLeft	0	
+			marginRight	0	
+			marginTop	0	
+			marginWidth	5	
+			numColumns	1	
+			verticalSpacing	5	
+			*/
+			
+			positionForChildrenGridLayout.marginWidth = 0;
+			positionForChildrenGridLayout.marginHeight = 0;
+
+			positionForChildrenGridLayout.horizontalSpacing = 0;
+			positionForChildrenGridLayout.verticalSpacing = 0;
+
+			String[] propertiesValues = positionForChildren.split(","); 
+			for (String property : propertiesValues) {
+				
+				String[] nameValue = property.split(":");
+				String name = nameValue[0].trim();
+				String value = defaultMarginSpacing;
+				if (nameValue.length > 1) {
+					value = nameValue[1].trim();	
+				}
+				
+				switch (name) {
+				case "numColumns":
+					positionForChildrenGridLayout.numColumns = Integer.parseInt(value);
+					break;
+				case "makeColumnsEqualWidth":
+					positionForChildrenGridLayout.makeColumnsEqualWidth = Boolean.parseBoolean(value);
+					break;
+				case "marginWidth":
+					positionForChildrenGridLayout.marginWidth = Integer.parseInt(value);
+					break;
+				case "marginHeight":
+					positionForChildrenGridLayout.marginHeight = Integer.parseInt(value);
+					break;
+				case "marginLeft":
+					positionForChildrenGridLayout.marginLeft = Integer.parseInt(value);
+					break;
+				case "marginTop":
+					positionForChildrenGridLayout.marginTop = Integer.parseInt(value);
+					break;
+				case "marginRight":
+					positionForChildrenGridLayout.marginRight = Integer.parseInt(value);
+					break;
+				case "marginBottom":
+					positionForChildrenGridLayout.marginBottom = Integer.parseInt(value);
+					break;
+				case "horizontalSpacing":
+					positionForChildrenGridLayout.horizontalSpacing = Integer.parseInt(value);
+					break;
+				case "verticalSpacing":
+					positionForChildrenGridLayout.verticalSpacing = Integer.parseInt(value);
+					break;
+
+				case "noMargins":
+					positionForChildrenGridLayout.marginWidth = 0;
+					positionForChildrenGridLayout.marginHeight = 0;
+					
+					positionForChildrenGridLayout.marginLeft = 0;
+					positionForChildrenGridLayout.marginTop = 0;
+					positionForChildrenGridLayout.marginRight = 0;
+					positionForChildrenGridLayout.marginBottom = 0;
+					break;
+				case "margins":
+					int margin = Integer.parseInt(value);
+					
+					positionForChildrenGridLayout.marginWidth = 0;
+					positionForChildrenGridLayout.marginHeight = 0;
+					
+					positionForChildrenGridLayout.marginLeft = margin;
+					positionForChildrenGridLayout.marginTop = margin;
+					positionForChildrenGridLayout.marginRight = margin;
+					positionForChildrenGridLayout.marginBottom = margin;
+					break;
+
+				case L.noSpacing:
+					positionForChildrenGridLayout.horizontalSpacing = 0;
+					positionForChildrenGridLayout.verticalSpacing = 0;
+					break;
+				case L.spacing:
+					int spacing = Integer.parseInt(value);
+					
+					positionForChildrenGridLayout.horizontalSpacing = spacing;
+					positionForChildrenGridLayout.verticalSpacing = spacing;
+					break;
+				}
+			}
+		}
+
+		public GridLayout getPositionForChildrenGridLayout() {
+			return positionForChildrenGridLayout;
+		}
+	}
+
+	/** Panel */
+	public class Panel extends ParentComponent {
+
+		/** */
+		public Panel(Form parentForm, String positionInParent, String positionForChildren) {
+			this((ParentComponent) parentForm, positionInParent, positionForChildren);
+		}
+
+		/** */
+		public Panel(Panel parentPanel) {
+			this((ParentComponent) parentPanel, "", "");
+		}
+		
+		/** */
+		public Panel(Panel parentPanel, String positionInParent) {
+			this((ParentComponent) parentPanel, positionInParent, "");
+		}
+		
+		/** */
+		public Panel(Panel parentPanel, String positionInParent, String positionForChildren) {
+			this((ParentComponent) parentPanel, positionInParent, positionForChildren);
+		}
+		
+		/** */
+		private Panel(ParentComponent parentComponent, String positionInParent, String positionForChildren) {
+			super(positionInParent, positionForChildren);
+			
+			Composite swtComposite = new Composite((Composite) parentComponent.getSwtWidget(), SWT.NONE);
+			swtComposite.setLayoutData(getPositionInParentGridData());
+			swtComposite.setLayout(getPositionForChildrenGridLayout());
+			
+			if (isDebug) {
+				swtComposite.setBackground(randomColor());
 			}
 			
-			switch (name) {
-			case "verticalAlignment":
-				gridData.verticalAlignment = Integer.parseInt(value);
-				break;
-			case "horizontalAlignment":
-				gridData.horizontalAlignment = Integer.parseInt(value);
-				break;
-			case "widthHint":
-				gridData.widthHint = Integer.parseInt(value);
-				break;
-			case "heightHint":
-				gridData.heightHint = Integer.parseInt(value);
-				break;
-			case "horizontalIndent":
-				gridData.horizontalIndent = Integer.parseInt(value);
-				break;
-			case "verticalIndent":
-				gridData.verticalIndent = Integer.parseInt(value);
-				break;
-			case "horizontalSpan":
-				gridData.horizontalSpan = Integer.parseInt(value);
-				break;
-			case "verticalSpan":
-				gridData.verticalSpan = Integer.parseInt(value);
-				break;
-			case "grabExcessHorizontalSpace":
-				gridData.grabExcessHorizontalSpace = Boolean.parseBoolean(value);
-				break;
-			case "grabExcessVerticalSpace":
-				gridData.grabExcessVerticalSpace = Boolean.parseBoolean(value);
-				break;
-			case "minimumWidth":
-				gridData.minimumWidth = Integer.parseInt(value);
-				break;
-			case "minimumHeight":
-				gridData.minimumHeight = Integer.parseInt(value);
-				break;
-			case "exclude":
-				gridData.exclude = Boolean.parseBoolean(value);
-				break;
-
-			case "horizontalFill":
-				gridData.horizontalAlignment = GridData.FILL;
-				gridData.grabExcessHorizontalSpace = true;
-				break;
-
-			case "bothFill":
-				gridData.horizontalAlignment = GridData.FILL;
-				gridData.grabExcessHorizontalSpace = true;
-
-				gridData.verticalAlignment = GridData.FILL;
-				gridData.grabExcessVerticalSpace = true;
-				break;
-
-			}
+			setSwtWidget(swtComposite);
 		}
-		
-		return gridData;
+
+		/** */
+		public Composite getComposite() {
+			return (Composite) getSwtWidget();
+		}
+	}
+
+	/** Form */
+	public class Form extends ParentComponent {
+
+		/** */
+		public Form(String caption, String positionForChildren) {
+			super("", positionForChildren);
+			
+			Shell swtShell = new Shell(display);
+			swtShell.setText(caption);
+			swtShell.setLayout(getPositionForChildrenGridLayout());
+			
+			setSwtWidget(swtShell);
+		}
+
+		/** */
+		public Shell getShell() {
+			return (Shell) getSwtWidget();
+		}
 	}
 	
-	/** Composite */
-	public Composite c(Composite parent, GridData hisLayoutInHisParent, GridLayout theLayoutForHisChildren) {
-		
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayoutData(hisLayoutInHisParent);
-		composite.setLayout(theLayoutForHisChildren);
-		
-		if (isDebug) {
-			composite.setBackground(randomColor());
+	/** Button component */
+	public class ButtonComponent extends Component {
+
+		/** */
+		public ButtonComponent(Panel panel, int swtStyle, String positionInParent) {
+			super(positionInParent);
+			
+			Button swtButton = new Button((Composite) panel.getSwtWidget(), swtStyle);
+			swtButton.setLayoutData(getPositionInParentGridData());
+			
+			setSwtWidget(swtButton);
 		}
-		
-		return composite;
-	}
 
-	/** Create control */
-	public <T extends Control> T w(T createNew, GridData hisLayoutInHisParent) {
-		
-		createNew.setLayoutData(hisLayoutInHisParent);
-		return createNew;
-	}
-
-	/** Create control with caption */
-	public Button button(Composite parent, int style, String text, GridData hisLayoutInHisParent) {
-
-		return button(parent, style, text, hisLayoutInHisParent, null);
+		/** */
+		public Button getButton() {
+			return (Button) getSwtWidget();
+		}
 	}
 	
-	/** Create control with caption */
-	public Button button(Composite parent, int style, String text, GridData hisLayoutInHisParent, E e) {
-		
-		Button button = new Button(parent, style);
-		button.setText(text);
-		button.setLayoutData(hisLayoutInHisParent);
-		
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent selectionEvent) {
-				e.onClick(selectionEvent);
-			}
-		});
-		
-		return button;
-	}
+	/** Push button */
+	public class PushButton extends ButtonComponent {
 
-	/** Label */
-	public Label label(Composite parent, int style, String text, GridData hisLayoutInHisParent) {
+		/** */
+		public PushButton(Panel panel) {
+			super(panel, SWT.PUSH, "");
+		}
 		
-		Label label = new Label(parent, style);
-		label.setText(text);
-		label.setLayoutData(hisLayoutInHisParent);
-		
-		if (isDebug) {
-			label.setBackground(randomColor());
+		/** */
+		public PushButton(Panel panel, String positionInParent) {
+			super(panel, SWT.PUSH, positionInParent);
+		}
+	}
+	
+	/** Toggle button */
+	public class ToggleButton extends ButtonComponent {
+
+		/** */
+		public ToggleButton(Panel panel) {
+			super(panel, SWT.TOGGLE, "");
 		}
 
-		return label;
+		/** */
+		public ToggleButton(Panel panel, String positionInParent) {
+			super(panel, SWT.TOGGLE, positionInParent);
+		}
 	}
+	
 
+//	/** Separator */
+//	public class Separator extends Component {
+//		
+//	}
+	
+
+	
 	/** Random color component */
 	private int random255() {
 		
@@ -321,6 +409,8 @@ public class UI {
 	public void setDefaultMarginSpacing(String defaultMarginSpacing) {
 		this.defaultMarginSpacing = defaultMarginSpacing;
 	}
-	
-	
- }
+
+	public Display getDisplay() {
+		return display;
+	}
+}
