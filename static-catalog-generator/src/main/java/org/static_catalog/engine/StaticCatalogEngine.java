@@ -4,9 +4,12 @@ package org.static_catalog.engine;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.eclipse.swt.widgets.Display;
+import org.static_catalog.main.L;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -96,5 +99,83 @@ public class StaticCatalogEngine {
 		}
 	}
 	
+	/** Load analyze CSV */
+	public static void loadAnalyzeCsv(String csvCompleteFileName, long maxUniqueValues,
+			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames, ArrayList<String> fieldTypes,
+			AtomicBoolean doLoop, LoopProgress loopProgress) {
+
+		CsvParserSettings csvParserSettings = new CsvParserSettings();
+		csvParserSettings.setLineSeparatorDetectionEnabled(true);
+		CsvParser csvParser = new CsvParser(csvParserSettings);
+		csvParser.beginParsing(new File(csvCompleteFileName));
+		
+		String[] csvLine = csvParser.parseNext();
+		int lineLength = 0;
+		long csvLineIndex = 0;
+		while (csvLine != null) {
+			
+			if (csvLineIndex == 0) {
+				lineLength = csvLine.length;
+				for (int index = 0; index < lineLength; index++) {
+					fields.add(index, new HashMap<String, Long>());
+					fieldNames.add(index, csvLine[index]);
+				}
+			}
+			else {
+				for (int index = 0; index < lineLength; index++) {
+//					if (fields.get(index).size() < 500) {
+						long cnt = 0;
+						if (fields.get(index).containsKey(csvLine[index])) {
+							cnt = fields.get(index).get(csvLine[index]);
+						}
+//						if (cnt < 500) {
+							cnt++;
+							fields.get(index).put(csvLine[index] + "", cnt);
+//						}
+//					}
+				}
+			}
+
+			csvLineIndex++;
+			if (csvLineIndex % 500000 == 0) {
+				loopProgress.doProgress(csvLineIndex);
+			}
+
+			csvLine = csvParser.parseNext();
+		}
+		
+		
+		//String[] possibleTypes = { "long", "double", "date" };
+		String[] possibleTypes = { "long" };
+		for (int index = 0; index < lineLength; index++) {
+			
+			ArrayList<String> searchTypes = new ArrayList<>(Arrays.asList(possibleTypes));
+			
+			for (String key : fields.get(index).keySet()) {
+
+				if (searchTypes.size() == 0) {
+					break;
+				}
+				else {
+					if (searchTypes.contains("long")) {
+						try {
+							Long.parseLong(key); 
+						} catch (NumberFormatException numberFormatException) {
+							searchTypes.remove("long");
+						}
+					}
+				}
+			}
+			
+			if (searchTypes.size() == 0) {
+				fieldTypes.add("text");	
+			}
+			else {
+				fieldTypes.add("integer number");
+			}
+			
+
+		}
+	}
 
 }

@@ -528,6 +528,11 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
+		fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
+		fieldGridColumn.setText("Type");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(150);
+
 	    fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements count");
 	    fieldGridColumn.setWordWrap(true);
@@ -567,73 +572,57 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
 				ArrayList<String> fieldNames = new ArrayList<>();
-				
-
-				CsvParserSettings csvParserSettings = new CsvParserSettings();
-				csvParserSettings.setLineSeparatorDetectionEnabled(true);
-				CsvParser csvParser = new CsvParser(csvParserSettings);
-				csvParser.beginParsing(new File(analyzeCsvFileControl.getCompleteFileName()));
-				
-				String[] csvLine = csvParser.parseNext();
-				long csvLineIndex = 0;
-				while (csvLine != null) {
-					
-					int lineLength = csvLine.length;
-					
-					csvLineIndex++;
-					if (csvLineIndex % 500000 == 0) {
-						//L.p("csvLineIndex = " + csvLineIndex);
-						csvStatusLabel.setText(csvLineIndex + " lines...");
-					}
-					
-					if (csvLineIndex == 1) {
-						for (int index = 0; index < lineLength; index++) {
-							fields.add(index, new HashMap<String, Long>());
-							fieldNames.add(index, csvLine[index]);
-						}
-					}
-					else {
-						for (int index = 0; index < lineLength; index++) {
-							long cnt = 0;
-							if (fields.get(index).containsKey(csvLine[index])) {
-								cnt = fields.get(index).get(csvLine[index]);
+				 ArrayList<String> fieldTypes = new ArrayList<>();
+				 
+				StaticCatalogEngine.loadAnalyzeCsv(analyzeCsvFileControl.getCompleteFileName(), 500,
+				fields, fieldNames, fieldTypes, doLoop,
+				new LoopProgress() {
+					@Override
+					public void doProgress(long index) {
+						Display.getDefault().syncExec(new Runnable() {
+							public void run() {
+								csvStatusLabel.setText(index + " lines analyzed...");
+								Display.getDefault().readAndDispatch();
 							}
-							cnt++;
-							fields.get(index).put(csvLine[index] + "", cnt);
-						}
+						});
 					}
-
-					csvLine = csvParser.parseNext();
+				});
+				
+				//csvStatusLabel.setText("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				
+				csvStatusLabel.setText("Group ... lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				
+				for (int index = 0; index < fieldNames.size(); index++) {
 					
-					if (csvLine == null) {
-						csvStatusLabel.setText("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+					GridItem csvGridItem = new GridItem(csvAnalyzeGrid, SWT.NONE);
+					
+					csvGridItem.setText(0, fieldNames.get(index));
+					csvGridItem.setText(1, fieldTypes.get(index));
+					
+					
+					int diff = fields.get(index).keySet().size(); 
+					csvGridItem.setText(2, diff + "");
+					
+					if (diff < 500) {
 						
-						for (int index = 0; index < lineLength; index++) {
-							GridItem csvGridItem = new GridItem(csvAnalyzeGrid, SWT.NONE);
-							csvGridItem.setText(0, fieldNames.get(index));
-							int diff = fields.get(index).keySet().size(); 
-							csvGridItem.setText(1, diff + "");
-							
-							if (diff < 500) {
-								
-								HashMap<String, Long> groups = fields.get(index); 
-								
-								ArrayList<String> keys = new ArrayList<>(groups.keySet());
-								Collections.sort(keys);
+						HashMap<String, Long> groups = fields.get(index); 
+						
+						ArrayList<String> keys = new ArrayList<>(groups.keySet());
+						Collections.sort(keys);
 
-								csvGridItem.setText(2, String.join(", ", keys));
+						csvGridItem.setText(3, String.join(", ", keys));
 
-								
-								ArrayList<String> keysValues = new ArrayList<>();
-								for (String key : keys) {
-									keysValues.add(key + " (" + groups.get(key) + ") ");
-								}
-								
-								csvGridItem.setText(3, String.join(", ", keysValues));
-								
-								
-								//csvGridItem.setToolTipText(2, stringBuilder.toString());
-								
+						
+						ArrayList<String> keysValues = new ArrayList<>();
+						for (String key : keys) {
+							keysValues.add(key + " (" + groups.get(key) + ") ");
+						}
+						
+						csvGridItem.setText(4, String.join(", ", keysValues));
+						
+						
+						//csvGridItem.setToolTipText(2, stringBuilder.toString());
+						
 //								String distrib = "";
 //								String sep = "";
 //								for (long lo : fields.get(index).values()) {
@@ -649,18 +638,12 @@ public class StaticCatalogGeneratorMainWindow {
 //									sep = " - ";
 //								}
 //								csvGridItem.setText(3, distribNames);
-							}
-						}
-
-						return;
 					}
-
-					//csvLine = csvParser.parseNext();
 				}
+
+
 			}
 		});
-		
-		
 	}
 
 	/** Load image resource */
