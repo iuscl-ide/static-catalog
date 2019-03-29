@@ -5,10 +5,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
@@ -79,7 +81,7 @@ public class StaticCatalogEngine {
 
 			csvLineIndex++;
 			if (csvLineIndex % 10000 == 0) {
-				loopProgress.doProgress(csvLineIndex);
+				loopProgress.doProgress(csvLineIndex + " lines loaded...");
 				//csvStopLoadButton.setEnabled(true);
 //				csvStatusLabel.setText(csvLineIndex + " lines loaded...");
 			}
@@ -104,6 +106,10 @@ public class StaticCatalogEngine {
 			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames, ArrayList<String> fieldTypes,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
+		long start = System.currentTimeMillis();
+		
+		loopProgress.doProgress("Start lines analyze...");
+		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
@@ -138,15 +144,15 @@ public class StaticCatalogEngine {
 
 			csvLineIndex++;
 			if (csvLineIndex % 500000 == 0) {
-				loopProgress.doProgress(csvLineIndex);
+				loopProgress.doProgress(csvLineIndex + " lines analyzed...");
 			}
 
 			csvLine = csvParser.parseNext();
 		}
 		
+		loopProgress.doProgress(csvLineIndex + " lines done analyzing, try to find the types...");
 		
-		//String[] possibleTypes = { "long", "double", "date" };
-		String[] possibleTypes = { "long" };
+		String[] possibleTypes = { "long", "double", "date" };
 		for (int index = 0; index < lineLength; index++) {
 			
 			ArrayList<String> searchTypes = new ArrayList<>(Arrays.asList(possibleTypes));
@@ -164,18 +170,39 @@ public class StaticCatalogEngine {
 							searchTypes.remove("long");
 						}
 					}
+					if (searchTypes.contains("double")) {
+						try {
+							Double.parseDouble(key); 
+						} catch (NumberFormatException numberFormatException) {
+							searchTypes.remove("double");
+						}
+					}
+					if (searchTypes.contains("date")) {
+						try {
+							DateTime.parse(key); 
+						} catch (Exception exception) {
+							searchTypes.remove("date");
+						}
+					}
 				}
 			}
 			
 			if (searchTypes.size() == 0) {
 				fieldTypes.add("text");	
 			}
-			else {
+			else if (searchTypes.contains("long")) {
 				fieldTypes.add("integer number");
 			}
-			
-
+			else if (searchTypes.contains("double")) {
+				fieldTypes.add("price number");
+			}
+			else if (searchTypes.contains("date")) {
+				fieldTypes.add("date");
+			}
 		}
+		
+		loopProgress.doProgress("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+		
 	}
 
 }

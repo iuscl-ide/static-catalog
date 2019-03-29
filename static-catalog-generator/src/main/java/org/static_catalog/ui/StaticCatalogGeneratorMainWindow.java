@@ -48,7 +48,7 @@ public class StaticCatalogGeneratorMainWindow {
 	/** Progress */
 	public interface LoopProgress {
 		
-		public void doProgress(long index);
+		public void doProgress(String progressMessage);
 	}
 
 	/** Concurrent */
@@ -410,10 +410,10 @@ public class StaticCatalogGeneratorMainWindow {
 						StaticCatalogEngine.loadViewCsv(csvCompleteFileName, maxLines, csvFileGridLines, csvFileGridHeader, doLoop,
 						new LoopProgress() {
 							@Override
-							public void doProgress(long index) {
+							public void doProgress(String progressMessage) {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										csvStatusLabel.setText(index + " lines loaded...");
+										csvStatusLabel.setText(progressMessage);
 										Display.getDefault().readAndDispatch();
 									}
 								});
@@ -568,7 +568,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 //				csvFileGrid.setRedraw(false);
 				
-				long start = System.currentTimeMillis();
+				
 				
 				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
 				ArrayList<String> fieldNames = new ArrayList<>();
@@ -578,10 +578,10 @@ public class StaticCatalogGeneratorMainWindow {
 				fields, fieldNames, fieldTypes, doLoop,
 				new LoopProgress() {
 					@Override
-					public void doProgress(long index) {
+					public void doProgress(String progressMessage) {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
-								csvStatusLabel.setText(index + " lines analyzed...");
+								csvStatusLabel.setText(progressMessage);
 								Display.getDefault().readAndDispatch();
 							}
 						});
@@ -590,7 +590,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				//csvStatusLabel.setText("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 				
-				csvStatusLabel.setText("Group ... lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				//csvStatusLabel.setText("Group ... lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 				
 				for (int index = 0; index < fieldNames.size(); index++) {
 					

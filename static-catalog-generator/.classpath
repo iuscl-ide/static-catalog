@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/univocity-parsers-2.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/jodd-bean-5.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/jodd-core-5.0.10.jar"/>
+	<classpathentry kind="lib" path="lib/datetime-3.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
