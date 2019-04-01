@@ -1,7 +1,6 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -31,10 +29,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
+import org.static_catalog.main.L;
 import org.static_catalog.main.S;
-
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -539,6 +535,11 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWidth(150);
 
 	    fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
+		fieldGridColumn.setText("Exceptions");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(100);
+
+	    fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(320);
@@ -572,10 +573,11 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
 				ArrayList<String> fieldNames = new ArrayList<>();
-				 ArrayList<String> fieldTypes = new ArrayList<>();
+				ArrayList<String> fieldTypes = new ArrayList<>();
+				ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
 				 
 				StaticCatalogEngine.loadAnalyzeCsv(analyzeCsvFileControl.getCompleteFileName(), 500,
-				fields, fieldNames, fieldTypes, doLoop,
+				fields, fieldNames, fieldTypes, fieldTypesExceptionValues, doLoop,
 				new LoopProgress() {
 					@Override
 					public void doProgress(String progressMessage) {
@@ -597,7 +599,8 @@ public class StaticCatalogGeneratorMainWindow {
 					GridItem csvGridItem = new GridItem(csvAnalyzeGrid, SWT.NONE);
 					
 					csvGridItem.setText(0, fieldNames.get(index));
-					csvGridItem.setText(1, fieldTypes.get(index));
+					String fieldType = fieldTypes.get(index);
+					csvGridItem.setText(1, fieldType);
 					
 					
 					int diff = fields.get(index).keySet().size(); 
@@ -606,11 +609,18 @@ public class StaticCatalogGeneratorMainWindow {
 					if (diff < 500) {
 						
 						HashMap<String, Long> groups = fields.get(index); 
+
+						if (!fieldType.equals("text")) {
+							ArrayList<String> exceps = new ArrayList<>(fieldTypesExceptionValues.get(index).get(fieldType));
+							Collections.sort(exceps);
+
+							csvGridItem.setText(3, String.join(", ", exceps));
+						}
 						
 						ArrayList<String> keys = new ArrayList<>(groups.keySet());
 						Collections.sort(keys);
 
-						csvGridItem.setText(3, String.join(", ", keys));
+						csvGridItem.setText(4, String.join(", ", keys));
 
 						
 						ArrayList<String> keysValues = new ArrayList<>();
@@ -618,7 +628,7 @@ public class StaticCatalogGeneratorMainWindow {
 							keysValues.add(key + " (" + groups.get(key) + ") ");
 						}
 						
-						csvGridItem.setText(4, String.join(", ", keysValues));
+						csvGridItem.setText(5, String.join(", ", keysValues));
 						
 						
 						//csvGridItem.setToolTipText(2, stringBuilder.toString());

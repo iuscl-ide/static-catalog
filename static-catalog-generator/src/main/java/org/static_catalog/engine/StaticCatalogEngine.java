@@ -4,14 +4,10 @@ package org.static_catalog.engine;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.pojava.datetime.DateTime;
-import org.static_catalog.main.L;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -103,7 +99,8 @@ public class StaticCatalogEngine {
 	
 	/** Load analyze CSV */
 	public static void loadAnalyzeCsv(String csvCompleteFileName, long maxUniqueValues,
-			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames, ArrayList<String> fieldTypes,
+			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames,
+			ArrayList<String> fieldTypes, ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		long start = System.currentTimeMillis();
@@ -156,6 +153,11 @@ public class StaticCatalogEngine {
 		for (int index = 0; index < lineLength; index++) {
 			
 			ArrayList<String> searchTypes = new ArrayList<>(Arrays.asList(possibleTypes));
+			HashMap<String, ArrayList<String>> typesExceptionValues = new HashMap<>();
+			fieldTypesExceptionValues.add(typesExceptionValues);
+			for (String possibleType: possibleTypes) {
+				typesExceptionValues.put(possibleType, new ArrayList<>());
+			}
 			
 			for (String key : fields.get(index).keySet()) {
 
@@ -167,21 +169,36 @@ public class StaticCatalogEngine {
 						try {
 							Long.parseLong(key); 
 						} catch (NumberFormatException numberFormatException) {
-							searchTypes.remove("long");
+							if (typesExceptionValues.get("long").size() < 2) {
+								typesExceptionValues.get("long").add(key);
+							}
+							else {
+								searchTypes.remove("long");	
+							}
 						}
 					}
 					if (searchTypes.contains("double")) {
 						try {
 							Double.parseDouble(key); 
 						} catch (NumberFormatException numberFormatException) {
-							searchTypes.remove("double");
+							if (typesExceptionValues.get("double").size() < 2) {
+								typesExceptionValues.get("double").add(key);
+							}
+							else {
+								searchTypes.remove("double");
+							}
 						}
 					}
 					if (searchTypes.contains("date")) {
 						try {
 							DateTime.parse(key); 
 						} catch (Exception exception) {
-							searchTypes.remove("date");
+							if (typesExceptionValues.get("date").size() < 2) {
+								typesExceptionValues.get("date").add(key);
+							}
+							else {
+								searchTypes.remove("date");
+							}
 						}
 					}
 				}
@@ -191,14 +208,24 @@ public class StaticCatalogEngine {
 				fieldTypes.add("text");	
 			}
 			else if (searchTypes.contains("long")) {
-				fieldTypes.add("integer number");
+				fieldTypes.add("long");
 			}
 			else if (searchTypes.contains("double")) {
-				fieldTypes.add("price number");
+				fieldTypes.add("double");
 			}
 			else if (searchTypes.contains("date")) {
 				fieldTypes.add("date");
 			}
+
+//			else if (searchTypes.contains("long")) {
+//				fieldTypes.add("integer number");
+//			}
+//			else if (searchTypes.contains("double")) {
+//				fieldTypes.add("price number");
+//			}
+//			else if (searchTypes.contains("date")) {
+//				fieldTypes.add("date");
+//			}
 		}
 		
 		loopProgress.doProgress("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
