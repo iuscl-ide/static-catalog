@@ -46,7 +46,7 @@ public class StaticCatalogEngine {
 				return;
 			}
 			
-			int lineLength = csvLine.length;
+			//int lineLength = csvLine.length;
 			
 			if (csvLineIndex == 0) {
 //				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
@@ -101,6 +101,7 @@ public class StaticCatalogEngine {
 	public static void loadAnalyzeCsv(String csvCompleteFileName, long maxUniqueValues,
 			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames,
 			ArrayList<String> fieldTypes, ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues,
+			int maxExceptions,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		long start = System.currentTimeMillis();
@@ -128,12 +129,13 @@ public class StaticCatalogEngine {
 				for (int index = 0; index < lineLength; index++) {
 //					if (fields.get(index).size() < 500) {
 						long cnt = 0;
-						if (fields.get(index).containsKey(csvLine[index])) {
-							cnt = fields.get(index).get(csvLine[index]);
+						HashMap<String, Long> fieldsIndex = fields.get(index);
+						if (fieldsIndex.containsKey(csvLine[index])) {
+							cnt = fieldsIndex.get(csvLine[index]);
 						}
 //						if (cnt < 500) {
 							cnt++;
-							fields.get(index).put(csvLine[index] + "", cnt);
+							fieldsIndex.put(csvLine[index] + "", cnt);
 //						}
 //					}
 				}
@@ -159,7 +161,9 @@ public class StaticCatalogEngine {
 				typesExceptionValues.put(possibleType, new ArrayList<>());
 			}
 			
-			for (String key : fields.get(index).keySet()) {
+			HashMap<String, Long> fieldsIndex = fields.get(index);
+			int size = fieldsIndex.size();
+			for (String key : fieldsIndex.keySet()) {
 
 				if (searchTypes.size() == 0) {
 					break;
@@ -169,7 +173,7 @@ public class StaticCatalogEngine {
 						try {
 							Long.parseLong(key); 
 						} catch (NumberFormatException numberFormatException) {
-							if (typesExceptionValues.get("long").size() < 2) {
+							if (typesExceptionValues.get("long").size() < maxExceptions) {
 								typesExceptionValues.get("long").add(key);
 							}
 							else {
@@ -181,7 +185,7 @@ public class StaticCatalogEngine {
 						try {
 							Double.parseDouble(key); 
 						} catch (NumberFormatException numberFormatException) {
-							if (typesExceptionValues.get("double").size() < 2) {
+							if (typesExceptionValues.get("double").size() < maxExceptions) {
 								typesExceptionValues.get("double").add(key);
 							}
 							else {
@@ -193,7 +197,7 @@ public class StaticCatalogEngine {
 						try {
 							DateTime.parse(key); 
 						} catch (Exception exception) {
-							if (typesExceptionValues.get("date").size() < 2) {
+							if (typesExceptionValues.get("date").size() < maxExceptions) {
 								typesExceptionValues.get("date").add(key);
 							}
 							else {
@@ -204,17 +208,17 @@ public class StaticCatalogEngine {
 				}
 			}
 			
-			if (searchTypes.size() == 0) {
-				fieldTypes.add("text");	
-			}
-			else if (searchTypes.contains("long")) {
+			if ((searchTypes.contains("long")) && (size > typesExceptionValues.get("long").size())) {
 				fieldTypes.add("long");
 			}
-			else if (searchTypes.contains("double")) {
+			else if ((searchTypes.contains("double")) && (size > typesExceptionValues.get("double").size())) {
 				fieldTypes.add("double");
 			}
-			else if (searchTypes.contains("date")) {
+			else if ((searchTypes.contains("date")) && (size > typesExceptionValues.get("date").size())) {
 				fieldTypes.add("date");
+			}
+			else {
+				fieldTypes.add("text");
 			}
 
 //			else if (searchTypes.contains("long")) {
@@ -231,5 +235,5 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 		
 	}
-
+	
 }

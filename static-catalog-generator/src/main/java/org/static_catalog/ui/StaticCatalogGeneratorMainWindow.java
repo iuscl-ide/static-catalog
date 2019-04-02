@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
-import org.static_catalog.main.L;
+import org.static_catalog.engine.StringAsNumberComparator;
 import org.static_catalog.main.S;
 
 /** Generator main window */
@@ -47,6 +47,9 @@ public class StaticCatalogGeneratorMainWindow {
 		public void doProgress(String progressMessage);
 	}
 
+	/** Natural order */
+	private final StringAsNumberComparator stringAsNumberComparator = new StringAsNumberComparator();
+	
 	/** Concurrent */
 	private AtomicBoolean doLoop = new AtomicBoolean(true);
 	
@@ -56,18 +59,19 @@ public class StaticCatalogGeneratorMainWindow {
 	/** Main display */
 	private Display display;
 
-	/** Main Window instance */
-	private static StaticCatalogGeneratorMainWindow mainWindowInstance;
-
 	/* Fonts */
 	private Font fontNormal;
 	private Font fontBold;
 	private Font fontBigger;
 
+	/* Colors */
+	private Color whiteColor;
+	
+	/** Separator, margin, padding */
+	private final int sep = 8;
+	
 	/** Main application loop in the window */
 	public void runMainWindow() {
-
-		mainWindowInstance = this;
 
 //		// DEBUG
 //		DeviceData data = new DeviceData();
@@ -86,9 +90,6 @@ public class StaticCatalogGeneratorMainWindow {
 //			
 //		}
 		
-		/** margin, padding */
-		int sep = 8;
-
 		/* Display */
 		Display.setAppName("static-catalog");
 		display = new Display();
@@ -116,6 +117,8 @@ public class StaticCatalogGeneratorMainWindow {
 		fontBold = newFontAttributes(fontNormal, SWT.BOLD);
 		fontBigger = newFontSize(fontBold, 14);
 
+		/* Colors */
+		whiteColor = new Color(display, 255, 255, 255);
 		
 		/* Menu */
 	    Menu mainMenuBar = new Menu(mainShell, SWT.BAR);
@@ -189,8 +192,6 @@ public class StaticCatalogGeneratorMainWindow {
 		 * 2/ The text to be a combo with recent files
 		 * 
 		 */
-
-		int sep = 8;
 		
 		final Composite fileComposite = new Composite(parentComposite, SWT.NONE);
 		addDebug(fileComposite);
@@ -221,12 +222,6 @@ public class StaticCatalogGeneratorMainWindow {
 	/** Main tabs */
 	private ArrayList<Composite> createMainTabs(Shell mainShell) {
 		
-	    /* Layout */
-	    int sep = 8;
-	    
-	    GridData gridData;
-	    GridLayout gridLayout;
-	    
 	    final Composite topComposite = new Composite(mainShell, SWT.NONE);
 	    addDebug(topComposite);
 	    topComposite.setLayoutData(createFillHorizontalGridData());
@@ -234,13 +229,13 @@ public class StaticCatalogGeneratorMainWindow {
 
 	    final Composite topButtonsComposite = new Composite(topComposite, SWT.NONE);
 	    addDebug(topButtonsComposite);
-	    gridData = createGridData();
-	    gridData.horizontalAlignment = SWT.CENTER;
-	    gridData.grabExcessHorizontalSpace = true;
-	    topButtonsComposite.setLayoutData(gridData);
+	    GridData topButtonsCompositeGridData = createGridData();
+	    topButtonsCompositeGridData.horizontalAlignment = SWT.CENTER;
+	    topButtonsCompositeGridData.grabExcessHorizontalSpace = true;
+	    topButtonsComposite.setLayoutData(topButtonsCompositeGridData);
 	    topButtonsComposite.setLayout(createColumnsSpacingGridLayout(3, sep));
 	    
-	    String[] topButtonTexts = { "View CSV", "Analyse CSV", "Generate" };
+	    final String[] topButtonTexts = { "View CSV", "Analyse CSV", "Generate" };
 	    
 	    ArrayList<Button> topButtons = new ArrayList<>(); 
 
@@ -303,16 +298,8 @@ public class StaticCatalogGeneratorMainWindow {
 		 * 2/ Activate the Stop button when no memory
 		 * 
 		 */
-		
-	    /* Layout */
-	    int sep = 8;
-	    
-	    GridData gridData;
-	    GridLayout gridLayout;
-		
-	    
-	    final FileControl viewCsvFileControl = addFileControl(viewCsvTabComposite, "view_csv");
-	    
+
+		final FileControl viewCsvFileControl = addFileControl(viewCsvTabComposite, "view_csv");
 		
 		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
 		addDebug(csvButtonsComposite);
@@ -343,12 +330,16 @@ public class StaticCatalogGeneratorMainWindow {
 
 		
 		final Composite csvStatusComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		//csvStatusComposite.setBackground(colorWhite);
+		csvStatusComposite.setBackground(whiteColor);
 		csvStatusComposite.setLayoutData(createFillHorizontalGridData());
-		csvStatusComposite.setLayout(createColumnsGridLayout(2));
+		GridLayout csvStatusCompositeGridLayout = createColumnsGridLayout(2);
+		csvStatusCompositeGridLayout.marginWidth = sep;
+		csvStatusCompositeGridLayout.marginHeight = sep;
+		csvStatusComposite.setLayoutData(createFillHorizontalGridData());
+		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
 
 		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
-		csvStatusLabel.setBackground(new Color(display, 255, 255, 255));
+		csvStatusLabel.setBackground(whiteColor);
 		csvStatusLabel.setLayoutData(createFillHorizontalGridData());
 		csvStatusLabel.setText("Status");
 
@@ -464,16 +455,8 @@ public class StaticCatalogGeneratorMainWindow {
 		 * TODO 
 		 * 
 		 */
-		
-	    /* Layout */
-	    int sep = 8;
-	    
-	    GridData gridData;
-	    GridLayout gridLayout;
-		
 	    
 	    final FileControl analyzeCsvFileControl = addFileControl(parentComposite, "analyze_csv");
-	    
 		
 		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
 		addDebug(csvButtonsComposite);
@@ -484,14 +467,23 @@ public class StaticCatalogGeneratorMainWindow {
 		csvAnalyzeButton.setText("Analyze");
 		csvAnalyzeButton.setLayoutData(createWidthGridData(120));
 		
-//		final Text csvLoadLinesText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
-//		csvLoadLinesText.setText("2000000");
-//		csvLoadLinesText.setLayoutData(createWidthGridData(120));
-//
-//		final Label csvMaxLinesLabel = new Label(csvButtonsComposite, SWT.NONE);
-//		csvMaxLinesLabel.setLayoutData(createWidthGridData(120));
-//		csvMaxLinesLabel.setText("max lines");
-//
+		final Text typeMaxExceptionsText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		typeMaxExceptionsText.setText("1");
+		typeMaxExceptionsText.setLayoutData(createWidthGridData(30));
+
+		final Label typeMaxExceptionsLabel = new Label(csvButtonsComposite, SWT.NONE);
+		typeMaxExceptionsLabel.setLayoutData(createWidthGridData(210));
+		typeMaxExceptionsLabel.setText("maximum field type exception values");
+
+		final Text filterElementsMaxDisplayText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		filterElementsMaxDisplayText.setText("500");
+		filterElementsMaxDisplayText.setLayoutData(createWidthGridData(40));
+
+		final Label uniqueElementsMaxDisplayLabel = new Label(csvButtonsComposite, SWT.NONE);
+		uniqueElementsMaxDisplayLabel.setLayoutData(createWidthGridData(200));
+		uniqueElementsMaxDisplayLabel.setText("maximum filter elements to display");
+
+		
 //		final Button csvStopLoadButton = new Button(csvButtonsComposite, SWT.NONE);
 //		csvStopLoadButton.setText("Stop");
 //		csvStopLoadButton.setEnabled(false);
@@ -504,12 +496,15 @@ public class StaticCatalogGeneratorMainWindow {
 
 		
 		final Composite csvStatusComposite = new Composite(parentComposite, SWT.NONE);
-		//csvStatusComposite.setBackground(colorWhite);
+		csvStatusComposite.setBackground(whiteColor);
 		csvStatusComposite.setLayoutData(createFillHorizontalGridData());
-		csvStatusComposite.setLayout(createColumnsGridLayout(2));
+		GridLayout csvStatusCompositeGridLayout = createColumnsGridLayout(2);
+		csvStatusCompositeGridLayout.marginWidth = sep;
+		csvStatusCompositeGridLayout.marginHeight = sep;
+		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
 
 		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
-		csvStatusLabel.setBackground(new Color(display, 255, 255, 255));
+		csvStatusLabel.setBackground(whiteColor);
 		csvStatusLabel.setLayoutData(createFillHorizontalGridData());
 		csvStatusLabel.setText("Status");
 
@@ -542,12 +537,12 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(320);
+	    fieldGridColumn.setWidth(300);
 
 	    fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements distribution");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(320);
+	    fieldGridColumn.setWidth(300);
 
 		
 		
@@ -567,17 +562,15 @@ public class StaticCatalogGeneratorMainWindow {
 //				}
 				csvAnalyzeGridLines.clear();
 				
-//				csvFileGrid.setRedraw(false);
-				
-				
-				
 				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
 				ArrayList<String> fieldNames = new ArrayList<>();
 				ArrayList<String> fieldTypes = new ArrayList<>();
 				ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
 				 
 				StaticCatalogEngine.loadAnalyzeCsv(analyzeCsvFileControl.getCompleteFileName(), 500,
-				fields, fieldNames, fieldTypes, fieldTypesExceptionValues, doLoop,
+				fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+				Integer.parseInt(typeMaxExceptionsText.getText()),
+				doLoop,
 				new LoopProgress() {
 					@Override
 					public void doProgress(String progressMessage) {
@@ -590,9 +583,7 @@ public class StaticCatalogGeneratorMainWindow {
 					}
 				});
 				
-				//csvStatusLabel.setText("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-				
-				//csvStatusLabel.setText("Group ... lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				int maxDiff = Integer.parseInt(filterElementsMaxDisplayText.getText());
 				
 				for (int index = 0; index < fieldNames.size(); index++) {
 					
@@ -606,7 +597,7 @@ public class StaticCatalogGeneratorMainWindow {
 					int diff = fields.get(index).keySet().size(); 
 					csvGridItem.setText(2, diff + "");
 					
-					if (diff < 500) {
+					if (diff < maxDiff) {
 						
 						HashMap<String, Long> groups = fields.get(index); 
 
@@ -618,7 +609,7 @@ public class StaticCatalogGeneratorMainWindow {
 						}
 						
 						ArrayList<String> keys = new ArrayList<>(groups.keySet());
-						Collections.sort(keys);
+						Collections.sort(keys, stringAsNumberComparator);
 
 						csvGridItem.setText(4, String.join(", ", keys));
 
@@ -629,29 +620,8 @@ public class StaticCatalogGeneratorMainWindow {
 						}
 						
 						csvGridItem.setText(5, String.join(", ", keysValues));
-						
-						
-						//csvGridItem.setToolTipText(2, stringBuilder.toString());
-						
-//								String distrib = "";
-//								String sep = "";
-//								for (long lo : fields.get(index).values()) {
-//									distrib = distrib + sep + lo;
-//									sep = " - ";
-//								}
-//								csvGridItem.setText(2, distrib);
-//								
-//								String distribNames = "";
-//								sep = "";
-//								for (String key : fields.get(index).keySet()) {
-//									distribNames = distribNames + sep + key;
-//									sep = " - ";
-//								}
-//								csvGridItem.setText(3, distribNames);
 					}
 				}
-
-
 			}
 		});
 	}
