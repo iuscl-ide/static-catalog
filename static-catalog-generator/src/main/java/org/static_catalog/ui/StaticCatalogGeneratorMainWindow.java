@@ -143,6 +143,8 @@ public class StaticCatalogGeneratorMainWindow {
 		createViewCsvTab(mainComposites.get(0));
 	    /* Analyze CSV */
 		createAnalyzeCsvTab(mainComposites.get(1));
+	    /* Create Filters */
+		createCreateFiltersTab(mainComposites.get(2));
 		
 		
 		/* Run */
@@ -159,6 +161,7 @@ public class StaticCatalogGeneratorMainWindow {
 		display.dispose();
 	}
 	
+	/** Up buttons */
 	private void mainSelection(int selectedButtonIndex, ArrayList<Button> topButtons, int[] activeButtonIndex, ArrayList<Composite> mainComposites) {
 
 		topButtons.get(selectedButtonIndex).setSelection(true);
@@ -233,9 +236,9 @@ public class StaticCatalogGeneratorMainWindow {
 	    topButtonsCompositeGridData.horizontalAlignment = SWT.CENTER;
 	    topButtonsCompositeGridData.grabExcessHorizontalSpace = true;
 	    topButtonsComposite.setLayoutData(topButtonsCompositeGridData);
-	    topButtonsComposite.setLayout(createColumnsSpacingGridLayout(3, sep));
+	    topButtonsComposite.setLayout(createColumnsSpacingGridLayout(4, sep));
 	    
-	    final String[] topButtonTexts = { "View CSV", "Analyse CSV", "Generate" };
+	    final String[] topButtonTexts = { "View CSV", "Analyse CSV", "Create Filters", "Generate" };
 	    
 	    ArrayList<Button> topButtons = new ArrayList<>(); 
 
@@ -624,6 +627,184 @@ public class StaticCatalogGeneratorMainWindow {
 				}
 			}
 		});
+	}
+
+	/** Create filters generation file based on the analysis */
+	private void createCreateFiltersTab(Composite parentComposite) {
+		
+		/*
+		 * TODO 
+		 * 
+		 */
+	    
+	    final FileControl filtersFileControl = addFileControl(parentComposite, "analyze_csv");
+		
+		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
+		addDebug(csvButtonsComposite);
+		csvButtonsComposite.setLayoutData(createFillHorizontalGridData());
+		csvButtonsComposite.setLayout(createColumnsSpacingGridLayout(5, sep));
+		
+		final Button saveFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
+		saveFiltersButton.setText("Save");
+		saveFiltersButton.setLayoutData(createWidthGridData(120));
+		
+//		final Text typeMaxExceptionsText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+//		typeMaxExceptionsText.setText("1");
+//		typeMaxExceptionsText.setLayoutData(createWidthGridData(30));
+//
+//		final Label typeMaxExceptionsLabel = new Label(csvButtonsComposite, SWT.NONE);
+//		typeMaxExceptionsLabel.setLayoutData(createWidthGridData(210));
+//		typeMaxExceptionsLabel.setText("maximum field type exception values");
+//
+//		final Text filterElementsMaxDisplayText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+//		filterElementsMaxDisplayText.setText("500");
+//		filterElementsMaxDisplayText.setLayoutData(createWidthGridData(40));
+//
+//		final Label uniqueElementsMaxDisplayLabel = new Label(csvButtonsComposite, SWT.NONE);
+//		uniqueElementsMaxDisplayLabel.setLayoutData(createWidthGridData(200));
+//		uniqueElementsMaxDisplayLabel.setText("maximum filter elements to display");
+
+		
+//		final Button csvStopLoadButton = new Button(csvButtonsComposite, SWT.NONE);
+//		csvStopLoadButton.setText("Stop");
+//		csvStopLoadButton.setEnabled(false);
+//		csvStopLoadButton.setLayoutData(createWidthGridData(120));
+
+		
+//		final Button csvExtractButton = new Button(csvButtonsComposite, SWT.NONE);
+//		csvExtractButton.setText("Extract");
+//		csvExtractButton.setLayoutData(createWidthGridData(120));
+
+		
+//		final Composite csvStatusComposite = new Composite(parentComposite, SWT.NONE);
+//		csvStatusComposite.setBackground(whiteColor);
+//		csvStatusComposite.setLayoutData(createFillHorizontalGridData());
+//		GridLayout csvStatusCompositeGridLayout = createColumnsGridLayout(2);
+//		csvStatusCompositeGridLayout.marginWidth = sep;
+//		csvStatusCompositeGridLayout.marginHeight = sep;
+//		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
+//
+//		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
+//		csvStatusLabel.setBackground(whiteColor);
+//		csvStatusLabel.setLayoutData(createFillHorizontalGridData());
+//		csvStatusLabel.setText("Status");
+
+		
+		final Grid filtersGrid = new Grid(parentComposite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		filtersGrid.setLayoutData(createFillBothGridData());
+		filtersGrid.setHeaderVisible(true);
+		filtersGrid.setLinesVisible(true);
+		
+		GridColumn fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Column");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(250);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Type");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(150);
+
+	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Unique elements count");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(150);
+
+	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Exceptions");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(100);
+
+	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Unique elements");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(300);
+
+	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Unique elements distribution");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(300);
+
+		
+		
+		/* Events */
+		final ArrayList<String[]> csvAnalyzeGridLines = new ArrayList<String[]>();
+		
+//		saveFiltersButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent selectionEvent) {
+//				
+//				//L.p(viewCsvFileControl.getCompleteFileName());
+//				filtersGrid.clearItems();
+//				filtersGrid.disposeAllItems();
+//				
+////				while (csvAnalyzeGrid.getColumnCount() > 0) {
+////					csvAnalyzeGrid.getColumns()[0].dispose();
+////				}
+//				csvAnalyzeGridLines.clear();
+//				
+//				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
+//				ArrayList<String> fieldNames = new ArrayList<>();
+//				ArrayList<String> fieldTypes = new ArrayList<>();
+//				ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
+//				 
+//				StaticCatalogEngine.loadAnalyzeCsv(filtersFileControl.getCompleteFileName(), 500,
+//				fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+//				Integer.parseInt(typeMaxExceptionsText.getText()),
+//				doLoop,
+//				new LoopProgress() {
+//					@Override
+//					public void doProgress(String progressMessage) {
+//						Display.getDefault().syncExec(new Runnable() {
+//							public void run() {
+//								csvStatusLabel.setText(progressMessage);
+//								Display.getDefault().readAndDispatch();
+//							}
+//						});
+//					}
+//				});
+//				
+//				int maxDiff = Integer.parseInt(filterElementsMaxDisplayText.getText());
+//				
+//				for (int index = 0; index < fieldNames.size(); index++) {
+//					
+//					GridItem csvGridItem = new GridItem(filtersGrid, SWT.NONE);
+//					
+//					csvGridItem.setText(0, fieldNames.get(index));
+//					String fieldType = fieldTypes.get(index);
+//					csvGridItem.setText(1, fieldType);
+//					
+//					
+//					int diff = fields.get(index).keySet().size(); 
+//					csvGridItem.setText(2, diff + "");
+//					
+//					if (diff < maxDiff) {
+//						
+//						HashMap<String, Long> groups = fields.get(index); 
+//
+//						if (!fieldType.equals("text")) {
+//							ArrayList<String> exceps = new ArrayList<>(fieldTypesExceptionValues.get(index).get(fieldType));
+//							Collections.sort(exceps);
+//
+//							csvGridItem.setText(3, String.join(", ", exceps));
+//						}
+//						
+//						ArrayList<String> keys = new ArrayList<>(groups.keySet());
+//						Collections.sort(keys, stringAsNumberComparator);
+//
+//						csvGridItem.setText(4, String.join(", ", keys));
+//
+//						
+//						ArrayList<String> keysValues = new ArrayList<>();
+//						for (String key : keys) {
+//							keysValues.add(key + " (" + groups.get(key) + ") ");
+//						}
+//						
+//						csvGridItem.setText(5, String.join(", ", keysValues));
+//					}
+//				}
+//			}
+//		});
 	}
 
 	/** Load image resource */
