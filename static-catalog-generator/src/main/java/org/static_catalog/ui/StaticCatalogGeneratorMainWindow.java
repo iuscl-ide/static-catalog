@@ -321,6 +321,13 @@ public class StaticCatalogGeneratorMainWindow {
 		csvMaxLinesLabel.setLayoutData(createWidthGridData(120));
 		csvMaxLinesLabel.setText("max lines");
 
+		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsComposite, SWT.CHECK);
+		GridData useFirstLineAsHeaderCheckBoxGridData = createWidthGridData(200);
+		useFirstLineAsHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
+		useFirstLineAsHeaderCheckBox.setLayoutData(useFirstLineAsHeaderCheckBoxGridData);
+		useFirstLineAsHeaderCheckBox.setText("Use first line as header");
+		useFirstLineAsHeaderCheckBox.setSelection(true);
+		
 		final Button csvStopLoadButton = new Button(csvButtonsComposite, SWT.NONE);
 		csvStopLoadButton.setText("Stop");
 		csvStopLoadButton.setEnabled(false);
@@ -382,14 +389,16 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				csvFileGrid.clearItems();
 				csvFileGrid.disposeAllItems();
+				csvFileGridLines.clear();
 				while (csvFileGrid.getColumnCount() > 0) {
 					csvFileGrid.getColumns()[0].dispose();
 				}
-
-				csvFileGridLines.clear();
+				csvFileGridHeader.clear();
+				
+				long maxLines = Long.parseLong(csvLoadLinesText.getText());
+				boolean useFirstLineAsHeader = useFirstLineAsHeaderCheckBox.getSelection();
 				
 				String csvCompleteFileName = viewCsvFileControl.getCompleteFileName();
-				long maxLines = Long.parseLong(csvLoadLinesText.getText());
 				
 				Thread thread = new Thread() {
 				    public void run() {
@@ -397,7 +406,9 @@ public class StaticCatalogGeneratorMainWindow {
 				    	long start = System.currentTimeMillis();
 				    	
 				    	doLoop.set(true);
-						StaticCatalogEngine.loadViewCsv(csvCompleteFileName, maxLines, csvFileGridLines, csvFileGridHeader, doLoop,
+						StaticCatalogEngine.loadViewCsv(csvCompleteFileName, csvFileGridLines, csvFileGridHeader,
+								maxLines, useFirstLineAsHeader,
+								doLoop,
 						new LoopProgress() {
 							@Override
 							public void doProgress(String progressMessage) {
@@ -464,7 +475,7 @@ public class StaticCatalogGeneratorMainWindow {
 		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
 		addDebug(csvButtonsComposite);
 		csvButtonsComposite.setLayoutData(createFillHorizontalGridData());
-		csvButtonsComposite.setLayout(createColumnsSpacingGridLayout(5, sep));
+		csvButtonsComposite.setLayout(createColumnsSpacingGridLayout(7, sep));
 		
 		final Button csvAnalyzeButton = new Button(csvButtonsComposite, SWT.NONE);
 		csvAnalyzeButton.setText("Analyze");
@@ -486,6 +497,23 @@ public class StaticCatalogGeneratorMainWindow {
 		uniqueElementsMaxDisplayLabel.setLayoutData(createWidthGridData(200));
 		uniqueElementsMaxDisplayLabel.setText("maximum filter elements to display");
 
+		
+		final Button useFirstLineasHeaderCheckBox = new Button(csvButtonsComposite, SWT.CHECK);
+		GridData useFirstLineasHeaderCheckBoxGridData = createWidthGridData(200);
+		useFirstLineasHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
+		useFirstLineasHeaderCheckBox.setLayoutData(useFirstLineasHeaderCheckBoxGridData);
+		useFirstLineasHeaderCheckBox.setText("Use first line as header");
+		useFirstLineasHeaderCheckBox.setSelection(true);
+
+		final Button createFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
+		GridData createFiltersButtonGridData = createWidthGridData(120);
+		createFiltersButtonGridData.horizontalAlignment = SWT.END;
+		createFiltersButtonGridData.grabExcessHorizontalSpace = true;
+		createFiltersButton.setLayoutData(createFiltersButtonGridData);
+		createFiltersButton.setText("Create New Filters");
+		
+
+		
 		
 //		final Button csvStopLoadButton = new Button(csvButtonsComposite, SWT.NONE);
 //		csvStopLoadButton.setText("Stop");
@@ -518,7 +546,7 @@ public class StaticCatalogGeneratorMainWindow {
 		csvAnalyzeGrid.setLinesVisible(true);
 		
 		GridColumn fieldGridColumn = new GridColumn(csvAnalyzeGrid, SWT.NONE);
-		fieldGridColumn.setText("Column");
+		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
@@ -547,8 +575,6 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(300);
 
-		
-		
 		/* Events */
 		final ArrayList<String[]> csvAnalyzeGridLines = new ArrayList<String[]>();
 		
@@ -570,9 +596,11 @@ public class StaticCatalogGeneratorMainWindow {
 				ArrayList<String> fieldTypes = new ArrayList<>();
 				ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
 				 
-				StaticCatalogEngine.loadAnalyzeCsv(analyzeCsvFileControl.getCompleteFileName(), 500,
+				StaticCatalogEngine.loadAnalyzeCsv(analyzeCsvFileControl.getCompleteFileName(),
 				fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+				500,
 				Integer.parseInt(typeMaxExceptionsText.getText()),
+				useFirstLineasHeaderCheckBox.getSelection(),
 				doLoop,
 				new LoopProgress() {
 					@Override
@@ -625,6 +653,13 @@ public class StaticCatalogGeneratorMainWindow {
 						csvGridItem.setText(5, String.join(", ", keysValues));
 					}
 				}
+			}
+		});
+		
+		createFiltersButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				//mainSelection(2, topButtons, activeButtonIndex, mainComposites);
 			}
 		});
 	}
@@ -864,7 +899,7 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		GridData gridData = createGridData();
 	    gridData.widthHint = width;
-
+	    
 	    return gridData;
 	}
 	

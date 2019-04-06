@@ -17,8 +17,9 @@ import com.univocity.parsers.csv.CsvParserSettings;
 public class StaticCatalogEngine {
 
 	/** Load CSV in grid */
-	public static void loadViewCsv(String csvCompleteFileName, long maxLines,
+	public static void loadViewCsv(String csvCompleteFileName,
 			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
+			long maxLines, boolean useFirstLineAsHeader,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
@@ -46,9 +47,9 @@ public class StaticCatalogEngine {
 				return;
 			}
 			
-			//int lineLength = csvLine.length;
+			int lineLength = csvLine.length;
 			
-			if (csvLineIndex == 0) {
+			if (useFirstLineAsHeader && (csvLineIndex == 0)) {
 //				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
 //			    fieldGridColumn.setWidth(50);
 //			    fieldGridColumn.setText("Index");
@@ -67,6 +68,15 @@ public class StaticCatalogEngine {
 				csvFileGridHeader.addAll(new ArrayList<String>(Arrays.asList(csvLine)));
 			}
 			else {
+				if (!useFirstLineAsHeader) {
+					int fieldsSize = csvFileGridHeader.size();
+					if (fieldsSize < lineLength) {
+						for (int index = fieldsSize; index < lineLength; index++) {
+							csvFileGridHeader.add(index, "Column " + (index + 1));
+						}
+					}
+				}
+
 				csvFileGridLines.add(csvLine);
 //				GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
 //				csvGridItem.setText(0, csvLineIndex + "");
@@ -98,10 +108,10 @@ public class StaticCatalogEngine {
 	}
 	
 	/** Load analyze CSV */
-	public static void loadAnalyzeCsv(String csvCompleteFileName, long maxUniqueValues,
+	public static void loadAnalyzeCsv(String csvCompleteFileName,
 			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames,
 			ArrayList<String> fieldTypes, ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues,
-			int maxExceptions,
+			long maxUniqueValues, int maxExceptions, boolean useFirstLineAsHeader,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		long start = System.currentTimeMillis();
@@ -117,15 +127,25 @@ public class StaticCatalogEngine {
 		int lineLength = 0;
 		long csvLineIndex = 0;
 		while (csvLine != null) {
-			
-			if (csvLineIndex == 0) {
-				lineLength = csvLine.length;
+
+			lineLength = csvLine.length;
+
+			if (useFirstLineAsHeader && (csvLineIndex == 0)) {
 				for (int index = 0; index < lineLength; index++) {
 					fields.add(index, new HashMap<String, Long>());
 					fieldNames.add(index, csvLine[index]);
 				}
 			}
 			else {
+				if (!useFirstLineAsHeader) {
+					int fieldsSize = fields.size();
+					if (fieldsSize < lineLength) {
+						for (int index = fieldsSize; index < lineLength; index++) {
+							fields.add(index, new HashMap<String, Long>());
+							fieldNames.add(index, "Field " + (index + 1));
+						}
+					}
+				}
 				for (int index = 0; index < lineLength; index++) {
 //					if (fields.get(index).size() < 500) {
 						long cnt = 0;
@@ -152,7 +172,7 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress(csvLineIndex + " lines done analyzing, try to find the types...");
 		
 		String[] possibleTypes = { "long", "double", "date" };
-		for (int index = 0; index < lineLength; index++) {
+		for (int index = 0; index < fields.size(); index++) {
 			
 			ArrayList<String> searchTypes = new ArrayList<>(Arrays.asList(possibleTypes));
 			HashMap<String, ArrayList<String>> typesExceptionValues = new HashMap<>();
