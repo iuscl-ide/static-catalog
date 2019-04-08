@@ -4,6 +4,7 @@ package org.static_catalog.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.nebula.widgets.grid.Grid;
@@ -31,10 +32,21 @@ import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
 import org.static_catalog.main.S;
+import org.static_catalog.model.StaticCatalogField;
+import org.static_catalog.model.StaticCatalogFilters;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
 
+	/** Type names */
+	public static final LinkedHashMap<String, String> typeNames = new LinkedHashMap<>();
+	static {
+		typeNames.put("long", "Integer");
+		typeNames.put("double", "Real");
+		typeNames.put("date", "Date");
+		typeNames.put("text", "Text");
+	}
+	
 	/** File control */
 	private interface FileControl {
 		
@@ -47,6 +59,19 @@ public class StaticCatalogGeneratorMainWindow {
 		public void doProgress(String progressMessage);
 	}
 
+	/** Change tab */
+	private interface TabButtons {
+		
+		public void changeTab(int selectedButtonIndex);
+	}
+
+	/** Load filters */
+	private interface LoadFilters {
+		
+		public void loadFilters(StaticCatalogFilters staticCatalogFilters);
+	}
+
+	
 	/** Natural order */
 	private final StringAsNumberComparator stringAsNumberComparator = new StringAsNumberComparator();
 	
@@ -69,6 +94,12 @@ public class StaticCatalogGeneratorMainWindow {
 	
 	/** Separator, margin, padding */
 	private final int sep = 8;
+	
+	/** Change */
+	private TabButtons tabButtons;
+	
+	/** Load filters */
+	private LoadFilters loadFilters;
 	
 	/** Main application loop in the window */
 	public void runMainWindow() {
@@ -161,31 +192,6 @@ public class StaticCatalogGeneratorMainWindow {
 		display.dispose();
 	}
 	
-	/** Up buttons */
-	private void mainSelection(int selectedButtonIndex, ArrayList<Button> topButtons, int[] activeButtonIndex, ArrayList<Composite> mainComposites) {
-
-		topButtons.get(selectedButtonIndex).setSelection(true);
-		
-		if (selectedButtonIndex == activeButtonIndex[0]) {
-			return;
-		}
-		activeButtonIndex[0] = selectedButtonIndex;
-		
-		for (int index = 0; index < topButtons.size(); index++) {
-			if (index != selectedButtonIndex) {
-				topButtons.get(index).setSelection(false);
-				Composite mainComposite = mainComposites.get(index);
-				mainComposite.setVisible(false);
-				((GridData) mainComposite.getLayoutData()).exclude = true;
-			}
-		}
-		
-		Composite activeComposite = mainComposites.get(selectedButtonIndex);
-		activeComposite.setVisible(true);
-		((GridData) activeComposite.getLayoutData()).exclude = false;
-		activeComposite.requestLayout();
-	}
-	
 	/** Create file control */
 	private FileControl addFileControl(Composite parentComposite, String fileControlName) {
 		
@@ -273,12 +279,40 @@ public class StaticCatalogGeneratorMainWindow {
 
 	    final int[] activeButtonIndex = new int[1];
 	    
+	    tabButtons = new TabButtons() {
+			@Override
+			public void changeTab(int selectedButtonIndex) {
+
+				topButtons.get(selectedButtonIndex).setSelection(true);
+				
+				if (selectedButtonIndex == activeButtonIndex[0]) {
+					return;
+				}
+				activeButtonIndex[0] = selectedButtonIndex;
+				
+				for (int index = 0; index < topButtons.size(); index++) {
+					if (index != selectedButtonIndex) {
+						topButtons.get(index).setSelection(false);
+						Composite mainComposite = mainComposites.get(index);
+						mainComposite.setVisible(false);
+						((GridData) mainComposite.getLayoutData()).exclude = true;
+					}
+				}
+				
+				Composite activeComposite = mainComposites.get(selectedButtonIndex);
+				activeComposite.setVisible(true);
+				((GridData) activeComposite.getLayoutData()).exclude = false;
+				activeComposite.requestLayout();
+			}
+		};
+	    
+	    
 	    SelectionAdapter topButtonSelectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
 				int selectedButtonIndex = topButtons.indexOf(selectionEvent.widget);
-				mainSelection(selectedButtonIndex, topButtons, activeButtonIndex, mainComposites);
+				tabButtons.changeTab(selectedButtonIndex);
 			}
 		};
 	    
@@ -287,7 +321,7 @@ public class StaticCatalogGeneratorMainWindow {
 		}
 
 		activeButtonIndex[0] = -1;
-		mainSelection(0, topButtons, activeButtonIndex, mainComposites);
+		tabButtons.changeTab(0);
 		
 		return mainComposites;
 	}
@@ -621,9 +655,10 @@ public class StaticCatalogGeneratorMainWindow {
 					GridItem csvGridItem = new GridItem(csvAnalyzeGrid, SWT.NONE);
 					
 					csvGridItem.setText(0, fieldNames.get(index));
+
 					String fieldType = fieldTypes.get(index);
-					csvGridItem.setText(1, fieldType);
-					
+					csvGridItem.setData("type", fieldType);
+					csvGridItem.setText(1, typeNames.get(fieldType));
 					
 					int diff = fields.get(index).keySet().size(); 
 					csvGridItem.setText(2, diff + "");
@@ -656,14 +691,32 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 		
+		/** Create and open new filters */
 		createFiltersButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				//mainSelection(2, topButtons, activeButtonIndex, mainComposites);
+
+				/* Create filter fields */
+				StaticCatalogFilters staticCatalogFilters = new StaticCatalogFilters();
+				for (GridItem gridItem : csvAnalyzeGrid.getItems()) {
+					
+					StaticCatalogField staticCatalogField = new StaticCatalogField();
+					String name = gridItem.getText(0);
+					staticCatalogField.setName(name);
+					staticCatalogField.setType((String) gridItem.getData("type"));
+					
+					staticCatalogField.setFilter(false);
+					staticCatalogField.setLabel("L " + name);
+					
+					staticCatalogFilters.getFields().add(staticCatalogField);
+				}
+				
+				loadFilters.loadFilters(staticCatalogFilters);
+				tabButtons.changeTab(2);
 			}
 		});
 	}
-
+	
 	/** Create filters generation file based on the analysis */
 	private void createCreateFiltersTab(Composite parentComposite) {
 		
@@ -731,7 +784,13 @@ public class StaticCatalogGeneratorMainWindow {
 		filtersGrid.setLinesVisible(true);
 		
 		GridColumn fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Column");
+		fieldGridColumn.setText("Index");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setAlignment(SWT.RIGHT);
+	    fieldGridColumn.setWidth(75);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
@@ -740,25 +799,67 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(150);
 
-	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Unique elements count");
-	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(150);
-
-	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Exceptions");
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CHECK | SWT.CENTER);
+		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setCheckable(true);
+	    
 
-	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Unique elements");
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Label");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(300);
+	    fieldGridColumn.setWidth(250);
 
-	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Unique elements distribution");
-	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(300);
+
+	    loadFilters = new LoadFilters() {
+			@Override
+			public void loadFilters(StaticCatalogFilters staticCatalogFilters) {
+
+				filtersGrid.clearItems();
+				filtersGrid.disposeAllItems();
+
+				int index = 0;
+				for (StaticCatalogField staticCatalogField : staticCatalogFilters.getFields()) {
+					
+					GridItem gridItem = new GridItem(filtersGrid, SWT.NONE);
+					
+					index++;
+					gridItem.setText(0, "" + index);
+					
+					gridItem.setText(1, staticCatalogField.getName());
+					gridItem.setText(2, staticCatalogField.getType());
+					
+					gridItem.setChecked(3, staticCatalogField.isFilter());
+					
+					//gridItem.setText(3, staticCatalogField.isFilter() + "");
+					
+					gridItem.setText(4, staticCatalogField.getLabel());
+					
+				}
+			}
+		};
+	    
+	    
+//	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+//		fieldGridColumn.setText("Unique elements count");
+//	    fieldGridColumn.setWordWrap(true);
+//	    fieldGridColumn.setWidth(150);
+//
+//	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+//		fieldGridColumn.setText("Exceptions");
+//	    fieldGridColumn.setWordWrap(true);
+//	    fieldGridColumn.setWidth(100);
+//
+//	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+//		fieldGridColumn.setText("Unique elements");
+//	    fieldGridColumn.setWordWrap(true);
+//	    fieldGridColumn.setWidth(300);
+//
+//	    fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+//		fieldGridColumn.setText("Unique elements distribution");
+//	    fieldGridColumn.setWordWrap(true);
+//	    fieldGridColumn.setWidth(300);
 
 		
 		
