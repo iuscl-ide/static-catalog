@@ -16,6 +16,59 @@ import com.univocity.parsers.csv.CsvParserSettings;
 /** Generator engine */
 public class StaticCatalogEngine {
 
+	private static final HashMap<String, String> replaceWords = new HashMap<>(); 
+	static {
+		replaceWords.put("id", "ID");
+		replaceWords.put("nr", "Nr");
+		replaceWords.put("nr.", "Nr.");
+		replaceWords.put("no.", "No.");
+	}
+	
+	/** Capitalize sentence */
+	public static String makeLabel(String name) {
+
+		String nameSpaces = name;
+		if (!name.contains(" ")) {
+			
+			String nameLowercase = name.toLowerCase();
+			nameSpaces = "";
+			for (int index = 0; index < name.length(); index++) {
+				char ch = nameLowercase.charAt(index);
+				if (name.charAt(index) == ch) {
+					nameSpaces = nameSpaces + ch;
+				}
+				else {
+					nameSpaces = nameSpaces + " " + ch;
+				}
+			}
+		}
+
+		String words[] = nameSpaces.split(" ");
+		String label = words[0].toLowerCase();
+		label = label.substring(0, 1).toUpperCase() + label.substring(1);
+		for (int index = 1; index < words.length; index++) {
+			String word = words[index];
+			if (replaceWords.containsKey(word)) {
+				word = replaceWords.get(word);
+			}
+			String drow = "";
+			for (int xedni = word.length() - 1; xedni >= 0; xedni--) {
+				char ch = word.charAt(xedni); 
+				if ((ch >= '0') && (ch <= '9')) {
+					drow = drow + ch;
+				}
+				else {
+					if (drow.length() > 0) {
+						word = word.substring(0, xedni + 1) + " " + drow;
+					}
+					break;
+				}
+			}
+			label = label + " " + word;
+		}
+		return label;
+	}
+	
 	/** Load CSV in grid */
 	public static void loadViewCsv(String csvCompleteFileName,
 			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,

@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridCellRenderer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
@@ -16,10 +17,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -31,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
+import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 import org.static_catalog.model.StaticCatalogField;
 import org.static_catalog.model.StaticCatalogFilters;
@@ -706,7 +711,7 @@ public class StaticCatalogGeneratorMainWindow {
 					staticCatalogField.setType((String) gridItem.getData("type"));
 					
 					staticCatalogField.setFilter(false);
-					staticCatalogField.setLabel("L " + name);
+					staticCatalogField.setLabel(StaticCatalogEngine.makeLabel(name));
 					
 					staticCatalogFilters.getFields().add(staticCatalogField);
 				}
@@ -799,11 +804,49 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(150);
 
+	    fieldGridColumn.setCellRenderer(new GridCellRenderer() {
+			
+			@Override
+			public void paint(GC gc, Object value) {
+				// TODO Auto-generated method stub
+//				GridItem gridItem = (GridItem) value;
+//				gc.drawText(gridItem.getText(2), gridItem.getBounds(2).x, gridItem.getBounds(2).y);
+//				L.p(value + "");
+				
+				Combo combo = new Combo(filtersGrid, SWT.DROP_DOWN);
+				combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+				combo.setItems("ef");
+				
+				
+			}
+			
+			@Override
+			public Point computeSize(GC gc, int wHint, int hHint, Object value) {
+				// TODO Auto-generated method stub
+				return new Point(wHint - 2, hHint - 2);
+			}
+			
+			@Override
+			public boolean notify(int event, Point point, Object value) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CHECK | SWT.CENTER);
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(100);
 	    fieldGridColumn.setCheckable(true);
+	    
+	    fieldGridColumn.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				L.p("devMessage");
+			}
+		});
 	    
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
