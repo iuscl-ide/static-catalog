@@ -99,6 +99,10 @@ public class StaticCatalogGeneratorMainWindow {
 
 	/* Colors */
 	private Color whiteColor;
+	private Color gridBackgroundColor;
+	private Color gridTextColor;
+	private Color gridSelectedBackgroundColor;
+	private Color gridSelectedTextColor;
 	
 	/** Separator, margin, padding */
 	private final int sep = 8;
@@ -158,6 +162,10 @@ public class StaticCatalogGeneratorMainWindow {
 
 		/* Colors */
 		whiteColor = new Color(display, 255, 255, 255);
+		gridBackgroundColor = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		gridTextColor = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		gridSelectedBackgroundColor = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
+		gridSelectedTextColor = display.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT);
 		
 		/* Menu */
 	    Menu mainMenuBar = new Menu(mainShell, SWT.BAR);
@@ -790,6 +798,7 @@ public class StaticCatalogGeneratorMainWindow {
 		filtersGrid.setLayoutData(createFillBothGridData());
 		filtersGrid.setHeaderVisible(true);
 		filtersGrid.setLinesVisible(true);
+		filtersGrid.setSelectionEnabled(false);
 		
 		GridColumn fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Index");
@@ -857,14 +866,38 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
-
+//	    final ArrayList<CCombo> selectedCCombos = new ArrayList<>();
+//	    selectedCCombos.add(null);
+//	    
+//	    filtersGrid.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent selectionEvent) {
+//				//selectionEvent.
+//				//L.p("vdv");
+//				if (selectedCCombos.get(0) != null) {
+//					selectedCCombos.get(0).setBackground(gridBackgroundColor);
+//					selectedCCombos.get(0).setForeground(gridTextColor);
+//				}
+//				
+//				GridItem gridItem = (GridItem) selectionEvent.item;
+//				selectedCCombos.set(0, (CCombo) gridItem.getData("typeCCombo"));
+//				selectedCCombos.get(0).setBackground(gridSelectedBackgroundColor);
+//				selectedCCombos.get(0).setForeground(gridSelectedTextColor);
+//			}
+//		});
+	    
 	    loadFilters = new LoadFilters() {
 			@Override
 			public void loadFilters(StaticCatalogFilters staticCatalogFilters) {
 
+				for (GridItem gridItem : filtersGrid.getItems()) {
+					((CCombo) gridItem.getData("typeCCombo")).dispose();
+					((Text) gridItem.getData("labelText")).dispose();
+				}
 				filtersGrid.clearItems();
 				filtersGrid.disposeAllItems();
-
+//				selectedCCombos.set(0, null);
+				
 				int index = 0;
 				for (StaticCatalogField staticCatalogField : staticCatalogFilters.getFields()) {
 					
@@ -879,18 +912,27 @@ public class StaticCatalogGeneratorMainWindow {
 					CCombo cCombo = new CCombo(filtersGrid, SWT.NONE);
 					cCombo.setEditable(false);
 					cCombo.setBackground(whiteColor);
-					cCombo.setText(typeNames.get(staticCatalogField.getType()));
 					cCombo.setItems(typeNameValues);
-
+					cCombo.setText(typeNames.get(staticCatalogField.getType()));
+					
 				    GridEditor cComboGridEditor = new GridEditor(filtersGrid);
 				    cComboGridEditor.minimumWidth = 50;
 				    cComboGridEditor.grabHorizontal = true;
 				    cComboGridEditor.setEditor(cCombo, gridItem, 2);
+				    gridItem.setData("typeCCombo", cCombo);
 				    
 					gridItem.setChecked(3, staticCatalogField.isFilter());
 					//gridItem.setText(3, staticCatalogField.isFilter() + "");
 					
-					gridItem.setText(4, staticCatalogField.getLabel());
+					Text labelText = new Text(filtersGrid, SWT.NONE);
+					labelText.setText(staticCatalogField.getLabel());
+
+					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
+					labelTextGridEditor.minimumWidth = 50;
+					labelTextGridEditor.grabHorizontal = true;
+					labelTextGridEditor.setEditor(labelText, gridItem, 4);
+					gridItem.setData("labelText", labelText);
+					//gridItem.setText(4, staticCatalogField.getLabel());
 					
 				}
 			}
@@ -920,7 +962,25 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		
 		/* Events */
-		final ArrayList<String[]> csvAnalyzeGridLines = new ArrayList<String[]>();
+		
+		saveFiltersButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				for (GridItem gridItem : filtersGrid.getItems()) {
+
+					L.p("" + gridItem.getText(0) + " " + gridItem.getText(1) + " " + gridItem.getChecked(3));
+					
+					L.p(((CCombo) gridItem.getData("typeCCombo")).getText());
+					L.p(((Text) gridItem.getData("labelText")).getText());
+
+//					((CCombo) gridItem.getData("typeCCombo")).dispose();
+//					((Text) gridItem.getData("labelText")).dispose();
+				}
+			}
+		});
+		
+
 		
 //		saveFiltersButton.addSelectionListener(new SelectionAdapter() {
 //			@Override
