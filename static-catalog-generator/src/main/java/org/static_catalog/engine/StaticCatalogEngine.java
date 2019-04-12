@@ -1,15 +1,21 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.engine;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.pojava.datetime.DateTime;
+import org.static_catalog.main.L;
+import org.static_catalog.model.StaticCatalogFilters;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
+import com.alibaba.fastjson.JSON;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
@@ -308,5 +314,5 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress("Group " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 		
 	}
-	
+
 }

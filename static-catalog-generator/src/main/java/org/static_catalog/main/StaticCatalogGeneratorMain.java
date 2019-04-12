@@ -22,15 +22,8 @@ public class StaticCatalogGeneratorMain {
 		String rootFolder = classFolder.getAbsolutePath(); 
 //		L.p("rootFolder = " + rootFolder);
 
-		/* Initialize properties, with log and cache */
-
 		/* Log */
 		L.init(rootFolder + "/log/static-catalog.log");
-		
-//	    EHAViewerProperties.init(new File(rootFolder + "/log/ehaviewer.log"),
-//	    		new File(rootFolder + "/conf/ehaviewer.prefs"),
-//	    		new File(rootFolder + "/cache"),
-//	    		new File(rootFolder + "/cache/ehaCaches.xml"));
 	    
 		/* All uncaught exceptions */
 	    UncaughtExceptionHandler uncaughtExceptionHandler = new UncaughtExceptionHandler() {
@@ -42,7 +35,7 @@ public class StaticCatalogGeneratorMain {
 	    Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
 		/* Start main window */
-	    StaticCatalogGeneratorMainWindow mainWindow = new StaticCatalogGeneratorMainWindow();
+	    StaticCatalogGeneratorMainWindow mainWindow = new StaticCatalogGeneratorMainWindow(rootFolder);
 		mainWindow.runMainWindow();
 
 		/* JVM bug */

@@ -21,11 +21,11 @@ public class StaticCatalogField {
 		this.name = name;
 	}
 
-	public boolean isFilter() {
+	public boolean getIsFilter() {
 		return isFilter;
 	}
 
-	public void setFilter(boolean isFilter) {
+	public void setIsFilter(boolean isFilter) {
 		this.isFilter = isFilter;
 	}
 
