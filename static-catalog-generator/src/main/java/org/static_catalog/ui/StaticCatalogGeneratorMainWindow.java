@@ -18,6 +18,8 @@ import org.eclipse.nebula.widgets.grid.GridEditor;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -257,31 +259,71 @@ public class StaticCatalogGeneratorMainWindow {
 		fileLabel.setText(labelText);
 		fileLabel.setLayoutData(ui.createWidth120GridData());
 		
-		CComboNoText recentFilesCCombo = new CComboNoText(fileComposite, SWT.BORDER | SWT.READ_ONLY);
+		final CComboNoText recentFilesCCombo = new CComboNoText(fileComposite, SWT.BORDER | SWT.READ_ONLY);
 		recentFilesCCombo.setLayoutData(ui.createWidthGridData(recentFilesCCombo.findButtonWidth()));
 		recentFilesCCombo.setEditable(false);
+
+		final Text fileText = new Text(fileComposite, SWT.SINGLE | SWT.BORDER);
+		fileText.setText(p.getFileName());
+		fileText.setLayoutData(ui.createFillHorizontalGridData());
+
+		final Button fileButton = new Button(fileComposite, SWT.NONE);
+		fileButton.setText("Browse");
+		fileButton.setLayoutData(ui.createWidth120GridData());
+
 		
-		String items[] = { "Item One",
-      "Item Two00000000000000000000000000000000000000000000000",
-      "Item Three", "Item Four", "Item Five" };
-		recentFilesCCombo.setItems( items );
+		int recentFileNamesSize = p.getRecentFileNames().size(); 
+		if (recentFileNamesSize == 0) {
+			recentFilesCCombo.add(FileControlProperties.NO_RECENT_FILES);
+		}
+		else {
+			recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNamesSize]));
+		}
 		
 		recentFilesCCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 	
 				CComboNoText cComboNoText = (CComboNoText) selectionEvent.widget;
-				L.p(cComboNoText.getText());
+				String recentFileName = cComboNoText.getText();
+				
+				if (recentFileName.equals(FileControlProperties.NO_RECENT_FILES)) {
+					return;
+				}
+				
+				p.setFileName(recentFileName);
+				fileText.setText(recentFileName);
+				
+				ArrayList<String> recentFileNames = p.getRecentFileNames(); 
+				recentFileNames.remove(recentFileName);
+				recentFileNames.add(0, recentFileName);
+				recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNames.size()]));
+				
+				p.save();
+			}
+		});
+
+		fileText.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent focusEvent) {
+				
+				String focusLostFileName = fileText.getText().trim();
+				if (!focusLostFileName.equalsIgnoreCase(p.getFileName())) {
+					
+					p.setFileName(focusLostFileName);
+
+					ArrayList<String> recentFileNames = p.getRecentFileNames(); 
+					if (recentFileNames.contains(focusLostFileName)) {
+						recentFileNames.remove(focusLostFileName);
+					}
+					recentFileNames.add(0, focusLostFileName);
+					recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNames.size()]));
+					
+					p.save();
+				}
 			}
 		});
 		
-		final Text fileText = new Text(fileComposite, SWT.SINGLE | SWT.BORDER);
-		fileText.setText(p.getFileName());
-		fileText.setLayoutData(ui.createFillHorizontalGridData());
-		
-		final Button fileButton = new Button(fileComposite, SWT.NONE);
-		fileButton.setText("Browse");
-		fileButton.setLayoutData(ui.createWidth120GridData());
 		fileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -298,8 +340,17 @@ public class StaticCatalogGeneratorMainWindow {
 				}
 				
 				if ((newFileName != null) && (!newFileName.equalsIgnoreCase(oldFileName))) {
-					fileText.setText(newFileName);
+
 					p.setFileName(newFileName);
+					fileText.setText(newFileName);
+					
+					ArrayList<String> recentFileNames = p.getRecentFileNames(); 
+					if (recentFileNames.contains(newFileName)) {
+						recentFileNames.remove(newFileName);
+					}
+					recentFileNames.add(0, newFileName);
+					recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNames.size()]));
+					
 					p.save();
 				}
 			}
