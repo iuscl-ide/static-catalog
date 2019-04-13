@@ -6,13 +6,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.static_catalog.ui.FileControlProperties;
+import org.static_catalog.ui.StaticCatalogGeneratorMainWindow;
+
 import com.alibaba.fastjson.JSON;
 
 /** Properties */
 public class P {
 	
 	/** Load, just once */
-	public static P load(String propertiesFileName) {
+	public static P load(StaticCatalogGeneratorMainWindow staticCatalogGeneratorMainWindow, String propertiesFileName) {
 		
 		String jsonSer = null;
 		try {
@@ -23,10 +26,18 @@ public class P {
 		}
 		
 		P p = new P();
+		p.viewCsvFileControl = new FileControlProperties();
+		p.analizeCsvFileControl = new FileControlProperties();
+		p.filtersFileControl = new FileControlProperties();
+
 		if (jsonSer != null) {
 			p = JSON.parseObject(jsonSer, P.class);	
 		}
 		p.propertiesFileName = propertiesFileName;
+
+		p.viewCsvFileControl.setP(p);
+		p.analizeCsvFileControl.setP(p);
+		p.filtersFileControl.setP(p);
 		
 		return p;
 	}
@@ -45,23 +56,15 @@ public class P {
 	
 	private String propertiesFileName = "";
 
-	private String viewCsvFileName = "";
+	private FileControlProperties viewCsvFileControl;
 	private int viewCsvMaxLines = 100;
 	private boolean viewCsvUseFirstLineAsHeader = true;
+
+	private FileControlProperties analizeCsvFileControl;
 	
-	private String analizeCsvFileName = "";
-	
-	private String filtersFileName = "";
+	private FileControlProperties filtersFileControl;
 
 	
-	public String getViewCsvFileName() {
-		return viewCsvFileName;
-	}
-
-	public void setViewCsvFileName(String viewCsvFileName) {
-		this.viewCsvFileName = viewCsvFileName;
-	}
-
 	public int getViewCsvMaxLines() {
 		return viewCsvMaxLines;
 	}
@@ -74,26 +77,27 @@ public class P {
 		return viewCsvUseFirstLineAsHeader;
 	}
 
-	public void setViewCsvUseFirstLineAsHeader(boolean viewCsvUseFirstLineAsHeader) {
-		this.viewCsvUseFirstLineAsHeader = viewCsvUseFirstLineAsHeader;
+	public FileControlProperties getViewCsvFileControl() {
+		return viewCsvFileControl;
 	}
 
-	public String getAnalizeCsvFileName() {
-		return analizeCsvFileName;
+	public void setViewCsvFileControl(FileControlProperties viewCsvFileControl) {
+		this.viewCsvFileControl = viewCsvFileControl;
 	}
 
-	public void setAnalizeCsvFileName(String analizeCsvFileName) {
-		this.analizeCsvFileName = analizeCsvFileName;
+	public FileControlProperties getAnalizeCsvFileControl() {
+		return analizeCsvFileControl;
 	}
 
-	public String getFiltersFileName() {
-		return filtersFileName;
+	public void setAnalizeCsvFileControl(FileControlProperties analizeCsvFileControl) {
+		this.analizeCsvFileControl = analizeCsvFileControl;
 	}
 
-	public void setFiltersFileName(String filtersFileName) {
-		this.filtersFileName = filtersFileName;
+	public FileControlProperties getFiltersFileControl() {
+		return filtersFileControl;
 	}
-	
-	
-	
+
+	public void setFiltersFileControl(FileControlProperties filtersFileControl) {
+		this.filtersFileControl = filtersFileControl;
+	}
 }

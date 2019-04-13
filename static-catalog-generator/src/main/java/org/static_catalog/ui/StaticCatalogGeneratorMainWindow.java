@@ -64,18 +64,15 @@ public class StaticCatalogGeneratorMainWindow {
 	public static final String[] typeNameValues = typeNames.values().toArray(new String[typeNames.values().size()]);
 	
 
-	/** File control */
-	private interface FileControlFileNameChanged {
-		
-		public void onFileNameChange(String newFileName);
-	}
 
+	
 	/** File control */
 	private interface FileControl {
 		
 		public String getCompleteFileName();
 	}
 
+	
 	/** Progress */
 	public interface LoopProgress {
 		
@@ -105,7 +102,7 @@ public class StaticCatalogGeneratorMainWindow {
 		super();
 		this.applicationRootFolder = applicationRootFolder;
 		
-		p = P.load(applicationRootFolder + "/static-catalog.config.json");
+		p = P.load(this, applicationRootFolder + "/static-catalog.config.json");
 	}
 
 	/** Natural order */
@@ -236,13 +233,13 @@ public class StaticCatalogGeneratorMainWindow {
 	}
 
 	/** Create file control */
-	private FileControl addFileControl(Composite parentComposite, String fileName, FileControlFileNameChanged fileControlFileNameChanged) {
-
-		return addFileControl(parentComposite, false, fileName, fileControlFileNameChanged);
+	private FileControl addFileControl(Composite parentComposite, String labelText, FileControlProperties p) {
+		
+		return addFileControl(parentComposite, labelText, false, p);
 	}
 	
 	/** Create file control */
-	private FileControl addFileControl(Composite parentComposite, boolean isFolder, String fileName, FileControlFileNameChanged fileControlFileNameChanged) {
+	private FileControl addFileControl(Composite parentComposite, String labelText, boolean isFolder, FileControlProperties p) {
 		
 		/*
 		 * TODO 
@@ -254,17 +251,33 @@ public class StaticCatalogGeneratorMainWindow {
 		final Composite fileComposite = new Composite(parentComposite, SWT.NONE);
 		ui.addDebug(fileComposite);
 	    fileComposite.setLayoutData(ui.createFillHorizontalGridData());
-		fileComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep8));
+		fileComposite.setLayout(ui.createColumnsSpacingGridLayout(4, UI.sep8));
 		
 		final Label fileLabel = new Label(fileComposite, SWT.NONE);
-		fileLabel.setText("File");
+		fileLabel.setText(labelText);
 		fileLabel.setLayoutData(ui.createWidth120GridData());
 		
-		final Text fileText = new Text(fileComposite, SWT.SINGLE | SWT.BORDER);
-		//fileText.setText("C:\\Iustin\\Programming\\_static-catalog\\tools\\datas\\big.csv");
-		fileText.setText(fileName);
-		fileText.setLayoutData(ui.createFillHorizontalGridData());
+		CComboNoText recentFilesCCombo = new CComboNoText(fileComposite, SWT.BORDER | SWT.READ_ONLY);
+		recentFilesCCombo.setLayoutData(ui.createWidthGridData(recentFilesCCombo.findButtonWidth()));
+		recentFilesCCombo.setEditable(false);
 		
+		String items[] = { "Item One",
+      "Item Two00000000000000000000000000000000000000000000000",
+      "Item Three", "Item Four", "Item Five" };
+		recentFilesCCombo.setItems( items );
+		
+		recentFilesCCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+	
+				CComboNoText cComboNoText = (CComboNoText) selectionEvent.widget;
+				L.p(cComboNoText.getText());
+			}
+		});
+		
+		final Text fileText = new Text(fileComposite, SWT.SINGLE | SWT.BORDER);
+		fileText.setText(p.getFileName());
+		fileText.setLayoutData(ui.createFillHorizontalGridData());
 		
 		final Button fileButton = new Button(fileComposite, SWT.NONE);
 		fileButton.setText("Browse");
@@ -273,19 +286,21 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 
-				String newFileName = fileText.getText();
+				String oldFileName = fileText.getText();
+				String newFileName = null;
 				if (isFolder) {
 					
 				}
 				else {
 					FileDialog fileDialog = new FileDialog(parentComposite.getShell(), SWT.NONE);
-					fileDialog.setFileName(newFileName);
+					fileDialog.setFileName(oldFileName);
 					newFileName = fileDialog.open();
 				}
 				
-				if (newFileName != null) {
+				if ((newFileName != null) && (!newFileName.equalsIgnoreCase(oldFileName))) {
 					fileText.setText(newFileName);
-					fileControlFileNameChanged.onFileNameChange(newFileName);
+					p.setFileName(newFileName);
+					p.save();
 				}
 			}
 		});
@@ -400,21 +415,7 @@ public class StaticCatalogGeneratorMainWindow {
 	/** View a CSV file in a grid */
 	private void createViewCsvTab(Composite viewCsvTabComposite) {
 		
-		/*
-		 * TODO 
-		 * 1/ Load in memory only string lines and parse on display
-		 * 2/ Activate the Stop button when no memory
-		 * 
-		 */
-
-		final FileControl viewCsvFileControl = addFileControl(viewCsvTabComposite, p.getViewCsvFileName(),
-				new FileControlFileNameChanged() {
-					@Override
-					public void onFileNameChange(String newFileName) {
-						p.setViewCsvFileName(newFileName);
-						p.save();
-					}
-				});
+		final FileControl viewCsvFileControl = addFileControl(viewCsvTabComposite, "CSV file", p.getViewCsvFileControl());
 		
 		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
 		ui.addDebug(csvButtonsComposite);
@@ -582,14 +583,7 @@ public class StaticCatalogGeneratorMainWindow {
 		 * 
 		 */
 	    
-	    final FileControl analyzeCsvFileControl = addFileControl(parentComposite, p.getAnalizeCsvFileName(),
-				new FileControlFileNameChanged() {
-					@Override
-					public void onFileNameChange(String newFileName) {
-						p.setAnalizeCsvFileName(newFileName);
-						p.save();
-					}
-				});
+	    final FileControl analyzeCsvFileControl = addFileControl(parentComposite, "Analyze file", p.getAnalizeCsvFileControl());
 		
 		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
 		ui.addDebug(csvButtonsComposite);
@@ -796,14 +790,7 @@ public class StaticCatalogGeneratorMainWindow {
 		 * 
 		 */
 	    
-	    final FileControl filtersFileControl = addFileControl(parentComposite, p.getFiltersFileName(),
-				new FileControlFileNameChanged() {
-					@Override
-					public void onFileNameChange(String newFileName) {
-						p.setFiltersFileName(newFileName);
-						p.save();
-					}
-				});
+	    final FileControl filtersFileControl = addFileControl(parentComposite, "Filters file", p.getFiltersFileControl());
 
 		
 		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
