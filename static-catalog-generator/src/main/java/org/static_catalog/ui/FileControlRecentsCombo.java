@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.*;
  * @see <a href="http://www.eclipse.org/swt/examples.php">SWT Example: CustomControlExample</a>
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
-public class CComboNoText extends Composite {
+public class FileControlRecentsCombo extends Composite {
 
 	Text text;
 	List list;
@@ -62,6 +62,8 @@ public class CComboNoText extends Composite {
 	Color foreground, background;
 	Font font;
 	Shell _shell;
+	
+	private FileControlRecentsComboSelectionEvent selectionEvent;
 
 	static final String PACKAGE_PREFIX = "org.eclipse.swt.custom."; //$NON-NLS-1$
 
@@ -93,10 +95,10 @@ public class CComboNoText extends Composite {
  * @see SWT#FLAT
  * @see Widget#getStyle()
  */
-public CComboNoText (Composite parent, int style) {
+public FileControlRecentsCombo (Composite parent, int style) {
 	super (parent, style = checkStyle (style));
 	_shell = super.getShell ();
-
+	
 	int textStyle = SWT.SINGLE;
 	if ((style & SWT.READ_ONLY) != 0) textStyle |= SWT.READ_ONLY;
 	if ((style & SWT.FLAT) != 0) textStyle |= SWT.FLAT;
@@ -126,7 +128,7 @@ public CComboNoText (Composite parent, int style) {
 			arrowEvent (event);
 			return;
 		}
-		if (CComboNoText.this == event.widget) {
+		if (FileControlRecentsCombo.this == event.widget) {
 			comboEvent (event);
 			return;
 		}
@@ -146,7 +148,7 @@ public CComboNoText (Composite parent, int style) {
 			return;
 		}
 		Shell shell = ((Control)event.widget).getShell ();
-		if (shell == CComboNoText.this.getShell ()) {
+		if (shell == FileControlRecentsCombo.this.getShell ()) {
 			handleFocus (SWT.FocusOut);
 		}
 	};
@@ -174,6 +176,13 @@ public CComboNoText (Composite parent, int style) {
 
 	initAccessible();
 }
+
+/** A file was selected by mouse up or enter key */
+public void addRecentsSelectionEvent(FileControlRecentsComboSelectionEvent selectionEvent) {
+
+	this.selectionEvent = selectionEvent;
+}
+
 static int checkStyle (int style) {
 	int mask = SWT.BORDER | SWT.READ_ONLY | SWT.FLAT | SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT;
 	return SWT.NO_FOCUS | (style & mask);
@@ -559,10 +568,6 @@ public void deselectAll () {
 }
 void dropDown (boolean drop) {
 	if (drop == isDropped ()) return;
-
-	System.out.println("drop down" + drop);
-
-	
 	Display display = getDisplay ();
 	if (!drop) {
 		display.removeFilter (SWT.Selection, filter);
@@ -1171,6 +1176,9 @@ void listEvent (Event event) {
 		case SWT.MouseUp: {
 			if (event.button != 1) return;
 			dropDown (false);
+			
+			selectionEvent.doEvent();
+			
 			break;
 		}
 		case SWT.Selection: {
@@ -1240,6 +1248,9 @@ void listEvent (Event event) {
 				e.time = event.time;
 				e.stateMask = event.stateMask;
 				notifyListeners (SWT.DefaultSelection, e);
+				
+				selectionEvent.doEvent();
+				
 			}
 			// At this point the widget may have been disposed.
 			// If so, do not continue.

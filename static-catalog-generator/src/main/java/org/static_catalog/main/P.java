@@ -27,7 +27,7 @@ public class P {
 		
 		P p = new P();
 		p.viewCsvFileControl = new FileControlProperties();
-		p.analizeCsvFileControl = new FileControlProperties();
+		p.examineCsvFileControl = new FileControlProperties();
 		p.filtersFileControl = new FileControlProperties();
 
 		if (jsonSer != null) {
@@ -36,7 +36,7 @@ public class P {
 		p.propertiesFileName = propertiesFileName;
 
 		p.viewCsvFileControl.setP(p);
-		p.analizeCsvFileControl.setP(p);
+		p.examineCsvFileControl.setP(p);
 		p.filtersFileControl.setP(p);
 		
 		return p;
@@ -57,13 +57,16 @@ public class P {
 	private String propertiesFileName = "";
 
 	private FileControlProperties viewCsvFileControl;
-	private int viewCsvMaxLines = 100;
+	private int viewCsvMaxLines = 1001;
 	private boolean viewCsvUseFirstLineAsHeader = true;
 
-	private FileControlProperties analizeCsvFileControl;
+	private FileControlProperties examineCsvFileControl;
+	private int examineCsvTypeMaxExceptions = 1;
+	private int examineCsvFilterElementsMaxDisplay = 500;
+	private boolean examineCsvUseFirstLineasHeader = true;
 	
 	private FileControlProperties filtersFileControl;
-
+	
 	
 	public int getViewCsvMaxLines() {
 		return viewCsvMaxLines;
@@ -73,8 +76,12 @@ public class P {
 		this.viewCsvMaxLines = viewCsvMaxLines;
 	}
 
-	public boolean isViewCsvUseFirstLineAsHeader() {
+	public boolean getViewCsvUseFirstLineAsHeader() {
 		return viewCsvUseFirstLineAsHeader;
+	}
+	
+	public void setViewCsvUseFirstLineAsHeader(boolean viewCsvUseFirstLineAsHeader) {
+		this.viewCsvUseFirstLineAsHeader = viewCsvUseFirstLineAsHeader;
 	}
 
 	public FileControlProperties getViewCsvFileControl() {
@@ -85,12 +92,12 @@ public class P {
 		this.viewCsvFileControl = viewCsvFileControl;
 	}
 
-	public FileControlProperties getAnalizeCsvFileControl() {
-		return analizeCsvFileControl;
+	public FileControlProperties getExamineCsvFileControl() {
+		return examineCsvFileControl;
 	}
 
-	public void setAnalizeCsvFileControl(FileControlProperties analizeCsvFileControl) {
-		this.analizeCsvFileControl = analizeCsvFileControl;
+	public void setExamineCsvFileControl(FileControlProperties examineCsvFileControl) {
+		this.examineCsvFileControl = examineCsvFileControl;
 	}
 
 	public FileControlProperties getFiltersFileControl() {
@@ -99,5 +106,29 @@ public class P {
 
 	public void setFiltersFileControl(FileControlProperties filtersFileControl) {
 		this.filtersFileControl = filtersFileControl;
+	}
+
+	public int getExamineCsvTypeMaxExceptions() {
+		return examineCsvTypeMaxExceptions;
+	}
+
+	public void setExamineCsvTypeMaxExceptions(int examineCsvTypeMaxExceptions) {
+		this.examineCsvTypeMaxExceptions = examineCsvTypeMaxExceptions;
+	}
+
+	public int getExamineCsvFilterElementsMaxDisplay() {
+		return examineCsvFilterElementsMaxDisplay;
+	}
+
+	public void setExamineCsvFilterElementsMaxDisplay(int examineCsvFilterElementsMaxDisplay) {
+		this.examineCsvFilterElementsMaxDisplay = examineCsvFilterElementsMaxDisplay;
+	}
+
+	public boolean getExamineCsvUseFirstLineasHeader() {
+		return examineCsvUseFirstLineasHeader;
+	}
+
+	public void setExamineCsvUseFirstLineasHeader(boolean examineCsvUseFirstLineasHeader) {
+		this.examineCsvUseFirstLineasHeader = examineCsvUseFirstLineasHeader;
 	}
 }

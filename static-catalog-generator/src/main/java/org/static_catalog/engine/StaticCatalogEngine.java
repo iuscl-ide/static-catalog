@@ -48,6 +48,7 @@ public class StaticCatalogEngine {
 				}
 			}
 		}
+		nameSpaces = nameSpaces.trim();
 
 		String words[] = nameSpaces.split(" ");
 		String label = words[0].toLowerCase();
@@ -166,8 +167,8 @@ public class StaticCatalogEngine {
 		}
 	}
 	
-	/** Load analyze CSV */
-	public static void loadAnalyzeCsv(String csvCompleteFileName,
+	/** Load examine CSV */
+	public static void loadExamineCsv(String csvCompleteFileName,
 			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames,
 			ArrayList<String> fieldTypes, ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues,
 			long maxUniqueValues, int maxExceptions, boolean useFirstLineAsHeader,
@@ -175,7 +176,7 @@ public class StaticCatalogEngine {
 
 		long start = System.currentTimeMillis();
 		
-		loopProgress.doProgress("Start lines analyze...");
+		loopProgress.doProgress("Start lines examine...");
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
@@ -222,7 +223,7 @@ public class StaticCatalogEngine {
 
 			csvLineIndex++;
 			if (csvLineIndex % 500000 == 0) {
-				loopProgress.doProgress(csvLineIndex + " lines analyzed...");
+				loopProgress.doProgress(csvLineIndex + " lines examined...");
 			}
 
 			csvLine = csvParser.parseNext();
