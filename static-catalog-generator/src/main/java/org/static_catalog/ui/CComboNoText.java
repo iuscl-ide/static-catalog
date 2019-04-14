@@ -101,7 +101,9 @@ public CComboNoText (Composite parent, int style) {
 	if ((style & SWT.READ_ONLY) != 0) textStyle |= SWT.READ_ONLY;
 	if ((style & SWT.FLAT) != 0) textStyle |= SWT.FLAT;
 	text = new Text (this, textStyle);
+	
 	text.setVisible(false);
+	
 	int arrowStyle = SWT.ARROW | SWT.DOWN;
 	if ((style & SWT.FLAT) != 0) arrowStyle |= SWT.FLAT;
 	arrow = new Button (this, arrowStyle);
@@ -557,6 +559,10 @@ public void deselectAll () {
 }
 void dropDown (boolean drop) {
 	if (drop == isDropped ()) return;
+
+	System.out.println("drop down" + drop);
+
+	
 	Display display = getDisplay ();
 	if (!drop) {
 		display.removeFilter (SWT.Selection, filter);
@@ -614,9 +620,11 @@ void dropDown (boolean drop) {
 	ScrollBar hBar = list.getHorizontalBar();
 	int emptyHBarSpace = hBar.isVisible () ? 0 : hBar.getSize ().y;
 	list.setSize (listRect.width, listRect.height - emptyHBarSpace);
-	popup.setBounds (x, y, width, height - emptyHBarSpace);
+	popup.setBounds (x, y + 2, width, height - emptyHBarSpace);
 	popup.setVisible (true);
 	if (isFocusControl()) list.setFocus ();
+	list.setFocus ();
+	list.select(0);
 
 	/*
 	 * Add a filter to listen to scrolling of the parent composite, when the

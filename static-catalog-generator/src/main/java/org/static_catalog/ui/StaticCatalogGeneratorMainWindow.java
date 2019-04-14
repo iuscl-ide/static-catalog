@@ -18,6 +18,8 @@ import org.eclipse.nebula.widgets.grid.GridEditor;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,6 +27,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -259,9 +262,15 @@ public class StaticCatalogGeneratorMainWindow {
 		fileLabel.setText(labelText);
 		fileLabel.setLayoutData(ui.createWidth120GridData());
 		
-		final CComboNoText recentFilesCCombo = new CComboNoText(fileComposite, SWT.BORDER | SWT.READ_ONLY);
-		recentFilesCCombo.setLayoutData(ui.createWidthGridData(recentFilesCCombo.findButtonWidth()));
+		final CComboNoText recentFilesCCombo = new CComboNoText(fileComposite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+		//final CCombo recentFilesCCombo = new CCombo(fileComposite, SWT.NONE);
+		recentFilesCCombo.setLayoutData(ui.createWidthGridData(recentFilesCCombo.findButtonWidth() + 300));
+		//recentFilesCCombo.setLayoutData(ui.createWidthGridData(120));
 		recentFilesCCombo.setEditable(false);
+		recentFilesCCombo.setVisibleItemCount(4);
+		//recentFilesCCombo.setSelection(new Point(0, 0));
+		
+//		recentFilesCCombo.setFont(fontBold);
 
 		final Text fileText = new Text(fileComposite, SWT.SINGLE | SWT.BORDER);
 		fileText.setText(p.getFileName());
@@ -280,26 +289,30 @@ public class StaticCatalogGeneratorMainWindow {
 			recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNamesSize]));
 		}
 		
+//		recentFilesCCombo.add
+		
 		recentFilesCCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
-	
+	//L.p("qdcd");
 				CComboNoText cComboNoText = (CComboNoText) selectionEvent.widget;
 				String recentFileName = cComboNoText.getText();
 				
 				if (recentFileName.equals(FileControlProperties.NO_RECENT_FILES)) {
 					return;
 				}
-				
-				p.setFileName(recentFileName);
-				fileText.setText(recentFileName);
-				
-				ArrayList<String> recentFileNames = p.getRecentFileNames(); 
-				recentFileNames.remove(recentFileName);
-				recentFileNames.add(0, recentFileName);
-				recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNames.size()]));
-				
-				p.save();
+
+				if (!cComboNoText.getListVisible()) {
+					p.setFileName(recentFileName);
+					fileText.setText(recentFileName);
+					
+					ArrayList<String> recentFileNames = p.getRecentFileNames(); 
+					recentFileNames.remove(recentFileName);
+					recentFileNames.add(0, recentFileName);
+					recentFilesCCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNames.size()]));
+					
+					p.save();
+				}
 			}
 		});
 
