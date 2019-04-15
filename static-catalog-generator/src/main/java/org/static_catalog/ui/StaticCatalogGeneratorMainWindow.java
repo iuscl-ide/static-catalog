@@ -1,10 +1,6 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -40,12 +37,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
-import org.static_catalog.main.L;
 import org.static_catalog.main.P;
+import org.static_catalog.main.S;
 import org.static_catalog.model.StaticCatalogField;
 import org.static_catalog.model.StaticCatalogFilters;
-
-import com.alibaba.fastjson.JSON;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -67,8 +62,11 @@ public class StaticCatalogGeneratorMainWindow {
 
 	private static final String[] filterExtensionsCsv = { "*.csv", "*.dat", "*.txt", "*.*" };
 	private static final String[] filterExtensionsJson = { "*.json", "*.*" };
+	private static final String[] filterExtensionsLiquid = { "*.liquid", "*.html", "*.txt", "*.*" };
+
 	private static final String[] filterNamesCsv = { "Comma separated values (*.csv)", "Comma separated values (*.dat)", "Comma separated values (*.txt)", "All files (*.*)" };
 	private static final String[] filterNamesJson = { "Filters file (*.json)", "All files (*.*)" };
+	private static final String[] filterNamesLiquid = { "Liquid template (*.liquid)", "Liquid template (*.html)", "Liquid template (*.txt)", "All files (*.*)" };
 	
 	/** File control */
 	private interface FileControl {
@@ -221,9 +219,10 @@ public class StaticCatalogGeneratorMainWindow {
 		createViewCsvTab(mainComposites.get(0));
 	    /* Examine CSV */
 		createExamineCsvTab(mainComposites.get(1));
-	    /* Create Filters */
-		createCreateFiltersTab(mainComposites.get(2));
-		
+	    /* Filters */
+		createFiltersTab(mainComposites.get(2));
+	    /* Generate */
+		createGenerateTab(mainComposites.get(3));
 		
 		/* Run */
 		mainShell.open();
@@ -340,7 +339,15 @@ public class StaticCatalogGeneratorMainWindow {
 				String oldFileName = fileText.getText();
 				String newFileName = null;
 				if (isFolder) {
-					
+					DirectoryDialog directoryDialog = new DirectoryDialog(parentComposite.getShell(), SWT.NONE);
+					directoryDialog.setText(labelText);
+					if (oldFileName.trim().length() == 0) {
+						directoryDialog.setFilterPath(applicationRootFolder);	
+					}
+					else {
+						directoryDialog.setFilterPath(oldFileName);	
+					}
+					newFileName = directoryDialog.open();
 				}
 				else {
 					FileDialog fileDialog = new FileDialog(parentComposite.getShell(), SWT.NONE);
@@ -360,6 +367,11 @@ public class StaticCatalogGeneratorMainWindow {
 					if (fileType.equalsIgnoreCase("json")) {
 						fileDialog.setFilterExtensions(filterExtensionsJson);
 						fileDialog.setFilterNames(filterNamesJson);
+					}
+
+					if (fileType.equalsIgnoreCase("liquid")) {
+						fileDialog.setFilterExtensions(filterExtensionsLiquid);
+						fileDialog.setFilterNames(filterNamesLiquid);
 					}
 					
 					newFileName = fileDialog.open();
@@ -912,7 +924,7 @@ public class StaticCatalogGeneratorMainWindow {
 	}
 	
 	/** Create filters generation file based on the analysis */
-	private void createCreateFiltersTab(Composite parentComposite) {
+	private void createFiltersTab(Composite parentComposite) {
 		
 	    final FileControl filtersFileControl = addFileControl(parentComposite, "Filters file", "json", p.getFiltersFileControl());
 		
@@ -1016,15 +1028,7 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 			
-				String jsonSer = null;
-				try {
-					jsonSer = new String(Files.readAllBytes(Paths.get(filtersFileControl.getCompleteFileName())), StandardCharsets.UTF_8);
-				}
-				catch (IOException ioException) {
-					L.e("JSON load", ioException);
-				}
-				
-				StaticCatalogFilters loadedFilters = JSON.parseObject(jsonSer, StaticCatalogFilters.class);
+				StaticCatalogFilters loadedFilters = S.loadObjectFromJsonFileName(filtersFileControl.getCompleteFileName(), StaticCatalogFilters.class);
 				loadFilters.loadFilters(loadedFilters);
 			}
 		});
@@ -1034,9 +1038,7 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
 				StaticCatalogFilters filtersDefinition = new StaticCatalogFilters();
-				
 				for (GridItem gridItem : filtersGrid.getItems()) {
-
 					StaticCatalogField field = new StaticCatalogField();
 					field.setName(gridItem.getText(1));
 					field.setType(nameTypes.get(((CCombo) gridItem.getData("typeCCombo")).getText()));
@@ -1045,13 +1047,101 @@ public class StaticCatalogGeneratorMainWindow {
 					filtersDefinition.getFields().add(field);
 				}
 					
-				String jsonSer = JSON.toJSONString(filtersDefinition, true);
+				S.saveObjectToJsonFileName(filtersDefinition, filtersFileControl.getCompleteFileName());
+			}
+		});
+	}
+
+	/** Create generation */
+	private void createGenerateTab(Composite parentComposite) {
+		
+	    final FileControl sourceCsvFileControl = addFileControl(parentComposite, "Source CSV", "csv", p.getGenerateSourceCsvFileControl());
+
+	    final FileControl filtersFileControl = addFileControl(parentComposite, "Filters file", "json", p.getGenerateFiltersFileControl());
+	    
+	    final FileControl destinationFileControl = addFileControl(parentComposite, "Destination folder", "", true, p.getGenerateDestinationFolderFileControl());
+
+	    final FileControl templateFileControl = addFileControl(parentComposite, "Template file", "liquid", p.getGenerateTemplateFileControl());
+
+		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
+		ui.addDebug(csvButtonsComposite);
+		csvButtonsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		csvButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(7, UI.sep8));
+		
+		final Button csvGenerateButton = new Button(csvButtonsComposite, SWT.NONE);
+		csvGenerateButton.setText("Generate");
+		csvGenerateButton.setLayoutData(ui.createWidth120GridData());
+
+		final Text typeMaxExceptionsText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		typeMaxExceptionsText.setLayoutData(ui.createWidthGridData(30));
+		typeMaxExceptionsText.setText(p.getGenerateTypeMaxExceptions() + "");
+		typeMaxExceptionsText.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent focusEvent) {
 				
+				int typeMaxExceptions = p.getGenerateTypeMaxExceptions();
 				try {
-					Files.write(Paths.get(filtersFileControl.getCompleteFileName()), jsonSer.getBytes(StandardCharsets.UTF_8));
-				} catch (IOException ioException) {
-					L.e("Error writing file", ioException);
+					typeMaxExceptions = Integer.parseInt(typeMaxExceptionsText.getText().trim());
 				}
+				catch (NumberFormatException numberFormatException) {
+					typeMaxExceptionsText.setText(typeMaxExceptions + "");
+				}		
+				p.setGenerateTypeMaxExceptions(typeMaxExceptions);		
+				p.save();
+			}
+		});
+
+		final Label typeMaxExceptionsLabel = new Label(csvButtonsComposite, SWT.NONE);
+		typeMaxExceptionsLabel.setLayoutData(ui.createWidthGridData(210));
+		typeMaxExceptionsLabel.setText("maximum field type exception values");
+
+		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsComposite, SWT.CHECK);
+		GridData useFirstLineasHeaderCheckBoxGridData = ui.createWidthGridData(200);
+		useFirstLineasHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
+		useFirstLineAsHeaderCheckBox.setLayoutData(useFirstLineasHeaderCheckBoxGridData);
+		useFirstLineAsHeaderCheckBox.setText("Use first line as header");
+		useFirstLineAsHeaderCheckBox.setSelection(p.getGenerateUseFirstLineasHeader());
+		useFirstLineAsHeaderCheckBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				p.setGenerateUseFirstLineasHeader(useFirstLineAsHeaderCheckBox.getSelection());
+				p.save();
+			}
+		});
+
+		
+		final Composite csvStatusComposite = new Composite(parentComposite, SWT.NONE);
+		csvStatusComposite.setBackground(whiteColor);
+		csvStatusComposite.setLayoutData(ui.createFillHorizontalGridData());
+		GridLayout csvStatusCompositeGridLayout = ui.createColumnsGridLayout(2);
+		csvStatusCompositeGridLayout.marginWidth = UI.sep8;
+		csvStatusCompositeGridLayout.marginHeight = UI.sep8;
+		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
+
+		final Label generateStatusLabel = new Label(csvStatusComposite, SWT.NONE);
+		generateStatusLabel.setBackground(whiteColor);
+		generateStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
+		generateStatusLabel.setText("Status");
+
+		csvGenerateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				StaticCatalogEngine.generate(sourceCsvFileControl.getCompleteFileName(),
+					filtersFileControl.getCompleteFileName(), destinationFileControl.getCompleteFileName(),	
+					Integer.parseInt(typeMaxExceptionsText.getText()), useFirstLineAsHeaderCheckBox.getSelection(), doLoop,
+					new LoopProgress() {
+						@Override
+						public void doProgress(String progressMessage) {
+							Display.getDefault().syncExec(new Runnable() {
+								public void run() {
+									generateStatusLabel.setText(progressMessage);
+									Display.getDefault().readAndDispatch();
+								}
+							});
+						}
+					}
+				);
 			}
 		});
 	}

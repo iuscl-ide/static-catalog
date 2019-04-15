@@ -1,23 +1,27 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.engine;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
+import org.static_catalog.main.S;
 import org.static_catalog.model.StaticCatalogFilters;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
-import com.alibaba.fastjson.JSON;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+
+import liqp.Template;
 
 /** Generator engine */
 public class StaticCatalogEngine {
@@ -316,4 +320,43 @@ public class StaticCatalogEngine {
 		
 	}
 
+	/** Generate catalog */
+	public static void generate(String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
+			int typeMaxExceptions, boolean useFirstLineAsHeader, AtomicBoolean doLoop, LoopProgress loopProgress) {
+
+//		/* Examine */
+//		ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
+//		ArrayList<String> fieldNames = new ArrayList<>();
+//		ArrayList<String> fieldTypes = new ArrayList<>();
+//		ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
+//		 
+//		loadExamineCsv(sourceCsvFileName,
+//		fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+//		500,
+//		typeMaxExceptions,
+//		useFirstLineAsHeader,
+//		doLoop, loopProgress);
+		
+		/* Filters */
+		StaticCatalogFilters filters = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogFilters.class);
+		
+		/* Catalog */
+		
+		String indexHtml = "{{ index }}";
+		String indexHtmlFileName = destinationFolderName + File.separator + "index.html";
+		
+		Template template = Template.parse(indexHtml);
+		String rendered = template.render("index", "s-c");
+		System.out.println(rendered);
+		
+		
+		try {
+			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
+		}
+		catch (IOException ioException) {
+			L.e("Error writing 'index.html' file", ioException);
+		}
+		
+		Program.launch(indexHtmlFileName);
+	}
 }

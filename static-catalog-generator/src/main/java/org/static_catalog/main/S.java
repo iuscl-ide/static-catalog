@@ -2,184 +2,93 @@
 package org.static_catalog.main;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Properties;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /** XML serialization */
 public class S {
 
-//    public static Document loadXmlFromFile(File documentFile) {
-//
-//        /* jdom */
-//        SAXBuilder jdomBuilder = new SAXBuilder();
-//
-//        try {
-//
-//        	return jdomBuilder.build(documentFile);
-//        }
-//        catch (Exception exception) {
-//
-//            /* */
-//        	return null;
-//        }
-//    }
-//
-//    public static void saveXmlToFile(Element rootElement, File documentFile) {
-//
-//        /* jdom */
-//		Document jdomDocument = new Document(rootElement);
-//		XMLOutputter jdomSerializer = new XMLOutputter(Format.getPrettyFormat());
-//
-//        try {
-//
-//    		jdomSerializer.output(jdomDocument, new FileWriter(documentFile));
-//        }
-//        catch (Exception exception) {
-//
-//            /* */
-//        	return;
-//        }
-//    }
-//
-//	
-//    public static String getElementChildTextValue(Element element_parent, String childName, Namespace namespace) {
-//
-//        String textValue = null;
-//
-//        Element element_child = element_parent.getChild(childName, namespace);
-//        if (element_child != null) {
-//
-//            textValue = element_child.getText();
-//        }
-//
-//        return textValue;
-//    }
-//
-//    public static String getChildString(Element parentElement, String childName) {
-//	
-//		return parentElement.getChildText(childName);
-//	}
-//
-//    public static Date getChildDate(Element parentElement, String childName) {
-//
-//		String textValue = getChildString(parentElement, childName);
-//		      
-//		if (textValue != null) {
-//		
-//			return new Date(Long.parseLong(textValue));
-//		}
-//		
-//		return null;
-//	}
-//    
-//    public static void putChildString(Element parentElement, String childName, String childValue) {
-//
-//		if (childValue == null) {
-//			
-//			return;
-//		}
-//
-//    	Element childElement = new Element(childName);
-//    	childElement.setText(childValue);
-//    	parentElement.addContent(childElement);
-//    }
-//
-//    public static void putChildDate(Element parentElement, String childName, Date childValue) {
-//
-//		if (childValue == null) {
-//			
-//			return;
-//		}
-//		
-//    	Element childElement = new Element(childName);
-//    	childElement.setText(Long.toString(childValue.getTime()));
-//    	parentElement.addContent(childElement);
-//    }
-//
-//    public static String getAttributeValue(Element element, String attributeName) {
-//
-//        String attributeValue = null;
-//
-//        if (element != null) {
-//
-//            Attribute attribute = element.getAttribute(attributeName);
-//            if (attribute != null) {
-//
-//                attributeValue = attribute.getValue();
-//            }
-//        }
-//
-//        return attributeValue;
-//    }
-//
-//    public static boolean hasAttributeValue(Element element, String attributeName, String attributeHasValue) {
-//
-//        String attributeValue = getAttributeValue(element, attributeName);
-//
-//        //noinspection RedundantIfStatement
-//        if ((attributeValue != null) && (attributeValue.equals(attributeHasValue))) {
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    public static void putAttributeString(Element element, String attributeName, String attributeValue) {
-//
-//    	element.setAttribute(attributeName, attributeValue);
-//    }
-//
-//	/** Loads an entire file in one string */
-//	public static String loadFileInString(File file) {
-//	
-//	    RandomAccessFile randomAccessFile = null;
-//	    String content = null;
-//	
-//	    try {
-//	
-//	        randomAccessFile = new RandomAccessFile(file, "r");
-//	        byte[] buffer = new byte[(int)randomAccessFile.length()];
-//	        randomAccessFile.readFully(buffer);
-//	        content = new String(buffer, "utf-8");
-//	        
-//	        /* UTF8_BOM */
-//	        if (content.startsWith("\uFEFF")) {
-//	        	
-//	        	content = content.substring(1);
-//	        }
-//	    }
-//	    catch (FileNotFoundException fileNotFoundException) {
-//	
-//	        L.e("FileNotFoundException = " + file, fileNotFoundException);
-//	    }
-//	    catch (IOException ioException) {
-//	
-//	    	L.e("IOException = " + file, ioException);
-//	    }
-//	    finally {
-//	
-//	        try {
-//	            if (randomAccessFile != null) {
-//	
-//	                randomAccessFile.close();
-//	            }
-//	        }
-//	        catch (IOException ioException) {
-//	
-//	        	L.e("IOException in finally", ioException);
-//	        }
-//	    }
-//	
-//	    return content;
-//	}
+	/** Jackson */
+	private static final ObjectMapper jsonEngine = new ObjectMapper();
 
+	/** File into string */
+	public static String loadFileInString(String fileName) {
+		
+		try {
+			return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
+		}
+		catch (IOException ioException) {
+			L.e("Error loading file", ioException);
+		}
+
+		return null;
+	}
+
+	/** String into file */
+	public static void saveStringToFile(String source, String fileName) {
+
+		try {
+			Files.write(Paths.get(fileName), source.getBytes(StandardCharsets.UTF_8));
+		}
+		catch (IOException ioException) {
+			L.e("Error writing file", ioException);
+		}
+	}
+
+	/** JSON string to object */
+	public static <T> T loadObjectFromJsonString(String jsonString, Class<T> clazz) {
+		
+		try {
+			return (T) jsonEngine.readValue(jsonString, clazz);	
+		}
+		catch (JsonMappingException jsonMappingException) {
+			L.e("Error mapping json", jsonMappingException);
+		}
+		catch (JsonProcessingException jsonProcessingException) {
+			L.e("Error processing json", jsonProcessingException);
+		}
+		catch (IOException ioException) {
+			L.e("Error loading json", ioException);
+		}
+
+		return null;
+	}
+
+	/** Object to JSON string */
+	public static <T> String saveObjectToJsonString(T t) {
+		
+		try {
+			return jsonEngine.writerWithDefaultPrettyPrinter().writeValueAsString(t);
+		}
+		catch (JsonProcessingException jsonProcessingException) {
+			L.e("Error processing json", jsonProcessingException);
+		}
+		
+		return null;
+	}
+
+	/** JSON file to object */
+	public static <T> T loadObjectFromJsonFileName(String jsonFileName, Class<T> clazz) {
+		
+		return loadObjectFromJsonString(loadFileInString(jsonFileName), clazz);
+	}
+
+	/** Object to JSON file */
+	public static <T> void saveObjectToJsonFileName(T t, String jsonFileName) {
+		
+		saveStringToFile(saveObjectToJsonString(t), jsonFileName);
+	}
+	
 	/** Load resource */
 	public static InputStream getResourceAsInputStream(String resourceName) {
 		
@@ -193,46 +102,6 @@ public class S {
 		return loadInputStreamInString(getResourceAsInputStream(textResourceName));
 	}
 
-	/** Load properties file */
-	public static Properties loadPropertiesFile(File file) {
-		
-		Properties properties = new Properties();
-
-		try {
-			
-			FileInputStream fileInputStream = new FileInputStream(file);
-			
-			try {
-				
-				properties.load(fileInputStream);
-			}
-			catch (IOException ioException) {
-				
-				L.e("Properties file exception", ioException);
-			}
-			finally {
-				
-				try {
-
-					if (fileInputStream != null) {
-					
-						fileInputStream.close();
-					}
-				}
-				catch (IOException ioException) {
-
-					L.e("IOException", ioException);
-				}
-			}
-		}
-		catch (FileNotFoundException fileNotFoundException) {
-
-			/* Temporary... */
-			//L.e("Properties file exception", fileNotFoundException);
-		}
-		
-		return properties;
-	}
 
 	/** Loads an entire input stream in one string */
 	public static String loadInputStreamInString(InputStream inputStream) {

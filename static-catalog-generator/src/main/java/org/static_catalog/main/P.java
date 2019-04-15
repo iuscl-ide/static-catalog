@@ -1,43 +1,50 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.main;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.static_catalog.ui.FileControlProperties;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow;
 
-import com.alibaba.fastjson.JSON;
-
 /** Properties */
 public class P {
-	
+
 	/** Load, just once */
 	public static P load(StaticCatalogGeneratorMainWindow staticCatalogGeneratorMainWindow, String propertiesFileName) {
 		
-		String jsonSer = null;
-		try {
-			jsonSer = new String(Files.readAllBytes(Paths.get(propertiesFileName)), StandardCharsets.UTF_8);
-		}
-		catch (IOException ioException) {
-//			L.e("JSON load", ioException);
+		String jsonString = null;
+		if (Files.exists(Paths.get(propertiesFileName))) {
+			jsonString = S.loadFileInString(propertiesFileName);
 		}
 		
 		P p = new P();
 		p.viewCsvFileControl = new FileControlProperties();
+		
 		p.examineCsvFileControl = new FileControlProperties();
+		
 		p.filtersFileControl = new FileControlProperties();
 
-		if (jsonSer != null) {
-			p = JSON.parseObject(jsonSer, P.class);	
+		p.generateSourceCsvFileControl = new FileControlProperties();
+		p.generateFiltersFileControl = new FileControlProperties();
+		p.generateDestinationFolderFileControl = new FileControlProperties();
+		p.generateTemplateFileControl = new FileControlProperties();
+		
+		if (jsonString != null) {
+			p = S.loadObjectFromJsonString(jsonString, P.class);
 		}
 		p.propertiesFileName = propertiesFileName;
 
 		p.viewCsvFileControl.setP(p);
+		
 		p.examineCsvFileControl.setP(p);
+		
 		p.filtersFileControl.setP(p);
+		
+		p.generateSourceCsvFileControl.setP(p);
+		p.generateFiltersFileControl.setP(p);
+		p.generateDestinationFolderFileControl.setP(p);
+		p.generateTemplateFileControl.setP(p);
 		
 		return p;
 	}
@@ -45,13 +52,7 @@ public class P {
 	/** Save, the instance */
 	public void save() {
 		
-		String jsonSer = JSON.toJSONString(this, true);
-		
-		try {
-			Files.write(Paths.get(propertiesFileName), jsonSer.getBytes(StandardCharsets.UTF_8));
-		} catch (IOException ioException) {
-			L.e("Error writing file", ioException);
-		}
+		S.saveObjectToJsonFileName(this, propertiesFileName);
 	}
 	
 	private String propertiesFileName = "";
@@ -67,6 +68,13 @@ public class P {
 	
 	private FileControlProperties filtersFileControl;
 	
+	private FileControlProperties generateSourceCsvFileControl;
+	private FileControlProperties generateFiltersFileControl;
+	private FileControlProperties generateDestinationFolderFileControl;
+	private FileControlProperties generateTemplateFileControl;
+	private int generateTypeMaxExceptions = 1;
+	private boolean generateUseFirstLineasHeader = true;
+
 	
 	public int getViewCsvMaxLines() {
 		return viewCsvMaxLines;
@@ -131,4 +139,54 @@ public class P {
 	public void setExamineCsvUseFirstLineasHeader(boolean examineCsvUseFirstLineasHeader) {
 		this.examineCsvUseFirstLineasHeader = examineCsvUseFirstLineasHeader;
 	}
+
+	public FileControlProperties getGenerateSourceCsvFileControl() {
+		return generateSourceCsvFileControl;
+	}
+
+	public void setGenerateSourceCsvFileControl(FileControlProperties generateSourceCsvFileControl) {
+		this.generateSourceCsvFileControl = generateSourceCsvFileControl;
+	}
+
+	public FileControlProperties getGenerateFiltersFileControl() {
+		return generateFiltersFileControl;
+	}
+
+	public void setGenerateFiltersFileControl(FileControlProperties generateFiltersFileControl) {
+		this.generateFiltersFileControl = generateFiltersFileControl;
+	}
+
+	public FileControlProperties getGenerateDestinationFolderFileControl() {
+		return generateDestinationFolderFileControl;
+	}
+
+	public void setGenerateDestinationFolderFileControl(FileControlProperties generateDestinationFolderFileControl) {
+		this.generateDestinationFolderFileControl = generateDestinationFolderFileControl;
+	}
+
+	public int getGenerateTypeMaxExceptions() {
+		return generateTypeMaxExceptions;
+	}
+
+	public void setGenerateTypeMaxExceptions(int generateTypeMaxExceptions) {
+		this.generateTypeMaxExceptions = generateTypeMaxExceptions;
+	}
+
+	public boolean getGenerateUseFirstLineasHeader() {
+		return generateUseFirstLineasHeader;
+	}
+
+	public void setGenerateUseFirstLineasHeader(boolean generateUseFirstLineasHeader) {
+		this.generateUseFirstLineasHeader = generateUseFirstLineasHeader;
+	}
+
+	public FileControlProperties getGenerateTemplateFileControl() {
+		return generateTemplateFileControl;
+	}
+
+	public void setGenerateTemplateFileControl(FileControlProperties generateTemplateFileControl) {
+		this.generateTemplateFileControl = generateTemplateFileControl;
+	}
+
+	
 }
