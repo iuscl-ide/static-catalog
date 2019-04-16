@@ -1,24 +1,28 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.text.WordUtils;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridEditor;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTFontUtils;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -39,15 +43,15 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.pojava.datetime.DateTime;
 import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
-import org.static_catalog.main.L;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
-import org.static_catalog.model.StaticCatalogFiltersField;
 import org.static_catalog.model.StaticCatalogExamine;
 import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
+import org.static_catalog.model.StaticCatalogFiltersField;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -839,19 +843,18 @@ public class StaticCatalogGeneratorMainWindow {
 					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
 						
 						Point gridP = csvExamineGrid.toDisplay(0, 0);
-						
-						final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE);
-						popupComposite.getShell().setLayout(ui.createGridLayout());
-						//popupComposite.setLayoutData(ui.createFillBothGridData());
-						popupComposite.setLayout(ui.createGridLayout());
+						final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
 						popupComposite.setSize(480, 480);
 						popupComposite.setLocation(
 								gridP.x + ((csvExamineGrid.getSize().x - popupComposite.getSize().x) / 2),
 								gridP.y + ((csvExamineGrid.getSize().y - popupComposite.getSize().y) / 2));
 
-						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-						popupCompositeText.setText(gridItem.getText(columnIndex));
+						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL);
+						popupCompositeText.setBackground(whiteColor);
+						String wrap = WordUtils.wrap(gridItem.getText(columnIndex), 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
+						popupCompositeText.setText(wrap);
 						popupCompositeText.setLayoutData(ui.createFillBothGridData());
+						popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
 	
 						popupComposite.show(popupComposite.getLocation());
 						break;
@@ -914,25 +917,56 @@ public class StaticCatalogGeneratorMainWindow {
 						
 						//HashMap<String, Long> groups = examineField.getUniqueValueCounts(); 
 
+						/* 3 */
 						if (!fieldType.equals("text")) {
 							ArrayList<String> exceps = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
 							Collections.sort(exceps);
-
 							csvGridItem.setText(3, String.join(", ", exceps));
 						}
-						
+							
 						ArrayList<String> keys = new ArrayList<>(uniqueValueCounts.keySet());
-						Collections.sort(keys, stringAsNumberComparator);
+
+						if (fieldType.equals("date")) {
+							Collections.sort(keys, new Comparator<String>() {
+				                @Override
+				                public int compare(String object1, String object2) {
+
+				                	return DateTime.parse(object1).compareTo(DateTime.parse(object2));
+				                }
+				            });
+						}
+
+						if (fieldType.equals("long")) {
+							Collections.sort(keys, new Comparator<String>() {
+				                @Override
+				                public int compare(String object1, String object2) {
+
+				                	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
+				                }
+				            });
+						}
+								
+						if (fieldType.equals("double")) {
+							Collections.sort(keys, new Comparator<String>() {
+				                @Override
+				                public int compare(String object1, String object2) {
+
+				                	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
+				                }
+				            });
+						}
+
+						if (fieldType.equals("text")) {
+							Collections.sort(keys, stringAsNumberComparator);
+						}
 
 						String uniqueElements = String.join(", ", keys);
 						csvGridItem.setText(4, uniqueElements);
-						//csvGridItem.setToolTipText(4, StaticCatalogEngine.wordWrap(uniqueElements, 50));
 						
 						ArrayList<String> keysValues = new ArrayList<>();
 						for (String key : keys) {
-							keysValues.add(key + " (" + uniqueValueCounts.get(key) + ") ");
+							keysValues.add(key + " (" + uniqueValueCounts.get(key) + ")");
 						}
-						
 						csvGridItem.setText(5, String.join(", ", keysValues));
 					}
 				}
