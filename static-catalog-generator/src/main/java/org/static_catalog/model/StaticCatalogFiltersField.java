@@ -2,7 +2,7 @@
 package org.static_catalog.model;
 
 /** Generation structure */
-public class StaticCatalogField {
+public class StaticCatalogFiltersField {
 
 	private String name;
 	

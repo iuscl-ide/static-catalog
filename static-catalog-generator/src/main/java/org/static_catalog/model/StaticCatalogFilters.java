@@ -6,9 +6,9 @@ import java.util.ArrayList;
 /** Generation structure */
 public class StaticCatalogFilters {
 
-	private final ArrayList<StaticCatalogField> fields = new ArrayList<>();
+	private final ArrayList<StaticCatalogFiltersField> fields = new ArrayList<>();
 
-	public ArrayList<StaticCatalogField> getFields() {
+	public ArrayList<StaticCatalogFiltersField> getFields() {
 		return fields;
 	}
 	

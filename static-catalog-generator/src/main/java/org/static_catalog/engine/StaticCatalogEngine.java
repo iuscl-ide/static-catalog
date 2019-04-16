@@ -6,15 +6,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
+import org.static_catalog.model.StaticCatalogExamine;
+import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
@@ -79,6 +83,74 @@ public class StaticCatalogEngine {
 		}
 		return label;
 	}
+	
+	/** http://www.java2s.com/Code/Java/Data-Type/WordWrap.htm */
+    public static String wordWrap(String input, int width) {
+        // protect ourselves
+        if (input == null) {
+            return "";
+        }
+        else if (width < 5) {
+            return input;
+        }
+        else if (width >= input.length()) {
+            return input;
+        }
+
+  
+
+        StringBuilder buf = new StringBuilder(input);
+        boolean endOfLine = false;
+        int lineStart = 0;
+
+        for (int i = 0; i < buf.length(); i++) {
+            if (buf.charAt(i) == '\n') {
+                lineStart = i + 1;
+                endOfLine = true;
+            }
+
+            // handle splitting at width character
+            if (i > lineStart + width - 1) {
+                if (!endOfLine) {
+                    int limit = i - lineStart - 1;
+                    BreakIterator breaks = BreakIterator.getLineInstance();
+                    breaks.setText(buf.substring(lineStart, i));
+                    int end = breaks.last();
+
+                    // if the last character in the search string isn't a space,
+                    // we can't split on it (looks bad). Search for a previous
+                    // break character
+                    if (end == limit + 1) {
+                        if (!Character.isWhitespace(buf.charAt(lineStart + end))) {
+                            end = breaks.preceding(end - 1);
+                        }
+                    }
+
+                    // if the last character is a space, replace it with a \n
+                    if (end != BreakIterator.DONE && end == limit + 1) {
+                        buf.replace(lineStart + end, lineStart + end + 1, "\n");
+                        lineStart = lineStart + end;
+                    }
+                    // otherwise, just insert a \n
+                    else if (end != BreakIterator.DONE && end != 0) {
+                        buf.insert(lineStart + end, '\n');
+                        lineStart = lineStart + end + 1;
+                    }
+                    else {
+                        buf.insert(i, '\n');
+                        lineStart = i + 1;
+                    }
+                }
+                else {
+                    buf.insert(i, '\n');
+                    lineStart = i + 1;
+                    endOfLine = false;
+                }
+            }
+        }
+
+        return buf.toString();
+    }
 	
 	/** Load CSV in grid */
 	public static void loadViewCsv(String csvCompleteFileName,
@@ -172,15 +244,15 @@ public class StaticCatalogEngine {
 	}
 	
 	/** Load examine CSV */
-	public static void loadExamineCsv(String csvCompleteFileName,
-			ArrayList<HashMap<String, Long>> fields, ArrayList<String> fieldNames,
-			ArrayList<String> fieldTypes, ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues,
+	public static void loadExamineCsv(String csvCompleteFileName, StaticCatalogExamine staticCatalogExamine,
 			long maxUniqueValues, int maxExceptions, boolean useFirstLineAsHeader,
 			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		long start = System.currentTimeMillis();
 		
 		loopProgress.doProgress("Start lines examine...");
+		
+		ArrayList<StaticCatalogExamineField> examineFields = staticCatalogExamine.getFields();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
@@ -196,30 +268,32 @@ public class StaticCatalogEngine {
 
 			if (useFirstLineAsHeader && (csvLineIndex == 0)) {
 				for (int index = 0; index < lineLength; index++) {
-					fields.add(index, new HashMap<String, Long>());
-					fieldNames.add(index, csvLine[index]);
+					StaticCatalogExamineField staticCatalogExamineField = new StaticCatalogExamineField();
+					staticCatalogExamineField.setName(csvLine[index]);
+					examineFields.add(index, staticCatalogExamineField);
 				}
 			}
 			else {
 				if (!useFirstLineAsHeader) {
-					int fieldsSize = fields.size();
+					int fieldsSize = examineFields.size();
 					if (fieldsSize < lineLength) {
 						for (int index = fieldsSize; index < lineLength; index++) {
-							fields.add(index, new HashMap<String, Long>());
-							fieldNames.add(index, "Field " + (index + 1));
+							StaticCatalogExamineField staticCatalogExamineField = new StaticCatalogExamineField();
+							staticCatalogExamineField.setName("Field " + (index + 1));
+							examineFields.add(index, staticCatalogExamineField);
 						}
 					}
 				}
 				for (int index = 0; index < lineLength; index++) {
 //					if (fields.get(index).size() < 500) {
 						long cnt = 0;
-						HashMap<String, Long> fieldsIndex = fields.get(index);
-						if (fieldsIndex.containsKey(csvLine[index])) {
-							cnt = fieldsIndex.get(csvLine[index]);
+						HashMap<String, Long> uniqueValueCounts = examineFields.get(index).getUniqueValueCounts();
+						if (uniqueValueCounts.containsKey(csvLine[index])) {
+							cnt = uniqueValueCounts.get(csvLine[index]);
 						}
 //						if (cnt < 500) {
 							cnt++;
-							fieldsIndex.put(csvLine[index] + "", cnt);
+							uniqueValueCounts.put(csvLine[index] + "", cnt);
 //						}
 //					}
 				}
@@ -236,18 +310,19 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress(csvLineIndex + " lines done analyzing, try to find the types...");
 		
 		String[] possibleTypes = { "long", "double", "date" };
-		for (int index = 0; index < fields.size(); index++) {
+		for (int index = 0; index < examineFields.size(); index++) {
+			
+			StaticCatalogExamineField examineField = examineFields.get(index);
 			
 			ArrayList<String> searchTypes = new ArrayList<>(Arrays.asList(possibleTypes));
-			HashMap<String, ArrayList<String>> typesExceptionValues = new HashMap<>();
-			fieldTypesExceptionValues.add(typesExceptionValues);
-			for (String possibleType: possibleTypes) {
+			HashMap<String, ArrayList<String>> typesExceptionValues = examineField.getFieldTypesExceptionValues();
+			for (String possibleType : possibleTypes) {
 				typesExceptionValues.put(possibleType, new ArrayList<>());
 			}
 			
-			HashMap<String, Long> fieldsIndex = fields.get(index);
-			int size = fieldsIndex.size();
-			for (String key : fieldsIndex.keySet()) {
+			HashMap<String, Long> uniqueValueCounts = examineField.getUniqueValueCounts();
+			int size = uniqueValueCounts.size();
+			for (String key : uniqueValueCounts.keySet()) {
 
 				if (searchTypes.size() == 0) {
 					break;
@@ -293,16 +368,16 @@ public class StaticCatalogEngine {
 			}
 			
 			if ((searchTypes.contains("long")) && (size > typesExceptionValues.get("long").size())) {
-				fieldTypes.add("long");
+				examineField.setType("long");
 			}
 			else if ((searchTypes.contains("double")) && (size > typesExceptionValues.get("double").size())) {
-				fieldTypes.add("double");
+				examineField.setType("double");
 			}
 			else if ((searchTypes.contains("date")) && (size > typesExceptionValues.get("date").size())) {
-				fieldTypes.add("date");
+				examineField.setType("date");
 			}
 			else {
-				fieldTypes.add("text");
+				examineField.setType("text");
 			}
 
 //			else if (searchTypes.contains("long")) {

@@ -16,11 +16,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,9 +41,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
+import org.static_catalog.main.L;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
-import org.static_catalog.model.StaticCatalogField;
+import org.static_catalog.model.StaticCatalogFiltersField;
+import org.static_catalog.model.StaticCatalogExamine;
+import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
 
 /** Generator main window */
@@ -577,7 +584,7 @@ public class StaticCatalogGeneratorMainWindow {
 		csvStatusLabel.setText("Status");
 
 		
-		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		csvFileGrid.setLayoutData(ui.createFillBothGridData());
 		csvFileGrid.setHeaderVisible(true);
 		//csvFileGrid.setAutoHeight(true);
@@ -784,8 +791,7 @@ public class StaticCatalogGeneratorMainWindow {
 		csvStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
 		csvStatusLabel.setText("Status");
 
-		
-		final Grid csvExamineGrid = new Grid(parentComposite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		final Grid csvExamineGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		csvExamineGrid.setLayoutData(ui.createFillBothGridData());
 		csvExamineGrid.setHeaderVisible(true);
 		csvExamineGrid.setLinesVisible(true);
@@ -803,6 +809,7 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements count");
 	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setAlignment(SWT.RIGHT);
 	    fieldGridColumn.setWidth(150);
 
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
@@ -821,6 +828,38 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWidth(300);
 
 		/* Events */
+	    csvExamineGrid.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent mouseEvent) {
+
+				GridItem gridItem = csvExamineGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
+				
+				for (int columnIndex = 0; columnIndex < csvExamineGrid.getColumnCount(); columnIndex++) {
+					
+					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
+						
+						Point gridP = csvExamineGrid.toDisplay(0, 0);
+						
+						final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE);
+						popupComposite.getShell().setLayout(ui.createGridLayout());
+						//popupComposite.setLayoutData(ui.createFillBothGridData());
+						popupComposite.setLayout(ui.createGridLayout());
+						popupComposite.setSize(480, 480);
+						popupComposite.setLocation(
+								gridP.x + ((csvExamineGrid.getSize().x - popupComposite.getSize().x) / 2),
+								gridP.y + ((csvExamineGrid.getSize().y - popupComposite.getSize().y) / 2));
+
+						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+						popupCompositeText.setText(gridItem.getText(columnIndex));
+						popupCompositeText.setLayoutData(ui.createFillBothGridData());
+	
+						popupComposite.show(popupComposite.getLocation());
+						break;
+					}
+				}
+			}
+		});
+	    
 		final ArrayList<String[]> csvExamineGridLines = new ArrayList<String[]>();
 		
 		csvExamineButton.addSelectionListener(new SelectionAdapter() {
@@ -831,13 +870,9 @@ public class StaticCatalogGeneratorMainWindow {
 				csvExamineGrid.disposeAllItems();
 				csvExamineGridLines.clear();
 				
-				ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
-				ArrayList<String> fieldNames = new ArrayList<>();
-				ArrayList<String> fieldTypes = new ArrayList<>();
-				ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
-				 
-				StaticCatalogEngine.loadExamineCsv(examineCsvFileControl.getCompleteFileName(),
-				fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+				StaticCatalogExamine staticCatalogExamine = new StaticCatalogExamine();
+				
+				StaticCatalogEngine.loadExamineCsv(examineCsvFileControl.getCompleteFileName(), staticCatalogExamine,
 				500,
 				Integer.parseInt(typeMaxExceptionsText.getText()),
 				useFirstLineAsHeaderCheckBox.getSelection(),
@@ -856,39 +891,46 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				int maxDiff = Integer.parseInt(filterElementsMaxDisplayText.getText());
 				
-				for (int index = 0; index < fieldNames.size(); index++) {
+				ArrayList<StaticCatalogExamineField> examineFields = staticCatalogExamine.getFields();
+				
+				for (int index = 0; index < examineFields.size(); index++) {
+					
+					StaticCatalogExamineField  examineField = examineFields.get(index);
 					
 					GridItem csvGridItem = new GridItem(csvExamineGrid, SWT.NONE);
 					
-					csvGridItem.setText(0, fieldNames.get(index));
+					csvGridItem.setText(0, examineField.getName());
 
-					String fieldType = fieldTypes.get(index);
+					String fieldType = examineField.getType();
 					csvGridItem.setData("type", fieldType);
 					csvGridItem.setText(1, typeNames.get(fieldType));
 					
-					int diff = fields.get(index).keySet().size(); 
+					HashMap<String, Long> uniqueValueCounts = examineField.getUniqueValueCounts();
+					
+					int diff = uniqueValueCounts.keySet().size(); 
 					csvGridItem.setText(2, diff + "");
 					
 					if (diff < maxDiff) {
 						
-						HashMap<String, Long> groups = fields.get(index); 
+						//HashMap<String, Long> groups = examineField.getUniqueValueCounts(); 
 
 						if (!fieldType.equals("text")) {
-							ArrayList<String> exceps = new ArrayList<>(fieldTypesExceptionValues.get(index).get(fieldType));
+							ArrayList<String> exceps = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
 							Collections.sort(exceps);
 
 							csvGridItem.setText(3, String.join(", ", exceps));
 						}
 						
-						ArrayList<String> keys = new ArrayList<>(groups.keySet());
+						ArrayList<String> keys = new ArrayList<>(uniqueValueCounts.keySet());
 						Collections.sort(keys, stringAsNumberComparator);
 
-						csvGridItem.setText(4, String.join(", ", keys));
-
+						String uniqueElements = String.join(", ", keys);
+						csvGridItem.setText(4, uniqueElements);
+						//csvGridItem.setToolTipText(4, StaticCatalogEngine.wordWrap(uniqueElements, 50));
 						
 						ArrayList<String> keysValues = new ArrayList<>();
 						for (String key : keys) {
-							keysValues.add(key + " (" + groups.get(key) + ") ");
+							keysValues.add(key + " (" + uniqueValueCounts.get(key) + ") ");
 						}
 						
 						csvGridItem.setText(5, String.join(", ", keysValues));
@@ -906,7 +948,7 @@ public class StaticCatalogGeneratorMainWindow {
 				StaticCatalogFilters staticCatalogFilters = new StaticCatalogFilters();
 				for (GridItem gridItem : csvExamineGrid.getItems()) {
 					
-					StaticCatalogField staticCatalogField = new StaticCatalogField();
+					StaticCatalogFiltersField staticCatalogField = new StaticCatalogFiltersField();
 					String name = gridItem.getText(0);
 					staticCatalogField.setName(name);
 					staticCatalogField.setType((String) gridItem.getData("type"));
@@ -941,7 +983,7 @@ public class StaticCatalogGeneratorMainWindow {
 		saveFiltersButton.setText("Save");
 		saveFiltersButton.setLayoutData(ui.createWidth120GridData());
 		
-		final Grid filtersGrid = new Grid(parentComposite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		final Grid filtersGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		filtersGrid.setLayoutData(ui.createFillBothGridData());
 		filtersGrid.setHeaderVisible(true);
 		filtersGrid.setLinesVisible(true);
@@ -986,7 +1028,7 @@ public class StaticCatalogGeneratorMainWindow {
 				filtersGrid.disposeAllItems();
 				
 				int index = 0;
-				for (StaticCatalogField staticCatalogField : staticCatalogFilters.getFields()) {
+				for (StaticCatalogFiltersField staticCatalogField : staticCatalogFilters.getFields()) {
 					
 					GridItem gridItem = new GridItem(filtersGrid, SWT.NONE);
 					
@@ -1039,7 +1081,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				StaticCatalogFilters filtersDefinition = new StaticCatalogFilters();
 				for (GridItem gridItem : filtersGrid.getItems()) {
-					StaticCatalogField field = new StaticCatalogField();
+					StaticCatalogFiltersField field = new StaticCatalogFiltersField();
 					field.setName(gridItem.getText(1));
 					field.setType(nameTypes.get(((CCombo) gridItem.getData("typeCCombo")).getText()));
 					field.setIsFilter(gridItem.getChecked(3));
