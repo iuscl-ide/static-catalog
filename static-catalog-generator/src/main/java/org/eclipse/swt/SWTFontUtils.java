@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
+import org.static_catalog.main.U;
 
 /** {@link SWT} font related utility methods. */
 public class SWTFontUtils {
@@ -73,8 +72,9 @@ public class SWTFontUtils {
 			// Get operating system and windowing system names.
 			String os = System.getProperty("os.name");
 			String ws = SWT.getPlatform();
-			os = StringUtils.deleteWhitespace(os).toLowerCase(Locale.US);
-			ws = StringUtils.deleteWhitespace(ws).toLowerCase(Locale.US);
+			
+			os = U.deleteWhitespace(os).toLowerCase(Locale.US);
+			ws = U.deleteWhitespace(ws).toLowerCase(Locale.US);
 
 			// Get names to check, in order from specific to generic.
 			String[] names = { os + "_" + ws, os, "" };

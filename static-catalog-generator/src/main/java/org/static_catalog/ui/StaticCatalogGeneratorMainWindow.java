@@ -1,17 +1,14 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.text.WordUtils;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridEditor;
@@ -48,6 +45,7 @@ import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.engine.StringAsNumberComparator;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
+import org.static_catalog.main.U;
 import org.static_catalog.model.StaticCatalogExamine;
 import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
@@ -851,7 +849,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL);
 						popupCompositeText.setBackground(whiteColor);
-						String wrap = WordUtils.wrap(gridItem.getText(columnIndex), 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
+						String wrap = U.wrap(gridItem.getText(columnIndex), 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
 						popupCompositeText.setText(wrap);
 						popupCompositeText.setLayoutData(ui.createFillBothGridData());
 						popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
@@ -988,7 +986,7 @@ public class StaticCatalogGeneratorMainWindow {
 					staticCatalogField.setType((String) gridItem.getData("type"));
 					
 					staticCatalogField.setIsFilter(false);
-					staticCatalogField.setLabel(StaticCatalogEngine.makeLabel(name));
+					staticCatalogField.setLabel(U.makeLabel(name));
 					
 					staticCatalogFilters.getFields().add(staticCatalogField);
 				}
@@ -1134,10 +1132,10 @@ public class StaticCatalogGeneratorMainWindow {
 	    final FileControl sourceCsvFileControl = addFileControl(parentComposite, "Source CSV", "csv", p.getGenerateSourceCsvFileControl());
 
 	    final FileControl filtersFileControl = addFileControl(parentComposite, "Filters file", "json", p.getGenerateFiltersFileControl());
-	    
-	    final FileControl destinationFileControl = addFileControl(parentComposite, "Destination folder", "", true, p.getGenerateDestinationFolderFileControl());
 
 	    final FileControl templateFileControl = addFileControl(parentComposite, "Template file", "liquid", p.getGenerateTemplateFileControl());
+
+	    final FileControl destinationFileControl = addFileControl(parentComposite, "Destination folder", "", true, p.getGenerateDestinationFolderFileControl());
 
 		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
 		ui.addDebug(csvButtonsComposite);
@@ -1221,4 +1219,5 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 	}
+
 }

@@ -30,128 +30,6 @@ import liqp.Template;
 /** Generator engine */
 public class StaticCatalogEngine {
 
-	private static final HashMap<String, String> replaceWords = new HashMap<>(); 
-	static {
-		replaceWords.put("id", "ID");
-		replaceWords.put("nr", "Nr");
-		replaceWords.put("nr.", "Nr.");
-		replaceWords.put("no.", "No.");
-	}
-	
-	/** Capitalize sentence */
-	public static String makeLabel(String name) {
-
-		String nameSpaces = name;
-		if (!name.contains(" ")) {
-			
-			String nameLowercase = name.toLowerCase();
-			nameSpaces = "";
-			for (int index = 0; index < name.length(); index++) {
-				char ch = nameLowercase.charAt(index);
-				if (name.charAt(index) == ch) {
-					nameSpaces = nameSpaces + ch;
-				}
-				else {
-					nameSpaces = nameSpaces + " " + ch;
-				}
-			}
-		}
-		nameSpaces = nameSpaces.trim();
-
-		String words[] = nameSpaces.split(" ");
-		String label = words[0].toLowerCase();
-		label = label.substring(0, 1).toUpperCase() + label.substring(1);
-		for (int index = 1; index < words.length; index++) {
-			String word = words[index];
-			if (replaceWords.containsKey(word)) {
-				word = replaceWords.get(word);
-			}
-			String drow = "";
-			for (int xedni = word.length() - 1; xedni >= 0; xedni--) {
-				char ch = word.charAt(xedni); 
-				if ((ch >= '0') && (ch <= '9')) {
-					drow = drow + ch;
-				}
-				else {
-					if (drow.length() > 0) {
-						word = word.substring(0, xedni + 1) + " " + drow;
-					}
-					break;
-				}
-			}
-			label = label + " " + word;
-		}
-		return label;
-	}
-	
-	/** http://www.java2s.com/Code/Java/Data-Type/WordWrap.htm */
-    public static String wordWrap(String input, int width) {
-        // protect ourselves
-        if (input == null) {
-            return "";
-        }
-        else if (width < 5) {
-            return input;
-        }
-        else if (width >= input.length()) {
-            return input;
-        }
-
-  
-
-        StringBuilder buf = new StringBuilder(input);
-        boolean endOfLine = false;
-        int lineStart = 0;
-
-        for (int i = 0; i < buf.length(); i++) {
-            if (buf.charAt(i) == '\n') {
-                lineStart = i + 1;
-                endOfLine = true;
-            }
-
-            // handle splitting at width character
-            if (i > lineStart + width - 1) {
-                if (!endOfLine) {
-                    int limit = i - lineStart - 1;
-                    BreakIterator breaks = BreakIterator.getLineInstance();
-                    breaks.setText(buf.substring(lineStart, i));
-                    int end = breaks.last();
-
-                    // if the last character in the search string isn't a space,
-                    // we can't split on it (looks bad). Search for a previous
-                    // break character
-                    if (end == limit + 1) {
-                        if (!Character.isWhitespace(buf.charAt(lineStart + end))) {
-                            end = breaks.preceding(end - 1);
-                        }
-                    }
-
-                    // if the last character is a space, replace it with a \n
-                    if (end != BreakIterator.DONE && end == limit + 1) {
-                        buf.replace(lineStart + end, lineStart + end + 1, "\n");
-                        lineStart = lineStart + end;
-                    }
-                    // otherwise, just insert a \n
-                    else if (end != BreakIterator.DONE && end != 0) {
-                        buf.insert(lineStart + end, '\n');
-                        lineStart = lineStart + end + 1;
-                    }
-                    else {
-                        buf.insert(i, '\n');
-                        lineStart = i + 1;
-                    }
-                }
-                else {
-                    buf.insert(i, '\n');
-                    lineStart = i + 1;
-                    endOfLine = false;
-                }
-            }
-        }
-
-        return buf.toString();
-    }
-	
 	/** Load CSV in grid */
 	public static void loadViewCsv(String csvCompleteFileName,
 			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
@@ -399,18 +277,19 @@ public class StaticCatalogEngine {
 	public static void generate(String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
 			int typeMaxExceptions, boolean useFirstLineAsHeader, AtomicBoolean doLoop, LoopProgress loopProgress) {
 
-//		/* Examine */
-//		ArrayList<HashMap<String, Long>> fields = new ArrayList<HashMap<String,Long>>();
-//		ArrayList<String> fieldNames = new ArrayList<>();
-//		ArrayList<String> fieldTypes = new ArrayList<>();
-//		ArrayList<HashMap<String, ArrayList<String>>> fieldTypesExceptionValues = new ArrayList<>();
-//		 
-//		loadExamineCsv(sourceCsvFileName,
-//		fields, fieldNames, fieldTypes, fieldTypesExceptionValues,
+		/* Examine */
+//		StaticCatalogExamine staticCatalogExamine = new StaticCatalogExamine();
+//		
+//		loadExamineCsv(sourceCsvFileName, staticCatalogExamine,
 //		500,
 //		typeMaxExceptions,
 //		useFirstLineAsHeader,
 //		doLoop, loopProgress);
+//
+//		S.saveObjectToJsonFileName(staticCatalogExamine, "C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine.csv");
+
+		StaticCatalogExamine staticCatalogExamine = S.loadObjectFromJsonFileName("C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine.json", StaticCatalogExamine.class);
+//		S.saveObjectToJsonFileName(staticCatalogExamine, "C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine2.json");
 		
 		/* Filters */
 		StaticCatalogFilters filters = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogFilters.class);

@@ -15,7 +15,6 @@ public class StaticCatalogExamineField {
 
 	private final HashMap<String, Long> uniqueValueCounts = new HashMap<>();
 
-	
 	public String getName() {
 		return name;
 	}
