@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/swt.jar"/>
 	<classpathentry kind="lib" path="lib/univocity-parsers-2.8.1.jar"/>
@@ -13,7 +14,5 @@
 	<classpathentry kind="lib" path="lib/jackson-databind-2.9.8.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.10.3.jar"/>
 	<classpathentry kind="lib" path="lib/liqp-0.7.8.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang3-3.9.jar"/>
-	<classpathentry kind="lib" path="lib/commons-text-1.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
