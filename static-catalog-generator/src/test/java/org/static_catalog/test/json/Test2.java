@@ -18,10 +18,11 @@ public class Test2 {
 	public void run() {
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-        data.put("foo", this. new Foo2());
-        Template fooAt = Template.parse("{{foo}}");
+        //data.put("foo", "{ \"foo\": { \"a\": \"aa\" }}");
+        //data.put("{ \"foo\": { \"a\": \"aa\" }}");
+        Template fooAt = Template.parse("{{foo.a}}");
 
-        String fooA = fooAt.render(data);
+        String fooA = fooAt.render("{ \"foo\": { \"a\": \"aa\" }}");
         
         System.out.println(fooA);
 		
