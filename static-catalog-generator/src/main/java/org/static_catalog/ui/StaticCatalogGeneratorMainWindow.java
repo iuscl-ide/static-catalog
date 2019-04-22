@@ -1202,7 +1202,8 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
 				StaticCatalogEngine.generate(sourceCsvFileControl.getCompleteFileName(),
-					filtersFileControl.getCompleteFileName(), destinationFileControl.getCompleteFileName(),	
+					filtersFileControl.getCompleteFileName(), templateFileControl.getCompleteFileName(),
+					destinationFileControl.getCompleteFileName(),	
 					Integer.parseInt(typeMaxExceptionsText.getText()), useFirstLineAsHeaderCheckBox.getSelection(), doLoop,
 					new LoopProgress() {
 						@Override

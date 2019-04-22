@@ -30,6 +30,10 @@ import liqp.Template;
 /** Generator engine */
 public class StaticCatalogEngine {
 
+	static class Foo {
+        public String a = "A";
+    }
+	
 	/** Load CSV in grid */
 	public static void loadViewCsv(String csvCompleteFileName,
 			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
@@ -274,7 +278,7 @@ public class StaticCatalogEngine {
 	}
 
 	/** Generate catalog */
-	public static void generate(String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
+	public static void generate(String sourceCsvFileName, String filtersFileName, String templateFilename, String destinationFolderName,	
 			int typeMaxExceptions, boolean useFirstLineAsHeader, AtomicBoolean doLoop, LoopProgress loopProgress) {
 
 		/* Examine */
@@ -296,12 +300,18 @@ public class StaticCatalogEngine {
 		
 		/* Catalog */
 		
-		String indexHtml = "{{ index }}";
-		String indexHtmlFileName = destinationFolderName + File.separator + "index.html";
+		String templateString = S.loadFileInString(templateFilename);
+		//		"{{ index }}";
+		String indexHtmlFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.html";
 		
-		Template template = Template.parse(indexHtml);
-		String rendered = template.render("index", "s-c");
-		System.out.println(rendered);
+		Template template = Template.parse(templateString);
+		
+		
+		ArrayList<Foo> foos = new ArrayList<>();
+		foos.add(new Foo());
+		foos.add(new Foo());
+		String rendered = template.render("foo", new Foo());
+//		System.out.println(rendered);
 		
 		
 		try {
