@@ -47,51 +47,33 @@
 			</div>
 		</div>
 
-		<div class="ui black segment">{{ foo.a }} earch-able catalog for static generated sites - static-catalog.org 2019</div>
+		<div class="ui black segment">Search-able catalog for static generated sites - static-catalog.org 2019</div>
 
 		<div class="ui grid">
 			<div class="four wide column">
 				
-				{% for filter in filters %}
+				{% for filter in template.filters %}
 				
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
-						<a class="header active title"> <i class="dropdown icon"></i> {{ foo.a }}
+						<a class="header active title"> <i class="dropdown icon"></i> {{ filter.label }}
 						</a>
 						<div class="active content">
 							<div class="ui list">
+							
+ 								{% for filter_value in filter.values %}
+							
 								<div class="item">
 									<div class="right floated content">
-										<div class="ui gray horizontal label">1</div>
+										<div class="ui gray horizontal label">{{ filter_value.count }}</div>
 									</div>
 									<div class="ui checkbox">
-										<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">Item 1</label>
+										<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">{{ filter_value.name }}</label>
 									</div>
 								</div>
-								<div class="item">
-									<div class="right floated content">
-										<div class="ui gray horizontal label">12</div>
-									</div>
-									<div class="ui checkbox">
-										<input type="checkbox" name="size" value="small"> <label>Item 2</label>
-									</div>
-								</div>
-								<div class="item">
-									<div class="right floated content">
-										<div class="ui gray horizontal label">123</div>
-									</div>
-									<div class="ui checkbox">
-										<input type="checkbox" name="size" value="small"> <label>Item 3</label>
-									</div>
-								</div>
-								<div class="item">
-									<div class="right floated content">
-										<div class="ui gray horizontal label">1234</div>
-									</div>
-									<div class="ui checkbox">
-										<input type="checkbox" name="size" value="small"> <label>Item 4</label>
-									</div>
-								</div>
+							
+ 								{% endfor %}
+								
 							</div>
 						</div>
 					</div>

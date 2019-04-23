@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.program.Program;
@@ -20,6 +20,10 @@ import org.static_catalog.main.S;
 import org.static_catalog.model.StaticCatalogExamine;
 import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
+import org.static_catalog.model.StaticCatalogFiltersField;
+import org.static_catalog.model.StaticCatalogTemplate;
+import org.static_catalog.model.StaticCatalogTemplateFilter;
+import org.static_catalog.model.StaticCatalogTemplateFilterValue;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -294,23 +298,59 @@ public class StaticCatalogEngine {
 
 		StaticCatalogExamine staticCatalogExamine = S.loadObjectFromJsonFileName("C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine.json", StaticCatalogExamine.class);
 //		S.saveObjectToJsonFileName(staticCatalogExamine, "C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine2.json");
+		LinkedHashMap<String, StaticCatalogExamineField> examineNameFields = new LinkedHashMap<>();
+		for (StaticCatalogExamineField examineFieldValue : staticCatalogExamine.getFields()) {
+			examineNameFields.put(examineFieldValue.getName(), examineFieldValue);	
+		}
 		
 		/* Filters */
 		StaticCatalogFilters filters = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogFilters.class);
 		
+		//String filtersJson = S.loadFileInString(filtersFileName);
+		
 		/* Catalog */
+		
+		StaticCatalogTemplate template = new StaticCatalogTemplate();
+		
+		for (StaticCatalogFiltersField filtersField : filters.getFields()) {
+			
+			if (filtersField.getIsFilter()) {
+				
+				StaticCatalogTemplateFilter templateFilter = new StaticCatalogTemplateFilter();
+				templateFilter.setLabel(filtersField.getLabel());
+				templateFilter.setName(filtersField.getName());
+				templateFilter.setType(filtersField.getType());
+
+				StaticCatalogExamineField examineField = examineNameFields.get(filtersField.getName());
+
+				//templateFilter.getExceptions().addAll(examineField.getFieldTypesExceptionValues().get(examineField.getType()));
+				
+				for (Entry<String, Long> uniqueValueCount : examineField.getUniqueValueCounts().entrySet()) {
+					
+					StaticCatalogTemplateFilterValue filterValue = new StaticCatalogTemplateFilterValue();
+					filterValue.setName(uniqueValueCount.getKey());
+					filterValue.setCount(uniqueValueCount.getValue());
+					templateFilter.getValues().add(filterValue);
+				}
+				
+				template.getTemplate().getFilters().add(templateFilter);
+			}
+		}
+		
+		String filtersJson = S.saveObjectToJsonString(template);
 		
 		String templateString = S.loadFileInString(templateFilename);
 		//		"{{ index }}";
 		String indexHtmlFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.html";
 		
-		Template template = Template.parse(templateString);
+		Template templateLiquid = Template.parse(templateString);
 		
+		String rendered = templateLiquid.render(filtersJson);
 		
-		ArrayList<Foo> foos = new ArrayList<>();
-		foos.add(new Foo());
-		foos.add(new Foo());
-		String rendered = template.render("foo", new Foo());
+//		ArrayList<Foo> foos = new ArrayList<>();
+//		foos.add(new Foo());
+//		foos.add(new Foo());
+//		String rendered = template.render("foo", new Foo());
 //		System.out.println(rendered);
 		
 		
