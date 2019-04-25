@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -325,13 +326,41 @@ public class StaticCatalogEngine {
 
 				//templateFilter.getExceptions().addAll(examineField.getFieldTypesExceptionValues().get(examineField.getType()));
 				
+				
+				int valuesCount = examineField.getUniqueValueCounts().size();
+				templateFilter.setValues_count(valuesCount);
+				int moreValuesThreshhold = Integer.MAX_VALUE;
+				
+				if (valuesCount > 10) {
+					templateFilter.setHas_more_values(true);
+					moreValuesThreshhold = 5;
+				}
+				
+				int valueIndex = 0;
 				for (Entry<String, Long> uniqueValueCount : examineField.getUniqueValueCounts().entrySet()) {
 					
 					StaticCatalogTemplateFilterValue filterValue = new StaticCatalogTemplateFilterValue();
-					filterValue.setName(uniqueValueCount.getKey());
+					String filterValueLabel = uniqueValueCount.getKey(); 
+					if (filtersField.getType().equals("date")) {
+						
+						DateTime date = DateTime.parse(filterValueLabel);
+						filterValueLabel = date.toString("MMM dd yyyy");	
+					}
+					
+					filterValue.setName(filterValueLabel);
+					
+					
 					filterValue.setCount(uniqueValueCount.getValue());
-					templateFilter.getValues().add(filterValue);
+					if (valueIndex < moreValuesThreshhold) {
+						templateFilter.getMain_values().add(filterValue);	
+					}
+					else {
+						templateFilter.getMore_values().add(filterValue);
+					}
+					
+					valueIndex++;
 				}
+				templateFilter.setMore_values_count(templateFilter.getMore_values().size());
 				
 				template.getTemplate().getFilters().add(templateFilter);
 			}

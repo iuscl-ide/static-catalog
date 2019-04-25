@@ -10,6 +10,7 @@
 <title>static-catalog</title>
 
 <link rel="stylesheet" type="text/css" href="semantic.css">
+<link rel="stylesheet" type="text/css" href="semantic-button-github.css">
 
 <script src="jquery-3.4.0.js"></script>
 <script src="semantic.js"></script>
@@ -47,10 +48,22 @@
 			</div>
 		</div>
 
-		<div class="ui black segment">Search-able catalog for static generated sites - static-catalog.org 2019</div>
+		<div class="ui black segment">
+		
+		<div class="ui grid">
+			<div class="middle aligned fourteen wide column">
+				Search-able catalog for static generated sites - static-catalog.org 2019
+			</div>
+			<div class="right aligned two wide column">
+				<div class="ui primary button">Apply</div>
+			</div>
+		</div>	
+		
+			
+		</div>
 
 		<div class="ui grid">
-			<div class="four wide column">
+			<div class="five wide column">
 				
 				{% for filter in template.filters %}
 				
@@ -61,18 +74,45 @@
 						<div class="active content">
 							<div class="ui list">
 							
- 								{% for filter_value in filter.values %}
+ 								{% for filter_value in filter.main_values %}
 							
 								<div class="item">
-									<div class="right floated content">
-										<div class="ui gray horizontal label">{{ filter_value.count }}</div>
-									</div>
 									<div class="ui checkbox">
 										<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">{{ filter_value.name }}</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
 									</div>
 								</div>
 							
  								{% endfor %}
+
+								{% if filter.has_more_values %}
+			
+								<div class="item">
+									<a class="header title"> <i class="dropdown icon"></i>Show more <span class="ui basic horizontal label">{{ filter.more_values_count }}</span></a> 
+									
+									<div class="content">
+										<div class="ui list">
+										
+			 								{% for filter_value in filter.more_values %}
+										
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">{{ filter_value.name }}</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+												</div>
+											</div>
+										
+			 								{% endfor %}
+											
+										</div>
+									</div>
+								</div>
+
+								{% endif %}
 								
 							</div>
 						</div>
@@ -82,7 +122,7 @@
 				{% endfor %}
 				
 			</div>
-			<div class="twelve wide stretched column">
+			<div class="eleven wide stretched column">
 				<table class="ui table stackable compact sortable celled table">
 					<thead>
 						<tr>
