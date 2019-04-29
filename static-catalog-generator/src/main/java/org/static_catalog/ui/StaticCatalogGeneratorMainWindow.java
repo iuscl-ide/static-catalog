@@ -2,8 +2,6 @@
 package org.static_catalog.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -40,9 +38,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.pojava.datetime.DateTime;
 import org.static_catalog.engine.StaticCatalogEngine;
-import org.static_catalog.engine.StringAsNumberComparator;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
@@ -116,9 +112,6 @@ public class StaticCatalogGeneratorMainWindow {
 		p = P.load(this, applicationRootFolder + "/static-catalog.config.json");
 	}
 
-	/** Natural order */
-	private final StringAsNumberComparator stringAsNumberComparator = new StringAsNumberComparator();
-	
 	/** Concurrent */
 	private AtomicBoolean doLoop = new AtomicBoolean(true);
 	
@@ -815,19 +808,19 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWidth(150);
 
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
-		fieldGridColumn.setText("Exceptions");
+		fieldGridColumn.setText("Exceptions (count)");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setWidth(150);
+
+//	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+//		fieldGridColumn.setText("Unique elements");
+//	    fieldGridColumn.setWordWrap(true);
+//	    fieldGridColumn.setWidth(300);
 
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
-		fieldGridColumn.setText("Unique elements");
+		fieldGridColumn.setText("Unique elements (count)");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(300);
-
-	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
-		fieldGridColumn.setText("Unique elements distribution");
-	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(300);
+	    fieldGridColumn.setWidth(550);
 
 		/* Events */
 	    csvExamineGrid.addMouseListener(new MouseAdapter() {
@@ -874,7 +867,7 @@ public class StaticCatalogGeneratorMainWindow {
 				StaticCatalogExamine staticCatalogExamine = new StaticCatalogExamine();
 				
 				StaticCatalogEngine.loadExamineCsv(examineCsvFileControl.getCompleteFileName(), staticCatalogExamine,
-				500,
+				Integer.parseInt(filterElementsMaxDisplayText.getText()),
 				Integer.parseInt(typeMaxExceptionsText.getText()),
 				useFirstLineAsHeaderCheckBox.getSelection(),
 				doLoop,
@@ -916,56 +909,72 @@ public class StaticCatalogGeneratorMainWindow {
 						//HashMap<String, Long> groups = examineField.getUniqueValueCounts(); 
 
 						/* 3 */
-						if (!fieldType.equals("text")) {
-							ArrayList<String> exceps = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
-							Collections.sort(exceps);
-							csvGridItem.setText(3, String.join(", ", exceps));
-						}
-							
+//						if (!fieldType.equals("text")) {
+//							ArrayList<String> exceps = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
+//							Collections.sort(exceps);
+//							csvGridItem.setText(3, String.join(", ", exceps));
+//						}
+
 						ArrayList<String> keys = new ArrayList<>(uniqueValueCounts.keySet());
-
-						if (fieldType.equals("date")) {
-							Collections.sort(keys, new Comparator<String>() {
-				                @Override
-				                public int compare(String object1, String object2) {
-
-				                	return DateTime.parse(object1).compareTo(DateTime.parse(object2));
-				                }
-				            });
-						}
-
-						if (fieldType.equals("long")) {
-							Collections.sort(keys, new Comparator<String>() {
-				                @Override
-				                public int compare(String object1, String object2) {
-
-				                	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
-				                }
-				            });
-						}
+						
+						if (!fieldType.equals("text")) {
+							ArrayList<String> exceptionKeys = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
+							if (exceptionKeys.size() > 0) {
+								//Collections.sort(exceptionKeys);
+								StaticCatalogEngine.sortTypeKey("text", keys);
+								ArrayList<String> exceptionKeysValues = new ArrayList<>();
+								for (String exceptionKey : exceptionKeys) {
+									exceptionKeysValues.add(exceptionKey + " (" + uniqueValueCounts.get(exceptionKey) + ")");
+								}
+								csvGridItem.setText(3, String.join(", ", exceptionKeysValues));
 								
-						if (fieldType.equals("double")) {
-							Collections.sort(keys, new Comparator<String>() {
-				                @Override
-				                public int compare(String object1, String object2) {
-
-				                	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
-				                }
-				            });
+								keys.removeAll(exceptionKeys);
+							}
 						}
 
-						if (fieldType.equals("text")) {
-							Collections.sort(keys, stringAsNumberComparator);
-						}
+						StaticCatalogEngine.sortTypeKey(fieldType, keys);
+//						if (fieldType.equals("date")) {
+//							Collections.sort(keys, new Comparator<String>() {
+//				                @Override
+//				                public int compare(String object1, String object2) {
+//
+//				                	return DateTime.parse(object1).compareTo(DateTime.parse(object2));
+//				                }
+//				            });
+//						}
+//
+//						if (fieldType.equals("long")) {
+//							Collections.sort(keys, new Comparator<String>() {
+//				                @Override
+//				                public int compare(String object1, String object2) {
+//
+//				                	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
+//				                }
+//				            });
+//						}
+//								
+//						if (fieldType.equals("double")) {
+//							Collections.sort(keys, new Comparator<String>() {
+//				                @Override
+//				                public int compare(String object1, String object2) {
+//
+//				                	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
+//				                }
+//				            });
+//						}
+//
+//						if (fieldType.equals("text")) {
+//							Collections.sort(keys, stringAsNumberComparator);
+//						}
 
-						String uniqueElements = String.join(", ", keys);
-						csvGridItem.setText(4, uniqueElements);
+//						String uniqueElements = String.join(", ", keys);
+//						csvGridItem.setText(4, uniqueElements);
 						
 						ArrayList<String> keysValues = new ArrayList<>();
 						for (String key : keys) {
 							keysValues.add(key + " (" + uniqueValueCounts.get(key) + ")");
 						}
-						csvGridItem.setText(5, String.join(", ", keysValues));
+						csvGridItem.setText(4, String.join(", ", keysValues));
 					}
 				}
 			}
@@ -985,7 +994,13 @@ public class StaticCatalogGeneratorMainWindow {
 					staticCatalogField.setName(name);
 					staticCatalogField.setType((String) gridItem.getData("type"));
 					
-					staticCatalogField.setIsFilter(false);
+					String uniqueValuesCount = gridItem.getText(4);
+					if ((uniqueValuesCount != null) && (uniqueValuesCount.trim().length() > 0)) {
+						staticCatalogField.setIsFilter(true);
+					}
+					else {
+						staticCatalogField.setIsFilter(false);	
+					}
 					staticCatalogField.setLabel(U.makeLabel(name));
 					
 					staticCatalogFilters.getFields().add(staticCatalogField);
@@ -1146,28 +1161,28 @@ public class StaticCatalogGeneratorMainWindow {
 		csvGenerateButton.setText("Generate");
 		csvGenerateButton.setLayoutData(ui.createWidth120GridData());
 
-		final Text typeMaxExceptionsText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
-		typeMaxExceptionsText.setLayoutData(ui.createWidthGridData(30));
-		typeMaxExceptionsText.setText(p.getGenerateTypeMaxExceptions() + "");
-		typeMaxExceptionsText.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent focusEvent) {
-				
-				int typeMaxExceptions = p.getGenerateTypeMaxExceptions();
-				try {
-					typeMaxExceptions = Integer.parseInt(typeMaxExceptionsText.getText().trim());
-				}
-				catch (NumberFormatException numberFormatException) {
-					typeMaxExceptionsText.setText(typeMaxExceptions + "");
-				}		
-				p.setGenerateTypeMaxExceptions(typeMaxExceptions);		
-				p.save();
-			}
-		});
-
-		final Label typeMaxExceptionsLabel = new Label(csvButtonsComposite, SWT.NONE);
-		typeMaxExceptionsLabel.setLayoutData(ui.createWidthGridData(210));
-		typeMaxExceptionsLabel.setText("maximum field type exception values");
+//		final Text typeMaxExceptionsText = new Text(csvButtonsComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+//		typeMaxExceptionsText.setLayoutData(ui.createWidthGridData(30));
+//		typeMaxExceptionsText.setText(p.getGenerateTypeMaxExceptions() + "");
+//		typeMaxExceptionsText.addFocusListener(new FocusAdapter() {
+//			@Override
+//			public void focusLost(FocusEvent focusEvent) {
+//				
+//				int typeMaxExceptions = p.getGenerateTypeMaxExceptions();
+//				try {
+//					typeMaxExceptions = Integer.parseInt(typeMaxExceptionsText.getText().trim());
+//				}
+//				catch (NumberFormatException numberFormatException) {
+//					typeMaxExceptionsText.setText(typeMaxExceptions + "");
+//				}		
+//				p.setGenerateTypeMaxExceptions(typeMaxExceptions);		
+//				p.save();
+//			}
+//		});
+//
+//		final Label typeMaxExceptionsLabel = new Label(csvButtonsComposite, SWT.NONE);
+//		typeMaxExceptionsLabel.setLayoutData(ui.createWidthGridData(210));
+//		typeMaxExceptionsLabel.setText("maximum field type exception values");
 
 		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsComposite, SWT.CHECK);
 		GridData useFirstLineasHeaderCheckBoxGridData = ui.createWidthGridData(200);
@@ -1204,7 +1219,7 @@ public class StaticCatalogGeneratorMainWindow {
 				StaticCatalogEngine.generate(sourceCsvFileControl.getCompleteFileName(),
 					filtersFileControl.getCompleteFileName(), templateFileControl.getCompleteFileName(),
 					destinationFileControl.getCompleteFileName(),	
-					Integer.parseInt(typeMaxExceptionsText.getText()), useFirstLineAsHeaderCheckBox.getSelection(), doLoop,
+					useFirstLineAsHeaderCheckBox.getSelection(), doLoop,
 					new LoopProgress() {
 						@Override
 						public void doProgress(String progressMessage) {

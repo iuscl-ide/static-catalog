@@ -67,18 +67,33 @@
 				
 				{% for filter in template.filters %}
 				
+				{% if filter.is_displayed %}
+				
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
-						<a class="header active title"> <i class="dropdown icon"></i> {{ filter.label }}
+						<a class="header active title"> <i class="dropdown icon"></i> {{ filter.label }} <span class="ui left pointing basic horizontal label">{{ filter.total_values_count }}</span>
 						</a>
 						<div class="active content">
 							<div class="ui list">
-							
- 								{% for filter_value in filter.main_values %}
+
+ 								{% for filter_value in filter.exception_values %}
 							
 								<div class="item">
 									<div class="ui checkbox">
-										<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">{{ filter_value.name }}</label>
+										<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id" style="font-style: italic;">{{ filter_value.name }}</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+									</div>
+								</div>
+							
+ 								{% endfor %}
+							
+ 								{% for filter_value in filter.values %}
+							
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
 									</div>
 									<div class="right floated content">
 										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
@@ -87,19 +102,32 @@
 							
  								{% endfor %}
 
-								{% if filter.has_more_values %}
+								{% if filter.has_more_values or filter.has_more_exception_values %}
 			
 								<div class="item">
-									<a class="header title"> <i class="dropdown icon"></i>Show more <span class="ui basic horizontal label">{{ filter.more_values_count }}</span></a> 
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ filter.total_more_values_count }}</span></a> 
 									
 									<div class="content">
 										<div class="ui list">
+
+			 								{% for filter_value in filter.more_exception_values %}
+										
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id" style="font-style: italic;">{{ filter_value.name }}</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+												</div>
+											</div>
+										
+			 								{% endfor %}
 										
 			 								{% for filter_value in filter.more_values %}
 										
 											<div class="item">
 												<div class="ui checkbox">
-													<input id="example-id" type="checkbox" name="size" value="small"> <label for="example-id">{{ filter_value.name }}</label>
+													<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
 												</div>
 												<div class="right floated content">
 													<div class="ui basic horizontal label">{{ filter_value.count }}</div>
@@ -118,6 +146,8 @@
 						</div>
 					</div>
 				</div>
+				
+				{% endif %}
 				
 				{% endfor %}
 				
