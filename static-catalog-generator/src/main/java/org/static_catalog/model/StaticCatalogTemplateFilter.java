@@ -79,7 +79,7 @@ public class StaticCatalogTemplateFilter {
 		this.exception_values_count = exception_values_count;
 	}
 
-	public boolean isHas_more_exception_values() {
+	public boolean getHas_more_exception_values() {
 		return has_more_exception_values;
 	}
 
@@ -103,7 +103,7 @@ public class StaticCatalogTemplateFilter {
 		this.values_count = values_count;
 	}
 
-	public boolean isHas_more_values() {
+	public boolean getHas_more_values() {
 		return has_more_values;
 	}
 
