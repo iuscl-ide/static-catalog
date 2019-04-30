@@ -2,6 +2,8 @@
 package org.static_catalog.main;
 
 import java.text.BreakIterator;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,5 +248,34 @@ public class U {
             return str;
         }
         return new String(chs, 0, count);
-    }	
+    }
+    
+    /** Make identifier */
+	public static String makeIdentifier(String identifier) {
+		/* https://stackoverflow.com/questions/7440801/how-to-convert-arbitrary-string-to-java-identifier */
+
+		if (identifier.length() == 0) {
+			return "_";
+		}
+		CharacterIterator ci = new StringCharacterIterator(identifier);
+		StringBuilder sb = new StringBuilder();
+		for (char c = ci.first(); c != CharacterIterator.DONE; c = ci.next()) {
+			if (c == ' ')
+				c = '_';
+			if (sb.length() == 0) {
+				if (Character.isJavaIdentifierStart(c)) {
+					sb.append(c);
+					continue;
+				} else
+					sb.append('_');
+			}
+			if (Character.isJavaIdentifierPart(c)) {
+				sb.append(c);
+			} else {
+				sb.append('_');
+			}
+		}
+		;
+		return sb.toString();
+	}
 }

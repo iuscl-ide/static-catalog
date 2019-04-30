@@ -55,7 +55,7 @@
 				Search-able catalog for static generated sites - static-catalog.org 2019
 			</div>
 			<div class="right aligned two wide column">
-				<div class="ui primary button">Apply</div>
+				<div class="ui fluid primary button">Apply</div>
 			</div>
 		</div>	
 		
@@ -93,7 +93,7 @@
 							
 								<div class="item">
 									<div class="ui checkbox">
-										<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
+										<input id="{{ filter_value.identifier }}" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
 									</div>
 									<div class="right floated content">
 										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
@@ -127,7 +127,7 @@
 										
 											<div class="item">
 												<div class="ui checkbox">
-													<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
+													<input id="{{ filter_value.identifier }}" type="checkbox" name="size" value="{{ filter_value.name }}"> <label for="example-id">{{ filter_value.name }}</label>
 												</div>
 												<div class="right floated content">
 													<div class="ui basic horizontal label">{{ filter_value.count }}</div>

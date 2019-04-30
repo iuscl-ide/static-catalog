@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class StaticCatalogTemplateFilter {
 
+	private String identifier;
+	
 	private String name;
 	
 	private String type;
@@ -38,6 +40,15 @@ public class StaticCatalogTemplateFilter {
 	private int total_values_count = 0;
 	
 	private int total_more_values_count = 0;
+
+	
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
 	public String getName() {
 		return name;

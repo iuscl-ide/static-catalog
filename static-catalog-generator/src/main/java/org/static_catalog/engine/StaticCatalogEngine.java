@@ -2,6 +2,7 @@
 package org.static_catalog.engine;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -18,17 +19,22 @@ import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
+import org.static_catalog.main.U;
 import org.static_catalog.model.StaticCatalogExamine;
 import org.static_catalog.model.StaticCatalogExamineField;
 import org.static_catalog.model.StaticCatalogFilters;
 import org.static_catalog.model.StaticCatalogFiltersField;
 import org.static_catalog.model.StaticCatalogTemplate;
+import org.static_catalog.model.StaticCatalogTemplateCatalog;
+import org.static_catalog.model.StaticCatalogTemplateCatalogRoot;
 import org.static_catalog.model.StaticCatalogTemplateFilter;
 import org.static_catalog.model.StaticCatalogTemplateFilterValue;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import com.univocity.parsers.csv.CsvWriter;
+import com.univocity.parsers.csv.CsvWriterSettings;
 
 import liqp.Template;
 
@@ -51,19 +57,19 @@ public class StaticCatalogEngine {
         }
     };
     
-//	private final static Comparator<String> longComparator = new Comparator<String>() {
-//        @Override
-//        public int compare(String object1, String object2) {
-//        	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
-//        }
-//    };
-//		
-//	private final static Comparator<String> doubleComparator = new Comparator<String>() {
-//        @Override
-//        public int compare(String object1, String object2) {
-//        	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
-//        }
-//    };
+	private final static Comparator<String> longComparator = new Comparator<String>() {
+        @Override
+        public int compare(String object1, String object2) {
+        	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
+        }
+    };
+		
+	private final static Comparator<String> doubleComparator = new Comparator<String>() {
+        @Override
+        public int compare(String object1, String object2) {
+        	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
+        }
+    };
 	
 	/** Load CSV in grid */
 	public static void loadViewCsv(String csvCompleteFileName,
@@ -363,7 +369,9 @@ public class StaticCatalogEngine {
 			
 			StaticCatalogTemplateFilter templateFilter = new StaticCatalogTemplateFilter();
 			templateFilter.setLabel(filtersField.getLabel());
-			templateFilter.setName(filtersField.getName());
+			String filtersFieldName = filtersField.getName();
+			templateFilter.setName(filtersFieldName);
+			templateFilter.setIdentifier(U.makeIdentifier(filtersFieldName));
 			templateFilter.setType(filtersField.getType());
 			templateFilter.setIs_displayed(filtersField.getIsFilter());
 
@@ -540,6 +548,7 @@ public class StaticCatalogEngine {
 			for (String valueKey : valueKeys) {
 
 				StaticCatalogTemplateFilterValue filterValue = new StaticCatalogTemplateFilterValue();
+				filterValue.setIdentifier(U.makeIdentifier(fieldName) + "__" + U.makeIdentifier(valueKey));
 				filterValue.setName(valueKey);
 				filterValue.setCount(values.get(valueKey));
 				
@@ -645,12 +654,48 @@ public class StaticCatalogEngine {
 			String destinationFolderName, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Filters */
+		String catalogBlocksFolderName = destinationFolderName + File.separator + "site" + File.separator + "catalog";
+		String catalogFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.json";
+
+		StaticCatalogTemplateCatalogRoot templateCatalogRoot = new StaticCatalogTemplateCatalogRoot();
+		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Integer>>> filterIdentifierBlocks = templateCatalogRoot.getTemplateCatalog().getFilterIdentifierBlocks();
+		
+		/* Filters */
 		ArrayList<StaticCatalogTemplateFilter> templateFields = filtersTemplate.getTemplate().getFilters(); 
 		int lineLength = templateFields.size();
 		ArrayList<Integer> valuesIndexes = new ArrayList<>();
+		LinkedHashMap<Integer, String> indexIdentifiers = new LinkedHashMap<>();
 		for (int index = 0; index < lineLength; index++) {
-			if (templateFields.get(index).getIs_displayed()) {
+			StaticCatalogTemplateFilter templateField = templateFields.get(index);
+			if (templateField.getIs_displayed()) {
 				valuesIndexes.add(index);
+				String filterNameIdentifier = U.makeIdentifier(templateField.getName());
+				indexIdentifiers.put(index, filterNameIdentifier);
+				filterIdentifierBlocks.put(filterNameIdentifier, new LinkedHashMap<>());
+			}
+		}
+		for (String filterNameIdentifier : filterIdentifierBlocks.keySet()) {
+			LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = filterIdentifierBlocks.get(filterNameIdentifier);
+		
+			ArrayList<StaticCatalogTemplateFilter> templateFilters = filtersTemplate.getTemplate().getFilters();
+			
+			for (StaticCatalogTemplateFilter templateFilter : templateFilters) {
+				if (templateFilter.getIdentifier().equals(filterNameIdentifier)) {
+					
+					for (StaticCatalogTemplateFilterValue value : templateFilter.getException_values()) {
+						filterNameIdentifierBlocks.put(value.getIdentifier(), new ArrayList<>());
+					}
+					for (StaticCatalogTemplateFilterValue value : templateFilter.getMore_exception_values()) {
+						filterNameIdentifierBlocks.put(value.getIdentifier(), new ArrayList<>());
+					}
+					for (StaticCatalogTemplateFilterValue value : templateFilter.getValues()) {
+						filterNameIdentifierBlocks.put(value.getIdentifier(), new ArrayList<>());
+					}
+					for (StaticCatalogTemplateFilterValue value : templateFilter.getMore_values()) {
+						filterNameIdentifierBlocks.put(value.getIdentifier(), new ArrayList<>());
+					}
+					break;
+				}
 			}
 		}
 		
@@ -667,8 +712,15 @@ public class StaticCatalogEngine {
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(sourceCsvFileName));
 		
+		CsvWriter csvWriter = null;
+		
 		long csvLineIndex = 0;
-
+		int blockIndex = 0;
+		int blockLineIndex = 0;
+		int blockLines = 10000;
+		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
+		String blockFileName = blockFilePrefix;
+		
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
@@ -689,8 +741,20 @@ public class StaticCatalogEngine {
 					if (fieldValue == null) {
 						fieldValue = "EMPTY";
 					}
-					path = path + pathSep + fieldValue;
-					pathSep = " / ";
+//					path = path + pathSep + fieldValue;
+//					pathSep = " / ";
+
+					String fieldNameIdentifier = indexIdentifiers.get(index);
+					LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = filterIdentifierBlocks.get(fieldNameIdentifier);
+					
+					String fieldValueIdentifier = fieldNameIdentifier + "__" + U.makeIdentifier(fieldValue);
+//					if (!filterNameIdentifierBlocks.containsKey(fieldValueIdentifier)) {
+//						filterNameIdentifierBlocks.put(fieldValueIdentifier, new ArrayList<>());
+//					}
+					ArrayList<Integer> blocks = filterNameIdentifierBlocks.get(fieldValueIdentifier);
+					if (!blocks.contains(blockIndex)) {
+						blocks.add(blockIndex);
+					}
 				}
 			}
 
@@ -698,14 +762,40 @@ public class StaticCatalogEngine {
 				uniquePathsWithCount.put(path, 0L);
 			}
 			
+			if (blockLineIndex % blockLines == 0) {
+				
+				blockFileName = blockFilePrefix + blockIndex + ".csv";
+				blockIndex++;
+				blockLineIndex = 0;
+				
+				if (csvWriter != null) {
+					csvWriter.close();
+				}
+				try {
+					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			csvWriter.writeRow(csvLine);
+			blockLineIndex++;
+			
 			csvLineIndex++;
 			if (csvLineIndex % 500000 == 0) {
 				loopProgress.doProgress(csvLineIndex + " lines examined...");
 			}
 			csvLine = csvParser.parseNext();
 		}
+		csvParser.stopParsing();
+		if (csvWriter != null) {
+			csvWriter.close();
+		}
 		
-		L.p(uniquePathsWithCount.size() + "");
+		S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
+		
+		//L.p(uniquePathsWithCount.size() + "");
 
 	}
 
@@ -718,19 +808,21 @@ public class StaticCatalogEngine {
 		}
 
 		if (type.equals(TYPE_LONG)) {
-			ArrayList<Long> longKeys = new ArrayList<>();
-			keys.forEach(key -> longKeys.add(Long.parseLong(key)));
-			Collections.sort(longKeys);
-			keys.clear();
-			longKeys.forEach(longKey -> keys.add(longKey.toString()));
+			Collections.sort(keys, longComparator);
+//			ArrayList<Long> longKeys = new ArrayList<>();
+//			keys.forEach(key -> longKeys.add(Long.parseLong(key)));
+//			Collections.sort(longKeys);
+//			keys.clear();
+//			longKeys.forEach(longKey -> keys.add(longKey.toString()));
 		}
 				
 		if (type.equals(TYPE_DOUBLE)) {
-			ArrayList<Double> doubleKeys = new ArrayList<>();
-			keys.forEach(key -> doubleKeys.add(Double.parseDouble(key)));
-			Collections.sort(doubleKeys);
-			keys.clear();
-			doubleKeys.forEach(doubleKey -> keys.add(doubleKey.toString()));
+			Collections.sort(keys, doubleComparator);
+//			ArrayList<Double> doubleKeys = new ArrayList<>();
+//			keys.forEach(key -> doubleKeys.add(Double.parseDouble(key)));
+//			Collections.sort(doubleKeys);
+//			keys.clear();
+//			doubleKeys.forEach(doubleKey -> keys.add(doubleKey.toString()));
 		}
 
 		if (type.equals(TYPE_TEXT)) {
