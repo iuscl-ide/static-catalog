@@ -721,11 +721,15 @@ public class StaticCatalogEngine {
 		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
 		String blockFileName = blockFilePrefix;
 		
+		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
 			/* CSV field names */
 			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
+				
+				headerLine = csvLine;
+				
 				csvLine = csvParser.parseNext();
 				csvLineIndex++;
 				continue;
@@ -777,6 +781,7 @@ public class StaticCatalogEngine {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				csvWriter.writeRow(headerLine);
 			}
 
 			csvWriter.writeRow(csvLine);
