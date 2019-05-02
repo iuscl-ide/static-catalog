@@ -42,10 +42,10 @@ import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
-import org.static_catalog.model.StaticCatalogExamine;
-import org.static_catalog.model.StaticCatalogExamineField;
-import org.static_catalog.model.StaticCatalogFilters;
-import org.static_catalog.model.StaticCatalogFiltersField;
+import org.static_catalog.model.src.StaticCatalogExamineFields;
+import org.static_catalog.model.src.StaticCatalogExamineField;
+import org.static_catalog.model.src.StaticCatalogConfigurationFields;
+import org.static_catalog.model.src.StaticCatalogConfigurationField;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -54,10 +54,10 @@ public class StaticCatalogGeneratorMainWindow {
 	public static final LinkedHashMap<String, String> typeNames = new LinkedHashMap<>();
 	public static final LinkedHashMap<String, String> nameTypes = new LinkedHashMap<>();
 	static {
-		typeNames.put("long", "Integer");
-		typeNames.put("double", "Real");
-		typeNames.put("date", "Date");
-		typeNames.put("text", "Text");
+		typeNames.put(StaticCatalogEngine.TYPE_LONG, "Integer");
+		typeNames.put(StaticCatalogEngine.TYPE_DOUBLE, "Real");
+		typeNames.put(StaticCatalogEngine.TYPE_DATE, "Date");
+		typeNames.put(StaticCatalogEngine.TYPE_TEXT, "Text");
 		
 		for (Entry<String, String> entry : typeNames.entrySet()) {
 			nameTypes.put(entry.getValue(), entry.getKey());
@@ -65,6 +65,22 @@ public class StaticCatalogGeneratorMainWindow {
 	}
 	public static final String[] typeNameValues = typeNames.values().toArray(new String[typeNames.values().size()]);
 
+	/** Display type names */
+	public static final LinkedHashMap<String, String> displayTypeNames = new LinkedHashMap<>();
+	public static final LinkedHashMap<String, String> displayNameTypes = new LinkedHashMap<>();
+	static {
+		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_NONE, "");
+		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_CHECKBOXES, "Checkboxes");
+		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_DROPDOWN, "Dropdown");
+		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_RADIOBUTTONS, "Radio Buttons");
+		
+		for (Entry<String, String> entry : displayTypeNames.entrySet()) {
+			displayNameTypes.put(entry.getValue(), entry.getKey());
+		}
+	}
+	public static final String[] displayTypeNameValues = displayTypeNames.values().toArray(new String[displayTypeNames.values().size()]);
+
+	
 	private static final String[] filterExtensionsCsv = { "*.csv", "*.dat", "*.txt", "*.*" };
 	private static final String[] filterExtensionsJson = { "*.json", "*.*" };
 	private static final String[] filterExtensionsLiquid = { "*.liquid", "*.html", "*.txt", "*.*" };
@@ -95,7 +111,7 @@ public class StaticCatalogGeneratorMainWindow {
 	/** Load filters */
 	private interface LoadFilters {
 		
-		public void loadFilters(StaticCatalogFilters staticCatalogFilters);
+		public void loadFilters(StaticCatalogConfigurationFields staticCatalogFilters);
 	}
 
 	/** Root folder */
@@ -786,7 +802,7 @@ public class StaticCatalogGeneratorMainWindow {
 		csvStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
 		csvStatusLabel.setText("Status");
 
-		final Grid csvExamineGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		final Grid csvExamineGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		csvExamineGrid.setLayoutData(ui.createFillBothGridData());
 		csvExamineGrid.setHeaderVisible(true);
 		csvExamineGrid.setLinesVisible(true);
@@ -794,12 +810,12 @@ public class StaticCatalogGeneratorMainWindow {
 		GridColumn fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(250);
+	    fieldGridColumn.setWidth(200);
 
 		fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(150);
+	    fieldGridColumn.setWidth(120);
 
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements count");
@@ -810,7 +826,7 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Exceptions (count)");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(150);
+	    fieldGridColumn.setWidth(250);
 
 //	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 //		fieldGridColumn.setText("Unique elements");
@@ -820,7 +836,7 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements (count)");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(550);
+	    fieldGridColumn.setWidth(500);
 
 		/* Events */
 	    csvExamineGrid.addMouseListener(new MouseAdapter() {
@@ -864,7 +880,7 @@ public class StaticCatalogGeneratorMainWindow {
 				csvExamineGrid.disposeAllItems();
 				csvExamineGridLines.clear();
 				
-				StaticCatalogExamine staticCatalogExamine = new StaticCatalogExamine();
+				StaticCatalogExamineFields staticCatalogExamine = new StaticCatalogExamineFields();
 				
 				StaticCatalogEngine.loadExamineCsv(examineCsvFileControl.getCompleteFileName(), staticCatalogExamine,
 				Integer.parseInt(filterElementsMaxDisplayText.getText()),
@@ -885,7 +901,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				int maxDiff = Integer.parseInt(filterElementsMaxDisplayText.getText());
 				
-				ArrayList<StaticCatalogExamineField> examineFields = staticCatalogExamine.getFields();
+				ArrayList<StaticCatalogExamineField> examineFields = staticCatalogExamine.getExamineFields();
 				
 				for (int index = 0; index < examineFields.size(); index++) {
 					
@@ -905,70 +921,21 @@ public class StaticCatalogGeneratorMainWindow {
 					csvGridItem.setText(2, diff + "");
 					
 					if (diff < maxDiff) {
-						
-						//HashMap<String, Long> groups = examineField.getUniqueValueCounts(); 
-
-						/* 3 */
-//						if (!fieldType.equals("text")) {
-//							ArrayList<String> exceps = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
-//							Collections.sort(exceps);
-//							csvGridItem.setText(3, String.join(", ", exceps));
-//						}
-
 						ArrayList<String> keys = new ArrayList<>(uniqueValueCounts.keySet());
 						
-						if (!fieldType.equals("text")) {
-							ArrayList<String> exceptionKeys = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
-							if (exceptionKeys.size() > 0) {
-								//Collections.sort(exceptionKeys);
-								StaticCatalogEngine.sortTypeKey("text", keys);
-								ArrayList<String> exceptionKeysValues = new ArrayList<>();
-								for (String exceptionKey : exceptionKeys) {
-									exceptionKeysValues.add(exceptionKey + " (" + uniqueValueCounts.get(exceptionKey) + ")");
-								}
-								csvGridItem.setText(3, String.join(", ", exceptionKeysValues));
-								
-								keys.removeAll(exceptionKeys);
+						ArrayList<String> exceptionKeys = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
+						if (exceptionKeys.size() > 0) {
+							StaticCatalogEngine.sortTypeKey("text", keys);
+							ArrayList<String> exceptionKeysValues = new ArrayList<>();
+							for (String exceptionKey : exceptionKeys) {
+								exceptionKeysValues.add(exceptionKey + " (" + uniqueValueCounts.get(exceptionKey) + ")");
 							}
+							csvGridItem.setText(3, String.join(", ", exceptionKeysValues));
+							
+							keys.removeAll(exceptionKeys);
 						}
 
 						StaticCatalogEngine.sortTypeKey(fieldType, keys);
-//						if (fieldType.equals("date")) {
-//							Collections.sort(keys, new Comparator<String>() {
-//				                @Override
-//				                public int compare(String object1, String object2) {
-//
-//				                	return DateTime.parse(object1).compareTo(DateTime.parse(object2));
-//				                }
-//				            });
-//						}
-//
-//						if (fieldType.equals("long")) {
-//							Collections.sort(keys, new Comparator<String>() {
-//				                @Override
-//				                public int compare(String object1, String object2) {
-//
-//				                	return Long.valueOf(object1).compareTo(Long.valueOf(object2));
-//				                }
-//				            });
-//						}
-//								
-//						if (fieldType.equals("double")) {
-//							Collections.sort(keys, new Comparator<String>() {
-//				                @Override
-//				                public int compare(String object1, String object2) {
-//
-//				                	return Double.valueOf(object1).compareTo(Double.valueOf(object2));
-//				                }
-//				            });
-//						}
-//
-//						if (fieldType.equals("text")) {
-//							Collections.sort(keys, stringAsNumberComparator);
-//						}
-
-//						String uniqueElements = String.join(", ", keys);
-//						csvGridItem.setText(4, uniqueElements);
 						
 						ArrayList<String> keysValues = new ArrayList<>();
 						for (String key : keys) {
@@ -986,22 +953,28 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 
 				/* Create filter fields */
-				StaticCatalogFilters staticCatalogFilters = new StaticCatalogFilters();
+				StaticCatalogConfigurationFields staticCatalogFilters = new StaticCatalogConfigurationFields();
 				for (GridItem gridItem : csvExamineGrid.getItems()) {
 					
-					StaticCatalogFiltersField staticCatalogField = new StaticCatalogFiltersField();
+					StaticCatalogConfigurationField staticCatalogField = new StaticCatalogConfigurationField();
 					String name = gridItem.getText(0);
 					staticCatalogField.setName(name);
+
+					staticCatalogField.setLabel(U.makeLabel(name));
+
 					staticCatalogField.setType((String) gridItem.getData("type"));
 					
 					String uniqueValuesCount = gridItem.getText(4);
 					if ((uniqueValuesCount != null) && (uniqueValuesCount.trim().length() > 0)) {
 						staticCatalogField.setIsFilter(true);
+						staticCatalogField.setDisplayType(StaticCatalogEngine.DISPLAY_TYPE_CHECKBOXES);
+						staticCatalogField.setMinDisplayValues(5);
+						staticCatalogField.setMaxDisplayValues(Integer.parseInt(filterElementsMaxDisplayText.getText()));
 					}
 					else {
-						staticCatalogField.setIsFilter(false);	
+						staticCatalogField.setIsFilter(false);
+						staticCatalogField.setDisplayType(StaticCatalogEngine.DISPLAY_TYPE_NONE);
 					}
-					staticCatalogField.setLabel(U.makeLabel(name));
 					
 					staticCatalogFilters.getFields().add(staticCatalogField);
 				}
@@ -1040,42 +1013,75 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn.setText("Index");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
-	    fieldGridColumn.setWidth(75);
+	    fieldGridColumn.setWidth(50);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(250);
+	    fieldGridColumn.setWidth(190);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Label");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(190);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(150);
+	    fieldGridColumn.setWidth(120);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CHECK | SWT.CENTER);
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(100);
 	    fieldGridColumn.setCheckable(true);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Display Type");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(120);
 	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Label");
+		fieldGridColumn.setText("Max Display Values");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(250);
+	    fieldGridColumn.setAlignment(SWT.RIGHT);
+	    fieldGridColumn.setWidth(120);
+	    
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Min Display Values");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setAlignment(SWT.RIGHT);	    
+	    fieldGridColumn.setWidth(120);
+	    
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Format");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(120);
+	    
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Transform Values");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(120);
 
+	    
 	    loadFilters = new LoadFilters() {
 			@Override
-			public void loadFilters(StaticCatalogFilters staticCatalogFilters) {
+			public void loadFilters(StaticCatalogConfigurationFields staticCatalogFilters) {
 
 				for (GridItem gridItem : filtersGrid.getItems()) {
-					((CCombo) gridItem.getData("typeCCombo")).dispose();
 					((Text) gridItem.getData("labelText")).dispose();
+					((CCombo) gridItem.getData("typeCCombo")).dispose();
+					((CCombo) gridItem.getData("displayTypeCCombo")).dispose();
+					((Text) gridItem.getData("maxDisplayValuesText")).dispose();
+					((Text) gridItem.getData("minDisplayValuesText")).dispose();
+					((Text) gridItem.getData("transformFormatText")).dispose();
+					((Text) gridItem.getData("transformValuesText")).dispose();
 				}
 				filtersGrid.clearItems();
 				filtersGrid.disposeAllItems();
 				
 				int index = 0;
-				for (StaticCatalogFiltersField staticCatalogField : staticCatalogFilters.getFields()) {
+				for (StaticCatalogConfigurationField staticCatalogField : staticCatalogFilters.getFields()) {
 					
 					GridItem gridItem = new GridItem(filtersGrid, SWT.NONE);
 					
@@ -1085,6 +1091,17 @@ public class StaticCatalogGeneratorMainWindow {
 					gridItem.setText(1, staticCatalogField.getName());
 					//gridItem.setText(2, staticCatalogField.getType());
 					
+
+					Text labelText = new Text(filtersGrid, SWT.NONE);
+					labelText.setText(staticCatalogField.getLabel());
+
+					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
+					labelTextGridEditor.minimumWidth = 50;
+					labelTextGridEditor.grabHorizontal = true;
+					labelTextGridEditor.setEditor(labelText, gridItem, 2);
+					gridItem.setData("labelText", labelText);
+					
+
 					CCombo cCombo = new CCombo(filtersGrid, SWT.NONE);
 					cCombo.setEditable(false);
 					cCombo.setBackground(whiteColor);
@@ -1094,19 +1111,68 @@ public class StaticCatalogGeneratorMainWindow {
 				    GridEditor cComboGridEditor = new GridEditor(filtersGrid);
 				    cComboGridEditor.minimumWidth = 50;
 				    cComboGridEditor.grabHorizontal = true;
-				    cComboGridEditor.setEditor(cCombo, gridItem, 2);
+				    cComboGridEditor.setEditor(cCombo, gridItem, 3);
 				    gridItem.setData("typeCCombo", cCombo);
 				    
-					gridItem.setChecked(3, staticCatalogField.getIsFilter());
+				    
+					gridItem.setChecked(4, staticCatalogField.getIsFilter());
 					
-					Text labelText = new Text(filtersGrid, SWT.NONE);
-					labelText.setText(staticCatalogField.getLabel());
+					
+					CCombo displayTypeCCombo = new CCombo(filtersGrid, SWT.NONE);
+					displayTypeCCombo.setEditable(false);
+					displayTypeCCombo.setBackground(whiteColor);
+					displayTypeCCombo.setItems(displayTypeNameValues);
+					displayTypeCCombo.setText(displayTypeNames.get(staticCatalogField.getDisplayType()));
+					
+				    GridEditor displayTypeGridEditor = new GridEditor(filtersGrid);
+				    displayTypeGridEditor.minimumWidth = 50;
+				    displayTypeGridEditor.grabHorizontal = true;
+				    displayTypeGridEditor.setEditor(displayTypeCCombo, gridItem, 5);
+				    gridItem.setData("displayTypeCCombo", displayTypeCCombo);
+				    
+				    
+					Text maxDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+					Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
+					maxDisplayValuesText.setText(maxDisplayValues == null ? "" : maxDisplayValues + "");
+					
+					GridEditor maxDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
+					maxDisplayValuesTextGridEditor.minimumWidth = 50;
+					maxDisplayValuesTextGridEditor.grabHorizontal = true;
+					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, 6);
+					gridItem.setData("maxDisplayValuesText", maxDisplayValuesText);
 
-					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
-					labelTextGridEditor.minimumWidth = 50;
-					labelTextGridEditor.grabHorizontal = true;
-					labelTextGridEditor.setEditor(labelText, gridItem, 4);
-					gridItem.setData("labelText", labelText);
+					
+					Text minDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+					Integer minDisplayValues = staticCatalogField.getMinDisplayValues();
+					minDisplayValuesText.setText(minDisplayValues == null ? "" : minDisplayValues + "");
+					
+					GridEditor minDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
+					minDisplayValuesTextGridEditor.minimumWidth = 50;
+					minDisplayValuesTextGridEditor.grabHorizontal = true;
+					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, 7);
+					gridItem.setData("minDisplayValuesText", minDisplayValuesText);
+
+					
+					Text transformFormatText = new Text(filtersGrid, SWT.NONE);
+					String transformFormat = staticCatalogField.getTransformFormat();
+					transformFormatText.setText(transformFormat == null ? "" : transformFormat);
+					
+					GridEditor transformFormatTextGridEditor = new GridEditor(filtersGrid);
+					transformFormatTextGridEditor.minimumWidth = 50;
+					transformFormatTextGridEditor.grabHorizontal = true;
+					transformFormatTextGridEditor.setEditor(transformFormatText, gridItem, 8);
+					gridItem.setData("transformFormatText", transformFormatText);
+
+					
+					Text transformValuesText = new Text(filtersGrid, SWT.NONE);
+					String transformValues = staticCatalogField.getTransformValues();
+					transformValuesText.setText(transformValues == null ? "" : transformValues);
+					
+					GridEditor transformValuesTextGridEditor = new GridEditor(filtersGrid);
+					transformValuesTextGridEditor.minimumWidth = 50;
+					transformValuesTextGridEditor.grabHorizontal = true;
+					transformValuesTextGridEditor.setEditor(transformValuesText, gridItem, 9);
+					gridItem.setData("transformValuesText", transformValuesText);
 				}
 			}
 		};
@@ -1117,7 +1183,7 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 			
-				StaticCatalogFilters loadedFilters = S.loadObjectFromJsonFileName(filtersFileControl.getCompleteFileName(), StaticCatalogFilters.class);
+				StaticCatalogConfigurationFields loadedFilters = S.loadObjectFromJsonFileName(filtersFileControl.getCompleteFileName(), StaticCatalogConfigurationFields.class);
 				loadFilters.loadFilters(loadedFilters);
 			}
 		});
@@ -1126,13 +1192,31 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
-				StaticCatalogFilters filtersDefinition = new StaticCatalogFilters();
+				StaticCatalogConfigurationFields filtersDefinition = new StaticCatalogConfigurationFields();
 				for (GridItem gridItem : filtersGrid.getItems()) {
-					StaticCatalogFiltersField field = new StaticCatalogFiltersField();
+					StaticCatalogConfigurationField field = new StaticCatalogConfigurationField();
 					field.setName(gridItem.getText(1));
-					field.setType(nameTypes.get(((CCombo) gridItem.getData("typeCCombo")).getText()));
-					field.setIsFilter(gridItem.getChecked(3));
+
 					field.setLabel(((Text) gridItem.getData("labelText")).getText());
+
+					field.setType(nameTypes.get(((CCombo) gridItem.getData("typeCCombo")).getText()));
+
+					field.setIsFilter(gridItem.getChecked(4));
+					
+					field.setDisplayType(displayNameTypes.get(((CCombo) gridItem.getData("displayTypeCCombo")).getText()));
+					
+					String maxDisplay = ((Text) gridItem.getData("maxDisplayValuesText")).getText();
+					field.setMaxDisplayValues(maxDisplay.trim().equals("") ? null : Integer.parseInt(maxDisplay));
+
+					String minDisplay = ((Text) gridItem.getData("minDisplayValuesText")).getText();
+					field.setMinDisplayValues(minDisplay.trim().equals("") ? null : Integer.parseInt(minDisplay));
+
+					String transformFormat = ((Text) gridItem.getData("transformFormatText")).getText();
+					field.setTransformFormat(transformFormat.trim().equals("") ? null : transformFormat);
+					
+					String transformValues = ((Text) gridItem.getData("transformValuesText")).getText();
+					field.setTransformValues(transformValues.trim().equals("") ? null : transformValues);
+					
 					filtersDefinition.getFields().add(field);
 				}
 					

@@ -1,8 +1,10 @@
-package org.static_catalog.model;
+/* Search-able catalog for static generated sites - static-catalog.org 2019 */
+package org.static_catalog.model.dest;
 
 import java.util.ArrayList;
 
-public class StaticCatalogTemplateFilter {
+/** Page JSON field */
+public class StaticCatalogPageField {
 
 	private String identifier;
 	
@@ -12,27 +14,27 @@ public class StaticCatalogTemplateFilter {
 
 	private String label;
 	
-	private boolean is_displayed;
+	private boolean filter;
 	
 	
-	private final ArrayList<StaticCatalogTemplateFilterValue> exception_values = new ArrayList<>();
+	private final ArrayList<StaticCatalogPageFieldValue> exception_values = new ArrayList<>();
 	
 	private int exception_values_count = 0;
 
 	private boolean has_more_exception_values = false;
 
-	private final ArrayList<StaticCatalogTemplateFilterValue> more_exception_values = new ArrayList<>();
+	private final ArrayList<StaticCatalogPageFieldValue> more_exception_values = new ArrayList<>();
 	
 	private int more_exception_values_count = 0;
 
 	
-	private final ArrayList<StaticCatalogTemplateFilterValue> values = new ArrayList<>();
+	private final ArrayList<StaticCatalogPageFieldValue> values = new ArrayList<>();
 	
 	private int values_count = 0;
 
 	private boolean has_more_values = false;
 
-	private final ArrayList<StaticCatalogTemplateFilterValue> more_values = new ArrayList<>();
+	private final ArrayList<StaticCatalogPageFieldValue> more_values = new ArrayList<>();
 	
 	private int more_values_count = 0;
 
@@ -74,12 +76,12 @@ public class StaticCatalogTemplateFilter {
 		this.label = label;
 	}
 
-	public boolean getIs_displayed() {
-		return is_displayed;
+	public boolean getFilter() {
+		return filter;
 	}
 
-	public void setIs_displayed(boolean is_displayed) {
-		this.is_displayed = is_displayed;
+	public void setFilter(boolean filter) {
+		this.filter = filter;
 	}
 
 	public int getException_values_count() {
@@ -146,19 +148,19 @@ public class StaticCatalogTemplateFilter {
 		this.total_more_values_count = total_more_values_count;
 	}
 
-	public ArrayList<StaticCatalogTemplateFilterValue> getException_values() {
+	public ArrayList<StaticCatalogPageFieldValue> getException_values() {
 		return exception_values;
 	}
 
-	public ArrayList<StaticCatalogTemplateFilterValue> getMore_exception_values() {
+	public ArrayList<StaticCatalogPageFieldValue> getMore_exception_values() {
 		return more_exception_values;
 	}
 
-	public ArrayList<StaticCatalogTemplateFilterValue> getValues() {
+	public ArrayList<StaticCatalogPageFieldValue> getValues() {
 		return values;
 	}
 
-	public ArrayList<StaticCatalogTemplateFilterValue> getMore_values() {
+	public ArrayList<StaticCatalogPageFieldValue> getMore_values() {
 		return more_values;
 	}
 }

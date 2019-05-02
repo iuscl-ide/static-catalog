@@ -55,73 +55,68 @@
 		</div>
 
 		<div class="ui black segment">
-		
-		<div class="ui grid">
-			<div class="middle aligned fourteen wide column">
-				Search-able catalog for static generated sites - static-catalog.org 2019
+			<div class="ui grid">
+				<div class="middle aligned fourteen wide column">Search-able catalog for static generated sites -
+					static-catalog.org 2019</div>
+				<div class="right aligned two wide column">
+					<div id="buttonApply" class="ui fluid primary button">Apply</div>
+				</div>
 			</div>
-			<div class="right aligned two wide column">
-				<div id="buttonApply" class="ui fluid primary button">Apply</div>
-			</div>
-		</div>	
-		
-			
 		</div>
-
 		<div class="ui grid">
 			<div class="five wide column">
-				{% for filter in template.filters %} {% if filter.is_displayed %}
+				{% for field in page.fields %} {% if field.filter %}
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
-						<a class="header active title"> <i class="dropdown icon"></i> {{ filter.label }} <span
-							class="ui left pointing basic horizontal label">{{ filter.total_values_count }}</span>
+						<a class="header active title"> <i class="dropdown icon"></i> {{ field.label }} <span
+							class="ui left pointing basic horizontal label">{{ field.total_values_count }}</span>
 						</a>
 						<div class="active content">
 							<div class="ui list">
-								{% for filter_value in filter.exception_values %}
+								{% for field_value in field.exception_values %}
 								<div class="item">
 									<div class="ui checkbox">
-										<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label
-											for="example-id" style="font-style: italic;">{{ filter_value.name }}</label>
+										<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+										<label for="{{ field_value.identifier }}" style="font-style: italic;">{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
-										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+										<div class="ui basic horizontal label">{{ field_value.count }}</div>
 									</div>
 								</div>
-								{% endfor %} {% for filter_value in filter.values %}
+								{% endfor %} {% for field_value in field.values %}
 								<div class="item">
 									<div class="ui checkbox">
-										<input id="{{ filter_value.identifier }}" type="checkbox" name="size" value="{{ filter_value.name }}">
-										<label for="example-id">{{ filter_value.name }}</label>
+										<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+										<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
-										<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+										<div class="ui basic horizontal label">{{ field_value.count }}</div>
 									</div>
 								</div>
-								{% endfor %} {% if filter.has_more_values or filter.has_more_exception_values %}
+								{% endfor %} {% if field.has_more_values or field.has_more_exception_values %}
 								<div class="item">
 									<a class="title"> <i class="dropdown icon"></i> Show more <span
-										class="ui left pointing basic horizontal label">{{ filter.total_more_values_count }}</span></a>
+										class="ui left pointing basic horizontal label">{{ field.total_more_values_count }}</span></a>
 									<div class="content">
 										<div class="ui list">
-											{% for filter_value in filter.more_exception_values %}
+											{% for field_value in field.more_exception_values %}
 											<div class="item">
 												<div class="ui checkbox">
-													<input id="example-id" type="checkbox" name="size" value="{{ filter_value.name }}"> <label
-														for="example-id" style="font-style: italic;">{{ filter_value.name }}</label>
+													<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+													<label for="{{ field_value.identifier }}" style="font-style: italic;">{{ field_value.label }}</label>
 												</div>
 												<div class="right floated content">
-													<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+													<div class="ui basic horizontal label">{{ field_value.count }}</div>
 												</div>
 											</div>
-											{% endfor %} {% for filter_value in filter.more_values %}
+											{% endfor %} {% for field_value in field.more_values %}
 											<div class="item">
 												<div class="ui checkbox">
-													<input id="{{ filter_value.identifier }}" type="checkbox" name="size" value="{{ filter_value.name }}">
-													<label for="example-id">{{ filter_value.name }}</label>
+													<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+													<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
 												</div>
 												<div class="right floated content">
-													<div class="ui basic horizontal label">{{ filter_value.count }}</div>
+													<div class="ui basic horizontal label">{{ field_value.count }}</div>
 												</div>
 											</div>
 											{% endfor %}
@@ -148,16 +143,16 @@
 					</div>
 					<div class="ui hidden clearing divider"></div>
 					<div id="scp_id__tiles_or_list" class="ui three column grid">
-<!-- 						<div class="column"> -->
-<!-- 							<div class="ui bottom attached grey segment"> -->
-<!-- 								<div name="scp_name__tile_grid" class="ui one column grid"> -->
-<!-- 									<div class="column"> -->
-<!-- 										<div class="ui small header">Field</div> -->
-<!-- 										Value -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
+						<!-- 						<div class="column"> -->
+						<!-- 							<div class="ui bottom attached grey segment"> -->
+						<!-- 								<div name="scp_name__tile_grid" class="ui one column grid"> -->
+						<!-- 									<div class="column"> -->
+						<!-- 										<div class="ui small header">Field</div> -->
+						<!-- 										Value -->
+						<!-- 									</div> -->
+						<!-- 								</div> -->
+						<!-- 							</div> -->
+						<!-- 						</div> -->
 					</div>
 					<div class="ui divider"></div>
 					<div class="ui right floated pagination menu">
@@ -173,14 +168,11 @@
 	<div style="display: none">
 		<div id="scp_id__tile_template" class="column">
 			<div class="ui bottom attached grey segment">
-				<div name="scp_name__tile_grid" class="ui one column grid" style="padding-top: 1rem">
-				</div>
+				<div name="scp_name__tile_grid" class="ui one column grid" style="padding-top: 1rem"></div>
 			</div>
 		</div>
 		<div id="scp_id__tile_field_template" class="column" style="padding-top: 0rem">
-			<span name="scp_name__tile_field_name" class="ui small header"></span>
-			&nbsp;
-			<span name="scp_name__tile_field_value"></span>
+			<span name="scp_name__tile_field_name" class="ui small header"></span> &nbsp; <span name="scp_name__tile_field_value"></span>
 		</div>
 	</div>
 	<script type="text/javascript">

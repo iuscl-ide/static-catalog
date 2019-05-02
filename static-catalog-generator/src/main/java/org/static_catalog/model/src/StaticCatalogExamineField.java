@@ -1,5 +1,5 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
-package org.static_catalog.model;
+package org.static_catalog.model.src;
 
 import java.util.ArrayList;
 import java.util.HashMap;
