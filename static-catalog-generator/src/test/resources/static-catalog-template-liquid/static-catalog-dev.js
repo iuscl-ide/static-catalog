@@ -11,10 +11,33 @@ const StaticCatalogDev = (() => {
 	var _$results_panel;
 	var _$tile_template;
 	var _$tile_field_template; 
+
+	var _pageFieldsFilters;
+	var _searchCatalog;
 	
 	/** init */
 	const init = () => {
 		
+		$.ajax({
+			dataType: "json",
+			url: "static-catalog-fields.json",
+			mimeType: "application/json",
+			success: result => {
+				_pageFieldsFilters = result;
+				console.log(_pageFieldsFilters);
+			}
+		});
+
+		$.ajax({
+			dataType: "json",
+			url: "static-catalog.json",
+			mimeType: "application/json",
+			success: result => {
+				_searchCatalog = result;
+				console.log(_searchCatalog);
+			}
+		});
+
 		//$('ui.table').tablesort();
 		$('.ui.accordion').accordion();
 		
@@ -67,7 +90,7 @@ const StaticCatalogDev = (() => {
 			
 			$tile_fields = $tile.find('div[name=scp_name__tile_grid]')[0];
 			
-			let result = results.data[index];
+			let result = results[index];
 			
 			for (let resultField in result) {
 				console.log(resultField + " " + result[resultField]);
@@ -88,8 +111,35 @@ const StaticCatalogDev = (() => {
 	/** */
 	const apply = () => {
 		
-		StaticCatalog.applyFilters(resultsCallback);
+		let keys = [];
+		let searchData = {
+			"searchFieldsValues": []
+		};
 		
+		let filters = _pageFieldsFilters.page.filters;
+		for (checkbox of $("input[id*='sc_filter__']")) {
+			if (checkbox.checked) {
+				let filterFieldValue = filters[checkbox.id];
+				
+				let filterField = filterFieldValue.field;
+				let filterValue = filterFieldValue.value;
+				
+				if (!keys.includes(filterField)) {
+					keys.push(filterField);
+					searchData.searchFieldsValues.push({
+						"field": filterField,
+						"values": []
+					});
+				}
+
+				let index = keys.indexOf(filterField, 0);
+				searchData.searchFieldsValues[index].values.push(filterValue);
+			}
+		}
+		searchData.searchCatalog = _searchCatalog.searchCatalog;
+		console.log(searchData);
+
+		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}
 
 	return {

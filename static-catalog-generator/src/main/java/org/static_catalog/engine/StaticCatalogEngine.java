@@ -22,9 +22,10 @@ import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
 import org.static_catalog.model.dest.StaticCatalogPage;
-import org.static_catalog.model.dest.StaticCatalogSearch;
 import org.static_catalog.model.dest.StaticCatalogPageField;
 import org.static_catalog.model.dest.StaticCatalogPageFieldValue;
+import org.static_catalog.model.dest.StaticCatalogPageFilter;
+import org.static_catalog.model.dest.StaticCatalogSearch;
 import org.static_catalog.model.src.StaticCatalogConfigurationField;
 import org.static_catalog.model.src.StaticCatalogConfigurationFields;
 import org.static_catalog.model.src.StaticCatalogExamineField;
@@ -385,7 +386,7 @@ public class StaticCatalogEngine {
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Filters */
-		String filterFieldsFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog-filters.json";
+		String filterFieldsFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog-fields.json";
 		
 		boolean dev = false;
 		if (dev) {
@@ -408,7 +409,7 @@ public class StaticCatalogEngine {
 			StaticCatalogPageField newPageField = new StaticCatalogPageField();
 			newPageField.setLabel(filtersField.getLabel());
 			newPageField.setName(filtersFieldName);
-			newPageField.setIdentifier(U.makeIdentifier(filtersFieldName));
+			newPageField.setIdentifier("sc_filter__" + U.makeIdentifier(filtersFieldName));
 			newPageField.setType(filtersField.getType());
 			newPageField.setFilter(filtersField.getIsFilter());
 
@@ -523,6 +524,9 @@ public class StaticCatalogEngine {
 			csvLine = csvParser.parseNext();
 		}
 		
+		/* Filters */
+		LinkedHashMap<String, StaticCatalogPageFilter> pageFilters = page.getPage().getFilters();
+		
 		/* Sorting */
 		for (StaticCatalogPageField pageField : pageFields) {
 			
@@ -578,10 +582,12 @@ public class StaticCatalogEngine {
 			
 			int exceptionsIndex = 0;
 			int moreExceptionsIndex = pageField.getException_values_count();
+			String fieldIdentifier = pageField.getIdentifier();
 			for (String exceptionKey : exceptionKeys) {
 
+				String valueIdentifier = fieldIdentifier + "__" + U.makeIdentifier(exceptionKey);
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
-				filterValue.setIdentifier(U.makeIdentifier(fieldName) + "__" + U.makeIdentifier(exceptionKey));
+				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(exceptionKey);
 				filterValue.setLabel(exceptionKey); // TODO
 				filterValue.setCount(exceptions.get(exceptionKey));
@@ -593,6 +599,11 @@ public class StaticCatalogEngine {
 					pageField.getMore_exception_values().add(filterValue);
 				}
 				
+				StaticCatalogPageFilter pageFilter = new StaticCatalogPageFilter();
+				pageFilter.setField(fieldName);
+				pageFilter.setValue(exceptionKey);
+				pageFilters.put(valueIdentifier, pageFilter);
+				
 				exceptionsIndex++;
 			}
 			
@@ -600,8 +611,9 @@ public class StaticCatalogEngine {
 			int moreValuesIndex = pageField.getValues_count();
 			for (String valueKey : valueKeys) {
 
+				String valueIdentifier = fieldIdentifier + "__" + U.makeIdentifier(valueKey);
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
-				filterValue.setIdentifier(U.makeIdentifier(fieldName) + "__" + U.makeIdentifier(valueKey));
+				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(valueKey);
 				filterValue.setLabel(valueKey); // TODO
 				filterValue.setCount(values.get(valueKey));
@@ -612,7 +624,12 @@ public class StaticCatalogEngine {
 				else {
 					pageField.getMore_values().add(filterValue);
 				}
-				
+
+				StaticCatalogPageFilter pageFilter = new StaticCatalogPageFilter();
+				pageFilter.setField(fieldName);
+				pageFilter.setValue(valueKey);
+				pageFilters.put(valueIdentifier, pageFilter);
+
 				valuesIndex++;
 			}
 		}

@@ -1,23 +1,49 @@
-/**	
+/*	
 ╭──────────────────────────────────────╮
 │ static-catalog                       │
 ╰──────────────────────────────────────╯
 */
 
+
 const StaticCatalog = (() => {
 
-	const _loadBlock = (index, resultsCallback) => {
+	const _loadBlock = (searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback) => {
+		
+		let index = searchBlocks[blockIndex];
+		
 		
 		const xmlHttpRequest = new XMLHttpRequest();
 		xmlHttpRequest.onreadystatechange = () => {
-			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
 				
 				const csvString = xmlHttpRequest.responseText;
 				const results = Papa.parse(csvString, {
 					header: true
 				});
 				
-				resultsCallback(results);
+				for (let result of results.data) {
+
+					let ok = true;
+					for (searchFilter of searchFilters) {
+						let searchFieldName = searchFilter.field;
+						resultValue = result[searchFieldName];
+						if (!searchFilter.values.includes(resultValue)) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						resultLines.push(result);
+					}
+				}
+				
+				console.log(resultLines);
+				
+				resultsCallback(resultLines.slice(0, 10));
+				
+				
+				
+				//resultsCallback(results);
 				
 //				console.log(results);
 //				
@@ -42,12 +68,59 @@ const StaticCatalog = (() => {
 		xmlHttpRequest.overrideMimeType("text/csv");
 		xmlHttpRequest.send();
 	}
+	
+	const _union = (a, b) => {
+	    const cache = {};
 
-	const applyFilters = (resultsCallback) => {
+	    a.forEach(item => cache[item] = item);
+	    b.forEach(item => cache[item] = item);
+
+	    return Object.keys(cache).map(key => cache[key]);
+	};
+
+	/** */
+	const applyFilters = (searchData, resultsCallback) => {
 		
-		console.log("apply filters");
-		_loadBlock(0, resultsCallback);
+		let searchFilters = searchData.searchFieldsValues;
+		let nameValuesBlocks = searchData.searchCatalog.nameValuesBlocks;
+		let searchBlocks;
+		
+		noResults:
+		for (searchFilter of searchFilters) {
+			
+			let searchFieldName = searchFilter.field;
+			console.log(searchFieldName);
+			
+			let valuesBlocks;
+			for (searchValue of searchFilter.values) {
+				console.log(searchValue);
 
+				let blocks = nameValuesBlocks[searchFieldName][searchValue];
+				console.log(blocks);
+				
+				if (!valuesBlocks) {
+					valuesBlocks = blocks;
+				}
+				else {
+					valuesBlocks = _union(valuesBlocks, blocks);
+				}
+			}
+			if (!searchBlocks) {
+				searchBlocks = valuesBlocks;
+			}
+			else {
+				searchBlocks = searchBlocks.filter(value => valuesBlocks.includes(value));
+				if (searchBlocks.length == 0) {
+					break noResults;
+				}
+			}
+		}
+		
+		console.log("Done apply filters.");
+		console.log(searchBlocks);
+		
+		let resultLines = [];
+		_loadBlock(searchFilters, searchBlocks, 0, resultLines, resultsCallback);
 	}
 	
 	return {
