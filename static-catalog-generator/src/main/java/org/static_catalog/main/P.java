@@ -63,7 +63,9 @@ public class P {
 
 	private FileControlProperties examineCsvFileControl;
 	private int examineCsvTypeMaxExceptions = 1;
-	private int examineCsvFilterElementsMaxDisplay = 500;
+	private int examineCsvFilterElementsMax = 50;
+	private int examineCsvFilterElementsMaxDisplay = 35;
+	private int examineCsvFilterElementsMinDisplay = 10;
 	private boolean examineCsvUseFirstLineasHeader = true;
 	
 	private FileControlProperties filtersFileControl;
@@ -188,5 +190,20 @@ public class P {
 		this.generateTemplateFileControl = generateTemplateFileControl;
 	}
 
+	public int getExamineCsvFilterElementsMax() {
+		return examineCsvFilterElementsMax;
+	}
+
+	public void setExamineCsvFilterElementsMax(int examineCsvFilterElementsMax) {
+		this.examineCsvFilterElementsMax = examineCsvFilterElementsMax;
+	}
+
+	public int getExamineCsvFilterElementsMinDisplay() {
+		return examineCsvFilterElementsMinDisplay;
+	}
+
+	public void setExamineCsvFilterElementsMinDisplay(int examineCsvFilterElementsMinDisplay) {
+		this.examineCsvFilterElementsMinDisplay = examineCsvFilterElementsMinDisplay;
+	}
 	
 }

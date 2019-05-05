@@ -83,11 +83,15 @@ public class StaticCatalogEngine {
     };
 	
 	/** Load CSV in grid */
-	public static void loadViewCsv(String csvCompleteFileName,
-			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
-			long maxLines, boolean useFirstLineAsHeader,
-			AtomicBoolean doLoop, LoopProgress loopProgress) {
+//	public static void loadViewCsv(String csvCompleteFileName,
+//			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
+//			long maxLines, boolean useFirstLineAsHeader,
+//			AtomicBoolean doLoop, LoopProgress loopProgress) {
 
+public static void loadViewCsv(String csvCompleteFileName,
+		ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
+		long maxLines, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
+		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
@@ -109,10 +113,10 @@ public class StaticCatalogEngine {
 		long csvLineIndex = 0;
 		while (csvLine != null) {
 			
-			if (!doLoop.get()) {
-				csvParser.stopParsing();
-				return;
-			}
+//			if (!doLoop.get()) {
+//				csvParser.stopParsing();
+//				return;
+//			}
 			
 			int lineLength = csvLine.length;
 			
@@ -351,7 +355,7 @@ public class StaticCatalogEngine {
 //			}
 		}
 		
-		loopProgress.doProgress("Group examine" + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+		loopProgress.doProgress("Group examine " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 		
 	}
 
