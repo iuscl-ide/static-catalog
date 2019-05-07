@@ -885,9 +885,48 @@ public static void loadViewCsv(String csvCompleteFileName,
 		}
 		
 		S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
-		
 		//L.p(uniquePathsWithCount.size() + "");
 
+//		int valuesIndexesCnt = valuesIndexes.size();
+//		
+//		int cnt = 0;
+//		
+//		ArrayList<Pair<String, String>> pairs = new ArrayList<Pair<String,String>>();
+//		for (int i = 0; i < valuesIndexesCnt - 1; i++) {
+//			for (int j = i + 1; j < valuesIndexesCnt; j++) {
+//				
+//				System.out.println(cnt++ + " --- " + i + " -- " + j);
+//				pairs.add(new Pair<>(pageFields.get(valuesIndexes.get(i)).getName(), pageFields.get(valuesIndexes.get(j)).getName()));
+//			}
+//		}
+//
+//		long cnt2 = 0;
+//		LinkedHashMap<Pair<String, String>, ArrayList<Pair<String, String>>> pairValues = new LinkedHashMap<Pair<String,String>, ArrayList<Pair<String,String>>>();
+//		for (Pair<String, String> pair : pairs) {
+//			System.out.println(pair);
+//			ArrayList<Pair<String,String>> values = new ArrayList<Pair<String,String>>();
+//			pairValues.put(pair, values);
+//			
+//			for (String value1 : nameValuesBlocks.get(pair.getValue(0)).keySet()) {
+//				for (String value2 : nameValuesBlocks.get(pair.getValue(1)).keySet()) {
+//
+//					System.out.println(cnt2++ + " " + value1 + " ++ " + value2);
+//					values.add(new Pair<String, String>(value1, value2));
+//				}
+//			}
+//		}
+		
+//		for (int index = 0; index < 2; index++) {
+//			for (int valuesIndex : valuesIndexes) {
+//				
+//				String fieldName = pageFields.get(valuesIndex).getName();
+//				
+//			}
+//			
+//			
+//		}
+		
+		
 	}
 
 
