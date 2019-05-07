@@ -77,9 +77,9 @@ const StaticCatalogDev = (() => {
 	/** */
 	const resultsCallback = (results) => {
 		
-		console.log(results);
+		//console.log(results);
 		
-		console.log(_$tile_template);
+		//console.log(_$tile_template);
 		
 		_$no_results_panel.hide();
 		
@@ -93,7 +93,7 @@ const StaticCatalogDev = (() => {
 			let result = results[index];
 			
 			for (let resultField in result) {
-				console.log(resultField + " " + result[resultField]);
+				//console.log(resultField + " " + result[resultField]);
 				
 				$tile_field = _$tile_field_template.clone();
 				$tile_field.appendTo($tile_fields);
@@ -101,7 +101,7 @@ const StaticCatalogDev = (() => {
 				$tile_field.find('span[name=scp_name__tile_field_value]').html(result[resultField]);
 			}
 			
-			console.log(result);
+			//console.log(result);
 		}
 		
 		_$results_panel.show();
@@ -110,6 +110,8 @@ const StaticCatalogDev = (() => {
 	
 	/** */
 	const apply = () => {
+
+		_$tiles_or_list.empty();
 		
 		let keys = [];
 		let searchData = {
@@ -137,7 +139,7 @@ const StaticCatalogDev = (() => {
 			}
 		}
 		searchData.searchCatalog = _searchCatalog.searchCatalog;
-		console.log(searchData);
+		//console.log(searchData);
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}

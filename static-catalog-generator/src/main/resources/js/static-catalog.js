@@ -37,11 +37,21 @@ const StaticCatalog = (() => {
 					}
 				}
 				
-				console.log(resultLines);
-				
-				resultsCallback(resultLines.slice(0, 10));
-				
-				
+				if (resultLines.length > 9) {
+					console.log("Found in block: " + blockIndex + " -> " + index);
+					//console.log(resultLines);
+					resultsCallback(resultLines.slice(0, 10));
+				}
+				else {
+					blockIndex++;
+					if (blockIndex >= searchBlocks.length) {
+						console.log("No more blocks");
+						resultsCallback(resultLines);
+					}
+					else {
+						_loadBlock(searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback);	
+					}
+				}
 				
 				//resultsCallback(results);
 				
@@ -89,14 +99,14 @@ const StaticCatalog = (() => {
 		for (searchFilter of searchFilters) {
 			
 			let searchFieldName = searchFilter.field;
-			console.log(searchFieldName);
+			//console.log(searchFieldName);
 			
 			let valuesBlocks;
 			for (searchValue of searchFilter.values) {
-				console.log(searchValue);
+				//console.log(searchValue);
 
 				let blocks = nameValuesBlocks[searchFieldName][searchValue];
-				console.log(blocks);
+				//console.log(blocks);
 				
 				if (!valuesBlocks) {
 					valuesBlocks = blocks;
@@ -116,7 +126,7 @@ const StaticCatalog = (() => {
 			}
 		}
 		
-		console.log("Done apply filters.");
+		console.log("Done apply filters, search blocks:");
 		console.log(searchBlocks);
 		
 		let resultLines = [];

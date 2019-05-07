@@ -53,7 +53,7 @@ public class StaticCatalogEngine {
 	
 	/** Display types */
 	public static final String DISPLAY_TYPE_NONE = "none"; 
-	public static final String DISPLAY_TYPE_CHECKBOXES = "checkboxes";
+	public static final String DISPLAY_TYPE_CHECKBOXES = "checkboxes"; 
 	public static final String DISPLAY_TYPE_DROPDOWN = "dropdown"; 
 	public static final String DISPLAY_TYPE_RADIOBUTTONS = "radiobuttons"; 
 
@@ -786,356 +786,110 @@ public static void loadViewCsv(String csvCompleteFileName,
 //			}
 //		}
 		
-//		/* Generate size blocks */
-//		long start = System.currentTimeMillis();
-//		loopProgress.doProgress("Start catalog generation...");
-//		
-//		ArrayList<String> fieldNames = new ArrayList<>();
-//
-//		LinkedHashMap<String, Long> uniquePathsWithCount = new LinkedHashMap<>();
-//		
-//		CsvParserSettings csvParserSettings = new CsvParserSettings();
-//		csvParserSettings.setLineSeparatorDetectionEnabled(true);
-//		CsvParser csvParser = new CsvParser(csvParserSettings);
-//		csvParser.beginParsing(new File(sourceCsvFileName));
-//		
-//		CsvWriter csvWriter = null;
-//		
-//		long csvLineIndex = 0;
-//		int blockIndex = -1;
-//		int blockLineIndex = 0;
-//		int blockLines = 10000;
-//		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
-//		String blockFileName = blockFilePrefix;
-//		
-//		String[] headerLine = null;
-//		String[] csvLine = csvParser.parseNext();
-//		while (csvLine != null) {
-//
-//			/* CSV field names */
-//			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
-//				
-//				headerLine = csvLine;
-//				// TODO
-//				csvLine = csvParser.parseNext();
-//				csvLineIndex++;
-//				continue;
-//			}
-//			
-////			String path = "";
-////			String pathSep = "";
-////			
-////
-////			if (!uniquePathsWithCount.containsKey(path)) {
-////				uniquePathsWithCount.put(path, 0L);
-////			}
-//			
-//			if (blockLineIndex % blockLines == 0) {
-//				
-//				blockIndex++;
-//				blockFileName = blockFilePrefix + blockIndex + ".csv";
-//				blockLineIndex = 0;
-//				
-//				if (csvWriter != null) {
-//					csvWriter.close();
-//				}
-//				try {
-//					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				csvWriter.writeRow(headerLine);
-//			}
-//
-//			for (int index : valuesIndexes) {
-//				
-//				String fieldValue = csvLine[index];
-//				if (fieldValue == null) {
-//					fieldValue = "NULL";
-//				}
-////					path = path + pathSep + fieldValue;
-////					pathSep = " / ";
-//
-//				String fieldName = pageFields.get(index).getName();
-//				LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = nameValuesBlocks.get(fieldName);
-//				
-////				String fieldValueIdentifier = fieldNameIdentifier + "__" + U.makeIdentifier(fieldValue);
-////					if (!filterNameIdentifierBlocks.containsKey(fieldValueIdentifier)) {
-////						filterNameIdentifierBlocks.put(fieldValueIdentifier, new ArrayList<>());
-////					}
-//				ArrayList<Integer> blocks = filterNameIdentifierBlocks.get(fieldValue);
-//				if (!blocks.contains(blockIndex)) {
-//					blocks.add(blockIndex);
-//				}
-//			}
-//			
-//			csvWriter.writeRow(csvLine);
-//			blockLineIndex++;
-//			
-//			csvLineIndex++;
-//			if (csvLineIndex % 500000 == 0) {
-//				loopProgress.doProgress(csvLineIndex + " lines examined...");
-//			}
-//			csvLine = csvParser.parseNext();
-//		}
-//		csvParser.stopParsing();
-//		if (csvWriter != null) {
-//			csvWriter.close();
-//		}
-//		
-//		S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
-		
-		//L.p(uniquePathsWithCount.size() + "");
-		
-		/* Generate filter blocks */
+		/* Generate */
 		long start = System.currentTimeMillis();
-		loopProgress.doProgress("Start catalog blocks generation...");
+		loopProgress.doProgress("Start catalog generation...");
 		
 		ArrayList<String> fieldNames = new ArrayList<>();
-		LinkedHashMap<String, StaticCatalogPageField> filterNames = new LinkedHashMap<>();
-		LinkedHashMap<String, Integer> filterNamesIndex = new LinkedHashMap<>();
-		int index = 0;
-		for (StaticCatalogPageField field : page.getPage().getFields()) {
-			String name = field.getName();
-			fieldNames.add(name);
-			if (field.getFilter()) {
-				filterNames.put(name, field);
-				filterNamesIndex.put(name, index);
-			}
-			index++;
-		}
 
-		ArrayList<String> readBlocks = new ArrayList<>();
-//		ArrayList<String> prevWriteBlockNames = new ArrayList<>();
-		ArrayList<String> writeBlockNames = new ArrayList<>();
-		
-		readBlocks.add(sourceCsvFileName);
-		writeBlockNames.add("Block");
-		
-		long writeBlockNamesTotal = 0;
-		
-//		int cnt = 0;
-//		for (String filterFieldName : filterNames.keySet()) {
-//			
-////			if (cnt++ > 2) {
-////				break;
-////			}
-//			int filterIndex = filterNamesIndex.get(filterFieldName);
-//			
-//			
-//			StaticCatalogPageField field = filterNames.get(filterFieldName);
-//			
-//			ArrayList<StaticCatalogPageFieldValue> fieldValues = new ArrayList<>();
-//			fieldValues.addAll(field.getException_values());
-//			fieldValues.addAll(field.getMore_exception_values());
-//			fieldValues.addAll(field.getValues());
-//			fieldValues.addAll(field.getMore_values());
-//
-//			readBlocks.clear();
-//			readBlocks.addAll(writeBlockNames);
-//			writeBlockNames.clear();
-//			long writeBlockNamesIndex = 0;
-			
-			
-//			for (String prevWriteBlockName : prevWriteBlockNames) {
-//				int valueIndex = 0;
-//				for (StaticCatalogPageFieldValue fieldValue : fieldValues) {
-//					writeBlockNames.add(prevWriteBlockName + "_" + valueIndex++);
-//				}
-//			}
-
-			//L.p(filterFieldName + ": " + writeBlockNames.size());
-			
-//			for (String readBlock : readBlocks) {
-//
-//				CsvParserSettings csvParserSettings = new CsvParserSettings();
-//				csvParserSettings.setLineSeparatorDetectionEnabled(true);
-//				CsvParser csvParser = new CsvParser(csvParserSettings);
-//				csvParser.beginParsing(new File(sourceCsvFileName));
-//
-//				long csvLineIndex = 0;
-//				String[] csvLine = csvParser.parseNext();
-//				while (csvLine != null) {
-//
-//					String filterValue = csvLine[filterIndex];
-//					if (filterValue == null) {
-//						filterValue = "EMPTY";
-//					}
-//					int valueIndex = 0;
-//					for (StaticCatalogPageFieldValue fieldValue : fieldValues) {
-//						String fieldValueName = null;
-//						if (fieldValue == null) {
-//							fieldValueName = "EMPTY";
-//						}
-//						else {
-//							fieldValueName = fieldValue.getName();
-//						}
-//						if (filterValue.equals(fieldValueName)) {
-//							String blockName = readBlock + "_" + valueIndex;
-////							L.p(blockName);
-//							if (!writeBlockNames.contains(blockName)) {
-//								L.p(filterValue + ": " + blockName + " __ " + writeBlockNamesIndex++ + " ___ " + writeBlockNamesTotal++);
-//								writeBlockNames.add(blockName);
-//							}
-//						}
-//						valueIndex++;
-//					}
-//					
-//					csvLineIndex++;
-//					if (csvLineIndex % 500000 == 0) {
-//						loopProgress.doProgress("For filter: " + filterFieldName + ", " + csvLineIndex + " lines examined...");
-//					}
-//					csvLine = csvParser.parseNext();
-//				}
-//				csvParser.stopParsing();
-////				if (csvWriter != null) {
-////					csvWriter.close();
-////				}
-//			}
-//			for (String writeBlockName : writeBlockNames) {
-//				L.p(writeBlockName);
-//			}
-//		}
-		
-		
-//		LinkedHashMap<String, Long> uniquePathsWithCount = new LinkedHashMap<>();
-//		
-//		CsvParserSettings csvParserSettings = new CsvParserSettings();
-//		csvParserSettings.setLineSeparatorDetectionEnabled(true);
-//		CsvParser csvParser = new CsvParser(csvParserSettings);
-//		csvParser.beginParsing(new File(sourceCsvFileName));
-//		
-//		CsvWriter csvWriter = null;
-//		
-//		long csvLineIndex = 0;
-//		int blockIndex = -1;
-//		int blockLineIndex = 0;
-//		int blockLines = 10000;
-//		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
-//		String blockFileName = blockFilePrefix;
-//		
-//		String[] headerLine = null;
-//		String[] csvLine = csvParser.parseNext();
-//		while (csvLine != null) {
-//
-//			/* CSV field names */
-//			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
-//				
-//				headerLine = csvLine;
-//				// TODO
-//				csvLine = csvParser.parseNext();
-//				csvLineIndex++;
-//				continue;
-//			}
-//			
-////			String path = "";
-////			String pathSep = "";
-////			
-////
-////			if (!uniquePathsWithCount.containsKey(path)) {
-////				uniquePathsWithCount.put(path, 0L);
-////			}
-//			
-//			if (blockLineIndex % blockLines == 0) {
-//				
-//				blockIndex++;
-//				blockFileName = blockFilePrefix + blockIndex + ".csv";
-//				blockLineIndex = 0;
-//				
-//				if (csvWriter != null) {
-//					csvWriter.close();
-//				}
-//				try {
-//					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				csvWriter.writeRow(headerLine);
-//			}
-//
-//			for (int index : valuesIndexes) {
-//				
-//				String fieldValue = csvLine[index];
-//				if (fieldValue == null) {
-//					fieldValue = "NULL";
-//				}
-////					path = path + pathSep + fieldValue;
-////					pathSep = " / ";
-//
-//				String fieldName = pageFields.get(index).getName();
-//				LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = nameValuesBlocks.get(fieldName);
-//				
-////				String fieldValueIdentifier = fieldNameIdentifier + "__" + U.makeIdentifier(fieldValue);
-////					if (!filterNameIdentifierBlocks.containsKey(fieldValueIdentifier)) {
-////						filterNameIdentifierBlocks.put(fieldValueIdentifier, new ArrayList<>());
-////					}
-//				ArrayList<Integer> blocks = filterNameIdentifierBlocks.get(fieldValue);
-//				if (!blocks.contains(blockIndex)) {
-//					blocks.add(blockIndex);
-//				}
-//			}
-//			
-//			csvWriter.writeRow(csvLine);
-//			blockLineIndex++;
-//			
-//			csvLineIndex++;
-//			if (csvLineIndex % 500000 == 0) {
-//				loopProgress.doProgress(csvLineIndex + " lines examined...");
-//			}
-//			csvLine = csvParser.parseNext();
-//		}
-//		csvParser.stopParsing();
-//		if (csvWriter != null) {
-//			csvWriter.close();
-//		}
-//		
-//		S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
-
-		
-		HashMap<String, Long> keys = new HashMap<String, Long>();
+		LinkedHashMap<String, Long> uniquePathsWithCount = new LinkedHashMap<>();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(sourceCsvFileName));
-
+		
+		CsvWriter csvWriter = null;
+		
 		long csvLineIndex = 0;
+		int blockIndex = -1;
+		int blockLineIndex = 0;
+		int blockLines = 500;
+		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
+		String blockFileName = blockFilePrefix;
+		
+		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
-			String key = "";
-			String sep = "__";
-			for (String filterFieldName : filterNames.keySet()) {
+			/* CSV field names */
+			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
 				
-//				if (cnt++ > 2) {
-//					break;
-//				}
-				int filterIndex = filterNamesIndex.get(filterFieldName);
-//				StaticCatalogPageField field = filterNames.get(filterFieldName);
-
-//				if (filterValue == null) {
-//					filterValue = "EMPTY";
-//				}
-
-				key = key + sep + csvLine[filterIndex];
+				headerLine = csvLine;
+				// TODO
+				csvLine = csvParser.parseNext();
+				csvLineIndex++;
+				continue;
+			}
+			
+//			String path = "";
+//			String pathSep = "";
+//			
+//
+//			if (!uniquePathsWithCount.containsKey(path)) {
+//				uniquePathsWithCount.put(path, 0L);
+//			}
+			
+			if (blockLineIndex % blockLines == 0) {
+				
+				blockIndex++;
+				blockFileName = blockFilePrefix + blockIndex + ".csv";
+				blockLineIndex = 0;
+				
+				if (csvWriter != null) {
+					csvWriter.close();
+				}
+				try {
+					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				csvWriter.writeRow(headerLine);
 			}
 
-			if (!keys.containsKey(key)) {
-				L.p(key);
-				keys.put(key, 0L);
+			for (int index : valuesIndexes) {
+				
+				String fieldValue = csvLine[index];
+				if (fieldValue == null) {
+					fieldValue = "NULL";
+				}
+//					path = path + pathSep + fieldValue;
+//					pathSep = " / ";
+
+				String fieldName = pageFields.get(index).getName();
+				LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = nameValuesBlocks.get(fieldName);
+				
+//				String fieldValueIdentifier = fieldNameIdentifier + "__" + U.makeIdentifier(fieldValue);
+//					if (!filterNameIdentifierBlocks.containsKey(fieldValueIdentifier)) {
+//						filterNameIdentifierBlocks.put(fieldValueIdentifier, new ArrayList<>());
+//					}
+				ArrayList<Integer> blocks = filterNameIdentifierBlocks.get(fieldValue);
+				if (!blocks.contains(blockIndex)) {
+					blocks.add(blockIndex);
+				}
 			}
+			
+			csvWriter.writeRow(csvLine);
+			blockLineIndex++;
 			
 			csvLineIndex++;
 			if (csvLineIndex % 500000 == 0) {
-				loopProgress.doProgress("For keys, lines examined...");
+				loopProgress.doProgress(csvLineIndex + " lines examined...");
 			}
 			csvLine = csvParser.parseNext();
 		}
+		csvParser.stopParsing();
+		if (csvWriter != null) {
+			csvWriter.close();
+		}
 		
-		L.p(keys.size() + "");
+		S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
+		
+		//L.p(uniquePathsWithCount.size() + "");
+
 	}
+
 
 	/** Sort type value */
 	public static void sortTypeKey(String type, ArrayList<String> keys) {
@@ -1143,12 +897,25 @@ public static void loadViewCsv(String csvCompleteFileName,
 		if (type.equals(TYPE_DATE)) {
 			Collections.sort(keys, datetimeComparator);
 		}
+
 		if (type.equals(TYPE_LONG)) {
 			Collections.sort(keys, longComparator);
+//			ArrayList<Long> longKeys = new ArrayList<>();
+//			keys.forEach(key -> longKeys.add(Long.parseLong(key)));
+//			Collections.sort(longKeys);
+//			keys.clear();
+//			longKeys.forEach(longKey -> keys.add(longKey.toString()));
 		}
+				
 		if (type.equals(TYPE_DOUBLE)) {
 			Collections.sort(keys, doubleComparator);
+//			ArrayList<Double> doubleKeys = new ArrayList<>();
+//			keys.forEach(key -> doubleKeys.add(Double.parseDouble(key)));
+//			Collections.sort(doubleKeys);
+//			keys.clear();
+//			doubleKeys.forEach(doubleKey -> keys.add(doubleKey.toString()));
 		}
+
 		if (type.equals(TYPE_TEXT)) {
 			Collections.sort(keys, stringAsNumberComparator);
 		}
