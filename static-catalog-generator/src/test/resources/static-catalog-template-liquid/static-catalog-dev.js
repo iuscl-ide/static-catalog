@@ -13,7 +13,7 @@ const StaticCatalogDev = (() => {
 	var _$tile_field_template; 
 
 	var _pageFieldsFilters;
-	var _searchCatalog;
+//	var _searchCatalog;
 	
 	/** init */
 	const init = () => {
@@ -28,15 +28,15 @@ const StaticCatalogDev = (() => {
 			}
 		});
 
-		$.ajax({
-			dataType: "json",
-			url: "static-catalog.json",
-			mimeType: "application/json",
-			success: result => {
-				_searchCatalog = result;
-				console.log(_searchCatalog);
-			}
-		});
+//		$.ajax({
+//			dataType: "json",
+//			url: "static-catalog.json",
+//			mimeType: "application/json",
+//			success: result => {
+//				_searchCatalog = result;
+//				console.log(_searchCatalog);
+//			}
+//		});
 
 		//$('ui.table').tablesort();
 		$('.ui.accordion').accordion();
@@ -169,8 +169,9 @@ const StaticCatalogDev = (() => {
 				searchData.searchFieldsValues[index].values.push(filterValue);
 			}
 		}
-		searchData.searchCatalog = _searchCatalog.searchCatalog;
-		//console.log(searchData);
+//		searchData.searchCatalog = _searchCatalog.searchCatalog;
+		searchData.filterNameIndex = _pageFieldsFilters.page.filterNameIndex;
+		console.log(searchData);
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}
