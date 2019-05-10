@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /** Page JSON fields */
-public class StaticCatalogPageFields {
+public class StaticCatalogPageComponents {
 
 	private final ArrayList<StaticCatalogPageField> fields = new ArrayList<>();
 
 	private final LinkedHashMap<String, StaticCatalogPageFilter> filters = new LinkedHashMap<>();
 
+	private final LinkedHashMap<String, Integer> filterNameIndex = new LinkedHashMap<>();
 	
 	public ArrayList<StaticCatalogPageField> getFields() {
 		return fields;
@@ -18,5 +19,9 @@ public class StaticCatalogPageFields {
 
 	public LinkedHashMap<String, StaticCatalogPageFilter> getFilters() {
 		return filters;
+	}
+
+	public LinkedHashMap<String, Integer> getFilterNameIndex() {
+		return filterNameIndex;
 	}
 }

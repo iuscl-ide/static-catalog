@@ -4,9 +4,9 @@ package org.static_catalog.model.dest;
 /** Page JSON root */
 public class StaticCatalogPage {
 
-	private final StaticCatalogPageFields page = new StaticCatalogPageFields();
+	private final StaticCatalogPageComponents page = new StaticCatalogPageComponents();
 
-	public StaticCatalogPageFields getPage() {
+	public StaticCatalogPageComponents getPage() {
 		return page;
 	}
 }

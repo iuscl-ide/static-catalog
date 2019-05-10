@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 /** Search JSON fields */
 public class StaticCatalogSearchFields {
 
-	private final LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesBlocks = new LinkedHashMap<>();
+	private final LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesLines = new LinkedHashMap<>();
 
-	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> getNameValuesBlocks() {
-		return nameValuesBlocks;
+	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> getNameValuesLines() {
+		return nameValuesLines;
 	}
 }
