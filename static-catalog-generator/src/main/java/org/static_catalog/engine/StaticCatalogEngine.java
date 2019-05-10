@@ -735,7 +735,7 @@ public static void loadViewCsv(String csvCompleteFileName,
 		String catalogFileName2 = destinationFolderName + File.separator + "site" + File.separator + "static-catalog2.json";
 
 		StaticCatalogSearch templateCatalogRoot = new StaticCatalogSearch();
-		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Integer>>> nameValuesBlocks = templateCatalogRoot.getSearchCatalog().getNameValuesBlocks();
+		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesBlocks = templateCatalogRoot.getSearchCatalog().getNameValuesBlocks();
 		
 		/* Filters */
 		ArrayList<StaticCatalogPageField> pageFields = page.getPage().getFields();
@@ -751,7 +751,7 @@ public static void loadViewCsv(String csvCompleteFileName,
 //				indexIdentifiers.put(index, pageFieldNameIdentifier);
 //				filterIdentifierBlocks.put(pageFieldNameIdentifier, new LinkedHashMap<>());
 				
-				LinkedHashMap<String, ArrayList<Integer>> valuesBlocks = new LinkedHashMap<>(); 
+				LinkedHashMap<String, ArrayList<Long>> valuesBlocks = new LinkedHashMap<>(); 
 				nameValuesBlocks.put(pageField.getName(), valuesBlocks);
 				for (StaticCatalogPageFieldValue value : pageField.getException_values()) {
 					valuesBlocks.put(value.getName(), new ArrayList<>());
@@ -832,9 +832,11 @@ public static void loadViewCsv(String csvCompleteFileName,
 		long csvLineIndex = 0;
 		int blockIndex = -1;
 		int blockLineIndex = 0;
-		int blockLines = 5000;
+		int blockLines = 10;
 		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
 		String blockFileName = blockFilePrefix;
+		
+		HashMap<String, Long> sums = new HashMap<>();
 		
 		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
@@ -867,13 +869,13 @@ public static void loadViewCsv(String csvCompleteFileName,
 				if (csvWriter != null) {
 					csvWriter.close();
 				}
-				try {
-					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				csvWriter.writeRow(headerLine);
+//				try {
+//					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				csvWriter.writeRow(headerLine);
 			}
 
 			for (int index : valuesIndexes) {
@@ -886,64 +888,80 @@ public static void loadViewCsv(String csvCompleteFileName,
 					pathSep = " / ";
 
 				String fieldName = pageFields.get(index).getName();
-				LinkedHashMap<String, ArrayList<Integer>> filterNameIdentifierBlocks = nameValuesBlocks.get(fieldName);
+				LinkedHashMap<String, ArrayList<Long>> filterNameIdentifierBlocks = nameValuesBlocks.get(fieldName);
 				
 //				String fieldValueIdentifier = fieldNameIdentifier + "__" + U.makeIdentifier(fieldValue);
 //					if (!filterNameIdentifierBlocks.containsKey(fieldValueIdentifier)) {
 //						filterNameIdentifierBlocks.put(fieldValueIdentifier, new ArrayList<>());
 //					}
-				ArrayList<Integer> blocks = filterNameIdentifierBlocks.get(fieldValue);
-				if (!blocks.contains(blockIndex)) {
-					blocks.add(blockIndex);
-				}
+
+				
+				ArrayList<Long> blocks = filterNameIdentifierBlocks.get(fieldValue);
+//				if (!blocks.contains(blockIndex)) {
+//					blocks.add(blockIndex);
+//				}
+
+//				String sumsKey = fieldName + "____" + fieldValue;
+//				int size = blocks.size();
+//				if (size > 0) {
+//					long sum = sums.get(sumsKey);
+//					blocks.add(csvLineIndex - sum);
+//					sums.put(sumsKey, csvLineIndex);
+//				}
+//				else {
+//					blocks.add(csvLineIndex);
+//					sums.put(sumsKey, csvLineIndex);
+//				}
+				
+				blocks.add(csvLineIndex);
 			}
 			
 			if (!uniquePathsWithCount.containsKey(path)) {
 				uniquePathsWithCount.put(path, 0L);
 			}
 			
-			/* Pairs */
-			for (int i = 0; i < valuesIndexesCnt - 1; i++) {
-				
-				int index1 = valuesIndexes.get(i);
-				String fieldName1 = pageFields.get(index1).getName();
-				String fieldValue1 = csvLine[index1];
-				if (fieldValue1 == null) {
-					fieldValue1 = "NULL";
-				}
-				
-				for (int j = i + 1; j < valuesIndexesCnt; j++) {
-					
-					int index2 = valuesIndexes.get(j);
-					String fieldName2 = pageFields.get(index2).getName();
-					String fieldValue2 = csvLine[index2];
-					if (fieldValue2 == null) {
-						fieldValue2 = "NULL";
-					}
-					
-					LinkedHashMap<String, LinkedHashMap<String, ArrayList<Integer>>> pairValuesBlocks = pairNamesValuesBlocks.get(fieldName1).get(fieldName2);
-
-					if (!pairValuesBlocks.containsKey(fieldValue1)) {
-						pairValuesBlocks.put(fieldValue1, new LinkedHashMap<>());
-					}
-					LinkedHashMap<String, ArrayList<Integer>> values2Blocks = pairValuesBlocks.get(fieldValue1);
-					if (!values2Blocks.containsKey(fieldValue2)) {
-						values2Blocks.put(fieldValue2, new ArrayList<>());
-					}
-					ArrayList<Integer> blocks = values2Blocks.get(fieldValue2);
-					if (!blocks.contains(blockIndex)) {
-						blocks.add(blockIndex);
-					}
-					
-					//System.out.println(cnt++ + " --- " + fieldValue1 + " -- " + fieldValue2);
-				}
-			}
+//			/* Pairs */
+//			for (int i = 0; i < valuesIndexesCnt - 1; i++) {
+//				
+//				int index1 = valuesIndexes.get(i);
+//				String fieldName1 = pageFields.get(index1).getName();
+//				String fieldValue1 = csvLine[index1];
+//				if (fieldValue1 == null) {
+//					fieldValue1 = "NULL";
+//				}
+//				
+//				for (int j = i + 1; j < valuesIndexesCnt; j++) {
+//					
+//					int index2 = valuesIndexes.get(j);
+//					String fieldName2 = pageFields.get(index2).getName();
+//					String fieldValue2 = csvLine[index2];
+//					if (fieldValue2 == null) {
+//						fieldValue2 = "NULL";
+//					}
+//					
+//					LinkedHashMap<String, LinkedHashMap<String, ArrayList<Integer>>> pairValuesBlocks = pairNamesValuesBlocks.get(fieldName1).get(fieldName2);
+//
+//					if (!pairValuesBlocks.containsKey(fieldValue1)) {
+//						pairValuesBlocks.put(fieldValue1, new LinkedHashMap<>());
+//					}
+//					LinkedHashMap<String, ArrayList<Integer>> values2Blocks = pairValuesBlocks.get(fieldValue1);
+//					if (!values2Blocks.containsKey(fieldValue2)) {
+//						values2Blocks.put(fieldValue2, new ArrayList<>());
+//					}
+//					ArrayList<Integer> blocks = values2Blocks.get(fieldValue2);
+//					if (!blocks.contains(blockIndex)) {
+//						blocks.add(blockIndex);
+//					}
+//					
+//					//System.out.println(cnt++ + " --- " + fieldValue1 + " -- " + fieldValue2);
+//				}
+//			}
 			
-			csvWriter.writeRow(csvLine);
+//			csvWriter.writeRow(csvLine);
 			blockLineIndex++;
 			
 			csvLineIndex++;
-			if (csvLineIndex % 500000 == 0) {
+			if (csvLineIndex % 500 == 0) {
 				loopProgress.doProgress(csvLineIndex + " lines examined...");
 			}
 			csvLine = csvParser.parseNext();
