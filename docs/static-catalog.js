@@ -155,8 +155,9 @@ const StaticCatalog = (() => {
 				//indexValues[indexIndex] = indexFieldValues;
 				console.log(indexValues);
 
+				indexIndex++;
 				if (indexIndex < indexFiles.length) {
-					_loadIndex(indexFiles, indexIndex + 1, searchData, indexValues, resultsCallback);
+					_loadIndex(indexFiles, indexIndex, searchData, indexValues, resultsCallback);
 				}
 				else {
 					
