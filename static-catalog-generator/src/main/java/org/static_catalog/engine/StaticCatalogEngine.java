@@ -2,10 +2,10 @@
 package org.static_catalog.engine;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
@@ -35,9 +34,6 @@ import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import com.univocity.parsers.csv.CsvWriter;
-import com.univocity.parsers.csv.CsvWriterSettings;
-
-import liqp.Template;
 
 /** Generator engine */
 public class StaticCatalogEngine {
@@ -363,26 +359,49 @@ public static void loadViewCsv(String csvCompleteFileName,
 	public static void generate(String sourceCsvFileName, String filtersFileName, String templateFilename, String destinationFolderName,	
 			boolean useFirstLineAsHeader, AtomicBoolean doLoop, LoopProgress loopProgress) {
 
-		/* Generate */
-		StaticCatalogPage filtersTemplate = generateFilters(sourceCsvFileName, filtersFileName, destinationFolderName, useFirstLineAsHeader, loopProgress);
-		String filtersJson = S.saveObjectToJsonString(filtersTemplate);
-		
-		String templateString = S.loadFileInString(templateFilename);
-
-		/* HTML */
-		String indexHtmlFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.html";
-		Template templateLiquid = Template.parse(templateString);
-		String rendered = templateLiquid.render(filtersJson);
-		try {
-			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
+		/* Structure */
+		Path destinationPath = Paths.get(destinationFolderName);
+		if (Files.notExists(destinationPath, LinkOption.NOFOLLOW_LINKS)) {
+			try {
+				loopProgress.doProgress("Create template site...");
+				
+				Files.createDirectories(destinationPath);
+				Path templateFilePath = Paths.get(templateFilename);
+				Path templateFolderPath = templateFilePath.getParent(); 
+						
+				L.p(templateFolderPath.toString());
+				
+				S.copyFolders(templateFolderPath, destinationPath, "gitignore; liquid");
+				
+				
+			} catch (IOException ioException) {
+				L.e("Generation - Can't create (write in ?) destination folder: " + destinationFolderName, ioException);
+				return;
+			}
 		}
-		catch (IOException ioException) {
-			L.e("Error writing 'index.html' file", ioException);
-		}
 		
-		generateCatalog(sourceCsvFileName, filtersTemplate, destinationFolderName, useFirstLineAsHeader, loopProgress);
 		
-		Program.launch(indexHtmlFileName);
+		
+//		/* Generate */
+//		StaticCatalogPage filtersTemplate = generateFilters(sourceCsvFileName, filtersFileName, destinationFolderName, useFirstLineAsHeader, loopProgress);
+//		String filtersJson = S.saveObjectToJsonString(filtersTemplate);
+//		
+//		String templateString = S.loadFileInString(templateFilename);
+//
+//		/* HTML */
+//		String indexHtmlFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.html";
+//		Template templateLiquid = Template.parse(templateString);
+//		String rendered = templateLiquid.render(filtersJson);
+//		try {
+//			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
+//		}
+//		catch (IOException ioException) {
+//			L.e("Error writing 'index.html' file", ioException);
+//		}
+//		
+//		generateCatalog(sourceCsvFileName, filtersTemplate, destinationFolderName, useFirstLineAsHeader, loopProgress);
+//		
+//		Program.launch(indexHtmlFileName);
 	}
 
 	/** Generate filters */

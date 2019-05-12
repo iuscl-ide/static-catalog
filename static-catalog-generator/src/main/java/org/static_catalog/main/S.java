@@ -8,8 +8,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -108,28 +116,19 @@ public class S {
 
 		Reader reader = new InputStreamReader(inputStream);
 		StringBuilder sb = new StringBuilder();
-		char buffer[] = new char[16384];  /* read 16k blocks */
+		char buffer[] = new char[16384]; /* read 16k blocks */
 		int len; /* how much content was read? */
 
 		try {
-
 			while ((len = reader.read(buffer)) > 0) {
-
 				sb.append(buffer, 0, len);
 			}
-		}
-		catch (IOException ioException) {
-
+		} catch (IOException ioException) {
 			L.e("IOException", ioException);
-		}
-		finally {
-			
+		} finally {
 			try {
-
 				reader.close();
-			}
-			catch (IOException ioException) {
-
+			} catch (IOException ioException) {
 				L.e("IOException", ioException);
 			}
 		}
@@ -138,47 +137,106 @@ public class S {
 	}
 
 	/** Saves an entire input stream in a file */
-    public static void saveInputStreamInFile(InputStream inputStream, File file) {
+	public static void saveInputStreamInFile(InputStream inputStream, File file) {
 
-        byte buffer[] = new byte[16384];  /* read 16k blocks */
-        int len; /* how much content was read? */
+		byte buffer[] = new byte[16384]; /* read 16k blocks */
+		int len; /* how much content was read? */
 
-        try {
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			while ((len = inputStream.read(buffer)) > 0) {
+				fileOutputStream.write(buffer, 0, len);
+			}
+			fileOutputStream.flush();
+			fileOutputStream.close();
+		} catch (IOException ioException) {
+			L.e("IOException = " + file, ioException);
+		}
+	}
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
+	/** Delete folder and contents */
+	public static void deleteFolder(String folderPath) {
 
-            while ((len = inputStream.read(buffer)) > 0) {
+		try {
+			Path rootPath = Paths.get(folderPath);     
+			List<Path> pathsToDelete;
+			pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+			for(Path path : pathsToDelete) {
+			    Files.deleteIfExists(path);
+			}
+		} catch (IOException ioException) {
+			L.e("Delete folder and contents error = " + folderPath, ioException);
+		}
+	}
 
-                fileOutputStream.write(buffer, 0, len);
-            }
-            fileOutputStream.flush();
-            fileOutputStream.close();
+    /**
+     * https://stackoverflow.com/questions/6214703/copy-entire-directory-contents-to-another-directory/10068306#10068306
+     */
+	private static class CopyFileVisitor extends SimpleFileVisitor<Path> {
+		
+		private final Path targetPath;
+		private Path sourcePath = null;
+		
+		private final ArrayList<String> ignoredExtensions = new ArrayList<String>();
 
-        }
-        catch (IOException ioException) {
+		public CopyFileVisitor(Path targetPath, String ignoreExtensions) {
+			this.targetPath = targetPath;
+			
+			for (String ignoredExtension : ignoreExtensions.split(";")) {
+				ignoredExtensions.add(ignoredExtension.trim());
+			}
+		}
 
-            L.e("IOException = " + file, ioException);
-        }
-    }
+		@Override
+		public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+			if (sourcePath == null) {
+				sourcePath = dir;
+			} else {
+				Files.createDirectories(targetPath.resolve(sourcePath.relativize(dir)));
+			}
+			return FileVisitResult.CONTINUE;
+		}
 
-    /** Delete folder and contents */
-    public static void deleteFolder(File file) {
+		@Override
+		public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+			
+			String fileExtension = getExtension(file.toString());
+			if (ignoredExtensions.contains(fileExtension)) {
+				return FileVisitResult.CONTINUE;
+			}
+			Files.copy(file, targetPath.resolve(sourcePath.relativize(file)));
+			return FileVisitResult.CONTINUE;
+		}
+	}
 
-        if (file.isDirectory()) {
+	/** Copy folders */
+	public static void copyFolders(Path sourcePath, Path targetPath) throws IOException {
+	
+		Files.walkFileTree(sourcePath, new CopyFileVisitor(targetPath, ""));
+	}
 
-            for (String child : file.list()) {
+	/** Copy folders */
+	public static void copyFolders(Path sourcePath, Path targetPath, String ignoreExtensions) throws IOException {
+	
+		Files.walkFileTree(sourcePath, new CopyFileVisitor(targetPath, ignoreExtensions));
+	}
 
-                deleteFolder(new File(file, child));
-            }
-        }
+	/**
+	 * https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java/21974043
+	 */
+	public static String getExtension(String fileName) {
 
-        boolean result = file.delete();  /* Delete child file or empty directory */
-
-        //noinspection PointlessBooleanExpression
-        if (result == false) {
-
-            L.e("deleteFolder false for " + file, new Exception("File delete false"));
-        }
-    }
-    
+		char ch;
+		int len;
+		if (fileName == null || (len = fileName.length()) == 0 || (ch = fileName.charAt(len - 1)) == '/' || ch == '\\'
+				|| // in the case of a directory
+				ch == '.') // in the case of . or ..
+			return "";
+		int dotInd = fileName.lastIndexOf('.'),
+				sepInd = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+		if (dotInd <= sepInd)
+			return "";
+		else
+			return fileName.substring(dotInd + 1).toLowerCase();
+	}
 }
