@@ -155,12 +155,26 @@ public class S {
 	}
 
 	/** Delete folder and contents */
+	public static void deleteFolderContentsOnly(String folderName) {
+
+		deleteFolder(folderName, true);
+	}
+
+	/** Delete folder and contents */
 	public static void deleteFolder(String folderName) {
+
+		deleteFolder(folderName, false);
+	}
+
+	/** Delete folder and/or contents */
+	private static void deleteFolder(String folderName, boolean deleteContentsOnly) {
 
 		try {
 			Path rootPath = Paths.get(folderName);     
-			List<Path> pathsToDelete;
-			pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+			List<Path> pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+			if (deleteContentsOnly) {
+				pathsToDelete.remove(rootPath);
+			}
 			for(Path path : pathsToDelete) {
 			    Files.deleteIfExists(path);
 			}

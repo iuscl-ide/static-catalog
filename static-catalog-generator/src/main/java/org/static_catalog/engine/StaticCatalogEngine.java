@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
@@ -691,12 +692,12 @@ public class StaticCatalogEngine {
 		/* Filters */
 		String catalogBlocksFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "data";
 		S.createFoldersIfNotExists(catalogBlocksFolderName);
-
+		S.deleteFolderContentsOnly(catalogBlocksFolderName);
 		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block-";
 		
 		String catalogIndexesFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "indexes";
 		S.createFoldersIfNotExists(catalogIndexesFolderName);
-
+		S.deleteFolderContentsOnly(catalogIndexesFolderName);
 		String indexesValueFileNamePrefix = catalogIndexesFolderName + File.separator + "static-catalog-index-value";
 
 		StaticCatalogIndexes templateCatalogRoot = new StaticCatalogIndexes();
@@ -732,6 +733,16 @@ public class StaticCatalogEngine {
 		}
 		
 		/* Generate */
+		long totalLines = contents.getTotalLinesCount();
+
+		int totalLinesDigitsCount = (new Long(totalLines)).toString().length();
+		final StringBuilder indexLinesModuloDigits = new StringBuilder();
+		indexLinesModuloDigits.append("1");
+		IntStream.range(0, totalLinesDigitsCount).forEach(index -> indexLinesModuloDigits.append("0"));
+		long indexLinesModulo = Long.parseLong(indexLinesModuloDigits.toString());
+
+		L.p(totalLines + " " + indexLinesModulo);
+		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
@@ -807,8 +818,8 @@ public class StaticCatalogEngine {
 		
 		loopProgress.doProgress("Catalog blocks generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the indexes...");
 		
-		long totalLines = contents.getTotalLinesCount();
-		long nameTotalSize = totalLines * ((new Long(totalLines)).toString().length() + 2);
+		
+		long nameTotalSize = totalLines * (2 * totalLinesDigitsCount + 2);
 		
 		long namesCount = nameValuesLines.size();
 		
