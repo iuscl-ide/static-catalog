@@ -12,20 +12,21 @@
 <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
 <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
 
-<script src="jquery-3.4.0.js"></script>
-<script src="scripts/static-catalog-dev.js"></script>
-
-<link rel="stylesheet" type="text/css" href="styles/static-catalog-dev.css">
-
 <!-- semantic-ui -->
 <link rel="stylesheet" type="text/css" href="semantic-ui/semantic.css">
 <link rel="stylesheet" type="text/css" href="semantic-ui/semantic-button-github.css">
+
+<script src="scripts/jquery-3.4.0.js"></script>
 <script src="semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="styles/static-catalog-dev.css">
+
+<script src="scripts/static-catalog-dev.js"></script>
 
 <!-- _catalog -->
 <script src="_catalog/scripts/papaparse.js"></script>
 <script src="_catalog/scripts/static-catalog.js"></script>
-
 
 </head>
 <body>
@@ -75,7 +76,7 @@
 		</div>
 		<div class="ui grid">
 			<div class="five wide column">
-				{% for field in page.fields %} {% if field.filter %}
+				{% for field in fields %} {% if field.filter %}
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
 						<a class="header active title"> <i class="dropdown icon"></i> {{ field.label }} <span

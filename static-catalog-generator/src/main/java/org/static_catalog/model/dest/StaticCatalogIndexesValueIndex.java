@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /** Search JSON fields */
-public class StaticCatalogSearchFields {
+public class StaticCatalogIndexesValueIndex {
 
 	private final LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesLines = new LinkedHashMap<>();
 

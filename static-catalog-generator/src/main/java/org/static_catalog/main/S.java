@@ -155,18 +155,44 @@ public class S {
 	}
 
 	/** Delete folder and contents */
-	public static void deleteFolder(String folderPath) {
+	public static void deleteFolder(String folderName) {
 
 		try {
-			Path rootPath = Paths.get(folderPath);     
+			Path rootPath = Paths.get(folderName);     
 			List<Path> pathsToDelete;
 			pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 			for(Path path : pathsToDelete) {
 			    Files.deleteIfExists(path);
 			}
 		} catch (IOException ioException) {
-			L.e("Delete folder and contents error = " + folderPath, ioException);
+			L.e("Delete folder and contents error = " + folderName, ioException);
 		}
+	}
+
+	/** Create all folders */
+	public static void createFoldersIfNotExists(String folderName) {
+
+		try {
+			Path catalogBlocksFolderPath = Paths.get(folderName); 
+			if (Files.notExists(catalogBlocksFolderPath)) {
+				Files.createDirectories(catalogBlocksFolderPath);
+			}
+		} catch (IOException ioException) {
+			L.e("Create folders error = " + folderName, ioException);
+		}
+	}
+
+	/** Create all folders */
+	public static long findFileSizeInBytes(String fileName) {
+
+		long fileSize = -1; 
+		try {
+			fileSize = Files.size(Paths.get(fileName)); 
+		} catch (IOException ioException) {
+			L.e("Find file size error = " + fileName, ioException);
+		}
+		
+		return fileSize;
 	}
 
     /**

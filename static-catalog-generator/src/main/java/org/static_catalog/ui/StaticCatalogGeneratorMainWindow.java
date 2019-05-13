@@ -1,6 +1,7 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,10 +31,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -42,10 +41,10 @@ import org.static_catalog.engine.StaticCatalogEngine;
 import org.static_catalog.main.P;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
-import org.static_catalog.model.src.StaticCatalogExamineFields;
-import org.static_catalog.model.src.StaticCatalogExamineField;
-import org.static_catalog.model.src.StaticCatalogConfigurationFields;
 import org.static_catalog.model.src.StaticCatalogConfigurationField;
+import org.static_catalog.model.src.StaticCatalogConfigurationFields;
+import org.static_catalog.model.src.StaticCatalogExamineField;
+import org.static_catalog.model.src.StaticCatalogExamineFields;
 
 /** Generator main window */
 public class StaticCatalogGeneratorMainWindow {
@@ -626,9 +625,6 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
-				csvLoadButton.setEnabled(false);
-//				csvStopLoadButton.setEnabled(true);
-				
 		    	long start = System.currentTimeMillis();
 		    	
 				csvFileGrid.clearItems();
@@ -644,7 +640,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				String csvCompleteFileName = viewCsvFileControl.getCompleteFileName();
 
-				StaticCatalogEngine.loadViewCsv(csvCompleteFileName, csvFileGridLines, csvFileGridHeader,
+				long totalLines = StaticCatalogEngine.loadViewCsv(csvCompleteFileName, csvFileGridLines, csvFileGridHeader,
 				maxLines, useFirstLineAsHeader,
 				new LoopProgress() {
 					@Override
@@ -685,76 +681,16 @@ public class StaticCatalogGeneratorMainWindow {
 					}
 				}
 
-				for (GridColumn gridColumn : csvFileGrid.getColumns()) {
-					gridColumn.pack();
-					gridColumn.setWidth(gridColumn.getWidth() + 24);
+				if (linesCount < 1500) {
+					for (GridColumn gridColumn : csvFileGrid.getColumns()) {
+						gridColumn.pack();
+						gridColumn.setWidth(gridColumn.getWidth() + 24);
+					}
 				}
 				
-				csvStatusLabel.setText(linesCount + " lines done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-				
-				csvLoadButton.setEnabled(true);
-
-				
-//				Thread thread = new Thread() {
-//				    public void run() {
-//				        
-//				    	long start = System.currentTimeMillis();
-//				    	
-//				    	doLoop.set(true);
-//						StaticCatalogEngine.loadViewCsv(csvCompleteFileName, csvFileGridLines, csvFileGridHeader,
-//								maxLines, useFirstLineAsHeader,
-//								doLoop,
-//						new LoopProgress() {
-//							@Override
-//							public void doProgress(String progressMessage) {
-//								Display.getDefault().syncExec(new Runnable() {
-//									public void run() {
-//										csvStatusLabel.setText(progressMessage);
-//										Display.getDefault().readAndDispatch();
-//									}
-//								});
-//							}
-//						});
-//
-//						Display.getDefault().syncExec(new Runnable() {
-//							public void run() {
-//								
-////								csvStopLoadButton.setEnabled(false);
-//								
-//								GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-//							    fieldGridColumn.setWidth(50);
-//							    fieldGridColumn.setText("Index");
-//							    fieldGridColumn.setAlignment(SWT.RIGHT);
-//								for (String columnName : csvFileGridHeader) {
-//									fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-//								    fieldGridColumn.setWordWrap(true);
-//								    fieldGridColumn.setText(columnName);
-//								}
-//								for (GridColumn gridColumn : csvFileGrid.getColumns()) {
-//									gridColumn.pack();
-//									gridColumn.setWidth(gridColumn.getWidth() + 24);
-//								}
-//								
-//								int linesCount = csvFileGridLines.size();
-//								csvFileGrid.setItemCount(linesCount);
-//								csvStatusLabel.setText(linesCount + " lines done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-//								
-//								csvLoadButton.setEnabled(true);
-//							}
-//						});
-//				    }
-//				};
-//				thread.start();
+				csvStatusLabel.setText(U.w(linesCount) + " lines (of total " + U.w(totalLines) + ") done loading in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 			}
 		});
-
-//		/* Stop loading */
-//		csvStopLoadButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent selectionEvent) {
-//				doLoop.set(false);
-//			}
-//		});
 	}
 
 	/** Examine a CSV file for generation rules */
@@ -1402,7 +1338,7 @@ public class StaticCatalogGeneratorMainWindow {
 				StaticCatalogEngine.generate(sourceCsvFileControl.getCompleteFileName(),
 					filtersFileControl.getCompleteFileName(), templateFileControl.getCompleteFileName(),
 					destinationFileControl.getCompleteFileName(),	
-					useFirstLineAsHeaderCheckBox.getSelection(), doLoop,
+					useFirstLineAsHeaderCheckBox.getSelection(),
 					new LoopProgress() {
 						@Override
 						public void doProgress(String progressMessage) {

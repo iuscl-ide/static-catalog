@@ -3,6 +3,7 @@ package org.static_catalog.main;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
+import java.text.NumberFormat;
 import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -17,6 +18,12 @@ public class U {
 		replaceWords.put("nr", "Nr");
 		replaceWords.put("nr.", "Nr.");
 		replaceWords.put("no.", "No.");
+	}
+
+	/** Write format */
+	public static String w(long longValue) {
+		
+		return NumberFormat.getInstance().format(longValue);
 	}
 	
 	/** Capitalize sentence */

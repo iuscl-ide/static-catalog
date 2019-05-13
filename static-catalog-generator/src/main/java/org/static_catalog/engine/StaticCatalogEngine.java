@@ -2,7 +2,9 @@
 package org.static_catalog.engine;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -16,15 +18,17 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
+import org.static_catalog.model.dest.StaticCatalogContents;
+import org.static_catalog.model.dest.StaticCatalogIndexes;
 import org.static_catalog.model.dest.StaticCatalogPage;
 import org.static_catalog.model.dest.StaticCatalogPageField;
 import org.static_catalog.model.dest.StaticCatalogPageFieldValue;
 import org.static_catalog.model.dest.StaticCatalogPageFilter;
-import org.static_catalog.model.dest.StaticCatalogSearch;
 import org.static_catalog.model.src.StaticCatalogConfigurationField;
 import org.static_catalog.model.src.StaticCatalogConfigurationFields;
 import org.static_catalog.model.src.StaticCatalogExamineField;
@@ -34,6 +38,9 @@ import org.static_catalog.ui.StaticCatalogGeneratorMainWindow.LoopProgress;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import com.univocity.parsers.csv.CsvWriter;
+import com.univocity.parsers.csv.CsvWriterSettings;
+
+import liqp.Template;
 
 /** Generator engine */
 public class StaticCatalogEngine {
@@ -53,6 +60,10 @@ public class StaticCatalogEngine {
 	public static final String DISPLAY_TYPE_DROPDOWN = "dropdown"; 
 	public static final String DISPLAY_TYPE_RADIOBUTTONS = "radiobuttons"; 
 
+	/** Index split types */
+	public static final String INDEX_SPLIT_TYPE_NONE = "none"; 
+	public static final String INDEX_SPLIT_TYPE_NAMES = "names"; 
+	public static final String INDEX_SPLIT_TYPE_VALUES = "values"; 
 	
 	/** Natural order */
 	private final static StringAsNumberComparator stringAsNumberComparator = new StringAsNumberComparator();
@@ -79,102 +90,59 @@ public class StaticCatalogEngine {
     };
 	
 	/** Load CSV in grid */
-//	public static void loadViewCsv(String csvCompleteFileName,
-//			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
-//			long maxLines, boolean useFirstLineAsHeader,
-//			AtomicBoolean doLoop, LoopProgress loopProgress) {
-
-public static void loadViewCsv(String csvCompleteFileName,
-		ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
-		long maxLines, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
-		
+	public static long loadViewCsv(String csvCompleteFileName,
+			ArrayList<String[]> csvFileGridLines, ArrayList<String> csvFileGridHeader,
+			long maxLines, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
+	
+		if (maxLines > 100001) {
+			maxLines = 100001;
+		}
+		String wMaxLines = U.w(maxLines);
+	
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(csvCompleteFileName));
 		
-//		csvStopLoadButton.setEnabled(true);
-//		csvButtonsComposite.redraw();
-//		csvStopLoadButton.requestLayout();
-//		Display.getCurrent().readAndDispatch();
-		
-//		Display.getCurrent().syncExec(new Runnable() {
-//		    public void run() {
-//		        /** UI update code */
-//		    	csvStopLoadButton.setEnabled(true);
-//		    }
-//		});
-		
 		String[] csvLine = csvParser.parseNext();
 		long csvLineIndex = 0;
+		boolean load = true;
 		while (csvLine != null) {
 			
-//			if (!doLoop.get()) {
-//				csvParser.stopParsing();
-//				return;
-//			}
-			
-			int lineLength = csvLine.length;
-			
-			if (useFirstLineAsHeader && (csvLineIndex == 0)) {
-//				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-//			    fieldGridColumn.setWidth(50);
-//			    fieldGridColumn.setText("Index");
-//			    fieldGridColumn.setAlignment(SWT.RIGHT);
-//				for (int index = 0; index < lineLength; index++) {
-//					fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
-//				    fieldGridColumn.setWordWrap(true);
-//				    //fieldGridColumn.setWidth(csvLine[index].length() * 10);
-//				    fieldGridColumn.setText(csvLine[index]);
-//				    //fieldGridColumn.pack();
-//				}
-//				for (GridColumn gridColumn : csvFileGrid.getColumns()) {
-//					gridColumn.pack();
-//					gridColumn.setWidth(gridColumn.getWidth() + 24);
-//				}
-				csvFileGridHeader.addAll(new ArrayList<String>(Arrays.asList(csvLine)));
-			}
-			else {
-				if (!useFirstLineAsHeader) {
-					int fieldsSize = csvFileGridHeader.size();
-					if (fieldsSize < lineLength) {
-						for (int index = fieldsSize; index < lineLength; index++) {
-							csvFileGridHeader.add(index, "Column " + (index + 1));
+			if (load) {
+				int lineLength = csvLine.length;
+				
+				if (useFirstLineAsHeader && (csvLineIndex == 0)) {
+					csvFileGridHeader.addAll(new ArrayList<String>(Arrays.asList(csvLine)));
+				}
+				else {
+					if (!useFirstLineAsHeader) {
+						int fieldsSize = csvFileGridHeader.size();
+						if (fieldsSize < lineLength) {
+							for (int index = fieldsSize; index < lineLength; index++) {
+								csvFileGridHeader.add(index, "Column " + (index + 1));
+							}
 						}
 					}
+	
+					csvFileGridLines.add(csvLine);
 				}
-
-				csvFileGridLines.add(csvLine);
-//				GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
-//				csvGridItem.setText(0, csvLineIndex + "");
-//				for (int index = 0; index < lineLength; index++) {
-//					csvGridItem.setText(index + 1, csvLine[index] + "");
-//				}
 			}
-
+			
 			csvLineIndex++;
-			if (csvLineIndex % 10000 == 0) {
-				loopProgress.doProgress(csvLineIndex + " lines loaded...");
-				//csvStopLoadButton.setEnabled(true);
-//				csvStatusLabel.setText(csvLineIndex + " lines loaded...");
+			if (csvLineIndex % 100000 == 0) {
+				loopProgress.doProgress(U.w(csvLineIndex) + " lines read (" + wMaxLines + " loaded)...");
 			}
 
 			if (csvLineIndex == maxLines) {
-//				csvStopLoadButton.setEnabled(false);
-//				for (GridColumn gridColumn : csvFileGrid.getColumns()) {
-//					gridColumn.pack();
-//					gridColumn.setWidth(gridColumn.getWidth() + 24);
-//				}
-//				csvFileGrid.setItemCount((int) (csvLineIndex - 1));
-//				csvStatusLabel.setText("Max " + (csvLineIndex - 1) + " lines done load in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-				csvParser.stopParsing();
-				return;
+				load = false;
 			}
 
 			csvLine = csvParser.parseNext();
 		}
-		
 		csvParser.stopParsing();
+		
+		return csvLineIndex;
 	}
 	
 	/** Load examine CSV */
@@ -248,13 +216,13 @@ public static void loadViewCsv(String csvCompleteFileName,
 
 			csvLineIndex++;
 			if (csvLineIndex % 500000 == 0) {
-				loopProgress.doProgress(csvLineIndex + " lines examined...");
+				loopProgress.doProgress(U.w(csvLineIndex) + " lines examined...");
 			}
 
 			csvLine = csvParser.parseNext();
 		}
 		
-		loopProgress.doProgress(csvLineIndex + " lines done analyzing, try to find the types...");
+		loopProgress.doProgress(U.w(csvLineIndex) + " lines done examining, now try to find the types...");
 		
 		for (int index = 0; index < examineFields.size(); index++) {
 			
@@ -351,15 +319,18 @@ public static void loadViewCsv(String csvCompleteFileName,
 //			}
 		}
 		
-		loopProgress.doProgress("Group examine " + csvLineIndex + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
-		
+		loopProgress.doProgress("Examine and group " + U.w(csvLineIndex) + " lines done in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
 	}
 
 	/** Generate */
 	public static void generate(String sourceCsvFileName, String filtersFileName, String templateFilename, String destinationFolderName,	
-			boolean useFirstLineAsHeader, AtomicBoolean doLoop, LoopProgress loopProgress) {
+			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
+		/* Total time */
+		long start = System.currentTimeMillis();
+		
 		/* Structure */
+		loopProgress.doProgress("Verify template site...");
 		Path destinationPath = Paths.get(destinationFolderName);
 		if (Files.notExists(destinationPath, LinkOption.NOFOLLOW_LINKS)) {
 			try {
@@ -368,58 +339,71 @@ public static void loadViewCsv(String csvCompleteFileName,
 				Files.createDirectories(destinationPath);
 				Path templateFilePath = Paths.get(templateFilename);
 				Path templateFolderPath = templateFilePath.getParent(); 
-						
-				L.p(templateFolderPath.toString());
-				
+//				L.p(templateFolderPath.toString());
 				S.copyFolders(templateFolderPath, destinationPath, "gitignore; liquid");
-				
-				
 			} catch (IOException ioException) {
 				L.e("Generation - Can't create (write in ?) destination folder: " + destinationFolderName, ioException);
 				return;
 			}
 		}
+		loopProgress.doProgress("Template site OK");
 		
+		/* Generate fields */
+		StaticCatalogPage page = new StaticCatalogPage();
+		StaticCatalogContents contents = new StaticCatalogContents();
+
+		generateFields(page, contents, sourceCsvFileName, filtersFileName, destinationFolderName, useFirstLineAsHeader, loopProgress);
+		String filterFieldsFileName = destinationFolderName + File.separator + "static-catalog-fields.json";
+		S.saveObjectToJsonFileName(page, filterFieldsFileName);
+		String catalogFolderName = destinationFolderName + File.separator + "_catalog";
+		S.createFoldersIfNotExists(catalogFolderName);
+		String catalogContentsFileName = catalogFolderName + File.separator + "static-catalog.json";
+		S.saveObjectToJsonFileName(contents, catalogContentsFileName);
+
+		/* HTML */
+		String templateString = S.loadFileInString(templateFilename);
+		String templateBaseFileNameNoExtension = Paths.get(templateFilename).getFileName().toString();
+		String ext = S.getExtension(templateBaseFileNameNoExtension);
+		if (ext.trim().length() > 0) {
+			templateBaseFileNameNoExtension = templateBaseFileNameNoExtension.substring(0, templateBaseFileNameNoExtension.length() - (ext.length() + 1));
+		}
 		
+		String indexHtmlFileName = destinationFolderName + File.separator + templateBaseFileNameNoExtension + ".html";
+		Template templateLiquid = Template.parse(templateString);
+		String filtersJson = S.saveObjectToJsonString(page);
+		String rendered = templateLiquid.render(filtersJson);
+		try {
+			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
+		}
+		catch (IOException ioException) {
+			L.e("Error writing '" + templateBaseFileNameNoExtension + "' file", ioException);
+		}
 		
-//		/* Generate */
-//		StaticCatalogPage filtersTemplate = generateFilters(sourceCsvFileName, filtersFileName, destinationFolderName, useFirstLineAsHeader, loopProgress);
-//		String filtersJson = S.saveObjectToJsonString(filtersTemplate);
-//		
-//		String templateString = S.loadFileInString(templateFilename);
-//
-//		/* HTML */
-//		String indexHtmlFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.html";
-//		Template templateLiquid = Template.parse(templateString);
-//		String rendered = templateLiquid.render(filtersJson);
-//		try {
-//			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
-//		}
-//		catch (IOException ioException) {
-//			L.e("Error writing 'index.html' file", ioException);
-//		}
-//		
-//		generateCatalog(sourceCsvFileName, filtersTemplate, destinationFolderName, useFirstLineAsHeader, loopProgress);
-//		
-//		Program.launch(indexHtmlFileName);
+		generateCatalog(sourceCsvFileName, page, contents, destinationFolderName, useFirstLineAsHeader, loopProgress);
+		
+		loopProgress.doProgress("Generate completed in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
+		
+		Program.launch(indexHtmlFileName);
 	}
 
 	/** Generate filters */
-	public static StaticCatalogPage generateFilters(String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
+	public static void generateFields(StaticCatalogPage page, StaticCatalogContents contents,
+			String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
-		/* Filters */
-		String filterFieldsFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog-fields.json";
+		/* Fields and filters time */
+		long start = System.currentTimeMillis();
+		loopProgress.doProgress("Start fields and filters generation...");
 		
+		/* Filters */
 		boolean dev = false;
 		if (dev) {
-			StaticCatalogPage template = S.loadObjectFromJsonFileName(filterFieldsFileName, StaticCatalogPage.class);
-			return template;
+			//StaticCatalogPage template = S.loadObjectFromJsonFileName(filterFieldsFileName, StaticCatalogPage.class);
+			//return template;
 		}
 		
-		StaticCatalogPage page = new StaticCatalogPage();
 		/* Fields */
-		ArrayList<StaticCatalogPageField> pageFields = page.getPage().getFields();
+		ArrayList<StaticCatalogPageField> pageFields = page.getFields();
 		
 		/* Generate */
 		ArrayList<StaticCatalogConfigurationField> filterFields = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogConfigurationFields.class).getFields();
@@ -441,9 +425,6 @@ public static void loadViewCsv(String csvCompleteFileName,
 		}
 		
 		/* Examine closely */
-		long start = System.currentTimeMillis();
-		loopProgress.doProgress("Start filters generation...");
-		
 		ArrayList<String> fieldNames = new ArrayList<>();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
@@ -541,14 +522,20 @@ public static void loadViewCsv(String csvCompleteFileName,
 			}
 
 			csvLineIndex++;
-			if (csvLineIndex % 500000 == 0) {
-				loopProgress.doProgress(csvLineIndex + " lines examined...");
+			if (csvLineIndex % 100000 == 0) {
+				loopProgress.doProgress("Fields and filters " + U.w(csvLineIndex) + " lines examined...");
 			}
 			csvLine = csvParser.parseNext();
 		}
 		
+		long totalLinesCount = csvLineIndex - (useFirstLineAsHeader ? 1 : 0);
+		long csvFileSize = S.findFileSizeInBytes(sourceCsvFileName);
+		long lineSize = csvFileSize / totalLinesCount;
+		long blockLinesCount = 1000000 / lineSize;
+		blockLinesCount = (blockLinesCount / 100) * 100;
+		
 		/* Filters */
-		LinkedHashMap<String, StaticCatalogPageFilter> pageFilters = page.getPage().getFilters();
+		LinkedHashMap<String, StaticCatalogPageFilter> pageFilters = page.getFilters();
 		
 		/* Sorting */
 		for (StaticCatalogPageField pageField : pageFields) {
@@ -657,152 +644,94 @@ public static void loadViewCsv(String csvCompleteFileName,
 			}
 		}
 		
-		/* Filter index */
-		LinkedHashMap<String, Integer> filterNameIndex = page.getPage().getFilterNameIndex();
-
+		/* Contents */
+		LinkedHashMap<String, Integer> filterNameIndex = contents.getFilterNameIndex();
+		LinkedHashMap<String, LinkedHashMap<String, Integer>> filterNameValueIndex = contents.getFilterNameValueIndex();
+		
 		int filterNameIndexCnt = 0;
 		for (StaticCatalogPageField pageField : pageFields) {
 			
 			if (pageField.getFilter()) {
-				filterNameIndex.put(pageField.getName(), filterNameIndexCnt++);	
+				String filterName = pageField.getName();
+				filterNameIndex.put(filterName, filterNameIndexCnt++);
+				
+				LinkedHashMap<String, Integer> filterValueIndex = new LinkedHashMap<>();
+				filterNameValueIndex.put(filterName, filterValueIndex);
+				
+				int filterNameValueIndexCnt = 0;
+				for (StaticCatalogPageFieldValue value : pageField.getException_values()) {
+					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
+				}
+				for (StaticCatalogPageFieldValue value : pageField.getMore_exception_values()) {
+					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
+				}
+				for (StaticCatalogPageFieldValue value : pageField.getValues()) {
+					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
+				}
+				for (StaticCatalogPageFieldValue value : pageField.getMore_values()) {
+					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
+				}
 			}
 		}
 		
-		S.saveObjectToJsonFileName(page, filterFieldsFileName);
+		contents.setTotalLinesCount(totalLinesCount);
+		contents.setBlockLinesCount(blockLinesCount);
 		
-		loopProgress.doProgress(csvLineIndex + "Filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, generate the catalog...");
-		
-		return page;
-		
-		
-//		StaticCatalogExamine staticCatalogExamine = new StaticCatalogExamine();
-//		
-//		loadExamineCsv(sourceCsvFileName, staticCatalogExamine,
-//		500,
-//		typeMaxExceptions,
-//		useFirstLineAsHeader,
-//		doLoop, loopProgress);
-//
-//		S.saveObjectToJsonFileName(staticCatalogExamine, "C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine1.csv");
-
-//		StaticCatalogExamine staticCatalogExamine = S.loadObjectFromJsonFileName("C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine1.json", StaticCatalogExamine.class);
-//		S.saveObjectToJsonFileName(staticCatalogExamine, "C:\\Iustin\\Programming\\_static-catalog\\repositories\\static-catalog\\static-catalog-generator\\examine2.json");
-//		LinkedHashMap<String, StaticCatalogExamineField> examineNameFields = new LinkedHashMap<>();
-//		for (StaticCatalogExamineField examineFieldValue : staticCatalogExamine.getFields()) {
-//			examineNameFields.put(examineFieldValue.getName(), examineFieldValue);	
-//		}
-		
-		
-		//String filtersJson = S.loadFileInString(filtersFileName);
-		
-		/* Catalog */
-		
-//		StaticCatalogTemplate template = new StaticCatalogTemplate();
-//		
-//		for (StaticCatalogFiltersField filtersField : filters.getFields()) {
-//			
-//			if (filtersField.getIsFilter()) {
-//				
-//				StaticCatalogTemplateFilter templateFilter = new StaticCatalogTemplateFilter();
-//				templateFilter.setLabel(filtersField.getLabel());
-//				templateFilter.setName(filtersField.getName());
-//				templateFilter.setType(filtersField.getType());
-//
-//				StaticCatalogExamineField examineField = examineNameFields.get(filtersField.getName());
-//
-//				//templateFilter.getExceptions().addAll(examineField.getFieldTypesExceptionValues().get(examineField.getType()));
-//				
-//				
-//				int valuesCount = examineField.getUniqueValueCounts().size();
-//				templateFilter.setValues_count(valuesCount);
-//				int moreValuesThreshhold = Integer.MAX_VALUE;
-//				
-//				if (valuesCount > 10) {
-//					templateFilter.setHas_more_values(true);
-//					moreValuesThreshhold = 5;
-//				}
-//				
-//				int valueIndex = 0;
-//				for (Entry<String, Long> uniqueValueCount : examineField.getUniqueValueCounts().entrySet()) {
-//					
-//					StaticCatalogTemplateFilterValue filterValue = new StaticCatalogTemplateFilterValue();
-//					String filterValueLabel = uniqueValueCount.getKey(); 
-//					if (filtersField.getType().equals("date")) {
-//						
-//						DateTime date = DateTime.parse(filterValueLabel);
-//						filterValueLabel = date.toString("MMM dd yyyy");	
-//					}
-//					
-//					filterValue.setName(filterValueLabel);
-//					
-//					
-//					filterValue.setCount(uniqueValueCount.getValue());
-//					if (valueIndex < moreValuesThreshhold) {
-//						templateFilter.getMain_values().add(filterValue);	
-//					}
-//					else {
-//						templateFilter.getMore_values().add(filterValue);
-//					}
-//					
-//					valueIndex++;
-//				}
-//				templateFilter.setMore_values_count(templateFilter.getMore_values().size());
-//				
-//				template.getTemplate().getFilters().add(templateFilter);
-//			}
-//		}
+		loopProgress.doProgress(U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 	}
 
-
 	/** Generate catalog */
-	public static void generateCatalog(String sourceCsvFileName, StaticCatalogPage page,
-			String destinationFolderName, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
+	public static void generateCatalog(String sourceCsvFileName, StaticCatalogPage page, StaticCatalogContents contents, String destinationFolderName,
+			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
-		/* Filters */
-		String catalogBlocksFolderName = destinationFolderName + File.separator + "site" + File.separator + "catalog";
-//		String catalogFileName = destinationFolderName + File.separator + "site" + File.separator + "static-catalog.json";
-		String catalogFileNamePrefix = destinationFolderName + File.separator + "site" + File.separator + "static-catalog-index-";
-		
-//		String catalogFileName2 = destinationFolderName + File.separator + "site" + File.separator + "static-catalog2.json";
-
-		StaticCatalogSearch templateCatalogRoot = new StaticCatalogSearch();
-		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesLines = templateCatalogRoot.getSearchCatalog().getNameValuesLines();
+		/* Indexes and blocks generation time */ 
+		long start = System.currentTimeMillis();
+		loopProgress.doProgress("Start catalog generation...");
 		
 		/* Filters */
-		ArrayList<StaticCatalogPageField> pageFields = page.getPage().getFields();
+		String catalogBlocksFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "data";
+		S.createFoldersIfNotExists(catalogBlocksFolderName);
+
+		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block-";
+		
+		String catalogIndexesFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "indexes";
+		S.createFoldersIfNotExists(catalogIndexesFolderName);
+
+		String indexesValueFileNamePrefix = catalogIndexesFolderName + File.separator + "static-catalog-index-value";
+
+		StaticCatalogIndexes templateCatalogRoot = new StaticCatalogIndexes();
+		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesLines = templateCatalogRoot.getValueIndexes().getNameValuesLines();
+		
+		/* Filters */
+		ArrayList<StaticCatalogPageField> pageFields = page.getFields();
 		
 		int lineLength = pageFields.size();
 		ArrayList<Integer> valuesIndexes = new ArrayList<>();
 		for (int index = 0; index < lineLength; index++) {
 			StaticCatalogPageField pageField = pageFields.get(index);
 			if (pageField.getFilter()) {
+				/* Field is index value */
 				valuesIndexes.add(index);
 
-				LinkedHashMap<String, ArrayList<Long>> valuesBlocks = new LinkedHashMap<>(); 
-				nameValuesLines.put(pageField.getName(), valuesBlocks);
+				/* All filter values */
+				LinkedHashMap<String, ArrayList<Long>> filterValues = new LinkedHashMap<>(); 
 				for (StaticCatalogPageFieldValue value : pageField.getException_values()) {
-					valuesBlocks.put(value.getName(), new ArrayList<>());
+					filterValues.put(value.getName(), new ArrayList<>());
 				}
 				for (StaticCatalogPageFieldValue value : pageField.getMore_exception_values()) {
-					valuesBlocks.put(value.getName(), new ArrayList<>());
+					filterValues.put(value.getName(), new ArrayList<>());
 				}
 				for (StaticCatalogPageFieldValue value : pageField.getValues()) {
-					valuesBlocks.put(value.getName(), new ArrayList<>());
+					filterValues.put(value.getName(), new ArrayList<>());
 				}
 				for (StaticCatalogPageFieldValue value : pageField.getMore_values()) {
-					valuesBlocks.put(value.getName(), new ArrayList<>());
+					filterValues.put(value.getName(), new ArrayList<>());
 				}
+				nameValuesLines.put(pageField.getName(), filterValues);
 			}
 		}
 		
 		/* Generate */
-		long start = System.currentTimeMillis();
-		loopProgress.doProgress("Start catalog generation...");
-		
-		ArrayList<String> fieldNames = new ArrayList<>();
-
-		LinkedHashMap<String, Long> uniquePathsWithCount = new LinkedHashMap<>();
-		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
@@ -812,17 +741,15 @@ public static void loadViewCsv(String csvCompleteFileName,
 		
 		long csvLineIndex = 0;
 		int blockIndex = -1;
-		int blockLineIndex = 0;
-		int blockLines = 10000;
-		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block_";
-		String blockFileName = blockFilePrefix;
-		
-		HashMap<String, Long> sums = new HashMap<>();
+		long blockLineIndex = 0;
+		long blockLines = contents.getBlockLinesCount();
 		
 		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
+			/* Blocks */
+			
 			/* CSV field names */
 			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
 				
@@ -833,60 +760,43 @@ public static void loadViewCsv(String csvCompleteFileName,
 				continue;
 			}
 			
-//			String path = "";
-//			String pathSep = "";
-			
-
-//			if (!uniquePathsWithCount.containsKey(path)) {
-//				uniquePathsWithCount.put(path, 0L);
-//			}
-			
 			if (blockLineIndex % blockLines == 0) {
 				
 				blockIndex++;
-				blockFileName = blockFilePrefix + blockIndex + ".csv";
+				String blockFileName = blockFilePrefix + blockIndex + ".csv";
 				blockLineIndex = 0;
 				
 				if (csvWriter != null) {
 					csvWriter.close();
 				}
-//				try {
-//					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				csvWriter.writeRow(headerLine);
+				try {
+					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
+				} catch (IOException ioException) {
+					L.e("Cataloog write block " + blockIndex + " error = " + blockFileName, ioException);
+				}
+				csvWriter.writeRow(headerLine);
 			}
 
+			csvWriter.writeRow(csvLine);
+			blockLineIndex++;
+			
+			/* Indexes */
 			for (int index : valuesIndexes) {
 				
 				String fieldValue = csvLine[index];
 				if (fieldValue == null) {
 					fieldValue = "NULL";
 				}
-//					path = path + pathSep + fieldValue;
-//					pathSep = " / ";
-
 				String fieldName = pageFields.get(index).getName();
 				LinkedHashMap<String, ArrayList<Long>> valueLines = nameValuesLines.get(fieldName);
-				
 				
 				ArrayList<Long> lines = valueLines.get(fieldValue);
 				lines.add(csvLineIndex);
 			}
 			
-//			if (!uniquePathsWithCount.containsKey(path)) {
-//				uniquePathsWithCount.put(path, 0L);
-//			}
-			
-			
-//			csvWriter.writeRow(csvLine);
-			blockLineIndex++;
-			
 			csvLineIndex++;
 			if (csvLineIndex % 100000 == 0) {
-				loopProgress.doProgress(csvLineIndex + " lines examined...");
+				loopProgress.doProgress("Catalog generation " + U.w(csvLineIndex) + " lines examined...");
 			}
 			csvLine = csvParser.parseNext();
 		}
@@ -895,58 +805,47 @@ public static void loadViewCsv(String csvCompleteFileName,
 			csvWriter.close();
 		}
 		
-		int indexFileCnt = 0;
-		for (LinkedHashMap<String, ArrayList<Long>> valueLines : templateCatalogRoot.getSearchCatalog().getNameValuesLines().values()) {
-			
-			S.saveObjectToJsonFileName(valueLines, catalogFileNamePrefix + indexFileCnt++ + ".json");
+		loopProgress.doProgress("Catalog blocks generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the indexes...");
+		
+		long totalLines = contents.getTotalLinesCount();
+		long nameTotalSize = totalLines * ((new Long(totalLines)).toString().length() + 2);
+		
+		long namesCount = nameValuesLines.size();
+		
+		if (namesCount * nameTotalSize < 1000000) {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
+		}
+		else if (nameTotalSize < 1000000) {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
+		}
+		else {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
 		}
 		
-		//S.saveObjectToJsonFileName(templateCatalogRoot, catalogFileName);
-
-		//L.p(uniquePathsWithCount.size() + "");
-
-//		int valuesIndexesCnt = valuesIndexes.size();
-//		
-//		int cnt = 0;
-//		
-//		ArrayList<Pair<String, String>> pairs = new ArrayList<Pair<String,String>>();
-//		for (int i = 0; i < valuesIndexesCnt - 1; i++) {
-//			for (int j = i + 1; j < valuesIndexesCnt; j++) {
-//				
-//				System.out.println(cnt++ + " --- " + i + " -- " + j);
-//				pairs.add(new Pair<>(pageFields.get(valuesIndexes.get(i)).getName(), pageFields.get(valuesIndexes.get(j)).getName()));
-//			}
-//		}
-//
-//		long cnt2 = 0;
-//		LinkedHashMap<Pair<String, String>, ArrayList<Pair<String, String>>> pairValues = new LinkedHashMap<Pair<String,String>, ArrayList<Pair<String,String>>>();
-//		for (Pair<String, String> pair : pairs) {
-//			System.out.println(pair);
-//			ArrayList<Pair<String,String>> values = new ArrayList<Pair<String,String>>();
-//			pairValues.put(pair, values);
-//			
-//			for (String value1 : nameValuesBlocks.get(pair.getValue(0)).keySet()) {
-//				for (String value2 : nameValuesBlocks.get(pair.getValue(1)).keySet()) {
-//
-//					System.out.println(cnt2++ + " " + value1 + " ++ " + value2);
-//					values.add(new Pair<String, String>(value1, value2));
-//				}
-//			}
-//		}
-		
-//		for (int index = 0; index < 2; index++) {
-//			for (int valuesIndex : valuesIndexes) {
-//				
-//				String fieldName = pageFields.get(valuesIndex).getName();
-//				
-//			}
-//			
-//			
-//		}
-		
-//		S.saveObjectToJsonFileName(pairNamesValuesBlocks, catalogFileName2);
+		if (contents.getIndexSplitType().equals(INDEX_SPLIT_TYPE_VALUES)) {
+			int indexNameCnt = 0;
+			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
+				int indexValueCnt = 0;
+				for (ArrayList<Long> lines : valueLines.values()) {
+					S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
+					indexValueCnt++;
+				}
+				indexNameCnt++;
+			}
+		}
+		else if (contents.getIndexSplitType().equals(INDEX_SPLIT_TYPE_NAMES)) {
+			int indexNameCnt = 0;
+			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
+				S.saveObjectToJsonFileName(valueLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
+				indexNameCnt++;
+			}
+		}
+		else {
+			S.saveObjectToJsonFileName(nameValuesLines, indexesValueFileNamePrefix + ".json");
+		}
+ 
+		loopProgress.doProgress(U.w(csvLineIndex) + " lines catalog generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 	}
-
 
 	/** Sort type value */
 	public static void sortTypeKey(String type, ArrayList<String> keys) {

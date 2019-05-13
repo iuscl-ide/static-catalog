@@ -1,12 +1,21 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.model.dest;
 
-/** Page JSON root */
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+/** Page JSON fields */
 public class StaticCatalogPage {
 
-	private final StaticCatalogPageComponents page = new StaticCatalogPageComponents();
+	private final ArrayList<StaticCatalogPageField> fields = new ArrayList<>();
 
-	public StaticCatalogPageComponents getPage() {
-		return page;
+	private final LinkedHashMap<String, StaticCatalogPageFilter> filters = new LinkedHashMap<>();
+	
+	public ArrayList<StaticCatalogPageField> getFields() {
+		return fields;
+	}
+
+	public LinkedHashMap<String, StaticCatalogPageFilter> getFilters() {
+		return filters;
 	}
 }

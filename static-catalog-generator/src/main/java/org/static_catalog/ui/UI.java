@@ -1,6 +1,8 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */ 
 package org.static_catalog.ui;
 
+import java.text.NumberFormat;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -28,14 +30,12 @@ public class UI {
 	/** Main display */
 	private Display display;
 
-	
 	/** Both needed */
 	public UI(boolean isDebug, Display display) {
 		super();
 		this.isDebug = isDebug;
 		this.display = display;
 	}
-
 	
 	/** Load image resource */
 	public Image getResourceAsImage(String imageResourceName) {
