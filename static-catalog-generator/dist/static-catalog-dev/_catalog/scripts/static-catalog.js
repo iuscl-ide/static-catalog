@@ -173,7 +173,7 @@ const StaticCatalog = (() => {
 	}
 
 	/** Modulo */
-	const _getStartLine = (line) => {
+	const _getLine = (line) => {
 		
 		let value = Math.trunc(line / indexLinesModulo);
 		if (value === 0) {
@@ -182,12 +182,24 @@ const StaticCatalog = (() => {
 
 		return value;
 	}
-	
+
+	/** Modulo start */
+	const _getStartLine = (line) => {
+		
+		return Math.trunc(line / indexLinesModulo);
+	}
+
+	/** Modulo end */
+	const _getEndLine = (line) => {
+		
+		return line % indexLinesModulo;
+	}
+
 	/** Add elements */
 	const _addUntil = (arraySrc, arrayDest, startIndex, limitValue) => {
 		
 		let srcElement = arraySrc[startIndex];
-		let value = _getStartLine(srcElement);
+		let value = _getLine(srcElement);
 		while (value < limitValue) {
 			arrayDest.push(srcElement);
 			
@@ -196,11 +208,91 @@ const StaticCatalog = (() => {
 				return startIndex;
 			}
 			srcElement = arraySrc[startIndex];
-			value = _getStartLine(srcElement);
+			value = _getLine(srcElement);
 		}
 		
 		return startIndex;
 	}
+
+	/** Compact */
+	const _compactLines = ( srcLines ) => {
+		
+		let destLines = [];
+		
+		for (let srcLine of srcLines) {
+
+			let srcStartLine = _getStartLine(srcLine);
+			let srcEndLine = _getEndLine(srcLine);
+
+			let destLinesSize = destLines.length;
+			if (destLinesSize == 0) {
+				destLines.push(srcLine);	
+			}
+			else {
+				let destLastIndex = destLinesSize - 1;
+				let destLastLine = destLines[destLastIndex];
+				let destStartLine = _getStartLine(destLastLine);
+				let destEndLine = _getEndLine(destLastLine);
+				
+				if (destStartLine == 0) {
+					/* One line destination */
+					if (srcStartLine == 0) {
+						/* One line source */
+						if (srcEndLine - destEndLine == 1) {
+							/* New interval */
+							let newLastLine = destEndLine * indexLinesModulo + srcEndLine;
+							destLines[destLastIndex] = newLastLine;
+						}
+						else {
+							/* New line */
+							destLines.push(srcEndLine);
+						}
+					}
+					else {
+						/* Interval line source */
+						if (srcStartLine - destEndLine == 1) {
+							/* New interval */
+							let newLastLine = destEndLine * indexLinesModulo + srcEndLine;
+							destLines[destLastIndex] = newLastLine;
+						}
+						else {
+							/* New line */
+							destLines.push(srcLine);
+						}
+					}
+				}
+				else {
+					/* Interval destination */
+					if (srcStartLine == 0) {
+						/* One line source */
+						if (srcEndLine - destEndLine == 1) {
+							/* Add to interval */
+							let newLastLine = destStartLine * indexLinesModulo + srcEndLine;
+							destLines[destLastIndex] = newLastLine;
+						}
+						else {
+							/* New line */
+							destLines.push(srcEndLine);
+						}
+					}
+					else {
+						/* Interval line source */
+						if (srcStartLine - destEndLine == 1) {
+							/* Add to interval */
+							let newLastLine = destStartLine * indexLinesModulo + srcEndLine;
+							destLines[destLastIndex] = newLastLine;
+						}
+						else {
+							/* New line */
+							destLines.push(srcLine);
+						}
+					}
+				}
+			}
+		}
+		
+		return destLines;
+	} 
 
 	/** Reunion */
 	const _createSortedUnion = (array1, array2) => {
@@ -215,7 +307,7 @@ const StaticCatalog = (() => {
 		let otherArray = array2;
 		let otherIndex = 0;
 		
-		if (_getStartLine(array1[0]) > _getStartLine(array2[0])) {
+		if (_getLine(array1[0]) > _getLine(array2[0])) {
 			currentArray = array2;
 			otherArray = array1;
 		}
@@ -224,7 +316,7 @@ const StaticCatalog = (() => {
 		let tempIndex;
 		while (otherIndex < otherArray.length) {
 			
-			currentIndex = _addUntil(currentArray, sortedUnion, currentIndex, _getStartLine(otherArray[otherIndex]));
+			currentIndex = _addUntil(currentArray, sortedUnion, currentIndex, _getLine(otherArray[otherIndex]));
 			tempArray = currentArray;
 			tempIndex = currentIndex;
 			currentArray = otherArray;
@@ -234,9 +326,15 @@ const StaticCatalog = (() => {
 		}
 		_addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
 		
+		c("before", sortedUnion);
+		
+		sortedUnion = _compactLines(sortedUnion);
+
+		c("after", sortedUnion);
+
 		return sortedUnion;
 	}
-	
+
 	/** Load an index name */
 	const _loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexValues, resultsCallback) => {
 		
