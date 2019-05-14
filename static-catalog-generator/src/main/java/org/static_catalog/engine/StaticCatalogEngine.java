@@ -530,6 +530,14 @@ public class StaticCatalogEngine {
 		}
 		
 		long totalLinesCount = csvLineIndex - (useFirstLineAsHeader ? 1 : 0);
+
+		int totalLinesDigitsCount = (new Long(totalLinesCount)).toString().length();
+		final StringBuilder indexLinesModuloDigits = new StringBuilder();
+		indexLinesModuloDigits.append("1");
+		IntStream.range(0, totalLinesDigitsCount).forEach(index -> indexLinesModuloDigits.append("0"));
+		long indexLinesModulo = Long.parseLong(indexLinesModuloDigits.toString());
+//		L.p(totalLines + " " + indexLinesModulo);
+		
 		long csvFileSize = S.findFileSizeInBytes(sourceCsvFileName);
 		long lineSize = csvFileSize / totalLinesCount;
 		long blockLinesCount = 1000000 / lineSize;
@@ -675,8 +683,22 @@ public class StaticCatalogEngine {
 			}
 		}
 		
+		long nameTotalSize = totalLinesCount * (2 * totalLinesDigitsCount + 2);
+		long namesCount = filterNameIndex.size();
+		
+		if (namesCount * nameTotalSize < 1000000) {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
+		}
+		else if (nameTotalSize < 1000000) {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
+		}
+		else {
+			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
+		}
+		
 		contents.setTotalLinesCount(totalLinesCount);
 		contents.setBlockLinesCount(blockLinesCount);
+		contents.setIndexLinesModulo(indexLinesModulo);
 		
 		loopProgress.doProgress(U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 	}
@@ -733,16 +755,6 @@ public class StaticCatalogEngine {
 		}
 		
 		/* Generate */
-		long totalLines = contents.getTotalLinesCount();
-
-		int totalLinesDigitsCount = (new Long(totalLines)).toString().length();
-		final StringBuilder indexLinesModuloDigits = new StringBuilder();
-		indexLinesModuloDigits.append("1");
-		IntStream.range(0, totalLinesDigitsCount).forEach(index -> indexLinesModuloDigits.append("0"));
-		long indexLinesModulo = Long.parseLong(indexLinesModuloDigits.toString());
-
-		L.p(totalLines + " " + indexLinesModulo);
-		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
@@ -753,7 +765,9 @@ public class StaticCatalogEngine {
 		long csvLineIndex = 0;
 		int blockIndex = -1;
 		long blockLineIndex = 0;
-		long blockLines = contents.getBlockLinesCount();
+		
+		long blockLinesCount = contents.getBlockLinesCount();
+		long indexLinesModulo = contents.getIndexLinesModulo();
 		
 		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
@@ -771,7 +785,7 @@ public class StaticCatalogEngine {
 				continue;
 			}
 			
-			if (blockLineIndex % blockLines == 0) {
+			if (blockLineIndex % blockLinesCount == 0) {
 				
 				blockIndex++;
 				String blockFileName = blockFilePrefix + blockIndex + ".csv";
@@ -800,9 +814,42 @@ public class StaticCatalogEngine {
 				}
 				String fieldName = pageFields.get(index).getName();
 				LinkedHashMap<String, ArrayList<Long>> valueLines = nameValuesLines.get(fieldName);
-				
 				ArrayList<Long> lines = valueLines.get(fieldValue);
-				lines.add(csvLineIndex);
+				
+				int linesSize = lines.size();
+				if (linesSize == 0) {
+					lines.add(csvLineIndex);	
+				}
+				else {
+					long lastLine = lines.get(linesSize - 1);
+					long intervalFirstLine = lastLine / indexLinesModulo;
+					long intervalSecondLine = lastLine % indexLinesModulo;
+					
+					if (intervalFirstLine == 0) {
+						/* One line */
+						if (csvLineIndex - intervalSecondLine == 1) {
+							/* New interval */
+							long newLastLine = intervalSecondLine * indexLinesModulo + csvLineIndex;
+							lines.set(linesSize - 1, newLastLine);
+						}
+						else {
+							/* New line */
+							lines.add(csvLineIndex);
+						}
+					}
+					else {
+						/* Interval */
+						if (csvLineIndex - intervalSecondLine == 1) {
+							/* Add to interval */
+							long newLastLine = intervalFirstLine * indexLinesModulo + csvLineIndex;
+							lines.set(linesSize - 1, newLastLine);
+						}
+						else {
+							/* New line */
+							lines.add(csvLineIndex);
+						}
+					}
+				}
 			}
 			
 			csvLineIndex++;
@@ -818,22 +865,10 @@ public class StaticCatalogEngine {
 		
 		loopProgress.doProgress("Catalog blocks generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the indexes...");
 		
+//		contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
 		
-		long nameTotalSize = totalLines * (2 * totalLinesDigitsCount + 2);
-		
-		long namesCount = nameValuesLines.size();
-		
-		if (namesCount * nameTotalSize < 1000000) {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
-		}
-		else if (nameTotalSize < 1000000) {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
-		}
-		else {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
-		}
-		
-		if (contents.getIndexSplitType().equals(INDEX_SPLIT_TYPE_VALUES)) {
+		String indexSplitType = contents.getIndexSplitType();
+		if (indexSplitType.equals(INDEX_SPLIT_TYPE_VALUES)) {
 			int indexNameCnt = 0;
 			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
 				int indexValueCnt = 0;
@@ -844,7 +879,7 @@ public class StaticCatalogEngine {
 				indexNameCnt++;
 			}
 		}
-		else if (contents.getIndexSplitType().equals(INDEX_SPLIT_TYPE_NAMES)) {
+		else if (indexSplitType.equals(INDEX_SPLIT_TYPE_NAMES)) {
 			int indexNameCnt = 0;
 			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
 				S.saveObjectToJsonFileName(valueLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");

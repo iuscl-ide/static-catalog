@@ -17,6 +17,8 @@ public class StaticCatalogContents {
 	private long totalLinesCount;
 	
 	private long blockLinesCount;
+	
+	private long indexLinesModulo;
 
 	public LinkedHashMap<String, Integer> getFilterNameIndex() {
 		return filterNameIndex;
@@ -48,5 +50,13 @@ public class StaticCatalogContents {
 
 	public void setBlockLinesCount(long blockLinesCount) {
 		this.blockLinesCount = blockLinesCount;
+	}
+
+	public long getIndexLinesModulo() {
+		return indexLinesModulo;
+	}
+
+	public void setIndexLinesModulo(long indexLinesModulo) {
+		this.indexLinesModulo = indexLinesModulo;
 	}
 }

@@ -4,8 +4,52 @@
 ╰──────────────────────────────────────╯
 */
 
+/** static-catalog engine */ 
 const StaticCatalog = (() => {
 
+	/* _catalog/static-catalog.json */
+	var filterNameIndex;
+	var filterNameValueIndex;
+	var indexSplitType;
+	var totalLinesCount;
+	var blockLinesCount;
+	var indexLinesModulo;
+
+	/** debug */
+	var isDebug = true
+	
+	/** debug console */
+	const c = (message, object) => {
+		
+		if (isDebug) {
+			console.log(message);
+			console.log(object);
+		}
+	}
+	
+	/** Initialize */
+	const _initialize = () => {
+		
+		const xmlHttpRequest = new XMLHttpRequest();
+		xmlHttpRequest.onreadystatechange = () => {
+			
+			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+				let contents = JSON.parse(xmlHttpRequest.responseText);
+				c("contents", contents);
+				
+				filterNameIndex = contents.filterNameIndex;
+				filterNameValueIndex = contents.filterNameValueIndex;
+				indexSplitType = contents.indexSplitType;
+				totalLinesCount = contents.totalLinesCount;
+				blockLinesCount = contents.blockLinesCount;
+				indexLinesModulo = contents.indexLinesModulo;
+			}
+		};
+		xmlHttpRequest.open("GET", "_catalog/static-catalog.json", true);
+		xmlHttpRequest.overrideMimeType("text/json");
+		xmlHttpRequest.send();
+	};
+	
 	/** https://gist.github.com/lovasoa/3361645 */
 	function array_intersect() {
 		var i, all, shortest, nShortest, n, len, ret = [], obj = {}, nOthers;
@@ -128,40 +172,165 @@ const StaticCatalog = (() => {
 		xmlHttpRequest.send();
 	}
 
-	const _loadIndex = (indexFiles, indexIndex, searchData, indexValues, resultsCallback) => {
+	/** Modulo */
+	const _getStartLine = (line) => {
 		
-		const xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.onreadystatechange = () => {
-			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-				
-				const jsonString = xmlHttpRequest.responseText;
-				const results = JSON.parse(jsonString);
-				
-				console.log(results);
-				
-				let indexFieldValues = [];
-				for (value of searchData.searchFieldsValues[indexIndex].values) {
-					console.log(value);
-					indexFieldValues = indexFieldValues.concat(results[value]);
-				}
-				if (indexIndex === 0) {
-					indexValues = indexFieldValues;
-				}
-				else {
-					indexValues = array_intersect(indexValues, indexFieldValues);
-				}
-				
-				//indexValues[indexIndex] = indexFieldValues;
-				console.log(indexValues);
+		let value = Math.trunc(line / indexLinesModulo);
+		if (value === 0) {
+			value = line % indexLinesModulo;
+		}
 
-				indexIndex = indexIndex + 1;
-				if (indexIndex < indexFiles.length) {
-					_loadIndex(indexFiles, indexIndex, searchData, indexValues, resultsCallback);
-				}
-				else {
-					
-					
-				}
+		return value;
+	}
+	
+	/** Add elements */
+	const _addUntil = (arraySrc, arrayDest, startIndex, limitValue) => {
+		
+		let srcElement = arraySrc[startIndex];
+		let value = _getStartLine(srcElement);
+		while (value < limitValue) {
+			arrayDest.push(srcElement);
+			
+			startIndex++;
+			if (startIndex === arraySrc.length) {
+				return startIndex;
+			}
+			srcElement = arraySrc[startIndex];
+			value = _getStartLine(srcElement);
+		}
+		
+		return startIndex;
+	}
+
+	/** Reunion */
+	const _createSortedUnion = (array1, array2) => {
+		
+		let sortedUnion = [];
+		
+		let index1 = 0;
+		let index2 = 0;
+		
+		let currentArray = array1;
+		let currentIndex = 0;
+		let otherArray = array2;
+		let otherIndex = 0;
+		
+		if (_getStartLine(array1[0]) > _getStartLine(array2[0])) {
+			currentArray = array2;
+			otherArray = array1;
+		}
+
+		let tempArray;
+		let tempIndex;
+		while (otherIndex < otherArray.length) {
+			
+			currentIndex = _addUntil(currentArray, sortedUnion, currentIndex, _getStartLine(otherArray[otherIndex]));
+			tempArray = currentArray;
+			tempIndex = currentIndex;
+			currentArray = otherArray;
+			currentIndex = otherIndex;
+			otherArray = tempArray;
+			otherIndex = tempIndex;
+		}
+		_addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
+		
+		return sortedUnion;
+	}
+	
+	/** Load an index name */
+	const _loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexValues, resultsCallback) => {
+		
+//		let p = new Promise( (resolve, reject) => {
+//			c("Promise", "");
+//			//resolve();
+//		}).then( () => {
+//			c("Then", "");
+//		});
+		
+//		let indexFilePromises = [];
+		let indexFiles = indexTypeFiles[indexTypeFileIndex];
+//		for (let indexFile of indexFiles) {
+//			let indexFilePromise = (indexFile) => {
+//				
+//				return new Promise( (resolve, reject) => {
+//					
+//					c("indexFile", indexFile);
+//					//resolve();
+//				});
+//			};
+//			indexFilePromises.push(indexFilePromise);
+//		};
+
+		let indexNameValuesLines = [];
+		let indexFilePromises = indexFiles.map( (indexFile) => {
+
+			return new Promise( (resolve, reject) => {
+				
+				const xmlHttpRequest = new XMLHttpRequest();
+				xmlHttpRequest.onreadystatechange = () => {
+					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+						
+						let lines = JSON.parse(xmlHttpRequest.responseText);
+						c("indexFile " + indexFile, lines);
+						indexNameValuesLines[indexFiles.indexOf(indexFile)] = lines; 
+						resolve();
+					}
+				};
+				xmlHttpRequest.open("GET", "_catalog/indexes/" + indexFile, true);
+				xmlHttpRequest.overrideMimeType("text/json");
+				xmlHttpRequest.send();
+			});
+		});  
+		
+	    Promise.all(indexFilePromises).then( () => {
+	    	
+//	    	c("All lines for name index finished downloading", "");
+	    	let indexNameLines = [];
+	    	for (let indexNameValuesLine of indexNameValuesLines) {
+	    		c("indexNameValuesLine", indexNameValuesLine);
+	    		if (indexNameLines.length === 0) {
+	    			indexNameLines = indexNameValuesLine;
+	    		}
+	    		else {
+	    			indexNameLines = _createSortedUnion(indexNameValuesLine, indexNameLines);
+	    		}
+	    	}
+	    	c("indexNameLines", indexNameLines);
+	    });
+		
+		
+//		const xmlHttpRequest = new XMLHttpRequest();
+//		xmlHttpRequest.onreadystatechange = () => {
+//			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+//				
+//				const jsonString = xmlHttpRequest.responseText;
+//				const results = JSON.parse(jsonString);
+//				
+//				console.log(results);
+//				
+//				let indexFieldValues = [];
+//				for (value of searchData.searchFieldsValues[indexIndex].values) {
+//					console.log(value);
+//					indexFieldValues = indexFieldValues.concat(results[value]);
+//				}
+//				if (indexIndex === 0) {
+//					indexValues = indexFieldValues;
+//				}
+//				else {
+//					indexValues = array_intersect(indexValues, indexFieldValues);
+//				}
+//				
+//				//indexValues[indexIndex] = indexFieldValues;
+//				console.log(indexValues);
+//
+//				indexIndex = indexIndex + 1;
+//				if (indexIndex < indexFiles.length) {
+//					_loadIndex(indexFiles, indexIndex, searchData, indexValues, resultsCallback);
+//				}
+//				else {
+//					
+//					
+//				}
 	
 				
 //				for (let result of results.data) {
@@ -215,26 +384,34 @@ const StaticCatalog = (() => {
 				//console.log(xmlHttpRequest.responseText.slice( 0, 100 ));
 				//console.log(this.responseText);
 				//console.log("apply2");
-			}
-		};
-		xmlHttpRequest.open("GET", indexFiles[indexIndex], true);
-		xmlHttpRequest.overrideMimeType("text/json");
-		xmlHttpRequest.send();
+//			}
+//		};
+//		xmlHttpRequest.open("GET", indexFiles[indexIndex], true);
+//		xmlHttpRequest.overrideMimeType("text/json");
+//		xmlHttpRequest.send();
 	}
 
-	/** */
+	/** Search received */
 	const applyFilters = (searchData, resultsCallback) => {
 		
 		let searchFilters = searchData.searchFieldsValues;
-		let filterNameIndex = searchData.filterNameIndex;
 		
-		let indexFiles = [];
-		for (searchFilter of searchFilters) {
-			indexFiles.push("static-catalog-index-" + filterNameIndex[searchFilter.field] + ".json"); 
+		let indexTypeFiles = [];
+		for (let searchFilter of searchFilters) {
+			
+			let searchFilterName = searchFilter.field;
+			let searchFilterNameIndex = filterNameIndex[searchFilterName];
+			let indexFiles = [];
+			indexTypeFiles.push(indexFiles);
+
+			for (let searchFilterValue of searchFilter.values) {
+				let searchFilterValueIndex = filterNameValueIndex[searchFilterName][searchFilterValue];
+				indexFiles.push("static-catalog-index-value-" + searchFilterNameIndex + "-" + searchFilterValueIndex + ".json");	
+			}
 		}
-		console.log(indexFiles);
+		c("indexTypeFiles", indexTypeFiles);
 		
-		_loadIndex(indexFiles, 0, searchData, [], resultsCallback);
+		_loadIndex(indexTypeFiles, 0, searchData, [], resultsCallback);
 		
 //		let nameValuesBlocks = searchData.searchCatalog.nameValuesBlocks;
 //		let searchBlocks;
@@ -281,7 +458,11 @@ const StaticCatalog = (() => {
 //		let resultLines = [];
 //		_loadBlock(searchFilters, searchBlocks, 0, resultLines, resultsCallback);
 	}
+
+	/* Constructor */
+	_initialize();
 	
+	/* Publish public */
 	return {
 		applyFilters: applyFilters
 	}

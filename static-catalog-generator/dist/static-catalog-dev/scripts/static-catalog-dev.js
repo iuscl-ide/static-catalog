@@ -4,6 +4,7 @@
 ╰──────────────────────────────────────╯
 */
 
+/** Particular to the page */
 const StaticCatalogDev = (() => {
 	
 	var _$tiles_or_list;
@@ -15,9 +16,10 @@ const StaticCatalogDev = (() => {
 	var _pageFieldsFilters;
 //	var _searchCatalog;
 	
-	/** init */
+	/** On jQuery document loaded completely */
 	const init = () => {
 		
+		/* static-catalog-fields.json */
 		$.ajax({
 			dataType: "json",
 			url: "static-catalog-fields.json",
@@ -72,40 +74,9 @@ const StaticCatalogDev = (() => {
 		_$results_panel = $('#scp_id__results_panel');
 		_$tile_template = $('#scp_id__tile_template');
 		_$tile_field_template = $('#scp_id__tile_field_template');
-		
-		$('#buttonApply1').click( clickEvent => {
-			
-			let arr = [];
-			
-			console.log("Start");
-//			for (let i = 0; i < 1000000; i++) {
-//				let arr2 = [];
-//				for (let j = 0; j < 100; j++) {
-//					arr2.push(i + j);
-//				}
-//				arr.push(arr2);
-//			}
-
-			
-			let arr2 = [];
-			for (let j = 0; j < 100; j++) {
-				arr2.push(j);
-			}
-			
-			let s = "10-20-35-39-47-69-38-47-68-24-1-3-7-6-7-44-6-2-8-67-31-64-9-54-71-6-55-88-4-31-49-5-5-5-6-10"
-			let l = 140000000;
-			for (let i = 0; i < l; i++) {
-				//arr.push(i + " => " + s + i * i + s);
-				//arr.push(arr2.clone());
-				arr.push(i + i);
-			}
-
-			console.log("Done");
-			console.log(arr[l - 1]);
-        });
 	}
 
-	/** */
+	/** Back in page from search */
 	const resultsCallback = (results) => {
 		
 		//console.log(results);
@@ -139,7 +110,7 @@ const StaticCatalogDev = (() => {
 		
 	}
 	
-	/** */
+	/** Collect selected filter values and send them to the engine */
 	const apply = () => {
 
 		_$tiles_or_list.empty();
@@ -149,7 +120,7 @@ const StaticCatalogDev = (() => {
 			"searchFieldsValues": []
 		};
 		
-		let filters = _pageFieldsFilters.page.filters;
+		let filters = _pageFieldsFilters.filters;
 		for (checkbox of $("input[id*='sc_filter__']")) {
 			if (checkbox.checked) {
 				let filterFieldValue = filters[checkbox.id];
@@ -170,7 +141,7 @@ const StaticCatalogDev = (() => {
 			}
 		}
 //		searchData.searchCatalog = _searchCatalog.searchCatalog;
-		searchData.filterNameIndex = _pageFieldsFilters.page.filterNameIndex;
+//		searchData.filterNameIndex = _pageFieldsFilters.page.filterNameIndex;
 		console.log(searchData);
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
