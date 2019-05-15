@@ -31,15 +31,14 @@
 </head>
 <body>
 	<div class="main ui container">
-		<div class="ui fitted hidden divider"></div>
+		<div class="ui vertical basic segment">Search-able catalog for static generated sites - <em>static-catalog.org</em> 2019</div>
 		<div class="ui inverted menu">
 			<div class="header item">
-				<img class="logo" src="assets/images/logo.png">
+				<img class="logo" src="assets/images/logo.png" width="35" height="35">
 				static-catalog
 			</div>
-			<a id="sc-research" class="active item"> Test </a> <a class="item"> Research </a>
+			<a id="sc-home" class="item"><i class="home icon"></i> Home </a> <a id="sc-repo" class="item"><i class="github icon"></i> GitHub Repo </a>
 			<div class="right menu">
-
 				<div class="item">
 					<div class="ui action input">
 						<input type="text" placeholder="Search...">
@@ -48,28 +47,17 @@
 						</button>
 					</div>
 				</div>
-
-				<!-- 				<div class="item"> -->
-				<!-- 					<div class="ui search"> -->
-				<!-- 						<div class="ui icon input"> -->
-				<!-- 							<input class="prompt" type="text" placeholder="Search..."> <i class="search icon"></i> -->
-				<!-- 						</div> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
-				<!-- 				<div class="item"> -->
-				<!-- 					<div class="ui inverted icon input"> -->
-				<!-- 						<input type="text" placeholder="Search..."> <i class="search link icon"></i> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
 			</div>
 		</div>
-
 		<div class="ui black segment">
-			<div class="ui grid">
-				<div class="middle aligned thirteen wide column">Search-able catalog for static generated sites -
-					<em>static-catalog.org</em> 2019</div>
+			<div class="ui divided grid">
+				<div class="middle aligned thirteen wide column">
+					<div class="ui black labels">
+  						<a class="ui label">Filter <i class="icon close"></i></a>
+					</div>					
+				</div>
 				<div class="right aligned three wide column">
-					<div id="buttonApply" class="ui fluid primary button">Apply</div>
+					<div id="buttonApply" class="ui fluid primary button">Search (filter)</div>
 				</div>
 			</div>
 		</div>
