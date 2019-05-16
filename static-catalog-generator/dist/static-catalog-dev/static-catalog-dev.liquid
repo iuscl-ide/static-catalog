@@ -37,14 +37,25 @@
 				<img class="logo" src="assets/images/logo.png" width="35" height="35">
 				static-catalog
 			</div>
-			<a id="sc-home" class="item"><i class="home icon"></i> Home </a> <a id="sc-repo" class="item"><i class="github icon"></i> GitHub Repo </a>
-			<div class="right menu">
-				<div class="item">
-					<div class="ui action input">
-						<input type="text" placeholder="Search...">
-						<button class="ui icon button">
-							<i class="search icon"></i>
-						</button>
+			<a id="sc-id--home-menu" class="item"><i class="home icon"></i> Home </a> <a id="sc-id--repo-menu" class="item"><i class="github icon"></i> GitHub Repo </a>
+<!-- 			<div class="right menu"> -->
+<!-- 				<div class="item"> -->
+<!-- 					<div class="ui action input"> -->
+<!-- 						<input type="text" placeholder="Search..."> -->
+<!-- 						<button class="ui icon button"> -->
+<!-- 							<i class="search icon"></i> -->
+<!-- 						</button> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+		</div>
+		<div class="overlay">
+			<div class="ui left close rail">
+				<div class="ui right aligned fluid container" style="padding-top: 2em">
+					<div class="ui labeled icon vertical menu">
+						<a  id="sc-id--filter-menu" class="item"><i class="filter icon"></i> Search </a>
+						<a  id="sc-id--clear-menu" class="item"><i class="trash alternate outline icon"></i> Clear All </a>
+						<a  id="sc-id--top-menu" class="item"><i class="long arrow alternate up icon"></i> Top </a>
 					</div>
 				</div>
 			</div>
@@ -52,12 +63,10 @@
 		<div class="ui black segment">
 			<div class="ui divided grid">
 				<div class="middle aligned thirteen wide column">
-					<div class="ui black labels">
-  						<a class="ui label">Filter <i class="icon close"></i></a>
-					</div>					
+					<div id="scp-id--filters-count" class="ui black labels"></div>					
 				</div>
 				<div class="right aligned three wide column">
-					<div id="buttonApply" class="ui fluid primary button">Search (filter)</div>
+					<div id="sc-id--search-button" class="ui fluid primary button">Search (filter)</div>
 				</div>
 			</div>
 		</div>
@@ -164,13 +173,18 @@
 		</div>
 	</div>
 	<div style="display: none">
-		<div id="scp_id__tile_template" class="column">
+		<div id="scp-id--tile-template" class="column">
 			<div class="ui bottom attached grey segment">
-				<div name="scp_name__tile_grid" class="ui one column grid" style="padding-top: 1rem"></div>
+				<div name="scp-name--tile-grid" class="ui one column grid" style="padding-top: 1rem"></div>
 			</div>
 		</div>
-		<div id="scp_id__tile_field_template" class="column" style="padding-top: 0rem">
-			<span name="scp_name__tile_field_name" class="ui small header"></span> &nbsp; <span name="scp_name__tile_field_value"></span>
+		<div id="scp-id--tile-field-template" class="column" style="padding-top: 0rem">
+			<span name="scp-name--tile-field-name" class="ui small header"></span> &nbsp; <span name="scp-name--tile-field-value"></span>
+		</div>
+		<div  id="scp-id--filter-count-template" class="ui label">
+			<a name="scp-name--filter-count-name"></a>
+			<div name="scp-name--filter-count-sum" class="detail"></div>
+			<i name="scp-name--filter-count-close" class="icon close"></i>
 		</div>
 	</div>
 	<script type="text/javascript">

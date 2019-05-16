@@ -330,6 +330,8 @@ public class StaticCatalogEngine {
 		/* Total time */
 		long start = System.currentTimeMillis();
 		
+		S.deleteFolder(destinationFolderName);
+		
 		/* Structure */
 		loopProgress.doProgress("Verify template site...");
 		Path destinationPath = Paths.get(destinationFolderName);
