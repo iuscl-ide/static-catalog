@@ -1,12 +1,12 @@
-/**	
-╭──────────────────────────────────────╮
-│ static-catalog-development-demo      │
-╰──────────────────────────────────────╯
+/*	
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog development/demo                    static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
 */
 
 "use strict";
 
-/** Particular to the page */
+/* Particular to the page */
 const StaticCatalogDev = (() => {
 
 	var pageFieldsFilters;
@@ -15,32 +15,32 @@ const StaticCatalogDev = (() => {
 	var $filterCheckboxes;
 	var $filters_count;
 	var $filter_count_template;
-	var $tiles_or_list;
+	var $tilesOrList;
 	var $no_results_panel;
 	var $results_panel;
 	var $tile_template;
 	var $tile_field_template; 
 	
+	var $messageArea;
+	var $welcomeMessage;
+	var $searchingMessage;
+	var $noResultsMessage;
+	var $successMessage;
+
+	var $resultsPanel;
+	
+	var $filter_accordions;
+	var $expand_collapse_menu;
+	var areFiltersExpanded;
+	
 	var filterCountClickEvent;
 	var filterCountLabelClickEvent;
+
 	
-	/** On jQuery document loaded completely */
+	
+	/* On jQuery document loaded completely */
 	const init = () => {
 		
-		/* static-catalog-fields.json */
-		$.ajax({
-			dataType: "json",
-			url: "static-catalog-fields.json",
-			mimeType: "application/json",
-			success: result => {
-				pageFieldsFilters = result;
-				pageFieldsFilters.fields.map( (pageField) => {
-					pageFields[pageField.name] = pageField;
-				});
-//				console.log(pageFieldsFilters);
-			}
-		});
-
 		/* semantic-ui stuff */
 		$(".overlay").visibility({
 			type: "fixed"
@@ -52,11 +52,22 @@ const StaticCatalogDev = (() => {
 		$filterCheckboxes = $("input[id*='sc_filter__']");
 		$filters_count = $("#scp-id--filters-count");
 		$filter_count_template = $("#scp-id--filter-count-template");
-		$tiles_or_list = $("#scp-id--tiles-or-list");
-		$no_results_panel = $("#scp-id--no-results-panel");
-		$results_panel = $("#scp-id--results-panel");
+		$tilesOrList = $("#scp-id--tiles-or-list");
 		$tile_template = $("#scp-id--tile-template");
 		$tile_field_template = $("#scp-id--tile-field-template");
+		
+		$messageArea = $("#scp-id--message-area");
+		$welcomeMessage = $("#scp-id--welcome-message");
+		$searchingMessage = $("#scp-id--searching-message");
+		$noResultsMessage = $("#scp-id--no-results-message");
+		$successMessage = $("#scp-id--success-message");
+		
+		$resultsPanel = $("#scp-id--results");
+		
+		
+		$filter_accordions = $(".ui.vertical.fluid.accordion.menu");
+		$expand_collapse_menu = $("#sc-id--expand-collapse-menu");
+		areFiltersExpanded = true;
 		
 		/* events */
 		$("#sc-id--search-button").click( clickEvent => {
@@ -67,9 +78,7 @@ const StaticCatalogDev = (() => {
 		$("#sc-id--filter-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
-//			apply();
-			displayFiltersCount();
-
+			apply();
         });
 		
 		$("#sc-id--clear-menu").click( clickEvent => {
@@ -81,6 +90,23 @@ const StaticCatalogDev = (() => {
 			});
         });
 
+		$expand_collapse_menu.click( clickEvent => {
+			
+			if (areFiltersExpanded) {
+				$filter_accordions.accordion("close", 0);
+				areFiltersExpanded = false;
+				$expand_collapse_menu.html("<i class='expand icon'></i> Expand ")
+				
+			}
+			else {
+				$filter_accordions.accordion("open", 0);
+				areFiltersExpanded = true;
+				$expand_collapse_menu.html("<i class='compress icon'></i> Collapse ")
+				
+			}
+			window.scrollTo(0, 0);
+        });
+		
 		$("#sc-id--top-menu").click( clickEvent => {
 			window.scrollTo(0, 0);
         });
@@ -97,7 +123,7 @@ const StaticCatalogDev = (() => {
 			const $tile_grid = $("div[name=scp-name--tile-grid]");
 			
 			$see_as_list.removeClass("active");
-			$tiles_or_list.removeClass().addClass("ui three column grid");
+			$tilesOrList.removeClass().addClass("ui three column grid");
 			$tile_grid.removeClass().addClass("ui one column grid");
 			$see_as_tiles.removeClass("item").addClass("active item");
         });
@@ -106,7 +132,7 @@ const StaticCatalogDev = (() => {
 			const $tile_grid = $("div[name=scp-name--tile-grid]");
 			
 			$see_as_tiles.removeClass("active");
-			$tiles_or_list.removeClass().addClass("ui one column grid");
+			$tilesOrList.removeClass().addClass("ui one column grid");
 			$tile_grid.removeClass().addClass("ui four column grid");
 			$see_as_list.removeClass("item").addClass("active item");
         });
@@ -132,44 +158,34 @@ const StaticCatalogDev = (() => {
 				
 				for (let checkbox of $filterCheckboxes) {
 					if (pageFieldsFilters.filters[checkbox.id].field === fieldName) {
-						let scrollElement = $(checkbox).parents(".ui.vertical.fluid.accordion.menu")[0];
+						let $filterAccordion = $($(checkbox).parents(".ui.vertical.fluid.accordion.menu")[0]);
+						$filterAccordion.accordion("open", 0);
 						$([document.documentElement, document.body]).animate({
-					        scrollTop: $(scrollElement).offset().top
+					        scrollTop: $filterAccordion.offset().top
 					    }, 100);
 						break;
 					}
 				}
 		    }
 		}
-	}
-
-	/** Back in page from search */
-	const resultsCallback = (results) => {
 		
-		$no_results_panel.hide();
-		
-		for (let index = 0; index < 10; index++) {
-			
-			$tile = $tile_template.clone();
-			$tile.appendTo($tiles_or_list);
-			
-			$tile_fields = $tile.find("div[name=scp-name--tile-grid]")[0];
-			
-			let result = results[index];
-			for (let resultField in result) {
-				//console.log(resultField + " " + result[resultField]);
-				
-				$tile_field = $tile_field_template.clone();
-				$tile_field.appendTo($tile_fields);
-				$tile_field.find("span[name=scp-name--tile-field-name]").html(resultField);
-				$tile_field.find("span[name=scp-name--tile-field-value]").html(result[resultField]);
+		/* static-catalog-fields.json */
+		$.ajax({
+			dataType: "json",
+			url: "static-catalog-fields.json",
+			mimeType: "application/json",
+			success: result => {
+				pageFieldsFilters = result;
+				pageFieldsFilters.fields.map( (pageField) => {
+					pageFields[pageField.name] = pageField;
+				});
+				//console.log(pageFieldsFilters);
+				displayFiltersCount();				
 			}
-		}
-		
-		$results_panel.show();
+		});
 	}
 
-	/** Collect selected filter values */
+	/* Collect selected filter values */
 	const findSearchFieldValues = () => {
 
 		let keys = [];
@@ -200,7 +216,7 @@ const StaticCatalogDev = (() => {
 		return searchFieldsValues;
 	}
 
-	/** Filter counts */
+	/* Filter counts */
 	const displayFiltersCount = () => {
 		
 		$filters_count.empty();
@@ -219,14 +235,62 @@ const StaticCatalogDev = (() => {
 		}
 	}
 
-	/** Collect selected filter values and send them to the engine */
+	/* Back in page from search */
+	const resultsCallback = (lines, foundLinesCount, totalLinesCount, totalSearchMs) => {
+
+		$searchingMessage.hide();
+
+		if (totalLinesCount === 0) {
+			$noResultsMessage.show();
+			return;
+		}
+
+		$successMessage.show();
+		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
+		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
+		$("#scp-id--total-lines").html(totalLinesCount.toLocaleString());
+		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
+		
+		for (let index = 0; index < 10; index++) {
+			
+			let $tile = $tile_template.clone();
+			$tile.appendTo($tilesOrList);
+			
+			let $tileFields = $tile.find("div[name=scp-name--tile-grid]")[0];
+			
+			let result = lines[index];
+			for (let resultField in result) {
+				//console.log(resultField + " " + result[resultField]);
+				
+				let $tile_field = $tile_field_template.clone();
+				$tile_field.appendTo($tileFields);
+				$tile_field.find("span[name=scp-name--tile-field-name]").html(resultField);
+				$tile_field.find("span[name=scp-name--tile-field-value]").html(result[resultField]);
+			}
+		}
+		
+		$resultsPanel.show();
+	}
+
+	/* Collect selected filter values and send them to the engine */
 	const apply = () => {
 
-		$tiles_or_list.empty();
+		$welcomeMessage.hide();
+		$noResultsMessage.hide();
+		$successMessage.hide();
+		$searchingMessage.show();
+		$resultsPanel.hide()
+		$tilesOrList.empty();
 		
 		let searchFieldsValues = findSearchFieldValues();
 		let searchData = {
-			"searchFieldsValues": searchFieldsValues
+			"searchFieldsValues": searchFieldsValues,
+			"paginationFirst": false,
+			"paginationPrevious": false,
+			"paginationPage": 1,
+			"paginationNext": false,
+			"paginationLast": false,
+			"paginationResultsPerPage": 10
 		};
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);

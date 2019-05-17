@@ -1,8 +1,6 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */ 
 package org.static_catalog.ui;
 
-import java.text.NumberFormat;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

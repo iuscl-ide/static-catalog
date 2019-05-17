@@ -6,11 +6,19 @@ import java.util.ArrayList;
 /** Generation structure */
 public class StaticCatalogConfigurationFields {
 
+	private String description = "";
+	
 	private final ArrayList<StaticCatalogConfigurationField> fields = new ArrayList<>();
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public ArrayList<StaticCatalogConfigurationField> getFields() {
 		return fields;
 	}
-	
-	
 }

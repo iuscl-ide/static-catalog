@@ -1,7 +1,7 @@
 /*	
-╭──────────────────────────────────────╮
-│ static-catalog                       │
-╰──────────────────────────────────────╯
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog distribution                        static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
 */
 
 /** static-catalog engine */ 
@@ -15,6 +15,11 @@ const StaticCatalog = (() => {
 	var blockLinesCount;
 	var indexLinesModulo;
 
+//	var cachePagination = {
+//		"paginationPage": 0,
+//		"paginationResultsPerPage": 0
+//	}
+	
 	/** debug */
 	var isDebug = true;
 	
@@ -36,14 +41,14 @@ const StaticCatalog = (() => {
 	}
 
 	/** Initialize */
-	const _initialize = () => {
+	const initialize = () => {
 		
 		const xmlHttpRequest = new XMLHttpRequest();
 		xmlHttpRequest.onreadystatechange = () => {
 			
 			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
 				let contents = JSON.parse(xmlHttpRequest.responseText);
-				c("contents", contents);
+//				c("contents", contents);
 				
 				filterNameIndex = contents.filterNameIndex;
 				filterNameValueIndex = contents.filterNameValueIndex;
@@ -58,81 +63,8 @@ const StaticCatalog = (() => {
 		xmlHttpRequest.send();
 	};
 	
-	/** */
-	const _loadBlock = (searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback) => {
-		
-		let index = searchBlocks[blockIndex];
-		
-		
-		const xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.onreadystatechange = () => {
-			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-				
-				const csvString = xmlHttpRequest.responseText;
-				const results = Papa.parse(csvString, {
-					header: true
-				});
-				
-				for (let result of results.data) {
-
-					let ok = true;
-					for (searchFilter of searchFilters) {
-						let searchFieldName = searchFilter.field;
-						resultValue = result[searchFieldName];
-						if (!searchFilter.values.includes(resultValue)) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
-						resultLines.push(result);
-					}
-				}
-				
-				if (resultLines.length > 9) {
-					console.log("Found in block: " + blockIndex + " -> " + index);
-					//console.log(resultLines);
-					resultsCallback(resultLines.slice(0, 10));
-				}
-				else {
-					blockIndex++;
-					if (blockIndex >= searchBlocks.length) {
-						console.log("No more blocks");
-						resultsCallback(resultLines);
-					}
-					else {
-						_loadBlock(searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback);	
-					}
-				}
-				
-				//resultsCallback(results);
-				
-//				console.log(results);
-//				
-//				var index = 0;
-//				var concat = "";
-//				for (let result of results.data) {
-//					concat = concat + index + " " + results.data[index][1] + "\n";
-//					index++;
-//					
-//				}
-				
-				//console.log(concat);
-				
-//				console.log("done");
-				//document.getElementById("demo").innerHTML = this.responseText;
-				//console.log(xmlHttpRequest.responseText.slice( 0, 100 ));
-				//console.log(this.responseText);
-				//console.log("apply2");
-			}
-		};
-		xmlHttpRequest.open("GET", "catalog/block_" + index + ".csv", true);
-		xmlHttpRequest.overrideMimeType("text/csv");
-		xmlHttpRequest.send();
-	}
-
 	/** Modulo */
-	const _getLine = (line) => {
+	const getLine = (line) => {
 		
 		let value = Math.trunc(line / indexLinesModulo);
 		if (value === 0) {
@@ -143,22 +75,22 @@ const StaticCatalog = (() => {
 	}
 
 	/** Modulo start */
-	const _getStartLine = (line) => {
+	const getStartLine = (line) => {
 		
 		return Math.trunc(line / indexLinesModulo);
 	}
 
 	/** Modulo end */
-	const _getEndLine = (line) => {
+	const getEndLine = (line) => {
 		
 		return line % indexLinesModulo;
 	}
 
 	/** Add elements */
-	const _addUntil = (arraySrc, arrayDest, startIndex, limitValue) => {
+	const addUntil = (arraySrc, arrayDest, startIndex, limitValue) => {
 		
 		let srcElement = arraySrc[startIndex];
-		let value = _getLine(srcElement);
+		let value = getLine(srcElement);
 		while (value < limitValue) {
 			arrayDest.push(srcElement);
 			
@@ -167,21 +99,21 @@ const StaticCatalog = (() => {
 				return startIndex;
 			}
 			srcElement = arraySrc[startIndex];
-			value = _getLine(srcElement);
+			value = getLine(srcElement);
 		}
 		
 		return startIndex;
 	}
 
 	/** Compact */
-	const _compactLines = ( srcLines ) => {
+	const compactLines = ( srcLines ) => {
 		
 		let destLines = [];
 		
 		for (let srcLine of srcLines) {
 
-			let srcStartLine = _getStartLine(srcLine);
-			let srcEndLine = _getEndLine(srcLine);
+			let srcStartLine = getStartLine(srcLine);
+			let srcEndLine = getEndLine(srcLine);
 
 			let destLinesSize = destLines.length;
 			if (destLinesSize == 0) {
@@ -190,8 +122,8 @@ const StaticCatalog = (() => {
 			else {
 				let destLastIndex = destLinesSize - 1;
 				let destLastLine = destLines[destLastIndex];
-				let destStartLine = _getStartLine(destLastLine);
-				let destEndLine = _getEndLine(destLastLine);
+				let destStartLine = getStartLine(destLastLine);
+				let destEndLine = getEndLine(destLastLine);
 				
 				if (destStartLine == 0) {
 					/* One line destination */
@@ -254,7 +186,7 @@ const StaticCatalog = (() => {
 	} 
 
 	/** Reunion */
-	const _createSortedUnion = (array1, array2) => {
+	const createUnion = (array1, array2) => {
 		
 		let sortedUnion = [];
 		
@@ -266,7 +198,7 @@ const StaticCatalog = (() => {
 		let otherArray = array2;
 		let otherIndex = 0;
 		
-		if (_getLine(array1[0]) > _getLine(array2[0])) {
+		if (getLine(array1[0]) > getLine(array2[0])) {
 			currentArray = array2;
 			otherArray = array1;
 		}
@@ -275,7 +207,7 @@ const StaticCatalog = (() => {
 		let tempIndex;
 		while (otherIndex < otherArray.length) {
 			
-			currentIndex = _addUntil(currentArray, sortedUnion, currentIndex, _getLine(otherArray[otherIndex]));
+			currentIndex = addUntil(currentArray, sortedUnion, currentIndex, getLine(otherArray[otherIndex]));
 			tempArray = currentArray;
 			tempIndex = currentIndex;
 			currentArray = otherArray;
@@ -283,25 +215,22 @@ const StaticCatalog = (() => {
 			otherArray = tempArray;
 			otherIndex = tempIndex;
 		}
-		_addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
-		
+		addUntil(currentArray, sortedUnion, currentIndex, Number.MAXSAFEINTEGER);
 //		c("before", sortedUnion);
-		
-		sortedUnion = _compactLines(sortedUnion);
-
+		sortedUnion = compactLines(sortedUnion);
 //		c("after", sortedUnion);
 
 		return sortedUnion;
 	}
 
 	/** Intersection */
-	const _createIntervalIntersection = (line1, line2) => {
+	const createIntervalIntersection = (line1, line2) => {
 		
-		let startLine1 = _getStartLine(line1);
-		let endLine1 = _getEndLine(line1);
+		let startLine1 = getStartLine(line1);
+		let endLine1 = getEndLine(line1);
 
-		let startLine2 = _getStartLine(line2);
-		let endLine2 = _getEndLine(line2);
+		let startLine2 = getStartLine(line2);
+		let endLine2 = getEndLine(line2);
 
 		if (startLine1 === 0) {
 			if (startLine2 === 0) {
@@ -329,7 +258,7 @@ const StaticCatalog = (() => {
 	};
 
 	/** Intersection */
-	const _createIntersection = (array1, array2) => {
+	const createIntersection = (array1, array2) => {
 		
 		let index1 = 0;
 		let index2 = 0;
@@ -344,9 +273,9 @@ const StaticCatalog = (() => {
 			while (index2 < array2Length) {
 //				c("index2", index2);
 				let line2 = array2[index2];
-				let line = _createIntervalIntersection(line1, line2);
+				let line = createIntervalIntersection(line1, line2);
 				if (line === null) {
-					if (_getLine(line1) > _getEndLine(line2)) {
+					if (getLine(line1) > getEndLine(line2)) {
 						index2++;
 					}
 					else {
@@ -356,7 +285,7 @@ const StaticCatalog = (() => {
 				}
 				else {
 					intersection.push(line);
-					if (_getEndLine(line1) >= _getEndLine(line2)) {
+					if (getEndLine(line1) >= getEndLine(line2)) {
 						index2++;	
 					}
 					else {
@@ -371,14 +300,7 @@ const StaticCatalog = (() => {
 	};
 
 	/** Load an index name */
-	const _loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve) => {
-		
-//		let p = new Promise( (resolve, reject) => {
-//			c("Promise", "");
-//			//resolve();
-//		}).then( () => {
-//			c("Then", "");
-//		});
+	const loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve) => {
 		
 		let indexFiles = indexTypeFiles[indexTypeFileIndex];
 		let indexNameValuesLines = [];
@@ -412,7 +334,7 @@ const StaticCatalog = (() => {
 	    			indexNameLines = indexNameValuesLine;
 	    		}
 	    		else {
-	    			indexNameLines = _createSortedUnion(indexNameValuesLine, indexNameLines);
+	    			indexNameLines = createUnion(indexNameValuesLine, indexNameLines);
 	    		}
 	    	}
 	    	c("union indexNameLines", indexNameLines);
@@ -421,7 +343,7 @@ const StaticCatalog = (() => {
 	    		indexLines = indexNameLines;
 	    	}
 	    	else {
-	    		indexLines = _createIntersection(indexLines, indexNameLines);
+	    		indexLines = createIntersection(indexLines, indexNameLines);
 	    		if (indexLines.length === 0) {
 	    			c("Intersection empty, exit", indexLines);
 	    			loadIndexResolve(indexLines);
@@ -434,13 +356,176 @@ const StaticCatalog = (() => {
 	    	
 	    	indexTypeFileIndex++;
 	    	if (indexTypeFileIndex < indexTypeFiles.length) {
-	    		_loadIndex(indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve);
+	    		loadIndex(indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve);
 	    	}
 	    	else {
 	    		c("all files downloaded and union", "");
 	    		loadIndexResolve(indexLines);
 	    	}
 	    });
+	}
+	
+	/** Load the CSV blocks */
+	const loadBlocks = (indexLines, searchData, resultLines, loadBlocksResolve) => {
+		
+		let searchLinesCount = searchData.paginationResultsPerPage;
+		let firstSearchIndexLine = (searchData.paginationPage - 1) * searchLinesCount + 1;
+		
+		
+		/* Find result lines indexes */
+		let resultIndexLines = [];
+		break_lines:
+		for (let indexLine of indexLines) {
+			
+			let startOrEndIndexLine = getLine(indexLine);
+			if (startOrEndIndexLine >= firstSearchIndexLine) {
+				
+				let startIndexLine = getStartLine(indexLine);
+				let endIndexLine = getEndLine(indexLine);
+				if (startIndexLine === 0) {
+					resultIndexLines.push(endIndexLine);
+					if (resultIndexLines.length === searchLinesCount) {
+						break break_lines;
+					}
+				}
+				else {
+					for (let index = startIndexLine; index <= endIndexLine; index++) {
+						resultIndexLines.push(index);
+						if (resultIndexLines.length === searchLinesCount) {
+							break break_lines;
+						}
+					}
+				}
+			}
+		}
+		c("result index lines", resultIndexLines);
+
+		/* Find result blocks indexes */
+		let resultIndexBlocks = [];
+		
+		for (let resultIndexLine of resultIndexLines) {
+			let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
+			if (!resultIndexBlocks.includes(resultIndexBlock)) {
+				resultIndexBlocks.push(resultIndexBlock);
+			}
+		}
+		c("result index blocks", resultIndexBlocks);
+		
+		/* Download result blocks */
+		let blockResults = {};
+		let blockFilePromises = resultIndexBlocks.map( (indexBlock) => {
+
+			return new Promise( (resolve, reject) => {
+				
+				const xmlHttpRequest = new XMLHttpRequest();
+				xmlHttpRequest.onreadystatechange = () => {
+					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+						
+						const csvString = xmlHttpRequest.responseText;
+						const results = Papa.parse(csvString, {
+							header: true
+						});
+
+						blockResults[indexBlock] = results.data;
+						resolve();
+					}
+				};
+				xmlHttpRequest.open("GET", "_catalog/data/block-" + indexBlock + ".csv", true);
+				xmlHttpRequest.overrideMimeType("text/csv");
+				xmlHttpRequest.send();
+				c("Download..", "_catalog/data/block-" + indexBlock + ".csv");
+			});
+		});  
+		
+	    Promise.all(blockFilePromises).then( () => {
+	    	
+	    	c("All blocks finished downloading", blockResults);
+	    	for (let resultIndexLine of resultIndexLines) {
+	    		let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
+	    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount);
+	    		
+	    		//c("Line in block", resultIndexBlockLine);
+	    		resultLines.push(blockResults[resultIndexBlock][resultIndexBlockLine]);
+	    	}
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	loadBlocksResolve(resultLines);
+	    });
+		
+		
+		
+		
+//		let index = searchBlocks[blockIndex];
+//		
+//		const xmlHttpRequest = new XMLHttpRequest();
+//		xmlHttpRequest.onreadystatechange = () => {
+//			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+//				
+//				const csvString = xmlHttpRequest.responseText;
+//				const results = Papa.parse(csvString, {
+//					header: true
+//				});
+//				
+//				for (let result of results.data) {
+//
+//					let ok = true;
+//					for (searchFilter of searchFilters) {
+//						let searchFieldName = searchFilter.field;
+//						resultValue = result[searchFieldName];
+//						if (!searchFilter.values.includes(resultValue)) {
+//							ok = false;
+//							break;
+//						}
+//					}
+//					if (ok) {
+//						resultLines.push(result);
+//					}
+//				}
+//				
+//				if (resultLines.length > 9) {
+//					console.log("Found in block: " + blockIndex + " -> " + index);
+//					//console.log(resultLines);
+//					resultsCallback(resultLines.slice(0, 10));
+//				}
+//				else {
+//					blockIndex++;
+//					if (blockIndex >= searchBlocks.length) {
+//						console.log("No more blocks");
+//						resultsCallback(resultLines);
+//					}
+//					else {
+//						loadBlock(searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback);	
+//					}
+//				}
+//				
+//				//resultsCallback(results);
+//				
+////				console.log(results);
+////				
+////				var index = 0;
+////				var concat = "";
+////				for (let result of results.data) {
+////					concat = concat + index + " " + results.data[index][1] + "\n";
+////					index++;
+////					
+////				}
+//				
+//				//console.log(concat);
+//				
+////				console.log("done");
+//				//document.getElementById("demo").innerHTML = this.responseText;
+//				//console.log(xmlHttpRequest.responseText.slice( 0, 100 ));
+//				//console.log(this.responseText);
+//				//console.log("apply2");
+//			}
+//		};
+//		xmlHttpRequest.open("GET", "_catalog/block" + index + ".csv", true);
+//		xmlHttpRequest.overrideMimeType("text/csv");
+//		xmlHttpRequest.send();
 	}
 
 	/** Search received */
@@ -465,19 +550,36 @@ const StaticCatalog = (() => {
 		}
 		c("indexTypeFiles", indexTypeFiles);
 		
+		if (indexTypeFiles.length === 0) {
+			resultsCallback([], 0);
+			return;
+		}
+		
+		/* Indexes */
 		var indexLines = null;
 		new Promise( (loadIndexResolve, reject) => {
 
-			_loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);
+			loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);
 		}).then((indexLines) => {
+
+			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
 			
-			c("done in " + ((new Date()).getTime() - startMs), indexLines);
+			/* Blocks */
+			var resultLines = [];
+			new Promise( (loadBlocksResolve, loadBlocksReject) => {
+
+				loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
+			}).then((resultLines) => {
+				
+				c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
+				resultsCallback(resultLines, totalLinesCount, totalLinesCount, (new Date()).getTime() - startMs);
+			});
 		});
 		
 	}
 
 	/* Constructor */
-	_initialize();
+	initialize();
 	
 	/* Publish public */
 	return {

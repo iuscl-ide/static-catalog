@@ -409,7 +409,9 @@ public class StaticCatalogEngine {
 		ArrayList<StaticCatalogPageField> pageFields = page.getFields();
 		
 		/* Generate */
-		ArrayList<StaticCatalogConfigurationField> filterFields = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogConfigurationFields.class).getFields();
+		StaticCatalogConfigurationFields configurationFields = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogConfigurationFields.class);
+		page.setDescription(configurationFields.getDescription());
+		ArrayList<StaticCatalogConfigurationField> filterFields = configurationFields.getFields();
 		int lineLength = filterFields.size();
 		/* Filters field names */
 		LinkedHashMap<String, StaticCatalogConfigurationField> nameFilters = new LinkedHashMap<>();

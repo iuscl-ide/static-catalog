@@ -1,7 +1,6 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.ui;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -436,7 +435,7 @@ public class StaticCatalogGeneratorMainWindow {
 	    topButtonsComposite.setLayoutData(topButtonsCompositeGridData);
 	    topButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(4, UI.sep8));
 	    
-	    final String[] topButtonTexts = { "View CSV", "Examine CSV", "Filters", "Generate" };
+	    final String[] topButtonTexts = { "View CSV", "Examine CSV", "Fields && Filters", "Generate" };
 	    
 	    ArrayList<Button> topButtons = new ArrayList<>(); 
 
@@ -444,7 +443,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 		    Button button = new Button(topButtonsComposite, SWT.TOGGLE);
 		    button.setText(topButtonText);
-		    button.setLayoutData(ui.createWidth120GridData());
+		    button.setLayoutData(ui.createWidthGridData(140));
 		    
 		    topButtons.add(button);
 	    }
@@ -1037,6 +1036,18 @@ public class StaticCatalogGeneratorMainWindow {
 		final Button saveFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
 		saveFiltersButton.setText("Save");
 		saveFiltersButton.setLayoutData(ui.createWidth120GridData());
+
+		final Composite fieldsComposite = new Composite(parentComposite, SWT.NONE);
+		ui.addDebug(fieldsComposite);
+		fieldsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		fieldsComposite.setLayout(ui.createColumnsSpacingGridLayout(2, UI.sep8));
+		
+		final Label descriptionLabel = new Label(fieldsComposite, SWT.NONE);
+		descriptionLabel.setText("Description");
+		descriptionLabel.setLayoutData(ui.createWidth120GridData());
+		
+		final Text descriptionText = new Text(fieldsComposite, SWT.SINGLE | SWT.BORDER);
+		descriptionText.setLayoutData(ui.createFillHorizontalGridData());
 		
 		final Grid filtersGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
 		filtersGrid.setLayoutData(ui.createFillBothGridData());
@@ -1103,6 +1114,8 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void loadFilters(StaticCatalogConfigurationFields staticCatalogFilters) {
 
+				descriptionText.setText(staticCatalogFilters.getDescription());
+				
 				for (GridItem gridItem : filtersGrid.getItems()) {
 					((Text) gridItem.getData("labelText")).dispose();
 					((CCombo) gridItem.getData("typeCCombo")).dispose();
@@ -1228,6 +1241,7 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
 				StaticCatalogConfigurationFields filtersDefinition = new StaticCatalogConfigurationFields();
+				filtersDefinition.setDescription(descriptionText.getText());
 				for (GridItem gridItem : filtersGrid.getItems()) {
 					StaticCatalogConfigurationField field = new StaticCatalogConfigurationField();
 					field.setName(gridItem.getText(1));

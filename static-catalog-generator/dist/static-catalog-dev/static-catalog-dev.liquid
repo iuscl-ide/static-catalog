@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog development-demo                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
 <!-- Standard Meta -->
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -32,6 +38,9 @@
 <body>
 	<div class="main ui container">
 		<div class="ui vertical basic segment">Search-able catalog for static generated sites - <em>static-catalog.org</em> 2019</div>
+
+		<div class="ui message">{{ description }}</div>
+
 		<div class="ui inverted menu">
 			<div class="header item">
 				<img class="logo" src="assets/images/logo.png" width="35" height="35">
@@ -53,9 +62,10 @@
 			<div class="ui left close rail">
 				<div class="ui right aligned fluid container" style="padding-top: 2em">
 					<div class="ui labeled icon vertical menu">
-						<a  id="sc-id--filter-menu" class="item"><i class="filter icon"></i> Search </a>
-						<a  id="sc-id--clear-menu" class="item"><i class="trash alternate outline icon"></i> Clear All </a>
-						<a  id="sc-id--top-menu" class="item"><i class="long arrow alternate up icon"></i> Top </a>
+						<a id="sc-id--filter-menu" class="item"><i class="filter icon"></i> Search </a>
+						<a id="sc-id--clear-menu" class="item"><i class="trash alternate outline icon"></i> Clear All </a>
+						<a id="sc-id--expand-collapse-menu" class="item"><i class="compress icon"></i> Collapse </a>
+						<a id="sc-id--top-menu" class="item"><i class="long arrow alternate up icon"></i> Top </a>
 					</div>
 				</div>
 			</div>
@@ -138,29 +148,44 @@
 				{% endif %} {% endfor %}
 			</div>
 			<div class="eleven wide column">
-				<div id="scp_id__no_results_panel" class="ui placeholder segment">
-					<div class="ui icon header">
-						<i class="ban icon"></i>No results
+				<div id="scp-id--welcome-message" class="ui icon message">
+					<i class="info circle icon"></i>
+					<div class="content">
+						<div class="header">Welcome</div>
+						<p>Please check some filters and do a search.</p>
 					</div>
 				</div>
-				<div id="scp_id__results_panel">
+				<div id="scp-id--searching-message" class="ui icon message" style="display: none">
+					<i class="notched circle loading icon"></i>
+					<div class="content">
+						<div class="header">Searching</div>
+						<p>We're fetching that content for you.</p>
+					</div>
+				</div>
+				<div id="scp-id--no-results-message" class="ui negative icon message" style="display: none">
+					<i class="ban icon"></i>
+					<div class="content">
+						<div class="header">No results</div>
+						<p>There were no lines found after applying the filters.</p>
+					</div>
+				</div>
+				<div id="scp-id--success-message" class="ui positive icon message" style="display: none">
+					<i class="flag checkered icon"></i>
+					<div class="content">
+						<div class="header">Search successful</div>
+						<p>The searh returned <strong><span id="scp-id--returned-lines"></span></strong>
+						lines from <strong><span id="scp-id--found-lines"></span></strong> found
+						(for the total of <strong><span id="scp-id--total-lines"></span></strong>)
+						in <strong><span id="scp-id--seconds"></span></strong> seconds.</p>
+					</div>
+				</div>
+				<div id="scp-id--results" style="display: none">
 					<div class="ui right floated main menu">
-						<a class="th popup icon active item" id="scp_id__see_as_tiles" data-content="See as tiles"><i class="th icon"></i></a>
-						<a class="list popup icon item" id="scp_id__see_as_list" data-content="See as list"><i class="list icon"></i></a>
+						<a class="th popup icon active item" id="scp-id--see-as-tiles" data-content="See as tiles"><i class="th icon"></i></a>
+						<a class="list popup icon item" id="scp-id--see-as-list" data-content="See as list"><i class="list icon"></i></a>
 					</div>
 					<div class="ui hidden clearing divider"></div>
-					<div id="scp_id__tiles_or_list" class="ui three column grid">
-						<!-- 						<div class="column"> -->
-						<!-- 							<div class="ui bottom attached grey segment"> -->
-						<!-- 								<div name="scp_name__tile_grid" class="ui one column grid"> -->
-						<!-- 									<div class="column"> -->
-						<!-- 										<div class="ui small header">Field</div> -->
-						<!-- 										Value -->
-						<!-- 									</div> -->
-						<!-- 								</div> -->
-						<!-- 							</div> -->
-						<!-- 						</div> -->
-					</div>
+					<div id="scp-id--tiles-or-list" class="ui three column grid"></div>
 					<div class="ui divider"></div>
 					<div class="ui right floated pagination menu">
 						<a class="active item"> 1 </a>
@@ -171,6 +196,55 @@
 				</div>
 			</div>
 		</div>
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<h4 class="ui inverted header">Distribution Requirements</h4>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a href="#" class="item">Papaparse</a>
+						</div>
+					</div>
+<!-- 					<div class="four wide column"> -->
+<!-- 						<h4 class="ui inverted header">Java components</h4> -->
+<!-- 						<div class="ui inverted link list"> -->
+<!-- 							<a href="#" class="item">Link One</a> <a href="#" class="item">Link Two</a> <a href="#" class="item">Link -->
+<!-- 								Three</a> <a href="#" class="item">Link Four</a> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+					<div class="four wide column">
+						<h4 class="ui inverted header">Development Requirements</h4>
+						<h5 class="ui inverted header">Java</h5>
+						<div class="ui inverted link list">
+							<a href="#" class="item">SWT</a>
+							<a href="#" class="item">Datetime</a>
+							<a href="#" class="item">liqp</a>
+							<a href="#" class="item">Univocity CSV Parser</a>
+						</div>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a href="#" class="item">jQuery</a>
+						</div>
+						<h5 class="ui inverted header">CSS</h5>
+						<div class="ui inverted link list">
+							<a href="#" class="item">Semantic-UI</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<h4 class="ui inverted header">About static-catalog</h4>
+						<p>The missing link of the static generated sites.</p>
+						<p>All the searches in this page are done on static data, without any server side code or database.</p>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
 	</div>
 	<div style="display: none">
 		<div id="scp-id--tile-template" class="column">
