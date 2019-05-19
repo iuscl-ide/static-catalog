@@ -73,6 +73,24 @@
 		<div class="ui black segment">
 			<div class="ui divided grid">
 				<div class="middle aligned thirteen wide column">
+					<div class="ui gray labels">
+						<div class="ui label">
+							Total lines
+							<div class="detail">{{ totals.totalLines }}</div>
+						</div>
+						<div class="ui label">
+							Data size
+							<div class="detail">{{ totals.totalCsvFileSize }}</div>
+						</div>
+						<div class="ui label">
+							Fields
+							<div class="detail">{{ totals.totalFields }}</div>
+						</div>
+						<div class="ui label">
+							Filters
+							<div class="detail">{{ totals.totalFilters }}</div>
+						</div>
+					</div>
 					<div id="scp-id--filters-count" class="ui black labels"></div>					
 				</div>
 				<div class="right aligned three wide column">

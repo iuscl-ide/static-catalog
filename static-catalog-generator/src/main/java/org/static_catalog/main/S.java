@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -279,4 +281,41 @@ public class S {
 		else
 			return fileName.substring(dotInd + 1).toLowerCase();
 	}
+	
+	/** Size */
+	public static long getFileSize(String fileName) {
+
+		File javaFile = new File(fileName);
+		return Long.valueOf(javaFile.length());
+	}
+	
+	/** From IusCL */
+	public static String formatSize(long size) {
+
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
+		
+		double b = size / (1024 * 1024 * 1024);
+		String suffix = "B";
+		if (b > 1) {
+			suffix = "GB";
+		}
+		else {
+			b = size / (1024 * 1024);
+			if (b > 1) {
+				suffix = "MB";
+			}
+			else {
+				b = size / 1024;
+				if (b > 1) {
+					suffix = "KB";
+				}
+				else {
+					return size + " B";
+				}
+			}
+		}
+		
+		return decimalFormat.format(b) + " " + suffix;
+	};
+
 }

@@ -13,6 +13,8 @@ public class StaticCatalogPage {
 
 	private final LinkedHashMap<String, StaticCatalogPageFilter> filters = new LinkedHashMap<>();
 	
+	private final StaticCatalogPageTotals totals = new StaticCatalogPageTotals(); 
+	
 	public ArrayList<StaticCatalogPageField> getFields() {
 		return fields;
 	}
@@ -27,5 +29,9 @@ public class StaticCatalogPage {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public StaticCatalogPageTotals getTotals() {
+		return totals;
 	}
 }
