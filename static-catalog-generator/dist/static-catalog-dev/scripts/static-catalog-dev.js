@@ -18,8 +18,8 @@ const StaticCatalogDev = (() => {
 	var $tilesOrList;
 	var $no_results_panel;
 	var $results_panel;
-	var $tile_template;
-	var $tile_field_template; 
+	var $tileTemplate;
+	var $tileFieldTemplate; 
 	
 	var $messageArea;
 	var $welcomeMessage;
@@ -53,8 +53,8 @@ const StaticCatalogDev = (() => {
 		$filters_count = $("#scp-id--filters-count");
 		$filter_count_template = $("#scp-id--filter-count-template");
 		$tilesOrList = $("#scp-id--tiles-or-list");
-		$tile_template = $("#scp-id--tile-template");
-		$tile_field_template = $("#scp-id--tile-field-template");
+		$tileTemplate = $("#scp-id--tile-template");
+		$tileFieldTemplate = $("#scp-id--tile-field-template");
 		
 		$messageArea = $("#scp-id--message-area");
 		$welcomeMessage = $("#scp-id--welcome-message");
@@ -120,7 +120,7 @@ const StaticCatalogDev = (() => {
 		const $see_as_list = $("#scp-id--see-as-list");
 		
 		$see_as_tiles.click( clickEvent => {
-			const $tile_grid = $("div[name=scp-name--tile-grid]");
+			const $tile_grid = $("div[data-name=scp-name--tile-grid]");
 			
 			$see_as_list.removeClass("active");
 			$tilesOrList.removeClass().addClass("ui three column grid");
@@ -129,7 +129,7 @@ const StaticCatalogDev = (() => {
         });
 		
 		$see_as_list.click( clickEvent => {
-			const $tile_grid = $("div[name=scp-name--tile-grid]");
+			const $tile_grid = $("div[data-name=scp-name--tile-grid]");
 			
 			$see_as_tiles.removeClass("active");
 			$tilesOrList.removeClass().addClass("ui one column grid");
@@ -235,43 +235,6 @@ const StaticCatalogDev = (() => {
 		}
 	}
 
-	/* Back in page from search */
-	const resultsCallback = (lines, foundLinesCount, totalLinesCount, totalSearchMs) => {
-
-		$searchingMessage.hide();
-
-		if (totalLinesCount === 0) {
-			$noResultsMessage.show();
-			return;
-		}
-
-		$successMessage.show();
-		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
-		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
-		$("#scp-id--total-lines").html(totalLinesCount.toLocaleString());
-		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
-		
-		for (let index = 0; index < 10; index++) {
-			
-			let $tile = $tile_template.clone();
-			$tile.appendTo($tilesOrList);
-			
-			let $tileFields = $tile.find("div[name=scp-name--tile-grid]")[0];
-			
-			let result = lines[index];
-			for (let resultField in result) {
-				//console.log(resultField + " " + result[resultField]);
-				
-				let $tile_field = $tile_field_template.clone();
-				$tile_field.appendTo($tileFields);
-				$tile_field.find("span[name=scp-name--tile-field-name]").html(resultField);
-				$tile_field.find("span[name=scp-name--tile-field-value]").html(result[resultField]);
-			}
-		}
-		
-		$resultsPanel.show();
-	}
-
 	/* Collect selected filter values and send them to the engine */
 	const apply = () => {
 
@@ -294,6 +257,38 @@ const StaticCatalogDev = (() => {
 		};
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
+	}
+
+	/* Back in page from search */
+	const resultsCallback = (lines, foundLinesCount, totalLinesCount, totalSearchMs) => {
+
+		$searchingMessage.hide();
+
+		if (foundLinesCount === 0) {
+			$noResultsMessage.show();
+			return;
+		}
+
+		$successMessage.show();
+		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
+		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
+		$("#scp-id--total-lines").html(totalLinesCount.toLocaleString());
+		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
+		
+		for (let line of lines) {
+			let $tile = $tileTemplate.clone();
+			$tile.appendTo($tilesOrList);
+			
+			let $tileFields = $tile.find("div[data-name=scp-name--tile-grid]")[0];
+			
+			for (let lineField in line) {
+				let $tileField = $tileFieldTemplate.clone();
+				$tileField.appendTo($tileFields);
+				$tileField.find("span[name=scp-name--tile-field-name]").html(lineField);
+				$tileField.find("span[name=scp-name--tile-field-value]").html(line[lineField]);
+			}
+		}
+		$resultsPanel.show();
 	}
 
 	return {

@@ -4,7 +4,9 @@
 ╰──────────────────────────────────────────────────────────────────────────────╯
 */
 
-/** static-catalog engine */ 
+"use strict";
+
+/* static-catalog engine */ 
 const StaticCatalog = (() => {
 
 	/* _catalog/static-catalog.json */
@@ -20,10 +22,10 @@ const StaticCatalog = (() => {
 //		"paginationResultsPerPage": 0
 //	}
 	
-	/** debug */
+	/* debug */
 	var isDebug = true;
 	
-	/** debug console */
+	/* debug console */
 	const c = (message, object) => {
 		
 		if (isDebug) {
@@ -32,7 +34,7 @@ const StaticCatalog = (() => {
 		}
 	}
 
-	/** debug console */
+	/* debug console */
 	const cl = () => {
 		
 		if (isDebug) {
@@ -40,7 +42,7 @@ const StaticCatalog = (() => {
 		}
 	}
 
-	/** Initialize */
+	/* Initialize */
 	const initialize = () => {
 		
 		const xmlHttpRequest = new XMLHttpRequest();
@@ -63,7 +65,7 @@ const StaticCatalog = (() => {
 		xmlHttpRequest.send();
 	};
 	
-	/** Modulo */
+	/* Modulo */
 	const getLine = (line) => {
 		
 		let value = Math.trunc(line / indexLinesModulo);
@@ -74,19 +76,39 @@ const StaticCatalog = (() => {
 		return value;
 	}
 
-	/** Modulo start */
+	/* Modulo start */
 	const getStartLine = (line) => {
 		
 		return Math.trunc(line / indexLinesModulo);
 	}
 
-	/** Modulo end */
+	/* Modulo end */
 	const getEndLine = (line) => {
 		
 		return line % indexLinesModulo;
 	}
 
-	/** Add elements */
+	/* Count line */
+	const getLineCount = ( line ) => {
+		
+		let startLine = getStartLine(line);
+		if (startLine === 0) {
+			return 1;
+		}
+		return (getEndLine(line) - startLine) + 1;
+	}
+
+	/* Count lines */
+	const getLinesCount = ( lines ) => {
+
+		let count = 0;
+		for (let line of lines) {
+			count = count + getLineCount(line);
+		}
+		return count;
+	}
+	
+	/* Add elements */
 	const addUntil = (arraySrc, arrayDest, startIndex, limitValue) => {
 		
 		let srcElement = arraySrc[startIndex];
@@ -105,7 +127,7 @@ const StaticCatalog = (() => {
 		return startIndex;
 	}
 
-	/** Compact */
+	/* Compact */
 	const compactLines = ( srcLines ) => {
 		
 		let destLines = [];
@@ -185,7 +207,7 @@ const StaticCatalog = (() => {
 		return destLines;
 	} 
 
-	/** Reunion */
+	/* Reunion */
 	const createUnion = (array1, array2) => {
 		
 		let sortedUnion = [];
@@ -223,7 +245,7 @@ const StaticCatalog = (() => {
 		return sortedUnion;
 	}
 
-	/** Intersection */
+	/* Intersection */
 	const createIntervalIntersection = (line1, line2) => {
 		
 		let startLine1 = getStartLine(line1);
@@ -257,7 +279,7 @@ const StaticCatalog = (() => {
 		}
 	};
 
-	/** Intersection */
+	/* Intersection */
 	const createIntersection = (array1, array2) => {
 		
 		let index1 = 0;
@@ -299,7 +321,7 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
-	/** Load an index name */
+	/* Load an index name */
 	const loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve) => {
 		
 		let indexFiles = indexTypeFiles[indexTypeFileIndex];
@@ -365,7 +387,7 @@ const StaticCatalog = (() => {
 	    });
 	}
 	
-	/** Load the CSV blocks */
+	/* Load the CSV blocks */
 	const loadBlocks = (indexLines, searchData, resultLines, loadBlocksResolve) => {
 		
 		let searchLinesCount = searchData.paginationResultsPerPage;
@@ -442,93 +464,17 @@ const StaticCatalog = (() => {
 	    	c("All blocks finished downloading", blockResults);
 	    	for (let resultIndexLine of resultIndexLines) {
 	    		let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
-	    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount);
+	    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount + 1);
 	    		
 	    		//c("Line in block", resultIndexBlockLine);
 	    		resultLines.push(blockResults[resultIndexBlock][resultIndexBlockLine]);
 	    	}
 	    	
-	    	
-	    	
-	    	
-	    	
-	    	
 	    	loadBlocksResolve(resultLines);
 	    });
-		
-		
-		
-		
-//		let index = searchBlocks[blockIndex];
-//		
-//		const xmlHttpRequest = new XMLHttpRequest();
-//		xmlHttpRequest.onreadystatechange = () => {
-//			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-//				
-//				const csvString = xmlHttpRequest.responseText;
-//				const results = Papa.parse(csvString, {
-//					header: true
-//				});
-//				
-//				for (let result of results.data) {
-//
-//					let ok = true;
-//					for (searchFilter of searchFilters) {
-//						let searchFieldName = searchFilter.field;
-//						resultValue = result[searchFieldName];
-//						if (!searchFilter.values.includes(resultValue)) {
-//							ok = false;
-//							break;
-//						}
-//					}
-//					if (ok) {
-//						resultLines.push(result);
-//					}
-//				}
-//				
-//				if (resultLines.length > 9) {
-//					console.log("Found in block: " + blockIndex + " -> " + index);
-//					//console.log(resultLines);
-//					resultsCallback(resultLines.slice(0, 10));
-//				}
-//				else {
-//					blockIndex++;
-//					if (blockIndex >= searchBlocks.length) {
-//						console.log("No more blocks");
-//						resultsCallback(resultLines);
-//					}
-//					else {
-//						loadBlock(searchFilters, searchBlocks, blockIndex, resultLines, resultsCallback);	
-//					}
-//				}
-//				
-//				//resultsCallback(results);
-//				
-////				console.log(results);
-////				
-////				var index = 0;
-////				var concat = "";
-////				for (let result of results.data) {
-////					concat = concat + index + " " + results.data[index][1] + "\n";
-////					index++;
-////					
-////				}
-//				
-//				//console.log(concat);
-//				
-////				console.log("done");
-//				//document.getElementById("demo").innerHTML = this.responseText;
-//				//console.log(xmlHttpRequest.responseText.slice( 0, 100 ));
-//				//console.log(this.responseText);
-//				//console.log("apply2");
-//			}
-//		};
-//		xmlHttpRequest.open("GET", "_catalog/block" + index + ".csv", true);
-//		xmlHttpRequest.overrideMimeType("text/csv");
-//		xmlHttpRequest.send();
 	}
 
-	/** Search received */
+	/* Search received */
 	const applyFilters = (searchData, resultsCallback) => {
 		
 		let startMs = (new Date()).getTime();
@@ -572,7 +518,8 @@ const StaticCatalog = (() => {
 			}).then((resultLines) => {
 				
 				c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
-				resultsCallback(resultLines, totalLinesCount, totalLinesCount, (new Date()).getTime() - startMs);
+				let foundLinesCount = getLinesCount(indexLines);
+				resultsCallback(resultLines, foundLinesCount, totalLinesCount, (new Date()).getTime() - startMs);
 			});
 		});
 		
