@@ -4,43 +4,43 @@ package org.static_catalog.model.dest;
 /** Page JSON filter field-value */
 public class StaticCatalogPageTotals {
 
-	private String totalLines;
+	private long totalLines;
 	
-	private String totalCsvFileSize;
+	private long totalCsvFileSize;
 
-	private String totalFields;
+	private long totalFields;
 	
-	private String totalFilters;
+	private long totalFilters;
 
-	public String getTotalLines() {
+	public long getTotalLines() {
 		return totalLines;
 	}
 
-	public void setTotalLines(String totalLines) {
+	public void setTotalLines(long totalLines) {
 		this.totalLines = totalLines;
 	}
 
-	public String getTotalCsvFileSize() {
+	public long getTotalCsvFileSize() {
 		return totalCsvFileSize;
 	}
 
-	public void setTotalCsvFileSize(String totalCsvFileSize) {
+	public void setTotalCsvFileSize(long totalCsvFileSize) {
 		this.totalCsvFileSize = totalCsvFileSize;
 	}
 
-	public String getTotalFields() {
+	public long getTotalFields() {
 		return totalFields;
 	}
 
-	public void setTotalFields(String totalFields) {
+	public void setTotalFields(long totalFields) {
 		this.totalFields = totalFields;
 	}
 
-	public String getTotalFilters() {
+	public long getTotalFilters() {
 		return totalFilters;
 	}
 
-	public void setTotalFilters(String totalFilters) {
+	public void setTotalFilters(long totalFilters) {
 		this.totalFilters = totalFilters;
 	}
 }

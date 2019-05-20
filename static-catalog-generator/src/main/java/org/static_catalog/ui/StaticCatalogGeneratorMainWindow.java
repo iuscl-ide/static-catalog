@@ -221,8 +221,13 @@ public class StaticCatalogGeneratorMainWindow {
 	    Menu fileMenu = new Menu(mainShell, SWT.DROP_DOWN);
 	    fileMenuHeader.setMenu(fileMenu);
 	    
-	    MenuItem openMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
-	    openMenuItem.setText("Open");
+	    MenuItem settingsMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
+	    settingsMenuItem.setText("Settings");
+	    
+	    new MenuItem(fileMenu, SWT.SEPARATOR);
+	    
+	    MenuItem exitMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
+	    exitMenuItem.setText("Exit");
 
 	    mainShell.setMenuBar(mainMenuBar);
 

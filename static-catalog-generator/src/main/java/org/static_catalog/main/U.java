@@ -6,10 +6,11 @@ import java.text.CharacterIterator;
 import java.text.NumberFormat;
 import java.text.StringCharacterIterator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Utils */
+/** Utilities */
 public class U {
 
 	private static final HashMap<String, String> replaceWords = new HashMap<>(); 
@@ -23,7 +24,7 @@ public class U {
 	/** Write format */
 	public static String w(long longValue) {
 		
-		return NumberFormat.getInstance().format(longValue);
+		return NumberFormat.getInstance(Locale.US).format(longValue);
 	}
 	
 	/** Capitalize sentence */

@@ -43,10 +43,28 @@ import com.univocity.parsers.csv.CsvWriter;
 import com.univocity.parsers.csv.CsvWriterSettings;
 
 import liqp.Template;
+import liqp.filters.Filter;
 
 /** Generator engine */
 public class StaticCatalogEngine {
 
+	/** Format long in liquid */
+	static {
+		Filter.registerFilter(new Filter("w") {
+			@Override
+			public Object apply(Object value, Object... params) {
+				return U.w(new Long(value.toString()));
+			}
+		});
+
+		Filter.registerFilter(new Filter("ws") {
+			@Override
+			public Object apply(Object value, Object... params) {
+				return S.formatSize(new Long(value.toString()));
+			}
+		});
+	}
+	
 	/** Types */
 	public static final String TYPE_DATE = "date"; 
 	public static final String TYPE_LONG = "long"; 
@@ -713,10 +731,10 @@ public class StaticCatalogEngine {
 		
 		StaticCatalogPageTotals totals = page.getTotals();
 		
-		totals.setTotalLines(U.w(totalLinesCount));
-		totals.setTotalCsvFileSize(S.formatSize(S.findFileSizeInBytes(sourceCsvFileName)));
-		totals.setTotalFields(U.w(lineLength));
-		totals.setTotalFilters(U.w(filterNameIndexCnt));
+		totals.setTotalLines(totalLinesCount);
+		totals.setTotalCsvFileSize(S.findFileSizeInBytes(sourceCsvFileName));
+		totals.setTotalFields(lineLength);
+		totals.setTotalFilters(filterNameIndexCnt);
 		
 		
 		loopProgress.doProgress(U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
@@ -788,7 +806,7 @@ public class StaticCatalogEngine {
 		long blockLinesCount = contents.getBlockLinesCount();
 		long indexLinesModulo = contents.getIndexLinesModulo();
 		
-		String[] headerLine = null;
+//		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
@@ -797,7 +815,7 @@ public class StaticCatalogEngine {
 			/* CSV field names */
 			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
 				
-				headerLine = csvLine;
+//				headerLine = csvLine;
 				// TODO
 				csvLine = csvParser.parseNext();
 				csvLineIndex++;
@@ -818,7 +836,7 @@ public class StaticCatalogEngine {
 				} catch (IOException ioException) {
 					L.e("Cataloog write block " + blockIndex + " error = " + blockFileName, ioException);
 				}
-				csvWriter.writeRow(headerLine);
+				//csvWriter.writeRow(headerLine);
 			}
 
 			csvWriter.writeRow(csvLine);

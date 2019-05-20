@@ -3,7 +3,7 @@
 <head>
 <!--
 ╭──────────────────────────────────────────────────────────────────────────────╮
-│ static-catalog development-demo                                              │
+│ static-catalog development/demo                    static-catalog.org - 2019 │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 -->
 
@@ -72,29 +72,31 @@
 		</div>
 		<div class="ui black segment">
 			<div class="ui divided grid">
-				<div class="middle aligned thirteen wide column">
+				<div class="thirteen wide column">
 					<div class="ui gray labels">
 						<div class="ui label">
 							Total lines
-							<div class="detail">{{ totals.totalLines }}</div>
+							<div class="detail">{{ totals.totalLines | w }}</div>
 						</div>
 						<div class="ui label">
 							Data size
-							<div class="detail">{{ totals.totalCsvFileSize }}</div>
+							<div class="detail">{{ totals.totalCsvFileSize | ws }}</div>
 						</div>
 						<div class="ui label">
 							Fields
-							<div class="detail">{{ totals.totalFields }}</div>
+							<div class="detail">{{ totals.totalFields | w }}</div>
 						</div>
 						<div class="ui label">
 							Filters
-							<div class="detail">{{ totals.totalFilters }}</div>
+							<div class="detail">{{ totals.totalFilters | w }}</div>
 						</div>
 					</div>
 					<div id="scp-id--filters-count" class="ui black labels"></div>					
 				</div>
 				<div class="right aligned three wide column">
-					<div id="sc-id--search-button" class="ui fluid primary button">Search (filter)</div>
+					<div id="sc-id--search-button" class="ui fluid primary button">Search</div>
+					<div class="ui hidden clearing divider"></div>
+					<div id="sc-id--debug-button" class="ui fluid red button">Debug</div>
 				</div>
 			</div>
 		</div>
@@ -125,7 +127,7 @@
 										<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
-										<div class="ui basic horizontal label">{{ field_value.count }}</div>
+										<div class="ui basic horizontal label">{{ field_value.count | w }}</div>
 									</div>
 								</div>
 								{% endfor %} {% if field.has_more_values or field.has_more_exception_values %}
@@ -184,17 +186,15 @@
 					<i class="ban icon"></i>
 					<div class="content">
 						<div class="header">No results</div>
-						<p>There were no lines found after applying the filters.</p>
+						<p>There were no lines found after applying the filters. The search took <strong><span id="scp-id--no-results-seconds"></span></strong> seconds.</p>
 					</div>
 				</div>
 				<div id="scp-id--success-message" class="ui positive icon message" style="display: none">
 					<i class="flag checkered icon"></i>
 					<div class="content">
 						<div class="header">Search successful</div>
-						<p>The searh returned <strong><span id="scp-id--returned-lines"></span></strong>
-						lines from <strong><span id="scp-id--found-lines"></span></strong> found
-						(for the total of <strong><span id="scp-id--total-lines"></span></strong>)
-						in <strong><span id="scp-id--seconds"></span></strong> seconds.</p>
+						<p>The search returned <strong><span id="scp-id--returned-lines"></span></strong>
+						lines from <strong><span id="scp-id--found-lines"></span></strong> found. The search took <strong><span id="scp-id--seconds"></span></strong> seconds.</p>
 					</div>
 				</div>
 				<div id="scp-id--results" style="display: none">

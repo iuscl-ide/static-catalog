@@ -11,6 +11,7 @@ const StaticCatalogDev = (() => {
 
 	var pageFieldsFilters;
 	var pageFields = {};
+	var pageFieldLabels = [];
 
 	var $filterCheckboxes;
 	var $filters_count;
@@ -36,7 +37,8 @@ const StaticCatalogDev = (() => {
 	var filterCountClickEvent;
 	var filterCountLabelClickEvent;
 
-	
+	/* debug */
+	var isDebug = true;
 	
 	/* On jQuery document loaded completely */
 	const init = () => {
@@ -89,6 +91,17 @@ const StaticCatalogDev = (() => {
 				element.checked = false;
 			});
         });
+		
+		if (isDebug) {
+			$("#sc-id--debug-button").click( clickEvent => {
+				
+				window.scrollTo(0, 0);
+				$filterCheckboxes.each( (index, element) => {
+					element.checked = true;
+					element.value = element.value.toLocaleString();
+				});
+	        });
+		}
 
 		$expand_collapse_menu.click( clickEvent => {
 			
@@ -176,8 +189,10 @@ const StaticCatalogDev = (() => {
 			mimeType: "application/json",
 			success: result => {
 				pageFieldsFilters = result;
+				let fieldIndex = 0;
 				pageFieldsFilters.fields.map( (pageField) => {
 					pageFields[pageField.name] = pageField;
+					pageFieldLabels[fieldIndex++] = pageField.label;
 				});
 				//console.log(pageFieldsFilters);
 				displayFiltersCount();				
@@ -260,19 +275,19 @@ const StaticCatalogDev = (() => {
 	}
 
 	/* Back in page from search */
-	const resultsCallback = (lines, foundLinesCount, totalLinesCount, totalSearchMs) => {
+	const resultsCallback = (lines, foundLinesCount, totalSearchMs) => {
 
 		$searchingMessage.hide();
 
 		if (foundLinesCount === 0) {
 			$noResultsMessage.show();
+			$("#scp-id--no-results-seconds").html((totalSearchMs / 1000).toLocaleString());
 			return;
 		}
 
 		$successMessage.show();
 		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
 		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
-		$("#scp-id--total-lines").html(totalLinesCount.toLocaleString());
 		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
 		
 		for (let line of lines) {
@@ -284,7 +299,7 @@ const StaticCatalogDev = (() => {
 			for (let lineField in line) {
 				let $tileField = $tileFieldTemplate.clone();
 				$tileField.appendTo($tileFields);
-				$tileField.find("span[name=scp-name--tile-field-name]").html(lineField);
+				$tileField.find("span[name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
 				$tileField.find("span[name=scp-name--tile-field-value]").html(line[lineField]);
 			}
 		}

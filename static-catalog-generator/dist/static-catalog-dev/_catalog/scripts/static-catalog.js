@@ -237,7 +237,7 @@ const StaticCatalog = (() => {
 			otherArray = tempArray;
 			otherIndex = tempIndex;
 		}
-		addUntil(currentArray, sortedUnion, currentIndex, Number.MAXSAFEINTEGER);
+		addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
 //		c("before", sortedUnion);
 		sortedUnion = compactLines(sortedUnion);
 //		c("after", sortedUnion);
@@ -359,7 +359,7 @@ const StaticCatalog = (() => {
 	    			indexNameLines = createUnion(indexNameValuesLine, indexNameLines);
 	    		}
 	    	}
-	    	c("union indexNameLines", indexNameLines);
+//	    	c("union indexNameLines", indexNameLines);
 	    	
 	    	if (indexLines === null) {
 	    		indexLines = indexNameLines;
@@ -372,7 +372,7 @@ const StaticCatalog = (() => {
 	    			return;
 	    		}
 	    		else {
-	    			c("intersection", indexLines);
+//	    			c("intersection", indexLines);
 	    		}
 	    	}
 	    	
@@ -445,7 +445,7 @@ const StaticCatalog = (() => {
 						
 						const csvString = xmlHttpRequest.responseText;
 						const results = Papa.parse(csvString, {
-							header: true
+							header: false
 						});
 
 						blockResults[indexBlock] = results.data;
@@ -465,6 +465,7 @@ const StaticCatalog = (() => {
 	    	for (let resultIndexLine of resultIndexLines) {
 	    		let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
 	    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount + 1);
+	    		//let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount);
 	    		
 	    		//c("Line in block", resultIndexBlockLine);
 	    		resultLines.push(blockResults[resultIndexBlock][resultIndexBlockLine]);
@@ -479,6 +480,9 @@ const StaticCatalog = (() => {
 		
 		let startMs = (new Date()).getTime();
 		cl();
+		
+		//c(createUnion([1, 3, 5], [2, 4]));
+		
 		let searchFilters = searchData.searchFieldsValues;
 		
 		let indexTypeFiles = [];
@@ -496,16 +500,19 @@ const StaticCatalog = (() => {
 		}
 		c("indexTypeFiles", indexTypeFiles);
 		
-		if (indexTypeFiles.length === 0) {
-			resultsCallback([], 0);
-			return;
-		}
-		
 		/* Indexes */
 		var indexLines = null;
-		new Promise( (loadIndexResolve, reject) => {
+		new Promise( (loadIndexResolve, loadIndexReject) => {
 
-			loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);
+			if (indexTypeFiles.length === 0) {
+				indexLines = [];
+				indexLines.push(indexLinesModulo + totalLinesCount);
+				loadIndexResolve(indexLines);
+			}
+			else {
+				loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);	
+			}
+			
 		}).then((indexLines) => {
 
 			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
@@ -515,11 +522,12 @@ const StaticCatalog = (() => {
 			new Promise( (loadBlocksResolve, loadBlocksReject) => {
 
 				loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
+				
 			}).then((resultLines) => {
 				
 				c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
 				let foundLinesCount = getLinesCount(indexLines);
-				resultsCallback(resultLines, foundLinesCount, totalLinesCount, (new Date()).getTime() - startMs);
+				resultsCallback(resultLines, foundLinesCount, (new Date()).getTime() - startMs);
 			});
 		});
 		
