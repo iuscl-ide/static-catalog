@@ -390,8 +390,8 @@ const StaticCatalog = (() => {
 	/* Load the CSV blocks */
 	const loadBlocks = (indexLines, searchData, resultLines, loadBlocksResolve) => {
 		
-		let searchLinesCount = searchData.paginationResultsPerPage;
-		let firstSearchIndexLine = (searchData.paginationPage - 1) * searchLinesCount + 1;
+		let searchLinesCount = searchData.searchPagination.paginationResultsPerPage;
+		let firstSearchIndexLine = (searchData.searchPagination.paginationPage - 1) * searchLinesCount + 1;
 		
 		
 		/* Find result lines indexes */
@@ -527,7 +527,7 @@ const StaticCatalog = (() => {
 				
 				c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
 				let foundLinesCount = getLinesCount(indexLines);
-				resultsCallback(resultLines, foundLinesCount, (new Date()).getTime() - startMs);
+				resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
 			});
 		});
 		

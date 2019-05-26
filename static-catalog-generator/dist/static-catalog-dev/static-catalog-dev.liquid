@@ -200,31 +200,39 @@
 				<div id="scp-id--results" style="display: none">
 					<div class="ui grid">
 						<div class="row">
-							<div class="two wide stretched column">
-								<div class="ui selection compact dropdown">
-									<input type="hidden" name="scp-name--lines-per-page" value="10"><i class="dropdown icon"></i>
-									<div class="text">10</div>
-									<div class="menu">
-										<div class="item" data-value="10">10</div>
-										<div class="item" data-value="25">25</div>
-										<div class="item" data-value="50">50</div>
-										<div class="item" data-value="100">100</div>
+							<div class="stretched column pr0" style="width: 150px;">
+								<span>
+									<div class="ui label">Lines</div>
+									<div id="scp-id--pagination-results-per-page" class="ui selection compact dropdown" style="width: 70px;">
+										<input type="hidden" name="scp-name--lines-per-page" value="10"><i class="dropdown icon"></i>
+										<div class="text">10</div>
+										<div class="menu">
+											<div class="item" data-value="10">10</div>
+											<div class="item" data-value="25">25</div>
+											<div class="item" data-value="50">50</div>
+											<div class="item" data-value="100">100</div>
+										</div>
 									</div>
-								</div>
+								</span>
 							</div>
-							<div class="center aligned middle aligned three wide stretched column">
-								lines per page
-							</div>
-							<div class="right aligned eleven wide column">
-								<div class="ui pagination menu">
-									<a class="item"><i class="fitted fast backward icon"></i></a> <a class="item"><i
-										class="fitted step backward icon"></i></a>
-									<div class="disabled item">...</div>
-									<a class="item">999,999</a> <a class="active item">999,999</a> <a class="item">999,999</a>
-									<div class="disabled item">...</div>
-									<a class="item"><i class="fitted step forward icon"></i></a> <a class="item"><i
-										class="fitted fast forward icon"></i></a>
-								</div>
+<!-- 							<div class="center aligned middle aligned three wide stretched column"> -->
+<!-- 								lines per page -->
+<!-- 							</div> -->
+							<div class="right aligned column pl0" style="width: calc(100% - 150px);">
+								<span>
+									<div class="ui label">Page</div>
+									<div class="ui pagination menu">
+										<a id="scp-id--pagination-first" class="item"><i class="fitted fast backward icon"></i></a>
+										<a id="scp-id--pagination-previous" class="item"><i class="fitted step backward icon"></i></a>
+										<div id="scp-id--pagination-ellipsis-1" class="disabled item">...</div>
+										<a id="scp-id--pagination-page-1" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-2" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-3" class="item">9,999,999</a>
+										<div id="scp-id--pagination-ellipsis-2" class="disabled item">...</div>
+										<a id="scp-id--pagination-next" class="item"><i class="fitted step forward icon"></i></a>
+										<a id="scp-id--pagination-last" class="item"><i class="fitted fast forward icon"></i></a>
+									</div>
+								</span>
 							</div>
 						</div>
 						<div class="row ptb0">

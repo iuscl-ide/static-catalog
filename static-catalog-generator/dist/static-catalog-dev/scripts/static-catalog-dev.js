@@ -30,6 +30,8 @@ const StaticCatalogDev = (() => {
 
 	var $resultsPanel;
 	
+	var $paginationResultsPerPage;
+	
 	var $filter_accordions;
 	var $expand_collapse_menu;
 	var areFiltersExpanded;
@@ -44,7 +46,14 @@ const StaticCatalogDev = (() => {
 	const init = () => {
 		
 		/* semantic-ui stuff */
-		$('.ui.dropdown').dropdown();
+		$paginationResultsPerPage = $("#scp-id--pagination-results-per-page");
+//		$('.ui.dropdown').dropdown({
+		$paginationResultsPerPage.dropdown({
+			 onChange: function(value, text, $selectedItem) {
+				 
+				 apply(findSearchPagination());
+			}
+		});
 		$(".overlay").visibility({
 			type: "fixed"
 		});
@@ -68,6 +77,8 @@ const StaticCatalogDev = (() => {
 		$resultsPanel = $("#scp-id--results");
 		
 		
+		
+		
 		$filter_accordions = $(".ui.vertical.fluid.accordion.menu");
 		$expand_collapse_menu = $("#sc-id--expand-collapse-menu");
 		areFiltersExpanded = true;
@@ -75,13 +86,13 @@ const StaticCatalogDev = (() => {
 		/* events */
 		$("#sc-id--search-button").click( clickEvent => {
 			
-			apply();
+			apply(findSearchPagination());
         });
 		
 		$("#sc-id--filter-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
-			apply();
+			apply(findSearchPagination());
         });
 		
 		$("#sc-id--clear-menu").click( clickEvent => {
@@ -103,7 +114,7 @@ const StaticCatalogDev = (() => {
 				});
 	        });
 		}
-
+		
 		$expand_collapse_menu.click( clickEvent => {
 			
 			if (areFiltersExpanded) {
@@ -130,6 +141,13 @@ const StaticCatalogDev = (() => {
 			displayFiltersCount();
         });
 
+//		$paginationResultsPerPage.dropdown({
+//			 onChange: function(value, text, $selectedItem) {
+//				
+//				console.log("text");
+//			}
+//		});
+		
 		const $see_as_tiles = $("#scp-id--see-as-tiles");
 		const $see_as_list = $("#scp-id--see-as-list");
 		
@@ -251,8 +269,22 @@ const StaticCatalogDev = (() => {
 		}
 	}
 
+	/* New pagination */
+	const findSearchPagination = () => {
+
+		let paginationResultsPerPage = parseInt($paginationResultsPerPage.text(), 10);
+		return {
+			"paginationFirst": false,
+			"paginationPrevious": false,
+			"paginationPage": 1,
+			"paginationNext": false,
+			"paginationLast": false,
+			"paginationResultsPerPage": paginationResultsPerPage
+		};
+	}
+	
 	/* Collect selected filter values and send them to the engine */
-	const apply = () => {
+	const apply = (searchPagination) => {
 
 		$welcomeMessage.hide();
 		$noResultsMessage.hide();
@@ -264,19 +296,14 @@ const StaticCatalogDev = (() => {
 		let searchFieldsValues = findSearchFieldValues();
 		let searchData = {
 			"searchFieldsValues": searchFieldsValues,
-			"paginationFirst": false,
-			"paginationPrevious": false,
-			"paginationPage": 1,
-			"paginationNext": false,
-			"paginationLast": false,
-			"paginationResultsPerPage": 10
+			"searchPagination": searchPagination
 		};
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}
 
 	/* Back in page from search */
-	const resultsCallback = (lines, foundLinesCount, totalSearchMs) => {
+	const resultsCallback = (searchData, lines, foundLinesCount, totalSearchMs) => {
 
 		$searchingMessage.hide();
 
