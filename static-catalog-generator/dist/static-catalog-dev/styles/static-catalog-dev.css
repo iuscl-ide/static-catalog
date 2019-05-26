@@ -27,6 +27,11 @@ div[data-name=scp-name--tile-grid] {
 	padding-bottom: 0em;
 }
 
+.ptb0 {
+	padding-top: 0em !important;
+	padding-bottom: 0em !important;
+}
+
 /* .main.container { */
 /* 	margin-top: 7em; */
 /* } */

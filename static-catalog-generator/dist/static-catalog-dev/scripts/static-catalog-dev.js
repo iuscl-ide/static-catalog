@@ -44,6 +44,7 @@ const StaticCatalogDev = (() => {
 	const init = () => {
 		
 		/* semantic-ui stuff */
+		$('.ui.dropdown').dropdown();
 		$(".overlay").visibility({
 			type: "fixed"
 		});
