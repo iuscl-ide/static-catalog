@@ -29,8 +29,22 @@ const StaticCatalogDev = (() => {
 	var $successMessage;
 
 	var $resultsPanel;
-	
+
+	var $paginationPages;
 	var $paginationResultsPerPage;
+	var $paginationEllipsis1;
+	var $paginationEllipsis2;
+	var $paginationPage1;
+	var $paginationPage2;
+	var $paginationPage3;
+	var $paginationFirst;
+	var $paginationPrevious;
+	var $paginationNext;
+	var $paginationLast;
+	
+	var pageIndex = -1;
+	var lastPageIndex = -1;
+	
 	
 	var $filter_accordions;
 	var $expand_collapse_menu;
@@ -77,6 +91,16 @@ const StaticCatalogDev = (() => {
 		$resultsPanel = $("#scp-id--results");
 		
 		
+		$paginationPages = $("#scp-id--pagination-pages");
+		$paginationFirst = $("#scp-id--pagination-first");
+		$paginationPrevious = $("#scp-id--pagination-previous");
+		$paginationNext = $("#scp-id--pagination-next");
+		$paginationLast = $("#scp-id--pagination-last");
+		$paginationEllipsis1 = $("#scp-id--pagination-ellipsis-1");
+		$paginationEllipsis2 = $("#scp-id--pagination-ellipsis-2");
+		$paginationPage1 = $("#scp-id--pagination-page-1");
+		$paginationPage2 = $("#scp-id--pagination-page-2");
+		$paginationPage3 = $("#scp-id--pagination-page-3");
 		
 		
 		$filter_accordions = $(".ui.vertical.fluid.accordion.menu");
@@ -103,6 +127,51 @@ const StaticCatalogDev = (() => {
 				element.checked = false;
 			});
         });
+		
+		/* Page click */
+		let paginationPageClickEvent = ($paginationPage) => {
+			
+			return (clickEvent) => {
+				
+				if ($paginationPage.hasClass("active")) {
+					return;
+				}
+				let searchPagination = findSearchPagination();
+				searchPagination.paginationPage = parseInt($paginationPage.prop("data-page"), 10); 
+				apply(searchPagination);
+		    }
+		}
+		
+		$paginationPage1.click(paginationPageClickEvent($paginationPage1));
+		$paginationPage2.click(paginationPageClickEvent($paginationPage2));
+		$paginationPage3.click(paginationPageClickEvent($paginationPage3));
+		
+		$paginationFirst.click( clickEvent => {
+			
+			apply(findSearchPagination());
+        });
+
+		$paginationPrevious.click( clickEvent => {
+			
+			let searchPagination = findSearchPagination();
+			searchPagination.paginationPage = pageIndex - 1;
+			apply(searchPagination);
+        });
+
+		$paginationNext.click( clickEvent => {
+
+			let searchPagination = findSearchPagination();
+			searchPagination.paginationPage = pageIndex + 1;
+			apply(searchPagination);
+        });
+
+		$paginationLast.click( clickEvent => {
+
+			let searchPagination = findSearchPagination();
+			searchPagination.paginationPage = lastPageIndex;
+			apply(searchPagination);
+        });
+
 		
 		if (isDebug) {
 			$("#sc-id--debug-button").click( clickEvent => {
@@ -305,6 +374,8 @@ const StaticCatalogDev = (() => {
 	/* Back in page from search */
 	const resultsCallback = (searchData, lines, foundLinesCount, totalSearchMs) => {
 
+		/* Message */
+
 		$searchingMessage.hide();
 
 		if (foundLinesCount === 0) {
@@ -317,6 +388,135 @@ const StaticCatalogDev = (() => {
 		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
 		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
 		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
+
+		/* Pagination */
+		let linesPerPage = searchData.searchPagination.paginationResultsPerPage;
+		pageIndex = searchData.searchPagination.paginationPage;
+		lastPageIndex = Math.trunc(foundLinesCount / linesPerPage) + ((foundLinesCount % linesPerPage) > 0 ? 1 : 0);
+		
+		$paginationPages.html(lastPageIndex.toLocaleString());
+		//$("#scp-id--seconds").html(lastPageIndex.toLocaleString());
+		
+		if (pageIndex === 1) {
+			$paginationFirst.removeClass().addClass("disabled item");
+			$paginationPrevious.removeClass().addClass("disabled item");
+		}
+		else {
+			$paginationFirst.removeClass().addClass("item");
+			$paginationPrevious.removeClass().addClass("item");
+		}
+
+		if ((pageIndex === lastPageIndex) || (lastPageIndex === 3)) {
+			$paginationNext.removeClass().addClass("disabled item");
+			$paginationLast.removeClass().addClass("disabled item");
+		}
+		else {
+			$paginationNext.removeClass().addClass("item");
+			$paginationLast.removeClass().addClass("item");
+		}
+
+		if ((pageIndex === 1) || (pageIndex === 2))  {
+			$paginationEllipsis1.hide();
+		}
+		else {
+			$paginationEllipsis1.show();
+		}
+		
+		if ((pageIndex === lastPageIndex) || (pageIndex === (lastPageIndex - 1)) || (lastPageIndex === 3))  {
+			$paginationEllipsis2.hide();
+		}
+		else {
+			$paginationEllipsis2.show();
+		}
+
+		if (pageIndex === 1) {
+			$paginationPage1.removeClass().addClass("active item");
+			$paginationPage1.html("1");
+			$paginationPage1.prop("data-page", 1);
+			if (lastPageIndex >= 2) {
+				$paginationPage2.show();
+				$paginationPage2.removeClass().addClass("item");
+				$paginationPage2.html("2");
+				$paginationPage2.prop("data-page", 2);
+			}
+			else {
+				$paginationPage2.hide();
+			}
+			if (lastPageIndex >= 3) {
+				$paginationPage3.show();
+				$paginationPage3.removeClass().addClass("item");
+				$paginationPage3.html("3");
+				$paginationPage3.prop("data-page", 3);
+			}
+			else {
+				$paginationPage3.hide();
+			}
+		}
+		else {
+			$paginationPage1.removeClass().addClass("item");
+		}
+
+		if (pageIndex === lastPageIndex) {
+			if (lastPageIndex >= 3) {
+				$paginationPage3.show();
+				$paginationPage3.removeClass().addClass("active item");
+				$paginationPage3.html((lastPageIndex).toLocaleString());
+				$paginationPage3.prop("data-page", lastPageIndex);
+				
+				$paginationPage2.show();
+				$paginationPage2.removeClass().addClass("item");
+				$paginationPage2.html((lastPageIndex - 1).toLocaleString());
+				$paginationPage2.prop("data-page", lastPageIndex - 1);
+
+				$paginationPage1.show();
+				$paginationPage1.removeClass().addClass("item");
+				$paginationPage1.html((lastPageIndex - 2).toLocaleString());
+				$paginationPage1.prop("data-page", lastPageIndex - 2);
+			}
+			
+			if (lastPageIndex == 2) {
+				$paginationPage3.hide();
+
+				$paginationPage2.show();
+				$paginationPage2.removeClass().addClass("active item");
+				$paginationPage2.html("2");
+				$paginationPage2.prop("data-page", 2);
+
+				$paginationPage1.show();
+				$paginationPage1.removeClass().addClass("item");
+				$paginationPage1.html("1");
+				$paginationPage1.prop("data-page", 1);
+			}
+
+			if (lastPageIndex == 1) {
+				$paginationPage3.hide();
+				$paginationPage2.hide();
+
+				$paginationPage1.show();
+				$paginationPage1.removeClass().addClass("active item");
+				$paginationPage1.html("1");
+				$paginationPage1.prop("data-page", 1);
+			}
+		}
+		
+		if (!((pageIndex === 1) || (pageIndex === lastPageIndex))) {
+			$paginationPage1.show();
+			$paginationPage1.removeClass().addClass("item");
+			$paginationPage1.html((pageIndex - 1).toLocaleString());
+			$paginationPage1.prop("data-page", pageIndex - 1);
+
+			$paginationPage2.show();
+			$paginationPage2.removeClass().addClass("active item");
+			$paginationPage2.html((pageIndex).toLocaleString());
+			$paginationPage2.prop("data-page", pageIndex);
+
+			$paginationPage3.show();
+			$paginationPage3.removeClass().addClass("item");
+			$paginationPage3.html((pageIndex + 1).toLocaleString());
+			$paginationPage3.prop("data-page", pageIndex + 1);
+		}
+		
+		/* Result lines */
 		
 		for (let line of lines) {
 			let $tile = $tileTemplate.clone();

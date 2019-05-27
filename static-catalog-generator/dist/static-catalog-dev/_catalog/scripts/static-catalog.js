@@ -396,14 +396,17 @@ const StaticCatalog = (() => {
 		
 		/* Find result lines indexes */
 		let resultIndexLines = [];
+		let linesCnt = 0;
 		break_lines:
 		for (let indexLine of indexLines) {
+
+			let newLinesCnt = linesCnt + getLineCount(indexLine);
 			
-			let startOrEndIndexLine = getLine(indexLine);
-			if (startOrEndIndexLine >= firstSearchIndexLine) {
+			if (newLinesCnt >= firstSearchIndexLine) {
 				
 				let startIndexLine = getStartLine(indexLine);
 				let endIndexLine = getEndLine(indexLine);
+				
 				if (startIndexLine === 0) {
 					resultIndexLines.push(endIndexLine);
 					if (resultIndexLines.length === searchLinesCount) {
@@ -411,14 +414,59 @@ const StaticCatalog = (() => {
 					}
 				}
 				else {
-					for (let index = startIndexLine; index <= endIndexLine; index++) {
+					let delta = firstSearchIndexLine - linesCnt;
+					delta = delta > 0 ? (delta - 1) : 0;
+					for (let index = startIndexLine + delta; index <= endIndexLine; index++) {
 						resultIndexLines.push(index);
 						if (resultIndexLines.length === searchLinesCount) {
 							break break_lines;
 						}
 					}
 				}
+				
 			}
+			linesCnt = newLinesCnt;
+
+//			if (startIndexLine === 0) {
+//				if (endIndexLine >= firstSearchIndexLine) {
+//					resultIndexLines.push(endIndexLine);
+//					if (resultIndexLines.length === searchLinesCount) {
+//						break break_lines;
+//					}
+//				}
+//			}
+//			else if (startIndexLine >= firstSearchIndexLine) 
+//			{
+//				for (let index = startIndexLine; index <= endIndexLine; index++) {
+//					resultIndexLines.push(index);
+//					if (resultIndexLines.length === searchLinesCount) {
+//						break break_lines;
+//					}
+//				}
+//			}
+//			
+//			
+//			
+//			let startOrEndIndexLine = getLine(indexLine);
+//			if (startOrEndIndexLine >= firstSearchIndexLine) {
+//				
+//				let startIndexLine = getStartLine(indexLine);
+//				let endIndexLine = getEndLine(indexLine);
+//				if (startIndexLine === 0) {
+//					resultIndexLines.push(endIndexLine);
+//					if (resultIndexLines.length === searchLinesCount) {
+//						break break_lines;
+//					}
+//				}
+//				else {
+//					for (let index = startIndexLine; index <= endIndexLine; index++) {
+//						resultIndexLines.push(index);
+//						if (resultIndexLines.length === searchLinesCount) {
+//							break break_lines;
+//						}
+//					}
+//				}
+//			}
 		}
 		c("result index lines", resultIndexLines);
 
