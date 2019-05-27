@@ -53,9 +53,6 @@ const StaticCatalogDev = (() => {
 	var filterCountClickEvent;
 	var filterCountLabelClickEvent;
 
-	/* debug */
-	var isDebug = true;
-	
 	/* On jQuery document loaded completely */
 	const init = () => {
 		
@@ -172,17 +169,14 @@ const StaticCatalogDev = (() => {
 			apply(searchPagination);
         });
 
-		
-		if (isDebug) {
-			$("#sc-id--debug-button").click( clickEvent => {
-				
-				window.scrollTo(0, 0);
-				$filterCheckboxes.each( (index, element) => {
-					element.checked = true;
-					element.value = element.value.toLocaleString();
-				});
-	        });
-		}
+		$("#sc-id--debug-button").click( clickEvent => {
+			
+			window.scrollTo(0, 0);
+			$filterCheckboxes.each( (index, element) => {
+				element.checked = true;
+				element.value = element.value.toLocaleString();
+			});
+        });
 		
 		$expand_collapse_menu.click( clickEvent => {
 			
@@ -210,13 +204,6 @@ const StaticCatalogDev = (() => {
 			displayFiltersCount();
         });
 
-//		$paginationResultsPerPage.dropdown({
-//			 onChange: function(value, text, $selectedItem) {
-//				
-//				console.log("text");
-//			}
-//		});
-		
 		const $see_as_tiles = $("#scp-id--see-as-tiles");
 		const $see_as_list = $("#scp-id--see-as-list");
 		
@@ -331,10 +318,10 @@ const StaticCatalogDev = (() => {
 			
 			let fieldName = searchFieldsValue.field;
 			let pageField = pageFields[fieldName];
-			$filter_count.find("a[name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(fieldName));
+			$filter_count.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(fieldName));
 			let sumDetail = searchFieldsValue.values.length + " (" + pageField.values.length + ")";
-			$filter_count.find("div[name=scp-name--filter-count-sum]").html(sumDetail);
-			$filter_count.find("i[name=scp-name--filter-count-close]").click(filterCountClickEvent(fieldName));
+			$filter_count.find("div[data-name=scp-name--filter-count-sum]").html(sumDetail);
+			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountClickEvent(fieldName));
 		}
 	}
 
@@ -343,11 +330,7 @@ const StaticCatalogDev = (() => {
 
 		let paginationResultsPerPage = parseInt($paginationResultsPerPage.text(), 10);
 		return {
-			"paginationFirst": false,
-			"paginationPrevious": false,
 			"paginationPage": 1,
-			"paginationNext": false,
-			"paginationLast": false,
 			"paginationResultsPerPage": paginationResultsPerPage
 		};
 	}
@@ -527,8 +510,8 @@ const StaticCatalogDev = (() => {
 			for (let lineField in line) {
 				let $tileField = $tileFieldTemplate.clone();
 				$tileField.appendTo($tileFields);
-				$tileField.find("span[name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
-				$tileField.find("span[name=scp-name--tile-field-value]").html(line[lineField]);
+				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
+				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[lineField]);
 			}
 		}
 		$resultsPanel.show();

@@ -426,47 +426,6 @@ const StaticCatalog = (() => {
 				
 			}
 			linesCnt = newLinesCnt;
-
-//			if (startIndexLine === 0) {
-//				if (endIndexLine >= firstSearchIndexLine) {
-//					resultIndexLines.push(endIndexLine);
-//					if (resultIndexLines.length === searchLinesCount) {
-//						break break_lines;
-//					}
-//				}
-//			}
-//			else if (startIndexLine >= firstSearchIndexLine) 
-//			{
-//				for (let index = startIndexLine; index <= endIndexLine; index++) {
-//					resultIndexLines.push(index);
-//					if (resultIndexLines.length === searchLinesCount) {
-//						break break_lines;
-//					}
-//				}
-//			}
-//			
-//			
-//			
-//			let startOrEndIndexLine = getLine(indexLine);
-//			if (startOrEndIndexLine >= firstSearchIndexLine) {
-//				
-//				let startIndexLine = getStartLine(indexLine);
-//				let endIndexLine = getEndLine(indexLine);
-//				if (startIndexLine === 0) {
-//					resultIndexLines.push(endIndexLine);
-//					if (resultIndexLines.length === searchLinesCount) {
-//						break break_lines;
-//					}
-//				}
-//				else {
-//					for (let index = startIndexLine; index <= endIndexLine; index++) {
-//						resultIndexLines.push(index);
-//						if (resultIndexLines.length === searchLinesCount) {
-//							break break_lines;
-//						}
-//					}
-//				}
-//			}
 		}
 		c("result index lines", resultIndexLines);
 
