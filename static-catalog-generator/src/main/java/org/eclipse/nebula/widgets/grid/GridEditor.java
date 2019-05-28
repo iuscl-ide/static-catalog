@@ -182,7 +182,7 @@ public class GridEditor extends ControlEditor
 
         if (grabHorizontal)
         {
-            editorRect.width = Math.max(cell.width, minimumWidth);
+            editorRect.width = Math.max(cell.width - 1, minimumWidth);
         }
 
         if (grabVertical)
@@ -192,7 +192,7 @@ public class GridEditor extends ControlEditor
 
         if (horizontalAlignment == SWT.RIGHT)
         {
-            editorRect.x += cell.width - editorRect.width;
+            editorRect.x += (cell.width - editorRect.width);
         }
         else if (horizontalAlignment == SWT.LEFT)
         {

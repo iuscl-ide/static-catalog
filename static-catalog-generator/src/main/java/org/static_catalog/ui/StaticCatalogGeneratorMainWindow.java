@@ -1069,40 +1069,40 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(190);
+	    fieldGridColumn.setWidth(150);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Label");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(190);
+	    fieldGridColumn.setWidth(160);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(120);
+	    fieldGridColumn.setWidth(80);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CHECK | SWT.CENTER);
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setWidth(90);
 	    fieldGridColumn.setCheckable(true);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Display Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(120);
+	    fieldGridColumn.setWidth(100);
 	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Max Display Values");
+		fieldGridColumn.setText("Max");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
-	    fieldGridColumn.setWidth(120);
+	    fieldGridColumn.setWidth(40);
 	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-		fieldGridColumn.setText("Min Display Values");
+		fieldGridColumn.setText("Min");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);	    
-	    fieldGridColumn.setWidth(120);
+	    fieldGridColumn.setWidth(40);
 	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Format");
@@ -1189,7 +1189,7 @@ public class StaticCatalogGeneratorMainWindow {
 					maxDisplayValuesText.setText(maxDisplayValues == null ? "" : maxDisplayValues + "");
 					
 					GridEditor maxDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
-					maxDisplayValuesTextGridEditor.minimumWidth = 50;
+					maxDisplayValuesTextGridEditor.minimumWidth = 35;
 					maxDisplayValuesTextGridEditor.grabHorizontal = true;
 					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, 6);
 					gridItem.setData("maxDisplayValuesText", maxDisplayValuesText);
@@ -1200,7 +1200,7 @@ public class StaticCatalogGeneratorMainWindow {
 					minDisplayValuesText.setText(minDisplayValues == null ? "" : minDisplayValues + "");
 					
 					GridEditor minDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
-					minDisplayValuesTextGridEditor.minimumWidth = 50;
+					minDisplayValuesTextGridEditor.minimumWidth = 35;
 					minDisplayValuesTextGridEditor.grabHorizontal = true;
 					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, 7);
 					gridItem.setData("minDisplayValuesText", minDisplayValuesText);
