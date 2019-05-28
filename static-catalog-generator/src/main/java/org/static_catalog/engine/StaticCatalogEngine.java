@@ -635,7 +635,7 @@ public class StaticCatalogEngine {
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(exceptionKey);
-				filterValue.setLabel(exceptionKey); // TODO
+				filterValue.setLabel(exceptionKey);	
 				filterValue.setCount(exceptions.get(exceptionKey));
 				
 				if (exceptionsIndex < moreExceptionsIndex) {
@@ -663,7 +663,20 @@ public class StaticCatalogEngine {
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(valueKey);
-				filterValue.setLabel(valueKey); // TODO
+
+				if (configurationField.getTransformFormat() != null) {
+					if (fieldType.equals(TYPE_DATE)) {
+						DateTime dateTime = DateTime.parse(valueKey);
+						filterValue.setLabel(dateTime.toString(configurationField.getTransformFormat()));
+					}
+					else {
+						filterValue.setLabel(valueKey);
+					}
+				}
+				else {
+					filterValue.setLabel(valueKey);
+				}
+				
 				filterValue.setCount(values.get(valueKey));
 				
 				if (valuesIndex < moreValuesIndex) {

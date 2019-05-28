@@ -1,0 +1,334 @@
+{
+  "description" : "Sample 5: schedule-real-time.csv - <a href=\"https://github.com/GerHobbelt/Developing-a-D3.js-Edge/tree/master/data_sources/geneva\"  target=\"_blank\">geneva-transport-2012</a>",
+  "fields" : [ {
+    "name" : "date",
+    "type" : "date",
+    "label" : "Date",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : "EEEE, MMMM dd yyyy",
+    "transformValues" : null
+  }, {
+    "name" : "routeCode",
+    "type" : "text",
+    "label" : "Route code",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "serviceVehicle",
+    "type" : "text",
+    "label" : "Service vehicle",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "tripId",
+    "type" : "long",
+    "label" : "Trip ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "vehicleId",
+    "type" : "long",
+    "label" : "Vehicle ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "patternId",
+    "type" : "long",
+    "label" : "Pattern ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "tripDirection",
+    "type" : "text",
+    "label" : "Trip direction",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "tripLength",
+    "type" : "long",
+    "label" : "Trip length",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "stopSequenceNr",
+    "type" : "long",
+    "label" : "Stop sequence Nr",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "stopCode",
+    "type" : "text",
+    "label" : "Stop code",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "stopLength",
+    "type" : "long",
+    "label" : "Stop length",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "stopTimeSchedule",
+    "type" : "date",
+    "label" : "Stop time schedule",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "stopTimeReal",
+    "type" : "date",
+    "label" : "Stop time real",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountTripUp",
+    "type" : "long",
+    "label" : "Passenger count trip up",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountTripDown",
+    "type" : "long",
+    "label" : "Passenger count trip down",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountStopUp",
+    "type" : "long",
+    "label" : "Passenger count stop up",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountStopDown",
+    "type" : "long",
+    "label" : "Passenger count stop down",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerLoadStop",
+    "type" : "long",
+    "label" : "Passenger load stop",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor1Up",
+    "type" : "long",
+    "label" : "Passenger count door 1 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor1Down",
+    "type" : "long",
+    "label" : "Passenger count door 1 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor2Up",
+    "type" : "long",
+    "label" : "Passenger count door 2 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor2Down",
+    "type" : "long",
+    "label" : "Passenger count door 2 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor3Up",
+    "type" : "long",
+    "label" : "Passenger count door 3 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor3Down",
+    "type" : "long",
+    "label" : "Passenger count door 3 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor4Up",
+    "type" : "long",
+    "label" : "Passenger count door 4 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor4Down",
+    "type" : "long",
+    "label" : "Passenger count door 4 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor5Up",
+    "type" : "long",
+    "label" : "Passenger count door 5 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor5Down",
+    "type" : "long",
+    "label" : "Passenger count door 5 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor6Up",
+    "type" : "long",
+    "label" : "Passenger count door 6 up",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "passengerCountDoor6Down",
+    "type" : "long",
+    "label" : "Passenger count door 6 down",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "isRedirection",
+    "type" : "text",
+    "label" : "Is redirection",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "isDelocalisation",
+    "type" : "text",
+    "label" : "Is delocalisation",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "name" : "isRelocalisation",
+    "type" : "text",
+    "label" : "Is relocalisation",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  } ]
+}

@@ -1107,7 +1107,7 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Format");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(120);
+	    fieldGridColumn.setWidth(140);
 	    
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Transform Values");

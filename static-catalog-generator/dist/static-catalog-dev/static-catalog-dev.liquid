@@ -77,7 +77,7 @@
 		</div>
 		<div class="ui black segment">
 			<div class="ui divided grid">
-				<div class="thirteen wide column">
+				<div class="thirteen wide column" style="min-height: 100px;">
 					<div class="ui gray labels">
 						<div class="ui label">
 							Total lines
@@ -131,7 +131,10 @@
 										<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
-										<div class="ui basic horizontal label">{{ field_value.count | w }}</div>
+										<div class="ui basic horizontal label"
+											{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top center"{% endif %}>
+											{{ field_value.count | w }}
+										</div>
 									</div>
 								</div>
 								{% endfor %} {% if field.has_more_values or field.has_more_exception_values %}
