@@ -6,7 +6,6 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /** Pop-up composite in a shell */
@@ -26,7 +25,7 @@ public class PopupComposite extends Composite {
 		shell.setLayout(ui.createMarginsGridLayout(1));
 		//shell.setLayout(ui.createGridLayout());
 		
-		setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+		//setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 		shell.addShellListener(new ActivationListener());
 		//setLayout(createLayout());
 		setLayoutData(ui.createFillBothGridData());

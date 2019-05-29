@@ -576,6 +576,17 @@ public class StaticCatalogEngine {
 			
 			String fieldName = pageField.getName();
 			StaticCatalogConfigurationField configurationField = nameFilters.get(fieldName);
+			String transformFormat = configurationField.getTransformFormat();
+			String transformValues = configurationField.getTransformValues();
+			HashMap<String, String> transformValuesLabels = new HashMap<>(); 
+			if (transformValues != null) {
+				String[] transformValuesKeysLabels = transformValues.split(";");
+				for (String transformValuesKeyLabel : transformValuesKeysLabels) {
+					transformValuesKeyLabel = transformValuesKeyLabel.trim();
+					String[] transformValueKeyLabel = transformValuesKeyLabel.split("="); 
+					transformValuesLabels.put(transformValueKeyLabel[0].trim(), transformValueKeyLabel[1].trim());
+				}
+			}
 			
 			HashMap<String, Long> exceptions = uniqueExceptionValuesWithCount.get(fieldName);
 			HashMap<String, Long> values = uniqueValuesWithCount.get(fieldName);
@@ -635,7 +646,14 @@ public class StaticCatalogEngine {
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(exceptionKey);
-				filterValue.setLabel(exceptionKey);	
+				
+				if (transformValues != null) {
+					filterValue.setLabel(transformValuesLabels.get(exceptionKey));
+				}
+				else {
+					filterValue.setLabel(exceptionKey);
+				}
+
 				filterValue.setCount(exceptions.get(exceptionKey));
 				
 				if (exceptionsIndex < moreExceptionsIndex) {
@@ -664,17 +682,22 @@ public class StaticCatalogEngine {
 				filterValue.setIdentifier(valueIdentifier);
 				filterValue.setName(valueKey);
 
-				if (configurationField.getTransformFormat() != null) {
+				if (transformFormat != null) {
 					if (fieldType.equals(TYPE_DATE)) {
 						DateTime dateTime = DateTime.parse(valueKey);
-						filterValue.setLabel(dateTime.toString(configurationField.getTransformFormat()));
+						filterValue.setLabel(dateTime.toString(transformFormat));
 					}
 					else {
 						filterValue.setLabel(valueKey);
 					}
 				}
 				else {
-					filterValue.setLabel(valueKey);
+					if (transformValues != null) {
+						filterValue.setLabel(transformValuesLabels.get(valueKey));
+					}
+					else {
+						filterValue.setLabel(valueKey);
+					}
 				}
 				
 				filterValue.setCount(values.get(valueKey));

@@ -30,8 +30,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -884,7 +886,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 				GridItem gridItem = csvExamineGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
 				
-				for (int columnIndex = 0; columnIndex < csvExamineGrid.getColumnCount(); columnIndex++) {
+				for (int columnIndex = 3; columnIndex <= 4; columnIndex++) {
 					
 					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
 						
@@ -1114,6 +1116,37 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(120);
 
+		MouseAdapter transformValuesTextMouseAdapter = new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent mouseEvent) {
+
+				Point gridP = filtersGrid.toDisplay(0, 0);
+				final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
+				popupComposite.setSize(480, 480);
+				popupComposite.setLocation(
+						gridP.x + ((filtersGrid.getSize().x - popupComposite.getSize().x) / 2),
+						gridP.y + ((filtersGrid.getSize().y - popupComposite.getSize().y) / 2));
+
+				final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+				popupCompositeText.setBackground(whiteColor);
+				final Text text = (Text)mouseEvent.widget;
+				popupCompositeText.setText(text.getText());
+				popupCompositeText.setLayoutData(ui.createFillBothGridData());
+				popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
+				popupCompositeText.addListener(SWT.Traverse, new Listener() {
+			        @Override
+			        public void handleEvent(Event event) {
+			        	
+			            if (event.detail == SWT.TRAVERSE_RETURN) {
+			            	text.setText(popupCompositeText.getText());
+			            	popupComposite.hide();
+			            }
+			        }
+			    });
+				
+				popupComposite.show(popupComposite.getLocation());
+			}
+		};
 	    
 	    loadFilters = new LoadFilters() {
 			@Override
@@ -1138,10 +1171,12 @@ public class StaticCatalogGeneratorMainWindow {
 					
 					GridItem gridItem = new GridItem(filtersGrid, SWT.NONE);
 					
-					index++;
-					gridItem.setText(0, "" + index);
+					int col = 0;
 					
-					gridItem.setText(1, staticCatalogField.getName());
+					index++;
+					gridItem.setText(col++, "" + index);
+					
+					gridItem.setText(col++, staticCatalogField.getName());
 					//gridItem.setText(2, staticCatalogField.getType());
 					
 
@@ -1151,7 +1186,7 @@ public class StaticCatalogGeneratorMainWindow {
 					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
 					labelTextGridEditor.minimumWidth = 50;
 					labelTextGridEditor.grabHorizontal = true;
-					labelTextGridEditor.setEditor(labelText, gridItem, 2);
+					labelTextGridEditor.setEditor(labelText, gridItem, col++);
 					gridItem.setData("labelText", labelText);
 					
 
@@ -1164,11 +1199,12 @@ public class StaticCatalogGeneratorMainWindow {
 				    GridEditor cComboGridEditor = new GridEditor(filtersGrid);
 				    cComboGridEditor.minimumWidth = 50;
 				    cComboGridEditor.grabHorizontal = true;
-				    cComboGridEditor.setEditor(cCombo, gridItem, 3);
+				    cComboGridEditor.setEditor(cCombo, gridItem, col++);
 				    gridItem.setData("typeCCombo", cCombo);
 				    
 				    
-					gridItem.setChecked(4, staticCatalogField.getIsFilter());
+				    boolean isFilter = staticCatalogField.getIsFilter();
+					gridItem.setChecked(col++, isFilter);
 					
 					
 					CCombo displayTypeCCombo = new CCombo(filtersGrid, SWT.NONE);
@@ -1180,9 +1216,9 @@ public class StaticCatalogGeneratorMainWindow {
 				    GridEditor displayTypeGridEditor = new GridEditor(filtersGrid);
 				    displayTypeGridEditor.minimumWidth = 50;
 				    displayTypeGridEditor.grabHorizontal = true;
-				    displayTypeGridEditor.setEditor(displayTypeCCombo, gridItem, 5);
+				    displayTypeGridEditor.setEditor(displayTypeCCombo, gridItem, col++);
 				    gridItem.setData("displayTypeCCombo", displayTypeCCombo);
-				    
+
 				    
 					Text maxDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
 					Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
@@ -1191,7 +1227,7 @@ public class StaticCatalogGeneratorMainWindow {
 					GridEditor maxDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
 					maxDisplayValuesTextGridEditor.minimumWidth = 35;
 					maxDisplayValuesTextGridEditor.grabHorizontal = true;
-					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, 6);
+					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, col++);
 					gridItem.setData("maxDisplayValuesText", maxDisplayValuesText);
 
 					
@@ -1202,7 +1238,7 @@ public class StaticCatalogGeneratorMainWindow {
 					GridEditor minDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
 					minDisplayValuesTextGridEditor.minimumWidth = 35;
 					minDisplayValuesTextGridEditor.grabHorizontal = true;
-					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, 7);
+					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, col++);
 					gridItem.setData("minDisplayValuesText", minDisplayValuesText);
 
 					
@@ -1213,18 +1249,20 @@ public class StaticCatalogGeneratorMainWindow {
 					GridEditor transformFormatTextGridEditor = new GridEditor(filtersGrid);
 					transformFormatTextGridEditor.minimumWidth = 50;
 					transformFormatTextGridEditor.grabHorizontal = true;
-					transformFormatTextGridEditor.setEditor(transformFormatText, gridItem, 8);
+					transformFormatTextGridEditor.setEditor(transformFormatText, gridItem, col++);
 					gridItem.setData("transformFormatText", transformFormatText);
 
 					
 					Text transformValuesText = new Text(filtersGrid, SWT.NONE);
 					String transformValues = staticCatalogField.getTransformValues();
 					transformValuesText.setText(transformValues == null ? "" : transformValues);
+					transformValuesText.addMouseListener(transformValuesTextMouseAdapter);
+					
 					
 					GridEditor transformValuesTextGridEditor = new GridEditor(filtersGrid);
 					transformValuesTextGridEditor.minimumWidth = 50;
 					transformValuesTextGridEditor.grabHorizontal = true;
-					transformValuesTextGridEditor.setEditor(transformValuesText, gridItem, 9);
+					transformValuesTextGridEditor.setEditor(transformValuesText, gridItem, col++);
 					gridItem.setData("transformValuesText", transformValuesText);
 				}
 			}
