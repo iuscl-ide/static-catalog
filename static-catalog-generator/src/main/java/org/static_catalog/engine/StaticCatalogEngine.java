@@ -439,6 +439,7 @@ public class StaticCatalogEngine {
 			String filtersFieldName = filtersField.getName();
 			
 			StaticCatalogPageField newPageField = new StaticCatalogPageField();
+			newPageField.setIndexInLine(filtersField.getIndexInLine());
 			newPageField.setLabel(filtersField.getLabel());
 			newPageField.setName(filtersFieldName);
 			filtersFieldIndex++;
@@ -802,12 +803,12 @@ public class StaticCatalogEngine {
 		ArrayList<StaticCatalogPageField> pageFields = page.getFields();
 		
 		int lineLength = pageFields.size();
-		ArrayList<Integer> valuesIndexes = new ArrayList<>();
+		ArrayList<Integer> filterIndexes = new ArrayList<>();
 		for (int index = 0; index < lineLength; index++) {
 			StaticCatalogPageField pageField = pageFields.get(index);
 			if (pageField.getFilter()) {
 				/* Field is index value */
-				valuesIndexes.add(index);
+				filterIndexes.add(index);
 
 				/* All filter values */
 				LinkedHashMap<String, ArrayList<Long>> filterValues = new LinkedHashMap<>(); 
@@ -879,13 +880,14 @@ public class StaticCatalogEngine {
 			blockLineIndex++;
 			
 			/* Indexes */
-			for (int index : valuesIndexes) {
+			for (int index : filterIndexes) {
 				
-				String fieldValue = csvLine[index];
+				StaticCatalogPageField pageField = pageFields.get(index);
+				String fieldValue = csvLine[pageField.getIndexInLine() - 1];
 				if (fieldValue == null) {
 					fieldValue = "NULL";
 				}
-				String fieldName = pageFields.get(index).getName();
+				String fieldName = pageField.getName();
 				LinkedHashMap<String, ArrayList<Long>> valueLines = nameValuesLines.get(fieldName);
 				ArrayList<Long> lines = valueLines.get(fieldValue);
 				

@@ -8,6 +8,8 @@ public class StaticCatalogPageField {
 
 	private String identifier;
 	
+	private int indexInLine;
+	
 	private String name;
 	
 	private String type;
@@ -50,6 +52,14 @@ public class StaticCatalogPageField {
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+
+	public int getIndexInLine() {
+		return indexInLine;
+	}
+
+	public void setIndexInLine(int indexInLine) {
+		this.indexInLine = indexInLine;
 	}
 
 	public String getName() {

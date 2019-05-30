@@ -995,10 +995,13 @@ public class StaticCatalogGeneratorMainWindow {
 
 				/* Create filter fields */
 				StaticCatalogConfigurationFields staticCatalogFilters = new StaticCatalogConfigurationFields();
+				int indexInLine = 0; 
 				for (GridItem gridItem : csvExamineGrid.getItems()) {
 					
 					StaticCatalogConfigurationField staticCatalogField = new StaticCatalogConfigurationField();
 					String name = gridItem.getText(0);
+					
+					staticCatalogField.setIndexInLine(++indexInLine);
 					staticCatalogField.setName(name);
 
 					staticCatalogField.setLabel(U.makeLabel(name));
@@ -1067,6 +1070,12 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
 	    fieldGridColumn.setWidth(50);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
+		fieldGridColumn.setText("Index in Line");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setAlignment(SWT.RIGHT);
+	    fieldGridColumn.setWidth(100);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
@@ -1155,6 +1164,8 @@ public class StaticCatalogGeneratorMainWindow {
 				descriptionText.setText(staticCatalogFilters.getDescription());
 				
 				for (GridItem gridItem : filtersGrid.getItems()) {
+					((Text) gridItem.getData("indexInLineText")).dispose();
+					((Composite) gridItem.getData("indexInLineUpDown")).dispose();
 					((Text) gridItem.getData("labelText")).dispose();
 					((CCombo) gridItem.getData("typeCCombo")).dispose();
 					((CCombo) gridItem.getData("displayTypeCCombo")).dispose();
@@ -1175,6 +1186,65 @@ public class StaticCatalogGeneratorMainWindow {
 					
 					index++;
 					gridItem.setText(col++, "" + index);
+					
+
+					Composite indexInLineUpDown = new Composite(filtersGrid, SWT.NONE);
+					indexInLineUpDown.setLayout(ui.createColumnsGridLayout(3));
+					
+					Text indexInLineText = new Text(indexInLineUpDown, SWT.READ_ONLY | SWT.RIGHT);
+					indexInLineText.setLayoutData(ui.createFillBothGridData());
+					indexInLineText.setBackground(whiteColor);
+					indexInLineText.setText("" + staticCatalogField.getIndexInLine());
+					gridItem.setData("indexInLineText", indexInLineText);
+
+					Button upButton = new Button(indexInLineUpDown, SWT.FLAT);
+					upButton.setText("\u25B2");
+					GridData upButtonGridData = ui.createWidthGridData(24);
+					upButtonGridData.heightHint = gridItem.getHeight();
+					upButton.setLayoutData(upButtonGridData);
+					upButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent selectionEvent) {
+
+							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
+							int index = fields.indexOf(staticCatalogField);
+							if (index > 0) {
+								fields.remove(index);
+								fields.add(index - 1, staticCatalogField);
+								loadFilters(staticCatalogFilters);
+							}
+						}
+					});
+					
+					Button downButton = new Button(indexInLineUpDown, SWT.FLAT);
+					downButton.setText("\u25BC");
+					GridData downButtonGridData = ui.createWidthGridData(24);
+					downButtonGridData.heightHint = gridItem.getHeight();
+					downButton.setLayoutData(downButtonGridData);
+					downButton.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent selectionEvent) {
+
+							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
+							int index = fields.indexOf(staticCatalogField);
+							if (index < (fields.size() - 1)) {
+								fields.remove(index);
+								fields.add(index + 1, staticCatalogField);
+								loadFilters(staticCatalogFilters);
+							}
+						}
+					});
+
+					GridEditor indexInLineUpDownGridEditor = new GridEditor(filtersGrid);
+					indexInLineUpDownGridEditor.minimumWidth = 50;
+					indexInLineUpDownGridEditor.grabHorizontal = true;
+					indexInLineUpDownGridEditor.setEditor(indexInLineUpDown, gridItem, col++);
+					gridItem.setData("indexInLineUpDown", indexInLineUpDown);
+					
+					
+					//gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
+					
+					
 					
 					gridItem.setText(col++, staticCatalogField.getName());
 					//gridItem.setText(2, staticCatalogField.getType());
@@ -1287,13 +1357,17 @@ public class StaticCatalogGeneratorMainWindow {
 				filtersDefinition.setDescription(descriptionText.getText());
 				for (GridItem gridItem : filtersGrid.getItems()) {
 					StaticCatalogConfigurationField field = new StaticCatalogConfigurationField();
-					field.setName(gridItem.getText(1));
+
+					String indexInLine = ((Text) gridItem.getData("indexInLineText")).getText();
+					field.setIndexInLine(Integer.parseInt(indexInLine));
+
+					field.setName(gridItem.getText(2));
 
 					field.setLabel(((Text) gridItem.getData("labelText")).getText());
 
 					field.setType(nameTypes.get(((CCombo) gridItem.getData("typeCCombo")).getText()));
 
-					field.setIsFilter(gridItem.getChecked(4));
+					field.setIsFilter(gridItem.getChecked(5));
 					
 					field.setDisplayType(displayNameTypes.get(((CCombo) gridItem.getData("displayTypeCCombo")).getText()));
 					

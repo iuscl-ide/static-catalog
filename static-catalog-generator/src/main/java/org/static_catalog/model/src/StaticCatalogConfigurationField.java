@@ -4,6 +4,8 @@ package org.static_catalog.model.src;
 /** Generation structure */
 public class StaticCatalogConfigurationField {
 
+	private Integer indexInLine;
+	
 	private String name;
 	
 	private String type;
@@ -23,6 +25,14 @@ public class StaticCatalogConfigurationField {
 	private String transformValues;
 
 	
+	public Integer getIndexInLine() {
+		return indexInLine;
+	}
+
+	public void setIndexInLine(Integer indexInLine) {
+		this.indexInLine = indexInLine;
+	}
+
 	public String getName() {
 		return name;
 	}

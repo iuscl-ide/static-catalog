@@ -12,6 +12,7 @@ const StaticCatalogDev = (() => {
 	var pageFieldsFilters;
 	var pageFields = {};
 	var pageFieldLabels = [];
+	var pageFieldIndexes = [];
 
 	var $filterCheckboxes;
 	var $filters_count;
@@ -267,7 +268,9 @@ const StaticCatalogDev = (() => {
 				let fieldIndex = 0;
 				pageFieldsFilters.fields.map( (pageField) => {
 					pageFields[pageField.name] = pageField;
-					pageFieldLabels[fieldIndex++] = pageField.label;
+					pageFieldLabels[fieldIndex] = pageField.label;
+					pageFieldIndexes[fieldIndex] = pageField.indexInLine;
+					fieldIndex++;
 				});
 				//console.log(pageFieldsFilters);
 				displayFiltersCount();				
@@ -511,7 +514,7 @@ const StaticCatalogDev = (() => {
 				let $tileField = $tileFieldTemplate.clone();
 				$tileField.appendTo($tileFields);
 				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
-				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[lineField]);
+				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldIndexes[lineField] - 1]);
 			}
 		}
 		$resultsPanel.show();

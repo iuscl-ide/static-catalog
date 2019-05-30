@@ -69,7 +69,7 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : "A = Aller; R = Retour"
   }, {
     "name" : "tripLength",
     "type" : "long",
@@ -309,7 +309,7 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : "Y = Yes; N = No"
   }, {
     "name" : "isDelocalisation",
     "type" : "text",
@@ -319,7 +319,7 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : "Y = Yes; N = No"
   }, {
     "name" : "isRelocalisation",
     "type" : "text",
@@ -329,6 +329,6 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : "Y = Yes; N = No"
   } ]
 }
