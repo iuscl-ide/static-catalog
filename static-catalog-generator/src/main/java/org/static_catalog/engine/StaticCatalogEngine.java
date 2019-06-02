@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 import org.eclipse.swt.program.Program;
@@ -167,8 +166,7 @@ public class StaticCatalogEngine {
 	
 	/** Load examine CSV */
 	public static void loadExamineCsv(String csvCompleteFileName, StaticCatalogExamineFields staticCatalogExamine,
-			long maxUniqueValues, int maxExceptions, boolean useFirstLineAsHeader,
-			AtomicBoolean doLoop, LoopProgress loopProgress) {
+			long maxUniqueValues, int maxExceptions, boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		long start = System.currentTimeMillis();
 		

@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
-import org.eclipse.nebula.widgets.grid.GridEditor;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTFontUtils;
@@ -128,8 +126,8 @@ public class StaticCatalogGeneratorMainWindow {
 		p = P.load(this, applicationRootFolder + "/static-catalog.config.json");
 	}
 
-	/** Concurrent */
-	private AtomicBoolean doLoop = new AtomicBoolean(true);
+//	/** Concurrent */
+//	private AtomicBoolean doLoop = new AtomicBoolean(true);
 	
 	/** Main display */
 	private Display display;
@@ -156,6 +154,9 @@ public class StaticCatalogGeneratorMainWindow {
 	
 	/** Load filters */
 	private LoadFilters loadFilters;
+	
+	/** Field edit window */
+	private StaticCatalogGeneratorFieldEditWindow fieldEditWindow = new StaticCatalogGeneratorFieldEditWindow();
 	
 	/** Main application loop in the window */
 	public void runMainWindow() {
@@ -246,6 +247,9 @@ public class StaticCatalogGeneratorMainWindow {
 		createFiltersTab(mainComposites.get(2));
 	    /* Generate */
 		createGenerateTab(mainComposites.get(3));
+		
+		/* Field edit */
+		fieldEditWindow.createFieldEditWindow(mainShell);
 		
 		/* Run */
 		mainShell.open();
@@ -927,7 +931,6 @@ public class StaticCatalogGeneratorMainWindow {
 				Integer.parseInt(filterElementsMaxText.getText()),
 				Integer.parseInt(typeMaxExceptionsText.getText()),
 				useFirstLineAsHeaderCheckBox.getSelection(),
-				doLoop,
 				new LoopProgress() {
 					@Override
 					public void doProgress(String progressMessage) {
@@ -1059,11 +1062,11 @@ public class StaticCatalogGeneratorMainWindow {
 		final Text descriptionText = new Text(fieldsComposite, SWT.SINGLE | SWT.BORDER);
 		descriptionText.setLayoutData(ui.createFillHorizontalGridData());
 		
-		final Grid filtersGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
+		final Grid filtersGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		filtersGrid.setLayoutData(ui.createFillBothGridData());
 		filtersGrid.setHeaderVisible(true);
 		filtersGrid.setLinesVisible(true);
-		filtersGrid.setSelectionEnabled(false);
+//		filtersGrid.setSelectionEnabled(false);
 		
 		GridColumn fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Index");
@@ -1092,7 +1095,7 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(80);
 
-		fieldGridColumn = new GridColumn(filtersGrid, SWT.CHECK | SWT.CENTER);
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(90);
@@ -1125,37 +1128,74 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(120);
 
-		MouseAdapter transformValuesTextMouseAdapter = new MouseAdapter() {
+	    
+	    filtersGrid.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent mouseEvent) {
 
-				Point gridP = filtersGrid.toDisplay(0, 0);
-				final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
-				popupComposite.setSize(480, 480);
-				popupComposite.setLocation(
-						gridP.x + ((filtersGrid.getSize().x - popupComposite.getSize().x) / 2),
-						gridP.y + ((filtersGrid.getSize().y - popupComposite.getSize().y) / 2));
-
-				final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-				popupCompositeText.setBackground(whiteColor);
-				final Text text = (Text)mouseEvent.widget;
-				popupCompositeText.setText(text.getText());
-				popupCompositeText.setLayoutData(ui.createFillBothGridData());
-				popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
-				popupCompositeText.addListener(SWT.Traverse, new Listener() {
-			        @Override
-			        public void handleEvent(Event event) {
-			        	
-			            if (event.detail == SWT.TRAVERSE_RETURN) {
-			            	text.setText(popupCompositeText.getText());
-			            	popupComposite.hide();
-			            }
-			        }
-			    });
+				filtersGrid.getSelectionIndex();
+				fieldEditWindow.showFieldEditWindow();
 				
-				popupComposite.show(popupComposite.getLocation());
+				
+//				Point gridP = filtersGrid.toDisplay(0, 0);
+//				final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
+//				popupComposite.setSize(480, 480);
+//				popupComposite.setLocation(
+//						gridP.x + ((filtersGrid.getSize().x - popupComposite.getSize().x) / 2),
+//						gridP.y + ((filtersGrid.getSize().y - popupComposite.getSize().y) / 2));
+//
+//				final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+//				popupCompositeText.setBackground(whiteColor);
+//				final Text text = (Text)mouseEvent.widget;
+//				popupCompositeText.setText(text.getText());
+//				popupCompositeText.setLayoutData(ui.createFillBothGridData());
+//				popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
+//				popupCompositeText.addListener(SWT.Traverse, new Listener() {
+//			        @Override
+//			        public void handleEvent(Event event) {
+//			        	
+//			            if (event.detail == SWT.TRAVERSE_RETURN) {
+//			            	text.setText(popupCompositeText.getText());
+//			            	popupComposite.hide();
+//			            }
+//			        }
+//			    });
+//				
+//				popupComposite.show(popupComposite.getLocation());
 			}
-		};
+	    });
+	    
+//		MouseAdapter transformValuesTextMouseAdapter = new MouseAdapter() {
+//			@Override
+//			public void mouseDoubleClick(MouseEvent mouseEvent) {
+//
+//				Point gridP = filtersGrid.toDisplay(0, 0);
+//				final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
+//				popupComposite.setSize(480, 480);
+//				popupComposite.setLocation(
+//						gridP.x + ((filtersGrid.getSize().x - popupComposite.getSize().x) / 2),
+//						gridP.y + ((filtersGrid.getSize().y - popupComposite.getSize().y) / 2));
+//
+//				final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+//				popupCompositeText.setBackground(whiteColor);
+//				final Text text = (Text)mouseEvent.widget;
+//				popupCompositeText.setText(text.getText());
+//				popupCompositeText.setLayoutData(ui.createFillBothGridData());
+//				popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
+//				popupCompositeText.addListener(SWT.Traverse, new Listener() {
+//			        @Override
+//			        public void handleEvent(Event event) {
+//			        	
+//			            if (event.detail == SWT.TRAVERSE_RETURN) {
+//			            	text.setText(popupCompositeText.getText());
+//			            	popupComposite.hide();
+//			            }
+//			        }
+//			    });
+//				
+//				popupComposite.show(popupComposite.getLocation());
+//			}
+//		};
 	    
 	    loadFilters = new LoadFilters() {
 			@Override
@@ -1163,19 +1203,19 @@ public class StaticCatalogGeneratorMainWindow {
 
 				descriptionText.setText(staticCatalogFilters.getDescription());
 				
-				for (GridItem gridItem : filtersGrid.getItems()) {
-					((Text) gridItem.getData("indexInLineText")).dispose();
-					((Composite) gridItem.getData("indexInLineUpDown")).dispose();
-					((Text) gridItem.getData("labelText")).dispose();
-					((CCombo) gridItem.getData("typeCCombo")).dispose();
-					((CCombo) gridItem.getData("displayTypeCCombo")).dispose();
-					((Text) gridItem.getData("maxDisplayValuesText")).dispose();
-					((Text) gridItem.getData("minDisplayValuesText")).dispose();
-					((Text) gridItem.getData("transformFormatText")).dispose();
-					((Text) gridItem.getData("transformValuesText")).dispose();
-				}
-				filtersGrid.clearItems();
-				filtersGrid.disposeAllItems();
+//				for (GridItem gridItem : filtersGrid.getItems()) {
+//					((Text) gridItem.getData("indexInLineText")).dispose();
+//					((Composite) gridItem.getData("indexInLineUpDown")).dispose();
+//					((Text) gridItem.getData("labelText")).dispose();
+//					((CCombo) gridItem.getData("typeCCombo")).dispose();
+//					((CCombo) gridItem.getData("displayTypeCCombo")).dispose();
+//					((Text) gridItem.getData("maxDisplayValuesText")).dispose();
+//					((Text) gridItem.getData("minDisplayValuesText")).dispose();
+//					((Text) gridItem.getData("transformFormatText")).dispose();
+//					((Text) gridItem.getData("transformValuesText")).dispose();
+//				}
+//				filtersGrid.clearItems();
+//				filtersGrid.disposeAllItems();
 				
 				int index = 0;
 				for (StaticCatalogConfigurationField staticCatalogField : staticCatalogFilters.getFields()) {
@@ -1186,154 +1226,169 @@ public class StaticCatalogGeneratorMainWindow {
 					
 					index++;
 					gridItem.setText(col++, "" + index);
-					
 
-					Composite indexInLineUpDown = new Composite(filtersGrid, SWT.NONE);
-					indexInLineUpDown.setLayout(ui.createColumnsGridLayout(3));
-					
-					Text indexInLineText = new Text(indexInLineUpDown, SWT.READ_ONLY | SWT.RIGHT);
-					indexInLineText.setLayoutData(ui.createFillBothGridData());
-					indexInLineText.setBackground(whiteColor);
-					indexInLineText.setText("" + staticCatalogField.getIndexInLine());
-					gridItem.setData("indexInLineText", indexInLineText);
-
-					Button upButton = new Button(indexInLineUpDown, SWT.FLAT);
-					upButton.setText("\u25B2");
-					GridData upButtonGridData = ui.createWidthGridData(24);
-					upButtonGridData.heightHint = gridItem.getHeight();
-					upButton.setLayoutData(upButtonGridData);
-					upButton.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent selectionEvent) {
-
-							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
-							int index = fields.indexOf(staticCatalogField);
-							if (index > 0) {
-								fields.remove(index);
-								fields.add(index - 1, staticCatalogField);
-								loadFilters(staticCatalogFilters);
-							}
-						}
-					});
-					
-					Button downButton = new Button(indexInLineUpDown, SWT.FLAT);
-					downButton.setText("\u25BC");
-					GridData downButtonGridData = ui.createWidthGridData(24);
-					downButtonGridData.heightHint = gridItem.getHeight();
-					downButton.setLayoutData(downButtonGridData);
-					downButton.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent selectionEvent) {
-
-							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
-							int index = fields.indexOf(staticCatalogField);
-							if (index < (fields.size() - 1)) {
-								fields.remove(index);
-								fields.add(index + 1, staticCatalogField);
-								loadFilters(staticCatalogFilters);
-							}
-						}
-					});
-
-					GridEditor indexInLineUpDownGridEditor = new GridEditor(filtersGrid);
-					indexInLineUpDownGridEditor.minimumWidth = 50;
-					indexInLineUpDownGridEditor.grabHorizontal = true;
-					indexInLineUpDownGridEditor.setEditor(indexInLineUpDown, gridItem, col++);
-					gridItem.setData("indexInLineUpDown", indexInLineUpDown);
-					
-					
-					//gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
-					
-					
-					
+					gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
 					gridItem.setText(col++, staticCatalogField.getName());
-					//gridItem.setText(2, staticCatalogField.getType());
-					
-
-					Text labelText = new Text(filtersGrid, SWT.NONE);
-					labelText.setText(staticCatalogField.getLabel());
-
-					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
-					labelTextGridEditor.minimumWidth = 50;
-					labelTextGridEditor.grabHorizontal = true;
-					labelTextGridEditor.setEditor(labelText, gridItem, col++);
-					gridItem.setData("labelText", labelText);
-					
-
-					CCombo cCombo = new CCombo(filtersGrid, SWT.NONE);
-					cCombo.setEditable(false);
-					cCombo.setBackground(whiteColor);
-					cCombo.setItems(typeNameValues);
-					cCombo.setText(typeNames.get(staticCatalogField.getType()));
-					
-				    GridEditor cComboGridEditor = new GridEditor(filtersGrid);
-				    cComboGridEditor.minimumWidth = 50;
-				    cComboGridEditor.grabHorizontal = true;
-				    cComboGridEditor.setEditor(cCombo, gridItem, col++);
-				    gridItem.setData("typeCCombo", cCombo);
-				    
-				    
-				    boolean isFilter = staticCatalogField.getIsFilter();
-					gridItem.setChecked(col++, isFilter);
-					
-					
-					CCombo displayTypeCCombo = new CCombo(filtersGrid, SWT.NONE);
-					displayTypeCCombo.setEditable(false);
-					displayTypeCCombo.setBackground(whiteColor);
-					displayTypeCCombo.setItems(displayTypeNameValues);
-					displayTypeCCombo.setText(displayTypeNames.get(staticCatalogField.getDisplayType()));
-					
-				    GridEditor displayTypeGridEditor = new GridEditor(filtersGrid);
-				    displayTypeGridEditor.minimumWidth = 50;
-				    displayTypeGridEditor.grabHorizontal = true;
-				    displayTypeGridEditor.setEditor(displayTypeCCombo, gridItem, col++);
-				    gridItem.setData("displayTypeCCombo", displayTypeCCombo);
-
-				    
-					Text maxDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+					gridItem.setText(col++, staticCatalogField.getLabel());
+					gridItem.setText(col++, staticCatalogField.getType());
+					gridItem.setText(col++, staticCatalogField.getIsFilter() ? "Yes" : "");
+					gridItem.setText(col++, staticCatalogField.getDisplayType());
 					Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
-					maxDisplayValuesText.setText(maxDisplayValues == null ? "" : maxDisplayValues + "");
-					
-					GridEditor maxDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
-					maxDisplayValuesTextGridEditor.minimumWidth = 35;
-					maxDisplayValuesTextGridEditor.grabHorizontal = true;
-					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, col++);
-					gridItem.setData("maxDisplayValuesText", maxDisplayValuesText);
-
-					
-					Text minDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+					gridItem.setText(col++, maxDisplayValues == null ? "" : maxDisplayValues + "");
 					Integer minDisplayValues = staticCatalogField.getMinDisplayValues();
-					minDisplayValuesText.setText(minDisplayValues == null ? "" : minDisplayValues + "");
-					
-					GridEditor minDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
-					minDisplayValuesTextGridEditor.minimumWidth = 35;
-					minDisplayValuesTextGridEditor.grabHorizontal = true;
-					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, col++);
-					gridItem.setData("minDisplayValuesText", minDisplayValuesText);
-
-					
-					Text transformFormatText = new Text(filtersGrid, SWT.NONE);
+					gridItem.setText(col++, minDisplayValues == null ? "" : minDisplayValues + "");
 					String transformFormat = staticCatalogField.getTransformFormat();
-					transformFormatText.setText(transformFormat == null ? "" : transformFormat);
-					
-					GridEditor transformFormatTextGridEditor = new GridEditor(filtersGrid);
-					transformFormatTextGridEditor.minimumWidth = 50;
-					transformFormatTextGridEditor.grabHorizontal = true;
-					transformFormatTextGridEditor.setEditor(transformFormatText, gridItem, col++);
-					gridItem.setData("transformFormatText", transformFormatText);
-
-					
-					Text transformValuesText = new Text(filtersGrid, SWT.NONE);
+					gridItem.setText(col++, transformFormat == null ? "" : transformFormat);
 					String transformValues = staticCatalogField.getTransformValues();
-					transformValuesText.setText(transformValues == null ? "" : transformValues);
-					transformValuesText.addMouseListener(transformValuesTextMouseAdapter);
+					gridItem.setText(col++, transformValues == null ? "" : transformValues);
 					
 					
-					GridEditor transformValuesTextGridEditor = new GridEditor(filtersGrid);
-					transformValuesTextGridEditor.minimumWidth = 50;
-					transformValuesTextGridEditor.grabHorizontal = true;
-					transformValuesTextGridEditor.setEditor(transformValuesText, gridItem, col++);
-					gridItem.setData("transformValuesText", transformValuesText);
+//					Composite indexInLineUpDown = new Composite(filtersGrid, SWT.NONE);
+//					indexInLineUpDown.setLayout(ui.createColumnsGridLayout(3));
+//					
+//					Text indexInLineText = new Text(indexInLineUpDown, SWT.READ_ONLY | SWT.RIGHT);
+//					indexInLineText.setLayoutData(ui.createFillBothGridData());
+//					indexInLineText.setBackground(whiteColor);
+//					indexInLineText.setText("" + staticCatalogField.getIndexInLine());
+//					gridItem.setData("indexInLineText", indexInLineText);
+//
+//					Button upButton = new Button(indexInLineUpDown, SWT.FLAT);
+//					upButton.setText("\u25B2");
+//					GridData upButtonGridData = ui.createWidthGridData(24);
+//					upButtonGridData.heightHint = gridItem.getHeight();
+//					upButton.setLayoutData(upButtonGridData);
+//					upButton.addSelectionListener(new SelectionAdapter() {
+//						@Override
+//						public void widgetSelected(SelectionEvent selectionEvent) {
+//
+//							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
+//							int index = fields.indexOf(staticCatalogField);
+//							if (index > 0) {
+//								fields.remove(index);
+//								fields.add(index - 1, staticCatalogField);
+//								loadFilters(staticCatalogFilters);
+//							}
+//						}
+//					});
+//					
+//					Button downButton = new Button(indexInLineUpDown, SWT.FLAT);
+//					downButton.setText("\u25BC");
+//					GridData downButtonGridData = ui.createWidthGridData(24);
+//					downButtonGridData.heightHint = gridItem.getHeight();
+//					downButton.setLayoutData(downButtonGridData);
+//					downButton.addSelectionListener(new SelectionAdapter() {
+//						@Override
+//						public void widgetSelected(SelectionEvent selectionEvent) {
+//
+//							ArrayList<StaticCatalogConfigurationField> fields = staticCatalogFilters.getFields(); 
+//							int index = fields.indexOf(staticCatalogField);
+//							if (index < (fields.size() - 1)) {
+//								fields.remove(index);
+//								fields.add(index + 1, staticCatalogField);
+//								loadFilters(staticCatalogFilters);
+//							}
+//						}
+//					});
+//
+//					GridEditor indexInLineUpDownGridEditor = new GridEditor(filtersGrid);
+//					indexInLineUpDownGridEditor.minimumWidth = 50;
+//					indexInLineUpDownGridEditor.grabHorizontal = true;
+//					indexInLineUpDownGridEditor.setEditor(indexInLineUpDown, gridItem, col++);
+//					gridItem.setData("indexInLineUpDown", indexInLineUpDown);
+//					
+//					
+//					//gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
+//					
+//					
+//					
+//					gridItem.setText(col++, staticCatalogField.getName());
+//					//gridItem.setText(2, staticCatalogField.getType());
+//					
+//
+//					Text labelText = new Text(filtersGrid, SWT.NONE);
+//					labelText.setText(staticCatalogField.getLabel());
+//
+//					GridEditor labelTextGridEditor = new GridEditor(filtersGrid);
+//					labelTextGridEditor.minimumWidth = 50;
+//					labelTextGridEditor.grabHorizontal = true;
+//					labelTextGridEditor.setEditor(labelText, gridItem, col++);
+//					gridItem.setData("labelText", labelText);
+//					
+//
+//					CCombo cCombo = new CCombo(filtersGrid, SWT.NONE);
+//					cCombo.setEditable(false);
+//					cCombo.setBackground(whiteColor);
+//					cCombo.setItems(typeNameValues);
+//					cCombo.setText(typeNames.get(staticCatalogField.getType()));
+//					
+//				    GridEditor cComboGridEditor = new GridEditor(filtersGrid);
+//				    cComboGridEditor.minimumWidth = 50;
+//				    cComboGridEditor.grabHorizontal = true;
+//				    cComboGridEditor.setEditor(cCombo, gridItem, col++);
+//				    gridItem.setData("typeCCombo", cCombo);
+//				    
+//				    
+//				    boolean isFilter = staticCatalogField.getIsFilter();
+//					gridItem.setChecked(col++, isFilter);
+//					
+//					
+//					CCombo displayTypeCCombo = new CCombo(filtersGrid, SWT.NONE);
+//					displayTypeCCombo.setEditable(false);
+//					displayTypeCCombo.setBackground(whiteColor);
+//					displayTypeCCombo.setItems(displayTypeNameValues);
+//					displayTypeCCombo.setText(displayTypeNames.get(staticCatalogField.getDisplayType()));
+//					
+//				    GridEditor displayTypeGridEditor = new GridEditor(filtersGrid);
+//				    displayTypeGridEditor.minimumWidth = 50;
+//				    displayTypeGridEditor.grabHorizontal = true;
+//				    displayTypeGridEditor.setEditor(displayTypeCCombo, gridItem, col++);
+//				    gridItem.setData("displayTypeCCombo", displayTypeCCombo);
+//
+//				    
+//					Text maxDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+//					Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
+//					maxDisplayValuesText.setText(maxDisplayValues == null ? "" : maxDisplayValues + "");
+//					
+//					GridEditor maxDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
+//					maxDisplayValuesTextGridEditor.minimumWidth = 35;
+//					maxDisplayValuesTextGridEditor.grabHorizontal = true;
+//					maxDisplayValuesTextGridEditor.setEditor(maxDisplayValuesText, gridItem, col++);
+//					gridItem.setData("maxDisplayValuesText", maxDisplayValuesText);
+//
+//					
+//					Text minDisplayValuesText = new Text(filtersGrid, SWT.NONE | SWT.RIGHT);
+//					Integer minDisplayValues = staticCatalogField.getMinDisplayValues();
+//					minDisplayValuesText.setText(minDisplayValues == null ? "" : minDisplayValues + "");
+//					
+//					GridEditor minDisplayValuesTextGridEditor = new GridEditor(filtersGrid);
+//					minDisplayValuesTextGridEditor.minimumWidth = 35;
+//					minDisplayValuesTextGridEditor.grabHorizontal = true;
+//					minDisplayValuesTextGridEditor.setEditor(minDisplayValuesText, gridItem, col++);
+//					gridItem.setData("minDisplayValuesText", minDisplayValuesText);
+//
+//					
+//					Text transformFormatText = new Text(filtersGrid, SWT.NONE);
+//					String transformFormat = staticCatalogField.getTransformFormat();
+//					transformFormatText.setText(transformFormat == null ? "" : transformFormat);
+//					
+//					GridEditor transformFormatTextGridEditor = new GridEditor(filtersGrid);
+//					transformFormatTextGridEditor.minimumWidth = 50;
+//					transformFormatTextGridEditor.grabHorizontal = true;
+//					transformFormatTextGridEditor.setEditor(transformFormatText, gridItem, col++);
+//					gridItem.setData("transformFormatText", transformFormatText);
+//
+//					
+//					Text transformValuesText = new Text(filtersGrid, SWT.NONE);
+//					String transformValues = staticCatalogField.getTransformValues();
+//					transformValuesText.setText(transformValues == null ? "" : transformValues);
+//					transformValuesText.addMouseListener(transformValuesTextMouseAdapter);
+//					
+//					
+//					GridEditor transformValuesTextGridEditor = new GridEditor(filtersGrid);
+//					transformValuesTextGridEditor.minimumWidth = 50;
+//					transformValuesTextGridEditor.grabHorizontal = true;
+//					transformValuesTextGridEditor.setEditor(transformValuesText, gridItem, col++);
+//					gridItem.setData("transformValuesText", transformValuesText);
 				}
 			}
 		};
