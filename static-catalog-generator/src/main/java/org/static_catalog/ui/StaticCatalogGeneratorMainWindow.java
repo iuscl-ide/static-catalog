@@ -136,13 +136,13 @@ public class StaticCatalogGeneratorMainWindow {
 	private UI ui;
 	
 	/* Fonts */
-	private Font fontNormal;
-	private Font fontBold;
-	private Font fontBigger;
-	private Font fontRecents;
+	public static Font fontNormal;
+	public static Font fontBold;
+	public static Font fontBigger;
+	public static Font fontRecents;
 
 	/* Colors */
-	private Color whiteColor;
+	public static Color whiteColor;
 //	private Color gridBackgroundColor;
 //	private Color gridTextColor;
 //	private Color gridSelectedBackgroundColor;
@@ -1230,9 +1230,9 @@ public class StaticCatalogGeneratorMainWindow {
 					gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
 					gridItem.setText(col++, staticCatalogField.getName());
 					gridItem.setText(col++, staticCatalogField.getLabel());
-					gridItem.setText(col++, staticCatalogField.getType());
+					gridItem.setText(col++, typeNames.get(staticCatalogField.getType()));
 					gridItem.setText(col++, staticCatalogField.getIsFilter() ? "Yes" : "");
-					gridItem.setText(col++, staticCatalogField.getDisplayType());
+					gridItem.setText(col++, displayTypeNames.get(staticCatalogField.getDisplayType()));
 					Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
 					gridItem.setText(col++, maxDisplayValues == null ? "" : maxDisplayValues + "");
 					Integer minDisplayValues = staticCatalogField.getMinDisplayValues();
@@ -1540,5 +1540,4 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 	}
-
 }
