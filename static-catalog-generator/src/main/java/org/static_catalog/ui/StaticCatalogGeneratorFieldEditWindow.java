@@ -2,17 +2,19 @@
 package org.static_catalog.ui;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -20,19 +22,25 @@ import org.static_catalog.model.src.StaticCatalogConfigurationField;
 
 /** Edit a field window */
 public class StaticCatalogGeneratorFieldEditWindow {
-
 	
 	/** The window */
 	private Shell fieldEditShell;
+	private StaticCatalogConfigurationField staticCatalogField;
 	
 	private Label indexValueLabel;
 	private Label indexInLineValueLabel;
 	private Label nameValueLabel;
 	private Text labelText;
 	private Combo typeCombo;
+	private Button useAsFilterCheckbox;
+	private Combo displayTypeCombo;
+	private Text maxDisplayValuesText;	
+	private Text minDisplayValuesText;
+	private Text formatText;
+	private Text transformValuesText;	
 	
 	/** Create window */
-	public void createFieldEditWindow(Shell mainShell) {
+	public void createFieldEditWindow(Shell mainShell, StaticCatalogGeneratorCallback callback) {
 
 //		// DEBUG
 //		DeviceData data = new DeviceData();
@@ -48,7 +56,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 
 		/* Modal window */
 		fieldEditShell = new Shell(mainShell, SWT.NONE | SWT.TITLE | SWT.BORDER | SWT.CLOSE | SWT.APPLICATION_MODAL);
-		fieldEditShell.setText("static-catalog Generator Edit Field");
+		fieldEditShell.setText("static-catalog Generator");
 		fieldEditShell.setLayout(ui.createMarginsVerticalSpacingGridLayout(UI.sep8, UI.sep8));
 
 		/* Icon */
@@ -80,68 +88,82 @@ public class StaticCatalogGeneratorFieldEditWindow {
 			}
 		});
 
-	    final Composite nameComposite = new Composite(fieldEditShell, SWT.NONE);
-	    ui.addDebug(nameComposite);
-	    nameComposite.setLayoutData(ui.createFillHorizontalGridData());
-	    nameComposite.setLayout(ui.createColumnsSpacingGridLayout(6, UI.sep8));
-
-	    final Label indexLabel = new Label(nameComposite, SWT.NONE);
-	    indexLabel.setLayoutData(ui.createWidthGridData(50));
+		Group topGroup = new Group(fieldEditShell, SWT.NONE);
+		topGroup.setText("Edit Field");
+		topGroup.setLayoutData(ui.createFillBothGridData());
+		GridLayout topGroupGridLayout = ui.createColumnsSpacingGridLayout(2, UI.sep8);
+		topGroupGridLayout.marginWidth = UI.sep8;
+		topGroupGridLayout.marginHeight = UI.sep8;
+		topGroupGridLayout.verticalSpacing = UI.sep8;
+	    topGroup.setLayout(topGroupGridLayout);
+	    
+	    final Label indexLabel = new Label(topGroup, SWT.NONE);
 	    indexLabel.setText("Index");
-
-	    indexValueLabel = new Label(nameComposite, SWT.NONE);
-	    indexValueLabel.setLayoutData(ui.createWidthGridData(50));
-	    indexValueLabel.setText("Index");
+	    indexValueLabel = new Label(topGroup, SWT.NONE);
+	    indexValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    indexValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
-	    
-	    final Label indexInLineLabel = new Label(nameComposite, SWT.NONE);
-	    indexInLineLabel.setLayoutData(ui.createWidthGridData(80));
+	    final Label indexInLineLabel = new Label(topGroup, SWT.NONE);
 	    indexInLineLabel.setText("Index in Line");
-
-	    indexInLineValueLabel = new Label(nameComposite, SWT.NONE);
-	    indexInLineValueLabel.setLayoutData(ui.createWidthGridData(50));
-	    indexInLineValueLabel.setText("Index in Line");
+	    indexInLineValueLabel = new Label(topGroup, SWT.NONE);
+	    indexInLineValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    indexInLineValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
-	    
-	    final Label nameLabel = new Label(nameComposite, SWT.NONE);
-	    nameLabel.setLayoutData(ui.createWidthGridData(80));
+	    final Label nameLabel = new Label(topGroup, SWT.NONE);
 	    nameLabel.setText("Field Name");
-
-	    nameValueLabel = new Label(nameComposite, SWT.NONE);
+	    nameValueLabel = new Label(topGroup, SWT.NONE);
 	    nameValueLabel.setLayoutData(ui.createFillHorizontalGridData());
-	    nameValueLabel.setText("Field Name");
 	    nameValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 
-
-	    final Composite labelTypeComposite = new Composite(fieldEditShell, SWT.NONE);
-	    labelTypeComposite.setLayoutData(ui.createFillHorizontalGridData());
-	    labelTypeComposite.setLayout(ui.createColumnsSpacingGridLayout(6, UI.sep8));
-
-	    final Label labelLabel = new Label(labelTypeComposite, SWT.NONE);
-	    labelLabel.setLayoutData(ui.createWidthGridData(50));
+	    final Label labelLabel = new Label(topGroup, SWT.NONE);
 	    labelLabel.setText("Label");
-
-	    labelText = new Text(labelTypeComposite, SWT.SINGLE | SWT.BORDER);
-	    labelText.setLayoutData(ui.createWidthGridData(200));
-	    labelText.setText("Label");
-	    //labelText.setFont(StaticCatalogGeneratorMainWindow.fontBold);
+	    labelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    labelText.setLayoutData(ui.createFillHorizontalGridData());
 	    
-	    
-	    final Label typeLabel = new Label(labelTypeComposite, SWT.NONE);
-	    typeLabel.setLayoutData(ui.createWidthGridData(50));
+	    final Label typeLabel = new Label(topGroup, SWT.NONE);
 	    typeLabel.setText("Type");
-
-		typeCombo = new Combo(labelTypeComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		typeCombo.setLayoutData(ui.createWidthGridData(100));
+		typeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		typeCombo.setLayoutData(ui.createWidth120GridData());
 		typeCombo.setItems(StaticCatalogGeneratorMainWindow.typeNameValues);
 
+	    final Label useAsFilterLabel = new Label(topGroup, SWT.NONE);
+	    useAsFilterLabel.setText("Use as Filter");
+		useAsFilterCheckbox = new Button(topGroup, SWT.CHECK);
+		
+	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
+	    displayTypeLabel.setText("Filter Display Type");
+	    displayTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    displayTypeCombo.setLayoutData(ui.createWidth120GridData());
+	    displayTypeCombo.setItems(StaticCatalogGeneratorMainWindow.displayTypeNameValues);
+		
+	    final Label maxDisplayValuesLabel = new Label(topGroup, SWT.NONE);
+	    maxDisplayValuesLabel.setText("Filter Max. Display Values");
+	    maxDisplayValuesText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    maxDisplayValuesText.setLayoutData(ui.createWidthGridData(50));
 
-	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
-	    ui.addDebug(middleComposite);
-	    middleComposite.setLayoutData(ui.createFillBothGridData());
-	    middleComposite.setLayout(ui.createGridLayout());
+	    final Label minDisplayValuesLabel = new Label(topGroup, SWT.NONE);
+	    minDisplayValuesLabel.setText("Filter Min. Display Values");
+	    minDisplayValuesText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    minDisplayValuesText.setLayoutData(ui.createWidthGridData(50));
+
+	    final Label formatLabel = new Label(topGroup, SWT.NONE);
+	    formatLabel.setText("Filter Format Values");
+	    formatText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    formatText.setLayoutData(ui.createFillHorizontalGridData());
+	    
+	    final Label transformValuesLabel = new Label(topGroup, SWT.NONE);
+	    transformValuesLabel.setText("Filter Transform Values");
+	    transformValuesText = new Text(topGroup, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+	    GridData transformValuesTextGridData = ui.createFillHorizontalGridData();
+	    transformValuesTextGridData.heightHint = 50;
+	    transformValuesTextGridData.minimumHeight = 50;
+	    //transformValuesText.sets
+	    transformValuesText.setLayoutData(transformValuesTextGridData);
+	    
+//	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
+//	    ui.addDebug(middleComposite);
+//	    middleComposite.setLayoutData(ui.createFillBothGridData());
+//	    middleComposite.setLayout(ui.createGridLayout());
 
 	    final Label separator = new Label(fieldEditShell, SWT.HORIZONTAL | SWT.SEPARATOR);
 	    separator.setLayoutData(ui.createFillHorizontalGridData());
@@ -160,6 +182,35 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		okButton.setText("OK");
 		okButton.setLayoutData(ui.createWidth120GridData());
 
+		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+
+				staticCatalogField.setLabel(labelText.getText());
+
+				staticCatalogField.setType(StaticCatalogGeneratorMainWindow.nameTypes.get(typeCombo.getText()));
+
+				staticCatalogField.setIsFilter(useAsFilterCheckbox.getSelection());
+				
+				staticCatalogField.setDisplayType(StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeCombo.getText()));
+
+				String maxDisplay = maxDisplayValuesText.getText();
+				staticCatalogField.setMaxDisplayValues(maxDisplay.trim().equals("") ? null : Integer.parseInt(maxDisplay));
+
+				String minDisplay = minDisplayValuesText.getText();
+				staticCatalogField.setMinDisplayValues(minDisplay.trim().equals("") ? null : Integer.parseInt(minDisplay));
+
+				String transformFormat = formatText.getText();
+				staticCatalogField.setTransformFormat(transformFormat.trim().equals("") ? null : transformFormat);
+				
+				String transformValues = transformValuesText.getText();
+				staticCatalogField.setTransformValues(transformValues.trim().equals("") ? null : transformValues);
+				
+				fieldEditShell.setVisible(false);
+				callback.doCallback();
+			}
+		});
+
 		final Button cancelButton = new Button(bottomComposite, SWT.NONE);
 		cancelButton.setText("Cancel");
 		cancelButton.setLayoutData(ui.createWidth120GridData());
@@ -176,6 +227,8 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	/** Create window */
 	public void showFieldEditWindow(int index, StaticCatalogConfigurationField staticCatalogField) {
 
+		this.staticCatalogField = staticCatalogField;
+		
 		indexValueLabel.setText("" + index);
 		indexInLineValueLabel.setText("" + staticCatalogField.getIndexInLine());
 		nameValueLabel.setText(staticCatalogField.getName());
@@ -183,6 +236,19 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		labelText.setText(staticCatalogField.getLabel());
 		typeCombo.setText(StaticCatalogGeneratorMainWindow.typeNames.get(staticCatalogField.getType()));
 
+		useAsFilterCheckbox.setSelection(staticCatalogField.getIsFilter());
+		displayTypeCombo.setText(StaticCatalogGeneratorMainWindow.displayTypeNames.get(staticCatalogField.getDisplayType()));
+		
+		Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
+		maxDisplayValuesText.setText(maxDisplayValues == null ? "" : "" + maxDisplayValues);	
+		Integer minDisplayValues = staticCatalogField.getMinDisplayValues();
+		minDisplayValuesText.setText(minDisplayValues == null ? "" : "" + minDisplayValues);	
+		
+		String transformFormat = staticCatalogField.getTransformFormat();
+		formatText.setText(transformFormat == null ? "" : transformFormat);
+		String transformValues = staticCatalogField.getTransformValues();
+		transformValuesText.setText(transformValues == null ? "" : transformValues);
+		
 		fieldEditShell.setVisible(true);
 		fieldEditShell.moveAbove(null);
 	}

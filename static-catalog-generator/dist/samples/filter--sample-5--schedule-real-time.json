@@ -1,6 +1,7 @@
 {
   "description" : "Sample 5: schedule-real-time.csv - <a href=\"https://github.com/GerHobbelt/Developing-a-D3.js-Edge/tree/master/data_sources/geneva\"  target=\"_blank\">geneva-transport-2012</a>",
   "fields" : [ {
+    "indexInLine" : 1,
     "name" : "date",
     "type" : "date",
     "label" : "Date",
@@ -11,56 +12,7 @@
     "transformFormat" : "EEEE, MMMM dd yyyy",
     "transformValues" : null
   }, {
-    "name" : "routeCode",
-    "type" : "text",
-    "label" : "Route code",
-    "isFilter" : true,
-    "displayType" : "checkboxes",
-    "maxDisplayValues" : 35,
-    "minDisplayValues" : 10,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "name" : "serviceVehicle",
-    "type" : "text",
-    "label" : "Service vehicle",
-    "isFilter" : false,
-    "displayType" : "none",
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "name" : "tripId",
-    "type" : "long",
-    "label" : "Trip ID",
-    "isFilter" : false,
-    "displayType" : "none",
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "name" : "vehicleId",
-    "type" : "long",
-    "label" : "Vehicle ID",
-    "isFilter" : false,
-    "displayType" : "none",
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "name" : "patternId",
-    "type" : "long",
-    "label" : "Pattern ID",
-    "isFilter" : false,
-    "displayType" : "none",
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
+    "indexInLine" : 7,
     "name" : "tripDirection",
     "type" : "text",
     "label" : "Trip direction",
@@ -71,6 +23,62 @@
     "transformFormat" : null,
     "transformValues" : "A = Aller; R = Retour"
   }, {
+    "indexInLine" : 2,
+    "name" : "routeCode",
+    "type" : "text",
+    "label" : "Route code",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "indexInLine" : 3,
+    "name" : "serviceVehicle",
+    "type" : "text",
+    "label" : "Service vehicle",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "indexInLine" : 5,
+    "name" : "vehicleId",
+    "type" : "long",
+    "label" : "Vehicle ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "indexInLine" : 4,
+    "name" : "tripId",
+    "type" : "long",
+    "label" : "Trip ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "indexInLine" : 6,
+    "name" : "patternId",
+    "type" : "long",
+    "label" : "Pattern ID",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null
+  }, {
+    "indexInLine" : 8,
     "name" : "tripLength",
     "type" : "long",
     "label" : "Trip length",
@@ -81,6 +89,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 9,
     "name" : "stopSequenceNr",
     "type" : "long",
     "label" : "Stop sequence Nr",
@@ -91,6 +100,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 10,
     "name" : "stopCode",
     "type" : "text",
     "label" : "Stop code",
@@ -101,6 +111,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 11,
     "name" : "stopLength",
     "type" : "long",
     "label" : "Stop length",
@@ -111,6 +122,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 12,
     "name" : "stopTimeSchedule",
     "type" : "date",
     "label" : "Stop time schedule",
@@ -121,6 +133,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 13,
     "name" : "stopTimeReal",
     "type" : "date",
     "label" : "Stop time real",
@@ -131,6 +144,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 14,
     "name" : "passengerCountTripUp",
     "type" : "long",
     "label" : "Passenger count trip up",
@@ -141,6 +155,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 15,
     "name" : "passengerCountTripDown",
     "type" : "long",
     "label" : "Passenger count trip down",
@@ -151,6 +166,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 16,
     "name" : "passengerCountStopUp",
     "type" : "long",
     "label" : "Passenger count stop up",
@@ -161,6 +177,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 17,
     "name" : "passengerCountStopDown",
     "type" : "long",
     "label" : "Passenger count stop down",
@@ -171,6 +188,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 18,
     "name" : "passengerLoadStop",
     "type" : "long",
     "label" : "Passenger load stop",
@@ -181,6 +199,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 19,
     "name" : "passengerCountDoor1Up",
     "type" : "long",
     "label" : "Passenger count door 1 up",
@@ -191,6 +210,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 20,
     "name" : "passengerCountDoor1Down",
     "type" : "long",
     "label" : "Passenger count door 1 down",
@@ -201,6 +221,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 21,
     "name" : "passengerCountDoor2Up",
     "type" : "long",
     "label" : "Passenger count door 2 up",
@@ -211,6 +232,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 22,
     "name" : "passengerCountDoor2Down",
     "type" : "long",
     "label" : "Passenger count door 2 down",
@@ -221,6 +243,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 23,
     "name" : "passengerCountDoor3Up",
     "type" : "long",
     "label" : "Passenger count door 3 up",
@@ -231,6 +254,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 24,
     "name" : "passengerCountDoor3Down",
     "type" : "long",
     "label" : "Passenger count door 3 down",
@@ -241,6 +265,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 25,
     "name" : "passengerCountDoor4Up",
     "type" : "long",
     "label" : "Passenger count door 4 up",
@@ -251,6 +276,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 26,
     "name" : "passengerCountDoor4Down",
     "type" : "long",
     "label" : "Passenger count door 4 down",
@@ -261,6 +287,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 27,
     "name" : "passengerCountDoor5Up",
     "type" : "long",
     "label" : "Passenger count door 5 up",
@@ -271,6 +298,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 28,
     "name" : "passengerCountDoor5Down",
     "type" : "long",
     "label" : "Passenger count door 5 down",
@@ -281,6 +309,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 29,
     "name" : "passengerCountDoor6Up",
     "type" : "long",
     "label" : "Passenger count door 6 up",
@@ -291,6 +320,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 30,
     "name" : "passengerCountDoor6Down",
     "type" : "long",
     "label" : "Passenger count door 6 down",
@@ -301,6 +331,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
+    "indexInLine" : 31,
     "name" : "isRedirection",
     "type" : "text",
     "label" : "Is redirection",
@@ -311,6 +342,7 @@
     "transformFormat" : null,
     "transformValues" : "Y = Yes; N = No"
   }, {
+    "indexInLine" : 32,
     "name" : "isDelocalisation",
     "type" : "text",
     "label" : "Is delocalisation",
@@ -321,6 +353,7 @@
     "transformFormat" : null,
     "transformValues" : "Y = Yes; N = No"
   }, {
+    "indexInLine" : 33,
     "name" : "isRelocalisation",
     "type" : "text",
     "label" : "Is relocalisation",
