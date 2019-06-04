@@ -10,10 +10,13 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.static_catalog.model.src.StaticCatalogConfigurationField;
 
 /** Edit a field window */
 public class StaticCatalogGeneratorFieldEditWindow {
@@ -21,6 +24,12 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	
 	/** The window */
 	private Shell fieldEditShell;
+	
+	private Label indexValueLabel;
+	private Label indexInLineValueLabel;
+	private Label nameValueLabel;
+	private Text labelText;
+	private Combo typeCombo;
 	
 	/** Create window */
 	public void createFieldEditWindow(Shell mainShell) {
@@ -77,35 +86,58 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    nameComposite.setLayout(ui.createColumnsSpacingGridLayout(6, UI.sep8));
 
 	    final Label indexLabel = new Label(nameComposite, SWT.NONE);
-	    indexLabel.setLayoutData(ui.createWidthGridData(100));
+	    indexLabel.setLayoutData(ui.createWidthGridData(50));
 	    indexLabel.setText("Index");
 
-	    final Label indexValueLabel = new Label(nameComposite, SWT.NONE);
-	    indexValueLabel.setLayoutData(ui.createWidthGridData(100));
+	    indexValueLabel = new Label(nameComposite, SWT.NONE);
+	    indexValueLabel.setLayoutData(ui.createWidthGridData(50));
 	    indexValueLabel.setText("Index");
 	    indexValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
 	    
 	    final Label indexInLineLabel = new Label(nameComposite, SWT.NONE);
-	    indexInLineLabel.setLayoutData(ui.createWidthGridData(100));
+	    indexInLineLabel.setLayoutData(ui.createWidthGridData(80));
 	    indexInLineLabel.setText("Index in Line");
 
-	    final Label indexInLineValueLabel = new Label(nameComposite, SWT.NONE);
-	    indexInLineValueLabel.setLayoutData(ui.createWidthGridData(100));
+	    indexInLineValueLabel = new Label(nameComposite, SWT.NONE);
+	    indexInLineValueLabel.setLayoutData(ui.createWidthGridData(50));
 	    indexInLineValueLabel.setText("Index in Line");
 	    indexInLineValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
 	    
 	    final Label nameLabel = new Label(nameComposite, SWT.NONE);
-	    nameLabel.setLayoutData(ui.createWidthGridData(100));
+	    nameLabel.setLayoutData(ui.createWidthGridData(80));
 	    nameLabel.setText("Field Name");
 
-	    final Label nameValueLabel = new Label(nameComposite, SWT.NONE);
-	    nameValueLabel.setLayoutData(ui.createWidthGridData(100));
+	    nameValueLabel = new Label(nameComposite, SWT.NONE);
+	    nameValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    nameValueLabel.setText("Field Name");
 	    nameValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 
+
+	    final Composite labelTypeComposite = new Composite(fieldEditShell, SWT.NONE);
+	    labelTypeComposite.setLayoutData(ui.createFillHorizontalGridData());
+	    labelTypeComposite.setLayout(ui.createColumnsSpacingGridLayout(6, UI.sep8));
+
+	    final Label labelLabel = new Label(labelTypeComposite, SWT.NONE);
+	    labelLabel.setLayoutData(ui.createWidthGridData(50));
+	    labelLabel.setText("Label");
+
+	    labelText = new Text(labelTypeComposite, SWT.SINGLE | SWT.BORDER);
+	    labelText.setLayoutData(ui.createWidthGridData(200));
+	    labelText.setText("Label");
+	    //labelText.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
+	    
+	    final Label typeLabel = new Label(labelTypeComposite, SWT.NONE);
+	    typeLabel.setLayoutData(ui.createWidthGridData(50));
+	    typeLabel.setText("Type");
+
+		typeCombo = new Combo(labelTypeComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		typeCombo.setLayoutData(ui.createWidthGridData(100));
+		typeCombo.setItems(StaticCatalogGeneratorMainWindow.typeNameValues);
+
+
 	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
 	    ui.addDebug(middleComposite);
 	    middleComposite.setLayoutData(ui.createFillBothGridData());
@@ -142,7 +174,14 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	}
 	
 	/** Create window */
-	public void showFieldEditWindow() {
+	public void showFieldEditWindow(int index, StaticCatalogConfigurationField staticCatalogField) {
+
+		indexValueLabel.setText("" + index);
+		indexInLineValueLabel.setText("" + staticCatalogField.getIndexInLine());
+		nameValueLabel.setText(staticCatalogField.getName());
+
+		labelText.setText(staticCatalogField.getLabel());
+		typeCombo.setText(StaticCatalogGeneratorMainWindow.typeNames.get(staticCatalogField.getType()));
 
 		fieldEditShell.setVisible(true);
 		fieldEditShell.moveAbove(null);

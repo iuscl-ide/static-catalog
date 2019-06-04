@@ -1078,7 +1078,7 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn.setText("Index in Line");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
-	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setWidth(80);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
@@ -1133,8 +1133,8 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void mouseDoubleClick(MouseEvent mouseEvent) {
 
-				filtersGrid.getSelectionIndex();
-				fieldEditWindow.showFieldEditWindow();
+				int index = filtersGrid.getSelectionIndex();
+				fieldEditWindow.showFieldEditWindow(index, ((StaticCatalogConfigurationFields) filtersGrid.getData("StaticCatalogConfigurationFields")).getFields().get(index));
 				
 				
 //				Point gridP = filtersGrid.toDisplay(0, 0);
@@ -1201,6 +1201,8 @@ public class StaticCatalogGeneratorMainWindow {
 			@Override
 			public void loadFilters(StaticCatalogConfigurationFields staticCatalogFilters) {
 
+				filtersGrid.setData("StaticCatalogConfigurationFields", staticCatalogFilters);
+				
 				descriptionText.setText(staticCatalogFilters.getDescription());
 				
 //				for (GridItem gridItem : filtersGrid.getItems()) {
