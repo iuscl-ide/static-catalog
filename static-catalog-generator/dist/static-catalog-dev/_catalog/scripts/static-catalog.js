@@ -386,6 +386,42 @@ const StaticCatalog = (() => {
 	    	}
 	    });
 	}
+
+	/* Load sort */
+	const loadSort = (sortLines, loadSortResolve) => {
+		
+		//let sortFiles = sortTypeFiles[sortTypeFileIndex];
+		let sortFiles = [];
+		sortFiles[0] = "static-catalog-sort-0.json";
+		
+		let sortNameValuesLines = [];
+		let sortFilePromises = sortFiles.map( (sortFile) => {
+
+			return new Promise( (resolve, reject) => {
+				
+				const xmlHttpRequest = new XMLHttpRequest();
+				xmlHttpRequest.onreadystatechange = () => {
+					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+						
+						let lines = JSON.parse(xmlHttpRequest.responseText);
+						sortLines.push(lines);
+//						c("sortFile " + sortFile, lines);
+						//sortNameValuesLines[sortFiles.sortOf(sortFile)] = lines; 
+						resolve();
+					}
+				};
+				xmlHttpRequest.open("GET", "_catalog/sort/" + sortFile, true);
+				xmlHttpRequest.overrideMimeType("text/json");
+				xmlHttpRequest.send();
+			});
+		});  
+		
+	    Promise.all(sortFilePromises).then( () => {
+	    	
+	    	c("all sort files downloaded", "");
+	    	loadSortResolve(sortLines);
+	    });
+	}
 	
 	/* Load the CSV blocks */
 	const loadBlocks = (indexLines, searchData, resultLines, loadBlocksResolve) => {
@@ -509,6 +545,7 @@ const StaticCatalog = (() => {
 		
 		/* Indexes */
 		var indexLines = null;
+		var sortLines = null;
 		new Promise( (loadIndexResolve, loadIndexReject) => {
 
 			if (indexTypeFiles.length === 0) {
@@ -523,21 +560,39 @@ const StaticCatalog = (() => {
 		}).then((indexLines) => {
 
 			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
-			
-			/* Blocks */
-			var resultLines = [];
-			new Promise( (loadBlocksResolve, loadBlocksReject) => {
 
-				loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
+			new Promise( (loadSortResolve, loadSortReject) => {
+
+				sortLines = [];
+				loadSort(sortLines, loadSortResolve);
+
+			}).then((sortLines) => {
+	
+				c("Sort loaded done in " + ((new Date()).getTime() - startMs), sortLines);
 				
-			}).then((resultLines) => {
-				
-				c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
-				let foundLinesCount = getLinesCount(indexLines);
-				resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
+				/* Blocks */
+				var resultLines = [];
+				new Promise( (loadBlocksResolve, loadBlocksReject) => {
+	
+					loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
+					
+				}).then((resultLines) => {
+					
+					/* Blocks */
+					var resultLines = [];
+					new Promise( (loadBlocksResolve, loadBlocksReject) => {
+	
+						loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
+						
+					}).then((resultLines) => {
+						
+						c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
+						let foundLinesCount = getLinesCount(indexLines);
+						resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
+					});
+				});
 			});
 		});
-		
 	}
 
 	/* Constructor */

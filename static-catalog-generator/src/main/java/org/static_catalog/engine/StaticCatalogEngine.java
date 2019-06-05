@@ -747,18 +747,18 @@ public class StaticCatalogEngine {
 			}
 		}
 		
-		long nameTotalSize = totalLinesCount * (2 * totalLinesDigitsCount + 2);
-		long namesCount = filterNameIndex.size();
-		
-		if (namesCount * nameTotalSize < 1000000) {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
-		}
-		else if (nameTotalSize < 1000000) {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
-		}
-		else {
-			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
-		}
+//		long nameTotalSize = totalLinesCount * (2 * totalLinesDigitsCount + 2);
+//		long namesCount = filterNameIndex.size();
+//		
+//		if (namesCount * nameTotalSize < 1000000) {
+//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
+//		}
+//		else if (nameTotalSize < 1000000) {
+//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
+//		}
+//		else {
+//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
+//		}
 		
 		contents.setTotalLinesCount(totalLinesCount);
 		contents.setBlockLinesCount(blockLinesCount);
@@ -784,15 +784,21 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress("Start catalog generation...");
 		
 		/* Filters */
-		String catalogBlocksFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "data";
+		String fsep = File.separator;
+		String catalogBlocksFolderName = destinationFolderName + fsep + "_catalog" + fsep + "data";
 		S.createFoldersIfNotExists(catalogBlocksFolderName);
 		S.deleteFolderContentsOnly(catalogBlocksFolderName);
-		String blockFilePrefix = catalogBlocksFolderName + File.separator + "block-";
+		String blockFilePrefix = catalogBlocksFolderName + fsep + "block-";
 		
-		String catalogIndexesFolderName = destinationFolderName + File.separator + "_catalog" + File.separator + "indexes";
+		String catalogIndexesFolderName = destinationFolderName + fsep + "_catalog" + fsep + "indexes";
 		S.createFoldersIfNotExists(catalogIndexesFolderName);
 		S.deleteFolderContentsOnly(catalogIndexesFolderName);
-		String indexesValueFileNamePrefix = catalogIndexesFolderName + File.separator + "static-catalog-index-value";
+		String indexesValueFileNamePrefix = catalogIndexesFolderName + fsep + "static-catalog-index-value";
+
+		String catalogSortFolderName = destinationFolderName + fsep + "_catalog" + fsep + "sort";
+		S.createFoldersIfNotExists(catalogSortFolderName);
+		S.deleteFolderContentsOnly(catalogSortFolderName);
+		String sortFileNamePrefix = catalogSortFolderName + fsep + "static-catalog-sort";
 
 		StaticCatalogIndexes templateCatalogRoot = new StaticCatalogIndexes();
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> nameValuesLines = templateCatalogRoot.getValueIndexes().getNameValuesLines();
@@ -937,31 +943,53 @@ public class StaticCatalogEngine {
 		}
 		
 		loopProgress.doProgress("Catalog blocks generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the indexes...");
+
+		/* INDEX_SPLIT_TYPE_VALUES */
+		int indexNameCnt = 0;
+		for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
+			int indexValueCnt = 0;
+			for (ArrayList<Long> lines : valueLines.values()) {
+				S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
+				indexValueCnt++;
+			}
+			indexNameCnt++;
+		}
+
+		loopProgress.doProgress("Catalog indexes generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the sort...");
+
+		ArrayList<Long> sortedLines = new ArrayList<>();
+		for (ArrayList<Long> lines : nameValuesLines.get("State").values()) {
+			sortedLines.addAll(lines);
+		}
+		S.saveObjectToJsonFileName(sortedLines, sortFileNamePrefix + "-0" + ".json");		
+		
+		
+//		nameValuesLines.get(key)
 		
 //		contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
 		
-		String indexSplitType = contents.getIndexSplitType();
-		if (indexSplitType.equals(INDEX_SPLIT_TYPE_VALUES)) {
-			int indexNameCnt = 0;
-			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
-				int indexValueCnt = 0;
-				for (ArrayList<Long> lines : valueLines.values()) {
-					S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
-					indexValueCnt++;
-				}
-				indexNameCnt++;
-			}
-		}
-		else if (indexSplitType.equals(INDEX_SPLIT_TYPE_NAMES)) {
-			int indexNameCnt = 0;
-			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
-				S.saveObjectToJsonFileName(valueLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
-				indexNameCnt++;
-			}
-		}
-		else {
-			S.saveObjectToJsonFileName(nameValuesLines, indexesValueFileNamePrefix + ".json");
-		}
+//		String indexSplitType = contents.getIndexSplitType();
+//		if (indexSplitType.equals(INDEX_SPLIT_TYPE_VALUES)) {
+//			int indexNameCnt = 0;
+//			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
+//				int indexValueCnt = 0;
+//				for (ArrayList<Long> lines : valueLines.values()) {
+//					S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
+//					indexValueCnt++;
+//				}
+//				indexNameCnt++;
+//			}
+//		}
+//		else if (indexSplitType.equals(INDEX_SPLIT_TYPE_NAMES)) {
+//			int indexNameCnt = 0;
+//			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
+//				S.saveObjectToJsonFileName(valueLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
+//				indexNameCnt++;
+//			}
+//		}
+//		else {
+//			S.saveObjectToJsonFileName(nameValuesLines, indexesValueFileNamePrefix + ".json");
+//		}
  
 		loopProgress.doProgress(U.w(csvLineIndex) + " lines catalog generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 	}
