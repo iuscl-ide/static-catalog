@@ -388,8 +388,9 @@ const StaticCatalog = (() => {
 	}
 
 	/* Load sort */
-	const loadSort = (sortLines, loadSortResolve) => {
+	const loadSort = (loadSortResolve) => {
 		
+		var sortLines;
 		//let sortFiles = sortTypeFiles[sortTypeFileIndex];
 		let sortFiles = [];
 		sortFiles[0] = "static-catalog-sort-0.json";
@@ -403,8 +404,7 @@ const StaticCatalog = (() => {
 				xmlHttpRequest.onreadystatechange = () => {
 					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
 						
-						let lines = JSON.parse(xmlHttpRequest.responseText);
-						sortLines.push(lines);
+						sortLines = JSON.parse(xmlHttpRequest.responseText);
 //						c("sortFile " + sortFile, lines);
 						//sortNameValuesLines[sortFiles.sortOf(sortFile)] = lines; 
 						resolve();
@@ -424,7 +424,28 @@ const StaticCatalog = (() => {
 	}
 	
 	/* Load the CSV blocks */
-	const loadBlocks = (indexLines, searchData, resultLines, loadBlocksResolve) => {
+	const loadBlocks = (indexLines, sortLines, searchData, resultLines, loadBlocksResolve) => {
+		
+		let startMs1 = (new Date()).getTime();
+		let sortIndexLines = [];
+		for (let sortLine of sortLines) {
+			let f1 = true;
+			let f2 = false;
+			for (let indexLine of indexLines) {
+				let found = createIntervalIntersection(sortLine, indexLine);
+				if (found === null) {
+					if (f2) {
+						break;
+					}
+				}
+				else {
+					f2 = true;
+					sortIndexLines.push(found);
+				}
+			}
+		}
+		c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
+		indexLines = sortIndexLines;
 		
 		let searchLinesCount = searchData.searchPagination.paginationResultsPerPage;
 		let firstSearchIndexLine = (searchData.searchPagination.paginationPage - 1) * searchLinesCount + 1;
@@ -545,7 +566,6 @@ const StaticCatalog = (() => {
 		
 		/* Indexes */
 		var indexLines = null;
-		var sortLines = null;
 		new Promise( (loadIndexResolve, loadIndexReject) => {
 
 			if (indexTypeFiles.length === 0) {
@@ -556,16 +576,13 @@ const StaticCatalog = (() => {
 			else {
 				loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);	
 			}
-			
 		}).then((indexLines) => {
 
 			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
 
 			new Promise( (loadSortResolve, loadSortReject) => {
 
-				sortLines = [];
-				loadSort(sortLines, loadSortResolve);
-
+				loadSort(loadSortResolve);
 			}).then((sortLines) => {
 	
 				c("Sort loaded done in " + ((new Date()).getTime() - startMs), sortLines);
@@ -574,22 +591,12 @@ const StaticCatalog = (() => {
 				var resultLines = [];
 				new Promise( (loadBlocksResolve, loadBlocksReject) => {
 	
-					loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
-					
+					loadBlocks(indexLines, sortLines, searchData, resultLines, loadBlocksResolve);
 				}).then((resultLines) => {
 					
-					/* Blocks */
-					var resultLines = [];
-					new Promise( (loadBlocksResolve, loadBlocksReject) => {
-	
-						loadBlocks(indexLines, searchData, resultLines, loadBlocksResolve);
-						
-					}).then((resultLines) => {
-						
-						c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
-						let foundLinesCount = getLinesCount(indexLines);
-						resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
-					});
+					c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
+					let foundLinesCount = getLinesCount(indexLines);
+					resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
 				});
 			});
 		});
