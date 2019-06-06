@@ -976,6 +976,9 @@ public class StaticCatalogGeneratorMainWindow {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 
 				/* Create filter fields */
+				int filterElementsMinDisplay = Integer.parseInt(filterElementsMinDisplayText.getText());
+				int filterElementsMaxDisplay = Integer.parseInt(filterElementsMaxDisplayText.getText());
+				
 				StaticCatalogConfigurationFields staticCatalogFilters = new StaticCatalogConfigurationFields();
 				int indexInLine = 0; 
 				for (GridItem gridItem : csvExamineGrid.getItems()) {
@@ -994,13 +997,15 @@ public class StaticCatalogGeneratorMainWindow {
 					if ((uniqueValuesCount != null) && (uniqueValuesCount.trim().length() > 0)) {
 						staticCatalogField.setIsFilter(true);
 						staticCatalogField.setDisplayType(StaticCatalogEngine.DISPLAY_TYPE_CHECKBOXES);
-						staticCatalogField.setMinDisplayValues(Integer.parseInt(filterElementsMinDisplayText.getText()));
-						staticCatalogField.setMaxDisplayValues(Integer.parseInt(filterElementsMaxDisplayText.getText()));
+						staticCatalogField.setMinDisplayValues(filterElementsMinDisplay);
+						staticCatalogField.setMaxDisplayValues(filterElementsMaxDisplay);
 					}
 					else {
 						staticCatalogField.setIsFilter(false);
 						staticCatalogField.setDisplayType(StaticCatalogEngine.DISPLAY_TYPE_NONE);
 					}
+					staticCatalogField.setIsSortAsc(false);
+					staticCatalogField.setIsSortDesc(false);					
 					
 					staticCatalogFilters.getFields().add(staticCatalogField);
 				}
@@ -1125,7 +1130,6 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(90);
-	    fieldGridColumn.setCheckable(true);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Display Type");
@@ -1154,6 +1158,16 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(120);
 
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
+		fieldGridColumn.setText("Sort Asc.");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(80);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
+		fieldGridColumn.setText("Sort Desc.");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(80);
+	    
 	    filtersGrid.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent mouseEvent) {
@@ -1198,6 +1212,8 @@ public class StaticCatalogGeneratorMainWindow {
 					gridItem.setText(col++, transformFormat == null ? "" : transformFormat);
 					String transformValues = staticCatalogField.getTransformValues();
 					gridItem.setText(col++, transformValues == null ? "" : transformValues);
+					gridItem.setText(col++, staticCatalogField.getIsSortAsc() ? "Yes" : "");
+					gridItem.setText(col++, staticCatalogField.getIsSortDesc() ? "Yes" : "");
 				}
 			}
 		};

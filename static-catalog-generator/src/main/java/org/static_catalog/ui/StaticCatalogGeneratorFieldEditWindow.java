@@ -38,6 +38,8 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	private Text minDisplayValuesText;
 	private Text formatText;
 	private Text transformValuesText;	
+	private Button sortAscCheckbox;
+	private Button sortDescCheckbox;
 	
 	/** Create window */
 	public void createFieldEditWindow(Shell mainShell, StaticCatalogGeneratorCallback callback) {
@@ -159,6 +161,15 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    transformValuesTextGridData.minimumHeight = 50;
 	    //transformValuesText.sets
 	    transformValuesText.setLayoutData(transformValuesTextGridData);
+
+	    final Label sortAscLabel = new Label(topGroup, SWT.NONE);
+	    sortAscLabel.setText("Sort Asc.");
+	    sortAscCheckbox = new Button(topGroup, SWT.CHECK);
+
+	    final Label sortDescLabel = new Label(topGroup, SWT.NONE);
+	    sortDescLabel.setText("Sort Desc.");
+	    sortDescCheckbox = new Button(topGroup, SWT.CHECK);
+
 	    
 //	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
 //	    ui.addDebug(middleComposite);
@@ -206,6 +217,9 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				String transformValues = transformValuesText.getText();
 				staticCatalogField.setTransformValues(transformValues.trim().equals("") ? null : transformValues);
 				
+				staticCatalogField.setIsSortAsc(sortAscCheckbox.getSelection());
+				staticCatalogField.setIsSortDesc(sortDescCheckbox.getSelection());
+				
 				fieldEditShell.setVisible(false);
 				callback.doCallback();
 			}
@@ -248,6 +262,9 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		formatText.setText(transformFormat == null ? "" : transformFormat);
 		String transformValues = staticCatalogField.getTransformValues();
 		transformValuesText.setText(transformValues == null ? "" : transformValues);
+		
+		sortAscCheckbox.setSelection(staticCatalogField.getIsSortAsc());
+		sortDescCheckbox.setSelection(staticCatalogField.getIsSortDesc());
 		
 		fieldEditShell.setVisible(true);
 		fieldEditShell.moveAbove(null);

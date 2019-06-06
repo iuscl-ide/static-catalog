@@ -18,6 +18,10 @@ public class StaticCatalogPageField {
 	
 	private boolean filter;
 	
+	private boolean sortAsc;
+	
+	private boolean sortDesc;
+	
 	
 	private final ArrayList<StaticCatalogPageFieldValue> exception_values = new ArrayList<>();
 	
@@ -92,6 +96,22 @@ public class StaticCatalogPageField {
 
 	public void setFilter(boolean filter) {
 		this.filter = filter;
+	}
+
+	public boolean getSortAsc() {
+		return sortAsc;
+	}
+
+	public void setSortAsc(boolean sortAsc) {
+		this.sortAsc = sortAsc;
+	}
+
+	public boolean getSortDesc() {
+		return sortDesc;
+	}
+
+	public void setSortDesc(boolean sortDesc) {
+		this.sortDesc = sortDesc;
 	}
 
 	public int getException_values_count() {

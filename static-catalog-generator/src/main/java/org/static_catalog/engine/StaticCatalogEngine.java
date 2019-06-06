@@ -444,6 +444,8 @@ public class StaticCatalogEngine {
 			newPageField.setIdentifier("sc_filter__" + filtersFieldIndex + "__" + U.makeIdentifier(filtersFieldName));
 			newPageField.setType(filtersField.getType());
 			newPageField.setFilter(filtersField.getIsFilter());
+			newPageField.setSortAsc(filtersField.getIsSortAsc());
+			newPageField.setSortDesc(filtersField.getIsSortDesc());
 
 			nameFilters.put(filtersFieldName, filtersField);
 			pageFields.add(newPageField);

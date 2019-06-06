@@ -444,48 +444,35 @@ const StaticCatalog = (() => {
 	const loadBlocks = (indexLines, sortLines, searchData, resultLines, loadBlocksResolve) => {
 		
 		let startMs1 = (new Date()).getTime();
-		let sortIndexLines = [];
-		let firstIndexLine = indexLines[0];
-		let lastIndexLine = indexLines[indexLines.length - 1];
-		let firstIndexLineStart = getLine(firstIndexLine);
-		let lastIndexLineEnd = getEndLine(lastIndexLine);
 		
+		let indexLinesLength = indexLines.length;
+		let sortIndexLines = [];
 		let indexLinesStarts = [];
 		for (let indexLine of indexLines) {
 			indexLinesStarts.push(getLine(indexLine));
 		}
 
-		let indexLinesEnds = [];
-		for (let indexLine of indexLines) {
-			indexLinesEnds.push(getEndLine(indexLine));
-		}
-
-		let sortExitCnts = [];
-		
 		for (let sortLine of sortLines) {
 			let sortLineStart = getLine(sortLine);
-//			let sortLineEnd = getEndLine(sortLine);
-			
-//			dur++;
-//			if ((dur % 1000) == 0) {
-//				c("dur", dur);	
-//			}
-			
-			
+
 			let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
-			//let endIndex = _.sortedIndex(indexLinesEnds, sortLineEnd);
-			//sortExitCnts.push(startIndex + " - " + endIndex + " -- " + sortLine + " - " + indexLines[startIndex] + " - " + indexLines[startIndex - 1]);
-			sortExitCnts.push(startIndex + " -- " + sortLine + " - " + indexLines[startIndex] + " -> " + indexLines[startIndex - 1]);
 			
-			if ((startIndex < indexLinesStarts.length) || (sortLineStart <= getEndLine(indexLines[indexLines.length - 1]))) {
-				if (startIndex > 0) {
-					startIndex = startIndex - 1;
-					let indexLine = indexLines[startIndex];
-					let found = createIntervalIntersection(sortLine, indexLine);
+			if (startIndex >= indexLinesLength) {
+				let lastIndexLine = indexLines[indexLinesLength - 1];
+				if (sortLineStart <= getEndLine(lastIndexLine)) {
+					let found = createIntervalIntersection(sortLine, lastIndexLine);
 					if (found !== null) {
 						sortIndexLines.push(found);
 					}
-					startIndex = startIndex + 1;
+				}
+			}
+			else {
+				if (startIndex > 0) {
+					let prevIndexLine = indexLines[startIndex - 1];
+					let found = createIntervalIntersection(sortLine, prevIndexLine);
+					if (found !== null) {
+						sortIndexLines.push(found);
+					}
 				}
 				let indexLine = indexLines[startIndex];
 				let found = createIntervalIntersection(sortLine, indexLine);
@@ -496,44 +483,8 @@ const StaticCatalog = (() => {
 					found = createIntervalIntersection(sortLine, indexLine);
 				}
 			}
-			
-//			let sortLineStart = getLine(sortLine);
-//			let sortLineEnd = getEndLine(sortLine);
-//			if ((sortLineEnd < firstIndexLineStart) || (sortLineStart > lastIndexLineEnd)) {
-//				continue;
-//			}
-			
-//			let f2 = false;
-
-//			let exitCnt = 0;
-//			for (let indexLine of indexLines) {
-				
-//				exitCnt++;
-//				if (getLine(indexLine) > sortLineEnd) {
-//					sortExitCnts.push(exitCnt);
-//					break;
-//				}
-				
-//				let found = createIntervalIntersection(sortLine, indexLine);
-//				if (found !== null) {
-//					sortIndexLines.push(found);	
-//				}
-				
-//				if (found === null) {
-//					if (f2) {
-//						break;
-//					}
-//				}
-//				else {
-//					f2 = true;
-//					sortIndexLines.push(found);
-//				}
-//			}
 		}
-		c("sortExitCnts done in " + ((new Date()).getTime() - startMs1), sortExitCnts);
-
 		c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
-		indexLines = sortIndexLines;
 		
 		let searchLinesCount = searchData.searchPagination.paginationResultsPerPage;
 		let firstSearchIndexLine = (searchData.searchPagination.paginationPage - 1) * searchLinesCount + 1;
@@ -543,7 +494,7 @@ const StaticCatalog = (() => {
 		let resultIndexLines = [];
 		let linesCnt = 0;
 		break_lines:
-		for (let indexLine of indexLines) {
+		for (let indexLine of sortIndexLines) {
 
 			let newLinesCnt = linesCnt + getLineCount(indexLine);
 			

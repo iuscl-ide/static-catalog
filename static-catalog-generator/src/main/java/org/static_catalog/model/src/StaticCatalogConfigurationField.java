@@ -24,6 +24,10 @@ public class StaticCatalogConfigurationField {
 
 	private String transformValues;
 
+	private boolean isSortAsc;
+
+	private boolean isSortDesc;
+
 	
 	public Integer getIndexInLine() {
 		return indexInLine;
@@ -103,5 +107,21 @@ public class StaticCatalogConfigurationField {
 
 	public void setTransformValues(String transformValues) {
 		this.transformValues = transformValues;
+	}
+
+	public boolean getIsSortAsc() {
+		return isSortAsc;
+	}
+
+	public void setIsSortAsc(boolean isSortAsc) {
+		this.isSortAsc = isSortAsc;
+	}
+
+	public boolean getIsSortDesc() {
+		return isSortDesc;
+	}
+
+	public void setIsSortDesc(boolean isSortDesc) {
+		this.isSortDesc = isSortDesc;
 	}
 }
