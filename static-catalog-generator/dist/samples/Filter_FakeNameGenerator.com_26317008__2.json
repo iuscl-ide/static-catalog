@@ -1,5 +1,5 @@
 {
-  "description" : "",
+  "description" : "Filter_FakeNameGenerator.com_26317008",
   "fields" : [ {
     "indexInLine" : 10,
     "name" : "State",
@@ -10,7 +10,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : true,
+    "isSortDesc" : true
   }, {
     "indexInLine" : 11,
     "name" : "StateFull",
@@ -21,7 +23,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 9,
     "name" : "City",
@@ -32,40 +36,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "indexInLine" : 12,
-    "name" : "ZipCode",
-    "type" : "long",
-    "label" : "Zip code",
-    "isFilter" : false,
-    "displayType" : "none",
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null
-  }, {
-    "indexInLine" : 2,
-    "name" : "Gender",
-    "type" : "text",
-    "label" : "Gender",
-    "isFilter" : true,
-    "displayType" : "checkboxes",
-    "maxDisplayValues" : 35,
-    "minDisplayValues" : 10,
-    "transformFormat" : null,
-    "transformValues" : "female = Woman; male = Man"
-  }, {
-    "indexInLine" : 4,
-    "name" : "Title",
-    "type" : "text",
-    "label" : "Title",
-    "isFilter" : true,
-    "displayType" : "checkboxes",
-    "maxDisplayValues" : 35,
-    "minDisplayValues" : 10,
-    "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : true,
+    "isSortDesc" : true
   }, {
     "indexInLine" : 1,
     "name" : "Number",
@@ -76,7 +49,22 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
+  }, {
+    "indexInLine" : 2,
+    "name" : "Gender",
+    "type" : "text",
+    "label" : "Gender",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : "female = Woman; male = Man",
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 3,
     "name" : "NameSet",
@@ -87,7 +75,22 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
+  }, {
+    "indexInLine" : 4,
+    "name" : "Title",
+    "type" : "text",
+    "label" : "Title",
+    "isFilter" : true,
+    "displayType" : "checkboxes",
+    "maxDisplayValues" : 35,
+    "minDisplayValues" : 10,
+    "transformFormat" : null,
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 5,
     "name" : "GivenName",
@@ -98,7 +101,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 6,
     "name" : "MiddleInitial",
@@ -109,7 +114,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 7,
     "name" : "Surname",
@@ -120,7 +127,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 8,
     "name" : "StreetAddress",
@@ -131,7 +140,22 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
+  }, {
+    "indexInLine" : 12,
+    "name" : "ZipCode",
+    "type" : "long",
+    "label" : "Zip code",
+    "isFilter" : false,
+    "displayType" : "none",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 13,
     "name" : "Country",
@@ -142,7 +166,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 14,
     "name" : "CountryFull",
@@ -153,7 +179,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 15,
     "name" : "EmailAddress",
@@ -164,7 +192,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 16,
     "name" : "Username",
@@ -175,7 +205,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 17,
     "name" : "Password",
@@ -186,7 +218,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 18,
     "name" : "BrowserUserAgent",
@@ -197,7 +231,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 19,
     "name" : "TelephoneNumber",
@@ -208,7 +244,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 20,
     "name" : "TelephoneCountryCode",
@@ -219,7 +257,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 21,
     "name" : "MothersMaiden",
@@ -230,7 +270,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 22,
     "name" : "Birthday",
@@ -241,7 +283,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 23,
     "name" : "Age",
@@ -252,7 +296,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 24,
     "name" : "TropicalZodiac",
@@ -263,95 +309,113 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 25,
     "name" : "CCType",
     "type" : "text",
-    "label" : "CC type",
+    "label" : "C c type",
     "isFilter" : true,
     "displayType" : "checkboxes",
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 26,
     "name" : "CCNumber",
     "type" : "long",
-    "label" : "CC number",
+    "label" : "C c number",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 27,
     "name" : "CVV2",
     "type" : "long",
-    "label" : "CVV 2",
+    "label" : "C v v 2",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 28,
     "name" : "CCExpires",
     "type" : "text",
-    "label" : "CC expires",
+    "label" : "C c expires",
     "isFilter" : true,
     "displayType" : "checkboxes",
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 29,
     "name" : "NationalID",
     "type" : "text",
-    "label" : "National ID",
+    "label" : "National i d",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 30,
     "name" : "UPS",
     "type" : "text",
-    "label" : "UPS",
+    "label" : "U p s",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 31,
     "name" : "WesternUnionMTCN",
     "type" : "long",
-    "label" : "Western Union MTCN",
+    "label" : "Western union m t c n",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 32,
     "name" : "MoneyGramMTCN",
     "type" : "long",
-    "label" : "Money Gram MTCN",
+    "label" : "Money gram m t c n",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 33,
     "name" : "Color",
@@ -362,7 +426,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 34,
     "name" : "Occupation",
@@ -373,7 +439,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 35,
     "name" : "Company",
@@ -384,7 +452,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 36,
     "name" : "Vehicle",
@@ -395,7 +465,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 37,
     "name" : "Domain",
@@ -406,7 +478,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 38,
     "name" : "BloodType",
@@ -417,7 +491,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 39,
     "name" : "Pounds",
@@ -428,7 +504,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 40,
     "name" : "Kilograms",
@@ -439,7 +517,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 41,
     "name" : "FeetInches",
@@ -450,7 +530,9 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 42,
     "name" : "Centimeters",
@@ -461,18 +543,22 @@
     "maxDisplayValues" : 35,
     "minDisplayValues" : 10,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 43,
     "name" : "GUID",
     "type" : "text",
-    "label" : "GUID",
+    "label" : "G u i d",
     "isFilter" : false,
     "displayType" : "none",
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 44,
     "name" : "Latitude",
@@ -483,7 +569,9 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   }, {
     "indexInLine" : 45,
     "name" : "Longitude",
@@ -494,6 +582,8 @@
     "maxDisplayValues" : null,
     "minDisplayValues" : null,
     "transformFormat" : null,
-    "transformValues" : null
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false
   } ]
 }
