@@ -42,6 +42,23 @@ const StaticCatalog = (() => {
 		}
 	}
 
+	/* _underscore.js */
+	const findInsertionIndex = (array, value) => {
+
+		let low = 0;
+		let high = array.length;
+		while (low < high) {
+			let mid = Math.floor((low + high) / 2);
+			if (array[mid] < value) {
+				low = mid + 1;
+			}
+			else {
+				high = mid;
+			}
+		}
+		return low;
+	};
+
 	/* Initialize */
 	const initialize = () => {
 		
@@ -428,22 +445,93 @@ const StaticCatalog = (() => {
 		
 		let startMs1 = (new Date()).getTime();
 		let sortIndexLines = [];
+		let firstIndexLine = indexLines[0];
+		let lastIndexLine = indexLines[indexLines.length - 1];
+		let firstIndexLineStart = getLine(firstIndexLine);
+		let lastIndexLineEnd = getEndLine(lastIndexLine);
+		
+		let indexLinesStarts = [];
+		for (let indexLine of indexLines) {
+			indexLinesStarts.push(getLine(indexLine));
+		}
+
+		let indexLinesEnds = [];
+		for (let indexLine of indexLines) {
+			indexLinesEnds.push(getEndLine(indexLine));
+		}
+
+		let sortExitCnts = [];
+		
 		for (let sortLine of sortLines) {
-			let f1 = true;
-			let f2 = false;
-			for (let indexLine of indexLines) {
-				let found = createIntervalIntersection(sortLine, indexLine);
-				if (found === null) {
-					if (f2) {
-						break;
+			let sortLineStart = getLine(sortLine);
+//			let sortLineEnd = getEndLine(sortLine);
+			
+//			dur++;
+//			if ((dur % 1000) == 0) {
+//				c("dur", dur);	
+//			}
+			
+			
+			let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
+			//let endIndex = _.sortedIndex(indexLinesEnds, sortLineEnd);
+			//sortExitCnts.push(startIndex + " - " + endIndex + " -- " + sortLine + " - " + indexLines[startIndex] + " - " + indexLines[startIndex - 1]);
+			sortExitCnts.push(startIndex + " -- " + sortLine + " - " + indexLines[startIndex] + " -> " + indexLines[startIndex - 1]);
+			
+			if ((startIndex < indexLinesStarts.length) || (sortLineStart <= getEndLine(indexLines[indexLines.length - 1]))) {
+				if (startIndex > 0) {
+					startIndex = startIndex - 1;
+					let indexLine = indexLines[startIndex];
+					let found = createIntervalIntersection(sortLine, indexLine);
+					if (found !== null) {
+						sortIndexLines.push(found);
 					}
+					startIndex = startIndex + 1;
 				}
-				else {
-					f2 = true;
+				let indexLine = indexLines[startIndex];
+				let found = createIntervalIntersection(sortLine, indexLine);
+				while (found !== null) {
 					sortIndexLines.push(found);
+					startIndex++;
+					indexLine = indexLines[startIndex];
+					found = createIntervalIntersection(sortLine, indexLine);
 				}
 			}
+			
+//			let sortLineStart = getLine(sortLine);
+//			let sortLineEnd = getEndLine(sortLine);
+//			if ((sortLineEnd < firstIndexLineStart) || (sortLineStart > lastIndexLineEnd)) {
+//				continue;
+//			}
+			
+//			let f2 = false;
+
+//			let exitCnt = 0;
+//			for (let indexLine of indexLines) {
+				
+//				exitCnt++;
+//				if (getLine(indexLine) > sortLineEnd) {
+//					sortExitCnts.push(exitCnt);
+//					break;
+//				}
+				
+//				let found = createIntervalIntersection(sortLine, indexLine);
+//				if (found !== null) {
+//					sortIndexLines.push(found);	
+//				}
+				
+//				if (found === null) {
+//					if (f2) {
+//						break;
+//					}
+//				}
+//				else {
+//					f2 = true;
+//					sortIndexLines.push(found);
+//				}
+//			}
 		}
+		c("sortExitCnts done in " + ((new Date()).getTime() - startMs1), sortExitCnts);
+
 		c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
 		indexLines = sortIndexLines;
 		
