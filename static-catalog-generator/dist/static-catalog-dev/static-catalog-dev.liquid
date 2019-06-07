@@ -109,14 +109,16 @@
 				<div style="display: flex; align-items: center;">
 					<div class="ui label" style="margin-right: 0.5em;">Sort by</div>
 					<div style="flex-grow: 1;">
-						<div id="scp-id--" class="ui selection fluid dropdown" tabindex="0">
-							<input type="hidden" name="scp-name--" value="10"><i class="dropdown icon"></i>
-							<div class="text">10</div>
+						<div id="scp-id--sort" class="ui selection fluid dropdown" tabindex="0">
+							<input type="hidden" name="scp-name--sort" value="initial"><i class="dropdown icon"></i>
+							<div class="text">Initial</div>
 							<div class="menu" tabindex="-1">
-								<div class="item active selected" data-value="10">10</div>
-								<div class="item" data-value="25">25</div>
-								<div class="item" data-value="50">50</div>
-								<div class="item" data-value="100">100</div>
+								<div class="item active selected" data-value="-1">Source order</div>
+								{% for field in fields %} {% if field.sortAsc  %}
+								<div class="item" data-value="{{ field.identifier }}___asc">{{ field.label }} <strong>Asc</strong></div>
+								{% endif %} {% if field.sortDesc  %}
+								<div class="item" data-value="{{ field.identifier }}___desc">{{ field.label }} <strong>Desc</strong></div>
+								{% endif %} {% endfor %}
 							</div>
 						</div>
 					</div>

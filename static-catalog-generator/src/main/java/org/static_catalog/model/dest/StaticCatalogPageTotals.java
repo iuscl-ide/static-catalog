@@ -12,6 +12,11 @@ public class StaticCatalogPageTotals {
 	
 	private long totalFilters;
 
+	private long blockLines;
+	
+	private long indexLinesModulo;
+
+	
 	public long getTotalLines() {
 		return totalLines;
 	}
@@ -42,5 +47,21 @@ public class StaticCatalogPageTotals {
 
 	public void setTotalFilters(long totalFilters) {
 		this.totalFilters = totalFilters;
+	}
+
+	public long getBlockLines() {
+		return blockLines;
+	}
+
+	public void setBlockLines(long blockLines) {
+		this.blockLines = blockLines;
+	}
+
+	public long getIndexLinesModulo() {
+		return indexLinesModulo;
+	}
+
+	public void setIndexLinesModulo(long indexLinesModulo) {
+		this.indexLinesModulo = indexLinesModulo;
 	}
 }

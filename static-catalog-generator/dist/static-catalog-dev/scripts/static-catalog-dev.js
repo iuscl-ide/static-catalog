@@ -11,9 +11,13 @@ const StaticCatalogDev = (() => {
 
 	var pageFieldsFilters;
 	var pageFields = {};
+	var pageFilters = {};
 	var pageFieldLabels = [];
 	var pageFieldIndexes = [];
+	var pageFieldTotalFilters = [];
 
+	var searchTotals = {};
+	
 	var $filterCheckboxes;
 	var $filters_count;
 	var $filter_count_template;
@@ -22,6 +26,8 @@ const StaticCatalogDev = (() => {
 	var $results_panel;
 	var $tileTemplate;
 	var $tileFieldTemplate; 
+	
+	var $sortDropdown;
 	
 	var $messageArea;
 	var $welcomeMessage;
@@ -66,6 +72,14 @@ const StaticCatalogDev = (() => {
 				 apply(findSearchPagination());
 			}
 		});
+		$sortDropdown = $("#scp-id--sort");
+		$sortDropdown.dropdown({
+			 onChange: function(value, text, $selectedItem) {
+				 
+				 apply(findSearchPagination());
+			}
+		});
+		
 		$(".overlay").visibility({
 			type: "fixed"
 		});
@@ -232,7 +246,7 @@ const StaticCatalogDev = (() => {
 			return (clickEvent) => {
 				
 				for (let checkbox of $filterCheckboxes) {
-					if (pageFieldsFilters.filters[checkbox.id].field === fieldName) {
+					if (pageFilters[checkbox.id].fieldName === fieldName) {
 						checkbox.checked = false;
 					}
 				}
@@ -246,7 +260,7 @@ const StaticCatalogDev = (() => {
 			return (clickEvent) => {
 				
 				for (let checkbox of $filterCheckboxes) {
-					if (pageFieldsFilters.filters[checkbox.id].field === fieldName) {
+					if (pageFilters[checkbox.id].fieldName === fieldName) {
 						let $filterAccordion = $($(checkbox).parents(".ui.vertical.fluid.accordion.menu")[0]);
 						$filterAccordion.accordion("open", 0);
 						$([document.documentElement, document.body]).animate({
@@ -258,6 +272,17 @@ const StaticCatalogDev = (() => {
 		    }
 		}
 		
+		/* The four ones */
+		const loadFilterValue = (pageFieldValue, pageField) => {
+			
+			let pageFilter = {};
+			pageFilter.fieldIndex = pageField.index;
+			pageFilter.filterIndex = pageFieldValue.index;
+			pageFilter.fieldName = pageField.name;
+			
+			pageFilters[pageFieldValue.identifier] = pageFilter;
+		};
+		
 		/* static-catalog-fields.json */
 		$.ajax({
 			dataType: "json",
@@ -267,11 +292,33 @@ const StaticCatalogDev = (() => {
 				pageFieldsFilters = result;
 				let fieldIndex = 0;
 				pageFieldsFilters.fields.map( (pageField) => {
-					pageFields[pageField.name] = pageField;
+					
+					pageFields[pageField.index] = pageField;
 					pageFieldLabels[fieldIndex] = pageField.label;
 					pageFieldIndexes[fieldIndex] = pageField.indexInLine;
+					pageFieldTotalFilters[fieldIndex] = pageField.exception_values.length + pageField.more_exception_values.length +
+						pageField.values.length + pageField.more_values.length;
 					fieldIndex++;
+
+					pageField.exception_values.map((pageFieldValue) => {
+						loadFilterValue(pageFieldValue, pageField);
+					});
+					pageField.more_exception_values.map((pageFieldValue) => {
+						loadFilterValue(pageFieldValue, pageField);
+					});
+					pageField.values.map((pageFieldValue) => {
+						loadFilterValue(pageFieldValue, pageField);
+					});
+					pageField.more_values.map((pageFieldValue) => {
+						loadFilterValue(pageFieldValue, pageField);
+					});
+					
+					let totals = pageFieldsFilters.totals;
+					searchTotals.totalLines = totals.totalLines;
+					searchTotals.blockLines = totals.blockLines;
+					searchTotals.indexLinesModulo = totals.indexLinesModulo;
 				});
+				
 				//console.log(pageFieldsFilters);
 				displayFiltersCount();				
 			}
@@ -284,26 +331,50 @@ const StaticCatalogDev = (() => {
 		let keys = [];
 		let searchFieldsValues = [];
 		
-		let filters = pageFieldsFilters.filters;
 		for (let checkbox of $filterCheckboxes) {
 			if (checkbox.checked) {
-				let filterFieldValue = filters[checkbox.id];
+				let pageFilter = pageFilters[checkbox.id];
 				
-				let filterField = filterFieldValue.field;
-				let filterValue = filterFieldValue.value;
+				let fieldIndex = pageFilter.fieldIndex;
+				let filterIndex = pageFilter.filterIndex;
 				
-				if (!keys.includes(filterField)) {
-					keys.push(filterField);
+				if (!keys.includes(fieldIndex)) {
+					keys.push(fieldIndex);
 					searchFieldsValues.push({
-						"field": filterField,
-						"values": []
+						"fieldIndex": fieldIndex,
+						"filterIndexes": []
 					});
 				}
 
-				let index = keys.indexOf(filterField, 0);
-				searchFieldsValues[index].values.push(filterValue);
+				let index = keys.indexOf(fieldIndex, 0);
+				searchFieldsValues[index].filterIndexes.push(filterIndex);
 			}
 		}
+		
+		
+//		let keys = [];
+//		let searchFieldsValues = [];
+//		
+//		let filters = pageFieldsFilters.filters;
+//		for (let checkbox of $filterCheckboxes) {
+//			if (checkbox.checked) {
+//				let filterFieldValue = filters[checkbox.id];
+//				
+//				let filterField = filterFieldValue.field;
+//				let filterValue = filterFieldValue.value;
+//				
+//				if (!keys.includes(filterField)) {
+//					keys.push(filterField);
+//					searchFieldsValues.push({
+//						"field": filterField,
+//						"values": []
+//					});
+//				}
+//
+//				let index = keys.indexOf(filterField, 0);
+//				searchFieldsValues[index].values.push(filterValue);
+//			}
+//		}
 		//console.log(searchFieldsValues);
 		
 		return searchFieldsValues;
@@ -319,12 +390,12 @@ const StaticCatalogDev = (() => {
 			let $filter_count = $filter_count_template.clone();
 			$filter_count.appendTo($filters_count);
 			
-			let fieldName = searchFieldsValue.field;
-			let pageField = pageFields[fieldName];
-			$filter_count.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(fieldName));
-			let sumDetail = searchFieldsValue.values.length + " (" + pageField.values.length + ")";
+			let fieldIndex = searchFieldsValue.fieldIndex;
+			let pageField = pageFields[fieldIndex];
+			$filter_count.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(pageField.name));
+			let sumDetail = searchFieldsValue.filterIndexes.length + " (" + pageFieldTotalFilters[fieldIndex] + ")";
 			$filter_count.find("div[data-name=scp-name--filter-count-sum]").html(sumDetail);
-			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountClickEvent(fieldName));
+			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountClickEvent(pageField.name));
 		}
 	}
 
@@ -351,7 +422,8 @@ const StaticCatalogDev = (() => {
 		let searchFieldsValues = findSearchFieldValues();
 		let searchData = {
 			"searchFieldsValues": searchFieldsValues,
-			"searchPagination": searchPagination
+			"searchPagination": searchPagination,
+			"searchTotals": searchTotals
 		};
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);

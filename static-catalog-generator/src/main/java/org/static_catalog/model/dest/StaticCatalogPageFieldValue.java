@@ -4,6 +4,8 @@ package org.static_catalog.model.dest;
 /** Page JSON field value */
 public class StaticCatalogPageFieldValue {
 
+	private int index;
+	
 	private String identifier;
 	
 	private String name;
@@ -12,6 +14,15 @@ public class StaticCatalogPageFieldValue {
 
 	private String label;
 	
+	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	public String getIdentifier() {
 		return identifier;
 	}

@@ -10,9 +10,9 @@
 const StaticCatalog = (() => {
 
 	/* _catalog/static-catalog.json */
-	var filterNameIndex;
-	var filterNameValueIndex;
-	var indexSplitType;
+//	var filterNameIndex;
+//	var filterNameValueIndex;
+//	var indexSplitType;
 	var totalLinesCount;
 	var blockLinesCount;
 	var indexLinesModulo;
@@ -59,28 +59,28 @@ const StaticCatalog = (() => {
 		return low;
 	};
 
-	/* Initialize */
-	const initialize = () => {
-		
-		const xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.onreadystatechange = () => {
-			
-			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-				let contents = JSON.parse(xmlHttpRequest.responseText);
-//				c("contents", contents);
-				
-				filterNameIndex = contents.filterNameIndex;
-				filterNameValueIndex = contents.filterNameValueIndex;
-				indexSplitType = contents.indexSplitType;
-				totalLinesCount = contents.totalLinesCount;
-				blockLinesCount = contents.blockLinesCount;
-				indexLinesModulo = contents.indexLinesModulo;
-			}
-		};
-		xmlHttpRequest.open("GET", "_catalog/static-catalog.json", true);
-		xmlHttpRequest.overrideMimeType("text/json");
-		xmlHttpRequest.send();
-	};
+//	/* Initialize */
+//	const initialize = () => {
+//		
+//		const xmlHttpRequest = new XMLHttpRequest();
+//		xmlHttpRequest.onreadystatechange = () => {
+//			
+//			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+//				let contents = JSON.parse(xmlHttpRequest.responseText);
+////				c("contents", contents);
+//				
+//				filterNameIndex = contents.filterNameIndex;
+//				filterNameValueIndex = contents.filterNameValueIndex;
+//				indexSplitType = contents.indexSplitType;
+//				totalLinesCount = contents.totalLinesCount;
+//				blockLinesCount = contents.blockLinesCount;
+//				indexLinesModulo = contents.indexLinesModulo;
+//			}
+//		};
+//		xmlHttpRequest.open("GET", "_catalog/static-catalog.json", true);
+//		xmlHttpRequest.overrideMimeType("text/json");
+//		xmlHttpRequest.send();
+//	};
 	
 	/* Modulo */
 	const getLine = (line) => {
@@ -584,6 +584,10 @@ const StaticCatalog = (() => {
 		let startMs = (new Date()).getTime();
 		cl();
 		
+		totalLinesCount = searchData.searchTotals.totalLines;
+		blockLinesCount = searchData.searchTotals.blockLines;
+		indexLinesModulo = searchData.searchTotals.indexLinesModulo;
+
 		//c(createUnion([1, 3, 5], [2, 4]));
 		
 		let searchFilters = searchData.searchFieldsValues;
@@ -591,14 +595,16 @@ const StaticCatalog = (() => {
 		let indexTypeFiles = [];
 		for (let searchFilter of searchFilters) {
 			
-			let searchFilterName = searchFilter.field;
-			let searchFilterNameIndex = filterNameIndex[searchFilterName];
+//			let searchFilterName = searchFilter.field;
+//			let searchFilterNameIndex = filterNameIndex[searchFilterName];
+			let fieldIndex = searchFilter.fieldIndex;
 			let indexFiles = [];
 			indexTypeFiles.push(indexFiles);
 
-			for (let searchFilterValue of searchFilter.values) {
-				let searchFilterValueIndex = filterNameValueIndex[searchFilterName][searchFilterValue];
-				indexFiles.push("static-catalog-index-value-" + searchFilterNameIndex + "-" + searchFilterValueIndex + ".json");	
+			for (let filterIndex of searchFilter.filterIndexes) {
+				//let searchFilterValueIndex = filterNameValueIndex[searchFilterName][searchFilterValue];
+				//indexFiles.push("static-catalog-index-value-" + searchFilterNameIndex + "-" + searchFilterValueIndex + ".json");
+				indexFiles.push("static-catalog-index-value-" + fieldIndex + "-" + filterIndex + ".json");
 			}
 		}
 		c("indexTypeFiles", indexTypeFiles);
@@ -642,7 +648,7 @@ const StaticCatalog = (() => {
 	}
 
 	/* Constructor */
-	initialize();
+//	initialize();
 	
 	/* Publish public */
 	return {

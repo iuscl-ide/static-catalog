@@ -6,6 +6,8 @@ import java.util.ArrayList;
 /** Page JSON field */
 public class StaticCatalogPageField {
 
+	private int index;
+	
 	private String identifier;
 	
 	private int indexInLine;
@@ -50,6 +52,14 @@ public class StaticCatalogPageField {
 	private int total_more_values_count = 0;
 
 	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	public String getIdentifier() {
 		return identifier;
 	}
