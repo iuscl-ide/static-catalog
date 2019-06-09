@@ -171,7 +171,10 @@ public class S {
 	private static void deleteFolder(String folderName, boolean deleteContentsOnly) {
 
 		try {
-			Path rootPath = Paths.get(folderName);     
+			Path rootPath = Paths.get(folderName);
+			if (Files.notExists(rootPath)) {
+				return;
+			}
 			List<Path> pathsToDelete = Files.walk(rootPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 			if (deleteContentsOnly) {
 				pathsToDelete.remove(rootPath);
