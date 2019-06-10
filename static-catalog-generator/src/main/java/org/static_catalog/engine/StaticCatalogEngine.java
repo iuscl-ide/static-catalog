@@ -23,12 +23,10 @@ import org.pojava.datetime.DateTime;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
-import org.static_catalog.model.dest.StaticCatalogContents;
 import org.static_catalog.model.dest.StaticCatalogIndexes;
 import org.static_catalog.model.dest.StaticCatalogPage;
 import org.static_catalog.model.dest.StaticCatalogPageField;
 import org.static_catalog.model.dest.StaticCatalogPageFieldValue;
-import org.static_catalog.model.dest.StaticCatalogPageFilter;
 import org.static_catalog.model.dest.StaticCatalogPageTotals;
 import org.static_catalog.model.src.StaticCatalogConfigurationField;
 import org.static_catalog.model.src.StaticCatalogConfigurationFields;
@@ -409,7 +407,7 @@ public class StaticCatalogEngine {
 	}
 
 	/** Generate filters */
-	public static void generateFields(StaticCatalogPage page, String sourceCsvFileName, String filtersFileName, String destinationFolderName,	
+	public static void generateFields(StaticCatalogPage page, String sourceCsvFileName, String fieldsFiltersFileName, String destinationFolderName,	
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Fields and filters time */
@@ -427,39 +425,39 @@ public class StaticCatalogEngine {
 		ArrayList<StaticCatalogPageField> pageFields = page.getFields();
 		
 		/* Generate */
-		StaticCatalogConfigurationFields configurationFields = S.loadObjectFromJsonFileName(filtersFileName, StaticCatalogConfigurationFields.class);
-		page.setDescription(configurationFields.getDescription());
+		StaticCatalogConfigurationFields configurationFieldsList = S.loadObjectFromJsonFileName(fieldsFiltersFileName, StaticCatalogConfigurationFields.class);
+		page.setDescription(configurationFieldsList.getDescription());
 		/* All fields will be exposed (!) as filters */
-		ArrayList<StaticCatalogConfigurationField> filterFields = configurationFields.getFields();
-		int lineLength = filterFields.size();
+		ArrayList<StaticCatalogConfigurationField> configurationFields = configurationFieldsList.getFields();
+		int lineLength = configurationFields.size();
 		/* Filters field names */
-		LinkedHashMap<String, StaticCatalogConfigurationField> nameFilters = new LinkedHashMap<>();
-		int filtersFieldIndex = 0;
+		LinkedHashMap<String, StaticCatalogConfigurationField> fieldNames = new LinkedHashMap<>();
+		int configurationFieldIndex = 0;
 		int filtersCnt = 0;
-		for (StaticCatalogConfigurationField filtersField : filterFields) {
-			if (filtersField.getIsFilter()) {
+		for (StaticCatalogConfigurationField configurationField : configurationFields) {
+			if (configurationField.getIsFilter()) {
 				filtersCnt++;
 			}
-			String filtersFieldName = filtersField.getName();
+			String configurationFieldName = configurationField.getName();
 			
 			StaticCatalogPageField newPageField = new StaticCatalogPageField();
-			newPageField.setIndexInLine(filtersField.getIndexInLine());
-			newPageField.setLabel(filtersField.getLabel());
-			newPageField.setName(filtersFieldName);
-			newPageField.setIndex(filtersFieldIndex);
-			newPageField.setIdentifier("sc_field__" + filtersFieldIndex + "__" + U.makeIdentifier(filtersFieldName));
-			filtersFieldIndex++;
-			newPageField.setType(filtersField.getType());
-			newPageField.setFilter(filtersField.getIsFilter());
-			newPageField.setSortAsc(filtersField.getIsSortAsc());
-			newPageField.setSortDesc(filtersField.getIsSortDesc());
+			newPageField.setCsvIndex(configurationField.getCsvIndex());
+			newPageField.setLabel(configurationField.getLabel());
+			newPageField.setName(configurationFieldName);
+			newPageField.setIndex(configurationFieldIndex);
+			newPageField.setIdentifier("sc_field__" + configurationFieldIndex + "__" + U.makeIdentifier(configurationFieldName));
+			configurationFieldIndex++;
+			newPageField.setType(configurationField.getType());
+			newPageField.setFilter(configurationField.getIsFilter());
+			newPageField.setSortAsc(configurationField.getIsSortAsc());
+			newPageField.setSortDesc(configurationField.getIsSortDesc());
 
-			nameFilters.put(filtersFieldName, filtersField);
+			fieldNames.put(configurationFieldName, configurationField);
 			pageFields.add(newPageField);
 		}
 		
 		/* Examine closely */
-		ArrayList<String> fieldNames = new ArrayList<>();
+		ArrayList<String> csvFieldNames = new ArrayList<>();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
@@ -470,7 +468,7 @@ public class StaticCatalogEngine {
 		
 		LinkedHashMap<String, HashMap<String, Long>> uniqueExceptionValuesWithCount = new LinkedHashMap<>();
 		LinkedHashMap<String, HashMap<String, Long>> uniqueValuesWithCount = new LinkedHashMap<>();
-		for (String fieldName : nameFilters.keySet()) {
+		for (String fieldName : fieldNames.keySet()) {
 			uniqueExceptionValuesWithCount.put(fieldName, new HashMap<>());
 			uniqueValuesWithCount.put(fieldName, new HashMap<>());
 		}
@@ -479,10 +477,10 @@ public class StaticCatalogEngine {
 		while (csvLine != null) {
 
 			/* CSV field names */
-			if ((csvLineIndex == 0) && (fieldNames.size() == 0)) {
+			if ((csvLineIndex == 0) && (csvFieldNames.size() == 0)) {
 				if (useFirstLineAsHeader) {
 					for (int index = 0; index < lineLength; index++) {
-						fieldNames.add(csvLine[index]);
+						csvFieldNames.add(csvLine[index]);
 					}
 					csvLine = csvParser.parseNext();
 					csvLineIndex++;
@@ -490,22 +488,22 @@ public class StaticCatalogEngine {
 				}
 				else {
 					for (int index = 0; index < lineLength; index++) {
-						fieldNames.add("Field " + (index + 1));
+						csvFieldNames.add("Field " + (index + 1));
 					}
 				}
 			}
 			
 			for (int index = 0; index < lineLength; index++) {
 				
-				String fieldName = fieldNames.get(index);
-				if (!nameFilters.containsKey(fieldName)) {
+				String csvFieldName = csvFieldNames.get(index);
+				if (!fieldNames.containsKey(csvFieldName)) {
 					/* Is not a field filter */
 					L.e("Inconsistent filters with the file", new Exception());
 				}
 
-				String fieldValue = csvLine[index];
-				if (fieldValue == null) {
-					HashMap<String, Long> exceptions = uniqueExceptionValuesWithCount.get(fieldName);
+				String csvFieldValue = csvLine[index];
+				if (csvFieldValue == null) {
+					HashMap<String, Long> exceptions = uniqueExceptionValuesWithCount.get(csvFieldName);
 					long cnt = 0;
 					if (exceptions.containsKey("NULL")) {
 						cnt = exceptions.get("NULL");
@@ -515,39 +513,39 @@ public class StaticCatalogEngine {
 					continue;
 				}
 
-				StaticCatalogConfigurationField configurationField = nameFilters.get(fieldName);
+				StaticCatalogConfigurationField configurationField = fieldNames.get(csvFieldName);
 				if (configurationField.getIsFilter()) {
 					/* Defined filter */
 					
 					try {
 						if (configurationField.getType().equals(TYPE_DATE)) {
-							DateTime.parse(fieldValue);
+							DateTime.parse(csvFieldValue);
 						}
 						if (configurationField.getType().equals(TYPE_LONG)) {
-							Long.parseLong(fieldValue);
+							Long.parseLong(csvFieldValue);
 						}
 						if (configurationField.getType().equals(TYPE_DOUBLE)) {
-							Double.parseDouble(fieldValue);
+							Double.parseDouble(csvFieldValue);
 						}
 					}
 					catch (Exception exception) {
-						HashMap<String, Long> exceptions = uniqueExceptionValuesWithCount.get(fieldName);
+						HashMap<String, Long> exceptions = uniqueExceptionValuesWithCount.get(csvFieldName);
 						long cnt = 0;
-						if (exceptions.containsKey(fieldValue)) {
-							cnt = exceptions.get(fieldValue);
+						if (exceptions.containsKey(csvFieldValue)) {
+							cnt = exceptions.get(csvFieldValue);
 						}
 						cnt++;
-						exceptions.put(fieldValue, cnt);
+						exceptions.put(csvFieldValue, cnt);
 						continue;
 					}
 
-					HashMap<String, Long> values = uniqueValuesWithCount.get(fieldName);
+					HashMap<String, Long> values = uniqueValuesWithCount.get(csvFieldName);
 					long cnt = 0;
-					if (values.containsKey(fieldValue)) {
-						cnt = values.get(fieldValue);
+					if (values.containsKey(csvFieldValue)) {
+						cnt = values.get(csvFieldValue);
 					}
 					cnt++;
-					values.put(fieldValue, cnt);
+					values.put(csvFieldValue, cnt);
 				}
 				else {
 					/* Not defined as filter */
@@ -583,7 +581,7 @@ public class StaticCatalogEngine {
 		for (StaticCatalogPageField pageField : pageFields) {
 			
 			String fieldName = pageField.getName();
-			StaticCatalogConfigurationField configurationField = nameFilters.get(fieldName);
+			StaticCatalogConfigurationField configurationField = fieldNames.get(fieldName);
 			String transformFormat = configurationField.getTransformFormat();
 			String transformValues = configurationField.getTransformValues();
 			HashMap<String, String> transformValuesLabels = new HashMap<>(); 
@@ -611,30 +609,14 @@ public class StaticCatalogEngine {
 			int exceptionsSize = exceptions.size();
 			int valuesSize = values.size();
 			int totalSize = exceptionsSize + valuesSize;
-	
+			
 			pageField.setTotal_values_count(totalSize);
 			
 			if (totalSize > maxDisplayValues) {
-				if (exceptionsSize > maxDisplayValues) {
-					pageField.setHas_more_exception_values(true);
-					pageField.setException_values_count(minDisplayValues);
-					pageField.setMore_exception_values_count(exceptionsSize - minDisplayValues);
-					
-					pageField.setMore_values_count(valuesSize);		
-				}
-				else {
-					pageField.setException_values_count(exceptionsSize);
-					
-					pageField.setHas_more_values(true);
-					pageField.setValues_count(minDisplayValues);
-					pageField.setMore_values_count(valuesSize - minDisplayValues);
-				}
-				
 				pageField.setTotal_more_values_count(totalSize - minDisplayValues);
 			}
 			else {
-				pageField.setException_values_count(exceptionsSize);
-				pageField.setValues_count(valuesSize);
+				pageField.setTotal_more_values_count(0);
 			}
 			
 			String fieldType = pageField.getType(); 
@@ -647,12 +629,11 @@ public class StaticCatalogEngine {
 			String fieldIdentifierPrefix = pageField.getIdentifier().replace("sc_field__", "sc_filter__");
 
 			/* Exceptions */
-			int exceptionsIndex = 0;
-			int moreExceptionsIndex = pageField.getException_values_count();
 			for (String exceptionKey : exceptionKeys) {
 				
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 				filterValue.setIndex(keyIndex);
+				filterValue.setIsException(true);
 				String valueIdentifier = fieldIdentifierPrefix + "__e_" + keyIndex + "__" + U.makeIdentifier(exceptionKey);
 				keyIndex++;
 				filterValue.setIdentifier(valueIdentifier);
@@ -666,29 +647,15 @@ public class StaticCatalogEngine {
 				}
 
 				filterValue.setCount(exceptions.get(exceptionKey));
-				
-				if (exceptionsIndex < moreExceptionsIndex) {
-					pageField.getException_values().add(filterValue);
-				}
-				else {
-					pageField.getMore_exception_values().add(filterValue);
-				}
-				
-				StaticCatalogPageFilter pageFilter = new StaticCatalogPageFilter();
-				pageFilter.setField(fieldName);
-				pageFilter.setValue(exceptionKey);
-//				pageFilters.put(valueIdentifier, pageFilter);
-				
-				exceptionsIndex++;
+				pageField.getValues().add(filterValue);
 			}
 
 			/* Values */
-			int valuesIndex = 0;
-			int moreValuesIndex = pageField.getValues_count();
 			for (String valueKey : valueKeys) {
 
 				StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 				filterValue.setIndex(keyIndex);
+				filterValue.setIsException(false);
 				String valueIdentifier = fieldIdentifierPrefix + "__" + keyIndex + "__" + U.makeIdentifier(valueKey);
 				keyIndex++;
 				filterValue.setIdentifier(valueIdentifier);
@@ -713,70 +680,11 @@ public class StaticCatalogEngine {
 				}
 				
 				filterValue.setCount(values.get(valueKey));
-				
-				if (valuesIndex < moreValuesIndex) {
-					pageField.getValues().add(filterValue);
-				}
-				else {
-					pageField.getMore_values().add(filterValue);
-				}
-
-				StaticCatalogPageFilter pageFilter = new StaticCatalogPageFilter();
-				pageFilter.setField(fieldName);
-				pageFilter.setValue(valueKey);
-//				pageFilters.put(valueIdentifier, pageFilter);
-
-				valuesIndex++;
+				pageField.getValues().add(filterValue);
 			}
 		}
-		
-		/* Contents */
-//		LinkedHashMap<String, Integer> filterNameIndex = contents.getFilterNameIndex();
-//		LinkedHashMap<String, LinkedHashMap<String, Integer>> filterNameValueIndex = contents.getFilterNameValueIndex();
-		
-//		int filterNameIndexCnt = 0;
-//		for (StaticCatalogPageField pageField : pageFields) {
-//			
-//			if (pageField.getFilter()) {
-//				String filterName = pageField.getName();
-//				filterNameIndex.put(filterName, filterNameIndexCnt++);
-//				
-//				LinkedHashMap<String, Integer> filterValueIndex = new LinkedHashMap<>();
-//				filterNameValueIndex.put(filterName, filterValueIndex);
-//				
-//				int filterNameValueIndexCnt = 0;
-//				for (StaticCatalogPageFieldValue value : pageField.getException_values()) {
-//					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
-//				}
-//				for (StaticCatalogPageFieldValue value : pageField.getMore_exception_values()) {
-//					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
-//				}
-//				for (StaticCatalogPageFieldValue value : pageField.getValues()) {
-//					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
-//				}
-//				for (StaticCatalogPageFieldValue value : pageField.getMore_values()) {
-//					filterValueIndex.put(value.getName(), filterNameValueIndexCnt++);
-//				}
-//			}
-//		}
-		
-//		long nameTotalSize = totalLinesCount * (2 * totalLinesDigitsCount + 2);
-//		long namesCount = filterNameIndex.size();
-//		
-//		if (namesCount * nameTotalSize < 1000000) {
-//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NONE);
-//		}
-//		else if (nameTotalSize < 1000000) {
-//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
-//		}
-//		else {
-//			contents.setIndexSplitType(INDEX_SPLIT_TYPE_VALUES);
-//		}
-//		
-//		contents.setTotalLinesCount(totalLinesCount);
-//		contents.setBlockLinesCount(blockLinesCount);
-//		contents.setIndexLinesModulo(indexLinesModulo);
-		
+
+		/* Totals */
 		StaticCatalogPageTotals totals = page.getTotals();
 		
 		totals.setTotalLines(totalLinesCount);
@@ -833,16 +741,7 @@ public class StaticCatalogEngine {
 
 				/* All filter values */
 				LinkedHashMap<String, ArrayList<Long>> filterValues = new LinkedHashMap<>(); 
-				for (StaticCatalogPageFieldValue value : pageField.getException_values()) {
-					filterValues.put(value.getName(), new ArrayList<>());
-				}
-				for (StaticCatalogPageFieldValue value : pageField.getMore_exception_values()) {
-					filterValues.put(value.getName(), new ArrayList<>());
-				}
 				for (StaticCatalogPageFieldValue value : pageField.getValues()) {
-					filterValues.put(value.getName(), new ArrayList<>());
-				}
-				for (StaticCatalogPageFieldValue value : pageField.getMore_values()) {
 					filterValues.put(value.getName(), new ArrayList<>());
 				}
 				nameValuesLines.put(pageField.getName(), filterValues);
@@ -920,7 +819,7 @@ public class StaticCatalogEngine {
 			for (int index : filterIndexes) {
 				
 				StaticCatalogPageField pageField = pageFields.get(index);
-				String fieldValue = csvLine[pageField.getIndexInLine() - 1];
+				String fieldValue = csvLine[pageField.getCsvIndex() - 1];
 				if (fieldValue == null) {
 					fieldValue = "NULL";
 				}
@@ -1035,25 +934,12 @@ public class StaticCatalogEngine {
 		if (type.equals(TYPE_DATE)) {
 			Collections.sort(keys, datetimeComparator);
 		}
-
 		if (type.equals(TYPE_LONG)) {
 			Collections.sort(keys, longComparator);
-//			ArrayList<Long> longKeys = new ArrayList<>();
-//			keys.forEach(key -> longKeys.add(Long.parseLong(key)));
-//			Collections.sort(longKeys);
-//			keys.clear();
-//			longKeys.forEach(longKey -> keys.add(longKey.toString()));
 		}
-				
 		if (type.equals(TYPE_DOUBLE)) {
 			Collections.sort(keys, doubleComparator);
-//			ArrayList<Double> doubleKeys = new ArrayList<>();
-//			keys.forEach(key -> doubleKeys.add(Double.parseDouble(key)));
-//			Collections.sort(doubleKeys);
-//			keys.clear();
-//			doubleKeys.forEach(doubleKey -> keys.add(doubleKey.toString()));
 		}
-
 		if (type.equals(TYPE_TEXT)) {
 			Collections.sort(keys, stringAsNumberComparator);
 		}

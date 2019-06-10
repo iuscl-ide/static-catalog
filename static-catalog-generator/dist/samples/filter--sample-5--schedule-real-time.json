@@ -1,7 +1,7 @@
 {
   "description" : "Sample 5: schedule-real-time.csv - <a href=\"https://github.com/GerHobbelt/Developing-a-D3.js-Edge/tree/master/data_sources/geneva\"  target=\"_blank\">geneva-transport-2012</a>",
   "fields" : [ {
-    "indexInLine" : 1,
+    "csvIndex" : 1,
     "name" : "date",
     "type" : "date",
     "label" : "Date",
@@ -12,7 +12,7 @@
     "transformFormat" : "EEEE, MMMM dd yyyy",
     "transformValues" : null
   }, {
-    "indexInLine" : 7,
+    "csvIndex" : 7,
     "name" : "tripDirection",
     "type" : "text",
     "label" : "Trip direction",
@@ -23,7 +23,7 @@
     "transformFormat" : null,
     "transformValues" : "A = Aller; R = Retour"
   }, {
-    "indexInLine" : 2,
+    "csvIndex" : 2,
     "name" : "routeCode",
     "type" : "text",
     "label" : "Route code",
@@ -34,7 +34,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 3,
+    "csvIndex" : 3,
     "name" : "serviceVehicle",
     "type" : "text",
     "label" : "Service vehicle",
@@ -45,7 +45,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 5,
+    "csvIndex" : 5,
     "name" : "vehicleId",
     "type" : "long",
     "label" : "Vehicle ID",
@@ -56,7 +56,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 4,
+    "csvIndex" : 4,
     "name" : "tripId",
     "type" : "long",
     "label" : "Trip ID",
@@ -67,7 +67,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 6,
+    "csvIndex" : 6,
     "name" : "patternId",
     "type" : "long",
     "label" : "Pattern ID",
@@ -78,7 +78,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 8,
+    "csvIndex" : 8,
     "name" : "tripLength",
     "type" : "long",
     "label" : "Trip length",
@@ -89,7 +89,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 9,
+    "csvIndex" : 9,
     "name" : "stopSequenceNr",
     "type" : "long",
     "label" : "Stop sequence Nr",
@@ -100,7 +100,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 10,
+    "csvIndex" : 10,
     "name" : "stopCode",
     "type" : "text",
     "label" : "Stop code",
@@ -111,7 +111,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 11,
+    "csvIndex" : 11,
     "name" : "stopLength",
     "type" : "long",
     "label" : "Stop length",
@@ -122,7 +122,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 12,
+    "csvIndex" : 12,
     "name" : "stopTimeSchedule",
     "type" : "date",
     "label" : "Stop time schedule",
@@ -133,7 +133,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 13,
+    "csvIndex" : 13,
     "name" : "stopTimeReal",
     "type" : "date",
     "label" : "Stop time real",
@@ -144,7 +144,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 14,
+    "csvIndex" : 14,
     "name" : "passengerCountTripUp",
     "type" : "long",
     "label" : "Passenger count trip up",
@@ -155,7 +155,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 15,
+    "csvIndex" : 15,
     "name" : "passengerCountTripDown",
     "type" : "long",
     "label" : "Passenger count trip down",
@@ -166,7 +166,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 16,
+    "csvIndex" : 16,
     "name" : "passengerCountStopUp",
     "type" : "long",
     "label" : "Passenger count stop up",
@@ -177,7 +177,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 17,
+    "csvIndex" : 17,
     "name" : "passengerCountStopDown",
     "type" : "long",
     "label" : "Passenger count stop down",
@@ -188,7 +188,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 18,
+    "csvIndex" : 18,
     "name" : "passengerLoadStop",
     "type" : "long",
     "label" : "Passenger load stop",
@@ -199,7 +199,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 19,
+    "csvIndex" : 19,
     "name" : "passengerCountDoor1Up",
     "type" : "long",
     "label" : "Passenger count door 1 up",
@@ -210,7 +210,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 20,
+    "csvIndex" : 20,
     "name" : "passengerCountDoor1Down",
     "type" : "long",
     "label" : "Passenger count door 1 down",
@@ -221,7 +221,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 21,
+    "csvIndex" : 21,
     "name" : "passengerCountDoor2Up",
     "type" : "long",
     "label" : "Passenger count door 2 up",
@@ -232,7 +232,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 22,
+    "csvIndex" : 22,
     "name" : "passengerCountDoor2Down",
     "type" : "long",
     "label" : "Passenger count door 2 down",
@@ -243,7 +243,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 23,
+    "csvIndex" : 23,
     "name" : "passengerCountDoor3Up",
     "type" : "long",
     "label" : "Passenger count door 3 up",
@@ -254,7 +254,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 24,
+    "csvIndex" : 24,
     "name" : "passengerCountDoor3Down",
     "type" : "long",
     "label" : "Passenger count door 3 down",
@@ -265,7 +265,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 25,
+    "csvIndex" : 25,
     "name" : "passengerCountDoor4Up",
     "type" : "long",
     "label" : "Passenger count door 4 up",
@@ -276,7 +276,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 26,
+    "csvIndex" : 26,
     "name" : "passengerCountDoor4Down",
     "type" : "long",
     "label" : "Passenger count door 4 down",
@@ -287,7 +287,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 27,
+    "csvIndex" : 27,
     "name" : "passengerCountDoor5Up",
     "type" : "long",
     "label" : "Passenger count door 5 up",
@@ -298,7 +298,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 28,
+    "csvIndex" : 28,
     "name" : "passengerCountDoor5Down",
     "type" : "long",
     "label" : "Passenger count door 5 down",
@@ -309,7 +309,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 29,
+    "csvIndex" : 29,
     "name" : "passengerCountDoor6Up",
     "type" : "long",
     "label" : "Passenger count door 6 up",
@@ -320,7 +320,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 30,
+    "csvIndex" : 30,
     "name" : "passengerCountDoor6Down",
     "type" : "long",
     "label" : "Passenger count door 6 down",
@@ -331,7 +331,7 @@
     "transformFormat" : null,
     "transformValues" : null
   }, {
-    "indexInLine" : 31,
+    "csvIndex" : 31,
     "name" : "isRedirection",
     "type" : "text",
     "label" : "Is redirection",
@@ -342,7 +342,7 @@
     "transformFormat" : null,
     "transformValues" : "Y = Yes; N = No"
   }, {
-    "indexInLine" : 32,
+    "csvIndex" : 32,
     "name" : "isDelocalisation",
     "type" : "text",
     "label" : "Is delocalisation",
@@ -353,7 +353,7 @@
     "transformFormat" : null,
     "transformValues" : "Y = Yes; N = No"
   }, {
-    "indexInLine" : 33,
+    "csvIndex" : 33,
     "name" : "isRelocalisation",
     "type" : "text",
     "label" : "Is relocalisation",

@@ -1,7 +1,7 @@
 {
   "description" : "Sample 3: FakeNameGenerator.com_*.csv - <a href=\"https://www.fakenamegenerator.com/\" target=\"_blank\">FakeNameGenerator.com</a>",
   "fields" : [ {
-    "indexInLine" : 10,
+    "csvIndex" : 10,
     "name" : "State",
     "type" : "text",
     "label" : "State",
@@ -12,9 +12,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : true,
-    "isSortDesc" : true
+    "isSortDesc" : true,
+    "sortAscLabel" : "State Ascending",
+    "sortDescLabel" : "State Descending"
   }, {
-    "indexInLine" : 11,
+    "csvIndex" : 11,
     "name" : "StateFull",
     "type" : "text",
     "label" : "State full",
@@ -25,9 +27,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 9,
+    "csvIndex" : 9,
     "name" : "City",
     "type" : "text",
     "label" : "City",
@@ -38,9 +42,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : true,
-    "isSortDesc" : true
+    "isSortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 1,
+    "csvIndex" : 1,
     "name" : "Number",
     "type" : "long",
     "label" : "Number",
@@ -51,9 +57,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 2,
+    "csvIndex" : 2,
     "name" : "Gender",
     "type" : "text",
     "label" : "Gender",
@@ -64,9 +72,11 @@
     "transformFormat" : null,
     "transformValues" : "female = Woman; male = Man",
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 3,
+    "csvIndex" : 3,
     "name" : "NameSet",
     "type" : "text",
     "label" : "Name set",
@@ -77,9 +87,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 4,
+    "csvIndex" : 4,
     "name" : "Title",
     "type" : "text",
     "label" : "Title",
@@ -90,9 +102,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 5,
+    "csvIndex" : 5,
     "name" : "GivenName",
     "type" : "text",
     "label" : "Given name",
@@ -103,9 +117,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 6,
+    "csvIndex" : 6,
     "name" : "MiddleInitial",
     "type" : "text",
     "label" : "Middle initial",
@@ -116,9 +132,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 7,
+    "csvIndex" : 7,
     "name" : "Surname",
     "type" : "text",
     "label" : "Surname",
@@ -129,9 +147,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 8,
+    "csvIndex" : 8,
     "name" : "StreetAddress",
     "type" : "text",
     "label" : "Street address",
@@ -142,9 +162,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 12,
+    "csvIndex" : 12,
     "name" : "ZipCode",
     "type" : "long",
     "label" : "Zip code",
@@ -155,9 +177,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 13,
+    "csvIndex" : 13,
     "name" : "Country",
     "type" : "text",
     "label" : "Country",
@@ -168,9 +192,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 14,
+    "csvIndex" : 14,
     "name" : "CountryFull",
     "type" : "text",
     "label" : "Country full",
@@ -181,9 +207,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 15,
+    "csvIndex" : 15,
     "name" : "EmailAddress",
     "type" : "text",
     "label" : "Email address",
@@ -194,9 +222,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 16,
+    "csvIndex" : 16,
     "name" : "Username",
     "type" : "text",
     "label" : "Username",
@@ -207,9 +237,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 17,
+    "csvIndex" : 17,
     "name" : "Password",
     "type" : "text",
     "label" : "Password",
@@ -220,9 +252,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 18,
+    "csvIndex" : 18,
     "name" : "BrowserUserAgent",
     "type" : "text",
     "label" : "Browser user agent",
@@ -233,9 +267,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 19,
+    "csvIndex" : 19,
     "name" : "TelephoneNumber",
     "type" : "text",
     "label" : "Telephone number",
@@ -246,9 +282,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 20,
+    "csvIndex" : 20,
     "name" : "TelephoneCountryCode",
     "type" : "long",
     "label" : "Telephone country code",
@@ -259,9 +297,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 21,
+    "csvIndex" : 21,
     "name" : "MothersMaiden",
     "type" : "text",
     "label" : "Mothers maiden",
@@ -272,9 +312,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 22,
+    "csvIndex" : 22,
     "name" : "Birthday",
     "type" : "date",
     "label" : "Birthday",
@@ -285,9 +327,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 23,
+    "csvIndex" : 23,
     "name" : "Age",
     "type" : "long",
     "label" : "Age",
@@ -298,9 +342,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 24,
+    "csvIndex" : 24,
     "name" : "TropicalZodiac",
     "type" : "text",
     "label" : "Tropical zodiac",
@@ -311,9 +357,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 25,
+    "csvIndex" : 25,
     "name" : "CCType",
     "type" : "text",
     "label" : "C c type",
@@ -324,9 +372,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 26,
+    "csvIndex" : 26,
     "name" : "CCNumber",
     "type" : "long",
     "label" : "C c number",
@@ -337,9 +387,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 27,
+    "csvIndex" : 27,
     "name" : "CVV2",
     "type" : "long",
     "label" : "C v v 2",
@@ -350,9 +402,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 28,
+    "csvIndex" : 28,
     "name" : "CCExpires",
     "type" : "text",
     "label" : "C c expires",
@@ -363,9 +417,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 29,
+    "csvIndex" : 29,
     "name" : "NationalID",
     "type" : "text",
     "label" : "National i d",
@@ -376,9 +432,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 30,
+    "csvIndex" : 30,
     "name" : "UPS",
     "type" : "text",
     "label" : "U p s",
@@ -389,9 +447,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 31,
+    "csvIndex" : 31,
     "name" : "WesternUnionMTCN",
     "type" : "long",
     "label" : "Western union m t c n",
@@ -402,9 +462,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 32,
+    "csvIndex" : 32,
     "name" : "MoneyGramMTCN",
     "type" : "long",
     "label" : "Money gram m t c n",
@@ -415,9 +477,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 33,
+    "csvIndex" : 33,
     "name" : "Color",
     "type" : "text",
     "label" : "Color",
@@ -428,9 +492,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 34,
+    "csvIndex" : 34,
     "name" : "Occupation",
     "type" : "text",
     "label" : "Occupation",
@@ -441,9 +507,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 35,
+    "csvIndex" : 35,
     "name" : "Company",
     "type" : "text",
     "label" : "Company",
@@ -454,9 +522,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 36,
+    "csvIndex" : 36,
     "name" : "Vehicle",
     "type" : "text",
     "label" : "Vehicle",
@@ -467,9 +537,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 37,
+    "csvIndex" : 37,
     "name" : "Domain",
     "type" : "text",
     "label" : "Domain",
@@ -480,9 +552,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 38,
+    "csvIndex" : 38,
     "name" : "BloodType",
     "type" : "text",
     "label" : "Blood type",
@@ -493,9 +567,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 39,
+    "csvIndex" : 39,
     "name" : "Pounds",
     "type" : "double",
     "label" : "Pounds",
@@ -506,9 +582,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 40,
+    "csvIndex" : 40,
     "name" : "Kilograms",
     "type" : "double",
     "label" : "Kilograms",
@@ -519,9 +597,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 41,
+    "csvIndex" : 41,
     "name" : "FeetInches",
     "type" : "text",
     "label" : "Feet inches",
@@ -532,9 +612,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 42,
+    "csvIndex" : 42,
     "name" : "Centimeters",
     "type" : "long",
     "label" : "Centimeters",
@@ -545,9 +627,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 43,
+    "csvIndex" : 43,
     "name" : "GUID",
     "type" : "text",
     "label" : "G u i d",
@@ -558,9 +642,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 44,
+    "csvIndex" : 44,
     "name" : "Latitude",
     "type" : "double",
     "label" : "Latitude",
@@ -571,9 +657,11 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   }, {
-    "indexInLine" : 45,
+    "csvIndex" : 45,
     "name" : "Longitude",
     "type" : "double",
     "label" : "Longitude",
@@ -584,6 +672,8 @@
     "transformFormat" : null,
     "transformValues" : null,
     "isSortAsc" : false,
-    "isSortDesc" : false
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
   } ]
 }

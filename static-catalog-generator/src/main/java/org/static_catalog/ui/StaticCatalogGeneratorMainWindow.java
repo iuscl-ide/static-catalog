@@ -986,7 +986,7 @@ public class StaticCatalogGeneratorMainWindow {
 					StaticCatalogConfigurationField staticCatalogField = new StaticCatalogConfigurationField();
 					String name = gridItem.getText(0);
 					
-					staticCatalogField.setIndexInLine(++indexInLine);
+					staticCatalogField.setCsvIndex(++indexInLine);
 					staticCatalogField.setName(name);
 
 					staticCatalogField.setLabel(U.makeLabel(name));
@@ -1198,7 +1198,7 @@ public class StaticCatalogGeneratorMainWindow {
 					index++;
 					gridItem.setText(col++, "" + index);
 
-					gridItem.setText(col++, "" + staticCatalogField.getIndexInLine());
+					gridItem.setText(col++, "" + staticCatalogField.getCsvIndex());
 					gridItem.setText(col++, staticCatalogField.getName());
 					gridItem.setText(col++, staticCatalogField.getLabel());
 					gridItem.setText(col++, typeNames.get(staticCatalogField.getType()));

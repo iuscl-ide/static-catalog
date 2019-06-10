@@ -40,6 +40,8 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	private Text transformValuesText;	
 	private Button sortAscCheckbox;
 	private Button sortDescCheckbox;
+	private Text sortAscLabelText;
+	private Text sortDescLabelText;
 	
 	/** Create window */
 	public void createFieldEditWindow(Shell mainShell, StaticCatalogGeneratorCallback callback) {
@@ -166,9 +168,19 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    sortAscLabel.setText("Sort Asc.");
 	    sortAscCheckbox = new Button(topGroup, SWT.CHECK);
 
+	    final Label sortAscLabelLabel = new Label(topGroup, SWT.NONE);
+	    sortAscLabelLabel.setText("Sort Asc. Label");
+	    sortAscLabelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    sortAscLabelText.setLayoutData(ui.createFillHorizontalGridData());
+	    
 	    final Label sortDescLabel = new Label(topGroup, SWT.NONE);
 	    sortDescLabel.setText("Sort Desc.");
 	    sortDescCheckbox = new Button(topGroup, SWT.CHECK);
+
+	    final Label sortDescLabelLabel = new Label(topGroup, SWT.NONE);
+	    sortDescLabelLabel.setText("Sort Desc. Label");
+	    sortDescLabelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    sortDescLabelText.setLayoutData(ui.createFillHorizontalGridData());
 
 	    
 //	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
@@ -219,7 +231,10 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				
 				staticCatalogField.setIsSortAsc(sortAscCheckbox.getSelection());
 				staticCatalogField.setIsSortDesc(sortDescCheckbox.getSelection());
-				
+
+				staticCatalogField.setSortAscLabel(sortAscLabelText.getText());
+				staticCatalogField.setSortDescLabel(sortDescLabelText.getText());
+
 				fieldEditShell.setVisible(false);
 				callback.doCallback();
 			}
@@ -244,7 +259,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		this.staticCatalogField = staticCatalogField;
 		
 		indexValueLabel.setText("" + index);
-		indexInLineValueLabel.setText("" + staticCatalogField.getIndexInLine());
+		indexInLineValueLabel.setText("" + staticCatalogField.getCsvIndex());
 		nameValueLabel.setText(staticCatalogField.getName());
 
 		labelText.setText(staticCatalogField.getLabel());
@@ -265,7 +280,12 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		
 		sortAscCheckbox.setSelection(staticCatalogField.getIsSortAsc());
 		sortDescCheckbox.setSelection(staticCatalogField.getIsSortDesc());
-		
+
+		String sortAscLabel = staticCatalogField.getSortAscLabel();
+		sortAscLabelText.setText(sortAscLabel == null ? "" : sortAscLabel);
+		String sortDescLabel = staticCatalogField.getSortDescLabel();
+		sortDescLabelText.setText(sortDescLabel == null ? "" : sortDescLabel);
+
 		fieldEditShell.setVisible(true);
 		fieldEditShell.moveAbove(null);
 	}

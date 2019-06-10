@@ -131,21 +131,12 @@
 						</a>
 						<div class="active content">
 							<div class="ui list">
-								{% for field_value in field.exception_values %}
+								{% assign display_values_count = field.total_values_count | minus: field.total_more_values_count %}
+								{% for field_value in field.values %} {% assign field_value_index = field_value.index | abs %} {% if field_value_index < display_values_count %}
 								<div class="item">
 									<div class="ui checkbox">
 										<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
-										<label for="{{ field_value.identifier }}" style="font-style: italic;">{{ field_value.label }}</label>
-									</div>
-									<div class="right floated content">
-										<div class="ui basic horizontal label">{{ field_value.count }}</div>
-									</div>
-								</div>
-								{% endfor %} {% for field_value in field.values %}
-								<div class="item">
-									<div class="ui checkbox">
-										<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
-										<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
+										<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
 										<div class="ui basic horizontal label"
@@ -154,33 +145,26 @@
 										</div>
 									</div>
 								</div>
-								{% endfor %} {% if field.has_more_values or field.has_more_exception_values %}
+								{% endif %} {% endfor %}
+								{% if field.total_more_values_count > 0 %}
 								<div class="item">
-									<a class="title"> <i class="dropdown icon"></i> Show more <span
-										class="ui left pointing basic horizontal label">{{ field.total_more_values_count }}</span></a>
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.total_more_values_count }}</span></a>
 									<div class="content">
 										<div class="ui list">
-											{% for field_value in field.more_exception_values %}
+											{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %} {% if field_value_index >= display_values_count %}
 											<div class="item">
 												<div class="ui checkbox">
 													<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
-													<label for="{{ field_value.identifier }}" style="font-style: italic;">{{ field_value.label }}</label>
+													<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
 												</div>
 												<div class="right floated content">
-													<div class="ui basic horizontal label">{{ field_value.count }}</div>
+													<div class="ui basic horizontal label"
+														{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top center"{% endif %}>
+														{{ field_value.count | w }}
+													</div>
 												</div>
 											</div>
-											{% endfor %} {% for field_value in field.more_values %}
-											<div class="item">
-												<div class="ui checkbox">
-													<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
-													<label for="{{ field_value.identifier }}">{{ field_value.label }}</label>
-												</div>
-												<div class="right floated content">
-													<div class="ui basic horizontal label">{{ field_value.count }}</div>
-												</div>
-											</div>
-											{% endfor %}
+											{% endif %} {% endfor %}
 										</div>
 									</div>
 								</div>

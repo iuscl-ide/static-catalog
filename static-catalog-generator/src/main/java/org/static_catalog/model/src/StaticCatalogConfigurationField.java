@@ -4,7 +4,7 @@ package org.static_catalog.model.src;
 /** Generation structure */
 public class StaticCatalogConfigurationField {
 
-	private Integer indexInLine;
+	private Integer csvIndex;
 	
 	private String name;
 	
@@ -28,13 +28,17 @@ public class StaticCatalogConfigurationField {
 
 	private boolean isSortDesc;
 
+	private String sortAscLabel;
+
+	private String sortDescLabel;
 	
-	public Integer getIndexInLine() {
-		return indexInLine;
+	
+	public Integer getCsvIndex() {
+		return csvIndex;
 	}
 
-	public void setIndexInLine(Integer indexInLine) {
-		this.indexInLine = indexInLine;
+	public void setCsvIndex(Integer csvIndex) {
+		this.csvIndex = csvIndex;
 	}
 
 	public String getName() {
@@ -123,5 +127,21 @@ public class StaticCatalogConfigurationField {
 
 	public void setIsSortDesc(boolean isSortDesc) {
 		this.isSortDesc = isSortDesc;
+	}
+
+	public String getSortAscLabel() {
+		return sortAscLabel;
+	}
+
+	public void setSortAscLabel(String sortAscLabel) {
+		this.sortAscLabel = sortAscLabel;
+	}
+
+	public String getSortDescLabel() {
+		return sortDescLabel;
+	}
+
+	public void setSortDescLabel(String sortDescLabel) {
+		this.sortDescLabel = sortDescLabel;
 	}
 }

@@ -14,6 +14,8 @@ public class StaticCatalogPageFieldValue {
 
 	private String label;
 	
+	private boolean isException;
+	
 	
 	public int getIndex() {
 		return index;
@@ -53,5 +55,13 @@ public class StaticCatalogPageFieldValue {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public boolean getIsException() {
+		return isException;
+	}
+
+	public void setIsException(boolean isException) {
+		this.isException = isException;
 	}
 }

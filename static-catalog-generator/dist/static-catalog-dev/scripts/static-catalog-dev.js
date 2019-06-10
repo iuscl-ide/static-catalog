@@ -13,7 +13,7 @@ const StaticCatalogDev = (() => {
 	var pageFields = {};
 	var pageFilters = {};
 	var pageFieldLabels = [];
-	var pageFieldIndexes = [];
+	var pageFieldCsvIndexes = [];
 	var pageFieldTotalFilters = [];
 
 	var searchTotals = {};
@@ -272,16 +272,16 @@ const StaticCatalogDev = (() => {
 		    }
 		}
 		
-		/* The four ones */
-		const loadFilterValue = (pageFieldValue, pageField) => {
-			
-			let pageFilter = {};
-			pageFilter.fieldIndex = pageField.index;
-			pageFilter.filterIndex = pageFieldValue.index;
-			pageFilter.fieldName = pageField.name;
-			
-			pageFilters[pageFieldValue.identifier] = pageFilter;
-		};
+//		/* The four ones */
+//		const loadFilterValue = (pageFieldValue, pageField) => {
+//			
+//			let pageFilter = {};
+//			pageFilter.fieldIndex = pageField.index;
+//			pageFilter.filterIndex = pageFieldValue.index;
+//			pageFilter.fieldName = pageField.name;
+//			
+//			pageFilters[pageFieldValue.identifier] = pageFilter;
+//		};
 		
 		/* static-catalog-fields.json */
 		$.ajax({
@@ -295,22 +295,18 @@ const StaticCatalogDev = (() => {
 					
 					pageFields[pageField.index] = pageField;
 					pageFieldLabels[fieldIndex] = pageField.label;
-					pageFieldIndexes[fieldIndex] = pageField.indexInLine;
-					pageFieldTotalFilters[fieldIndex] = pageField.exception_values.length + pageField.more_exception_values.length +
-						pageField.values.length + pageField.more_values.length;
+					pageFieldCsvIndexes[fieldIndex] = pageField.csvIndex;
+					pageFieldTotalFilters[fieldIndex] = pageField.values.length;
 					fieldIndex++;
 
-					pageField.exception_values.map((pageFieldValue) => {
-						loadFilterValue(pageFieldValue, pageField);
-					});
-					pageField.more_exception_values.map((pageFieldValue) => {
-						loadFilterValue(pageFieldValue, pageField);
-					});
 					pageField.values.map((pageFieldValue) => {
-						loadFilterValue(pageFieldValue, pageField);
-					});
-					pageField.more_values.map((pageFieldValue) => {
-						loadFilterValue(pageFieldValue, pageField);
+//						loadFilterValue(pageFieldValue, pageField);
+						let pageFilter = {};
+						pageFilter.fieldIndex = pageField.index;
+						pageFilter.filterIndex = pageFieldValue.index;
+						pageFilter.fieldName = pageField.name;
+						
+						pageFilters[pageFieldValue.identifier] = pageFilter;
 					});
 					
 					let totals = pageFieldsFilters.totals;
@@ -586,7 +582,7 @@ const StaticCatalogDev = (() => {
 				let $tileField = $tileFieldTemplate.clone();
 				$tileField.appendTo($tileFields);
 				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
-				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldIndexes[lineField] - 1]);
+				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldCsvIndexes[lineField] - 1]);
 			}
 //			let $map = $('<div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=' + line[43] + '%2C%20%20' + line[44] + '&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>Google Maps Generator by <a href="https://www.embedgooglemap.net">embedgooglemap.net</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>');
 //			$map.appendTo($tile);
