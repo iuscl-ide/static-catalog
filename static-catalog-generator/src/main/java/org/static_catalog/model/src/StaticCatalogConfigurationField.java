@@ -14,7 +14,11 @@ public class StaticCatalogConfigurationField {
 
 	private boolean isFilter;
 
+	private String filterType;
+
 	private String displayType;
+
+	private String intervalValue;
 
 	private Integer maxDisplayValues;
 
@@ -73,12 +77,28 @@ public class StaticCatalogConfigurationField {
 		this.label = label;
 	}
 
+	public String getFilterType() {
+		return filterType;
+	}
+
+	public void setFilterType(String filterType) {
+		this.filterType = filterType;
+	}
+
 	public String getDisplayType() {
 		return displayType;
 	}
 
 	public void setDisplayType(String displayType) {
 		this.displayType = displayType;
+	}
+
+	public String getIntervalValue() {
+		return intervalValue;
+	}
+
+	public void setIntervalValue(String intervalValue) {
+		this.intervalValue = intervalValue;
 	}
 
 	public Integer getMaxDisplayValues() {

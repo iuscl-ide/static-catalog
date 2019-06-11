@@ -33,6 +33,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	private Text labelText;
 	private Combo typeCombo;
 	private Button useAsFilterCheckbox;
+	private Combo filterTypeCombo;
 	private Combo displayTypeCombo;
 	private Text maxDisplayValuesText;	
 	private Text minDisplayValuesText;
@@ -133,7 +134,13 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    final Label useAsFilterLabel = new Label(topGroup, SWT.NONE);
 	    useAsFilterLabel.setText("Use as Filter");
 		useAsFilterCheckbox = new Button(topGroup, SWT.CHECK);
-		
+
+	    final Label filterTypeLabel = new Label(topGroup, SWT.NONE);
+	    filterTypeLabel.setText("Filter Type");
+	    filterTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    filterTypeCombo.setLayoutData(ui.createWidth120GridData());
+	    filterTypeCombo.setItems(StaticCatalogGeneratorMainWindow.filterTypeNameValues);
+
 	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
 	    displayTypeLabel.setText("Filter Display Type");
 	    displayTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -215,7 +222,11 @@ public class StaticCatalogGeneratorFieldEditWindow {
 
 				staticCatalogField.setIsFilter(useAsFilterCheckbox.getSelection());
 				
-				staticCatalogField.setDisplayType(StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeCombo.getText()));
+				String filterTypeComboText = filterTypeCombo.getText();
+				staticCatalogField.setFilterType(filterTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.filterNameTypes.get(filterTypeComboText));
+				
+				String displayTypeComboText = displayTypeCombo.getText();
+				staticCatalogField.setDisplayType(displayTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeComboText));
 
 				String maxDisplay = maxDisplayValuesText.getText();
 				staticCatalogField.setMaxDisplayValues(maxDisplay.trim().equals("") ? null : Integer.parseInt(maxDisplay));
@@ -232,8 +243,10 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				staticCatalogField.setIsSortAsc(sortAscCheckbox.getSelection());
 				staticCatalogField.setIsSortDesc(sortDescCheckbox.getSelection());
 
-				staticCatalogField.setSortAscLabel(sortAscLabelText.getText());
-				staticCatalogField.setSortDescLabel(sortDescLabelText.getText());
+				String sortAscLabel = sortAscLabelText.getText();
+				staticCatalogField.setSortAscLabel(sortAscLabel.trim().equals("") ? null : sortAscLabel);
+				String sortDescLabel = sortDescLabelText.getText();
+				staticCatalogField.setSortDescLabel(sortDescLabel.trim().equals("") ? null : sortDescLabel);
 
 				fieldEditShell.setVisible(false);
 				callback.doCallback();
@@ -266,7 +279,10 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		typeCombo.setText(StaticCatalogGeneratorMainWindow.typeNames.get(staticCatalogField.getType()));
 
 		useAsFilterCheckbox.setSelection(staticCatalogField.getIsFilter());
-		displayTypeCombo.setText(StaticCatalogGeneratorMainWindow.displayTypeNames.get(staticCatalogField.getDisplayType()));
+		String filterType = staticCatalogField.getFilterType();
+		filterTypeCombo.setText(filterType == null ? "" : StaticCatalogGeneratorMainWindow.filterTypeNames.get(filterType));
+		String displayType = staticCatalogField.getDisplayType();
+		displayTypeCombo.setText(displayType == null ? "" : StaticCatalogGeneratorMainWindow.displayTypeNames.get(displayType));
 		
 		Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
 		maxDisplayValuesText.setText(maxDisplayValues == null ? "" : "" + maxDisplayValues);	

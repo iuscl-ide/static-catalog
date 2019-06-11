@@ -69,14 +69,14 @@ const StaticCatalogDev = (() => {
 		$paginationResultsPerPage.dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
-				 apply(findSearchPagination());
+				 apply(findSearchSort(), findSearchPagination());
 			}
 		});
 		$sortDropdown = $("#scp-id--sort");
 		$sortDropdown.dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
-				 apply(findSearchPagination());
+				 apply(findSearchSort(), findSearchPagination());
 			}
 		});
 		
@@ -122,13 +122,13 @@ const StaticCatalogDev = (() => {
 		/* events */
 		$("#sc-id--search-button").click( clickEvent => {
 			
-			apply(findSearchPagination());
+			apply(findSearchSort(), findSearchPagination());
         });
 		
 		$("#sc-id--filter-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
-			apply(findSearchPagination());
+			apply(findSearchSort(), findSearchPagination());
         });
 		
 		$("#sc-id--clear-menu").click( clickEvent => {
@@ -160,7 +160,7 @@ const StaticCatalogDev = (() => {
 		
 		$paginationFirst.click( clickEvent => {
 			
-			apply(findSearchPagination());
+			apply(findSearchSort(), findSearchPagination());
         });
 
 		$paginationPrevious.click( clickEvent => {
@@ -395,6 +395,16 @@ const StaticCatalogDev = (() => {
 		}
 	}
 
+	/* Sort */
+	const findSearchSort = () => {
+
+		let sortValue = $sortDropdown.text();
+		return {
+//			"paginationPage": 1,
+//			"paginationResultsPerPage": paginationResultsPerPage
+		};
+	}
+	
 	/* New pagination */
 	const findSearchPagination = () => {
 
@@ -406,7 +416,7 @@ const StaticCatalogDev = (() => {
 	}
 	
 	/* Collect selected filter values and send them to the engine */
-	const apply = (searchPagination) => {
+	const apply = (searchSort, searchPagination) => {
 
 		$welcomeMessage.hide();
 		$noResultsMessage.hide();
@@ -417,6 +427,7 @@ const StaticCatalogDev = (() => {
 		
 		let searchFieldsValues = findSearchFieldValues();
 		let searchData = {
+			"searchSort": searchSort,
 			"searchFieldsValues": searchFieldsValues,
 			"searchPagination": searchPagination,
 			"searchTotals": searchTotals

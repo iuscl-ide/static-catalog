@@ -23,7 +23,11 @@ public class StaticCatalogPageField {
 	private boolean sortAsc;
 	
 	private boolean sortDesc;
-	
+
+	private String sortAscLabel;
+
+	private String sortDescLabel;
+
 	private int total_values_count = 0;
 	
 	private int total_more_values_count = 0;
@@ -101,6 +105,22 @@ public class StaticCatalogPageField {
 
 	public void setSortDesc(boolean sortDesc) {
 		this.sortDesc = sortDesc;
+	}
+
+	public String getSortAscLabel() {
+		return sortAscLabel;
+	}
+
+	public void setSortAscLabel(String sortAscLabel) {
+		this.sortAscLabel = sortAscLabel;
+	}
+
+	public String getSortDescLabel() {
+		return sortDescLabel;
+	}
+
+	public void setSortDescLabel(String sortDescLabel) {
+		this.sortDescLabel = sortDescLabel;
 	}
 
 	public int getTotal_values_count() {
