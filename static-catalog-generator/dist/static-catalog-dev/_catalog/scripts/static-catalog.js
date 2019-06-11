@@ -405,12 +405,12 @@ const StaticCatalog = (() => {
 	}
 
 	/* Load sort */
-	const loadSort = (loadSortResolve) => {
+	const loadSort = (searchSort, loadSortResolve) => {
 		
 		var sortLines;
 		//let sortFiles = sortTypeFiles[sortTypeFileIndex];
 		let sortFiles = [];
-		sortFiles[0] = "static-catalog-sort-0.json";
+		sortFiles[0] = "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json"; 
 		
 		let sortNameValuesLines = [];
 		let sortFilePromises = sortFiles.map( (sortFile) => {
@@ -452,39 +452,44 @@ const StaticCatalog = (() => {
 			indexLinesStarts.push(getLine(indexLine));
 		}
 
-		for (let sortLine of sortLines) {
-			let sortLineStart = getLine(sortLine);
-
-			let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
-			
-			if (startIndex >= indexLinesLength) {
-				let lastIndexLine = indexLines[indexLinesLength - 1];
-				if (sortLineStart <= getEndLine(lastIndexLine)) {
-					let found = createIntervalIntersection(sortLine, lastIndexLine);
-					if (found !== null) {
-						sortIndexLines.push(found);
-					}
-				}
-			}
-			else {
-				if (startIndex > 0) {
-					let prevIndexLine = indexLines[startIndex - 1];
-					let found = createIntervalIntersection(sortLine, prevIndexLine);
-					if (found !== null) {
-						sortIndexLines.push(found);
-					}
-				}
-				let indexLine = indexLines[startIndex];
-				let found = createIntervalIntersection(sortLine, indexLine);
-				while (found !== null) {
-					sortIndexLines.push(found);
-					startIndex++;
-					indexLine = indexLines[startIndex];
-					found = createIntervalIntersection(sortLine, indexLine);
-				}
-			}
+		if (sortLines === null) {
+			sortIndexLines = indexLines;
 		}
-		c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
+		else {
+			for (let sortLine of sortLines) {
+				let sortLineStart = getLine(sortLine);
+
+				let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
+				
+				if (startIndex >= indexLinesLength) {
+					let lastIndexLine = indexLines[indexLinesLength - 1];
+					if (sortLineStart <= getEndLine(lastIndexLine)) {
+						let found = createIntervalIntersection(sortLine, lastIndexLine);
+						if (found !== null) {
+							sortIndexLines.push(found);
+						}
+					}
+				}
+				else {
+					if (startIndex > 0) {
+						let prevIndexLine = indexLines[startIndex - 1];
+						let found = createIntervalIntersection(sortLine, prevIndexLine);
+						if (found !== null) {
+							sortIndexLines.push(found);
+						}
+					}
+					let indexLine = indexLines[startIndex];
+					let found = createIntervalIntersection(sortLine, indexLine);
+					while (found !== null) {
+						sortIndexLines.push(found);
+						startIndex++;
+						indexLine = indexLines[startIndex];
+						found = createIntervalIntersection(sortLine, indexLine);
+					}
+				}
+			}
+			c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
+		}
 		
 		let searchLinesCount = searchData.searchPagination.paginationResultsPerPage;
 		let firstSearchIndexLine = (searchData.searchPagination.paginationPage - 1) * searchLinesCount + 1;
@@ -624,10 +629,16 @@ const StaticCatalog = (() => {
 		}).then((indexLines) => {
 
 			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
-
+			/* Sort */
 			new Promise( (loadSortResolve, loadSortReject) => {
 
-				loadSort(loadSortResolve);
+				let searchSort = searchData.searchSort;
+				if (searchSort.sortFieldIndex === "-1") {
+					loadSortResolve(null);
+				}
+				else {
+					loadSort(searchSort, loadSortResolve);	
+				}
 			}).then((sortLines) => {
 	
 				c("Sort loaded done in " + ((new Date()).getTime() - startMs), sortLines);

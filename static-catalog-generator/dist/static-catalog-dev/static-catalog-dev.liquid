@@ -113,11 +113,11 @@
 							<input type="hidden" name="scp-name--sort" value="initial"><i class="dropdown icon"></i>
 							<div class="text">CSV order</div>
 							<div class="menu" tabindex="-1">
-								<div class="item active selected" data-value-sort-field-index="-1" data-value-sort-direction="">CSV order</div>
+								<div class="item active selected" data-sort-field-index="-1" data-sort-direction="">CSV order</div>
 								{% for field in fields %} {% if field.sortAsc  %}
-								<div class="item" data-value-sort-field-index="{{ field.index }}" data-value-sort-direction="asc">{% if field.sortAscLabel != null %}{{ field.sortAscLabel }}{% else %}{{ field.label }} <em>Asc</em>{% endif %}</div>
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="asc">{% if field.sortAscLabel != null %}{{ field.sortAscLabel }}{% else %}{{ field.label }} <em>Asc</em>{% endif %}</div>
 								{% endif %} {% if field.sortDesc  %}
-								<div class="item" data-value-sort-field-index="{{ field.index }}" data-value-sort-direction="desc">{% if field.sortDescLabel != null %}{{ field.sortDescLabel }}{% else %}{{ field.label }} <em>Desc</em>{% endif %}</div>
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="desc">{% if field.sortDescLabel != null %}{{ field.sortDescLabel }}{% else %}{{ field.label }} <em>Desc</em>{% endif %}</div>
 								{% endif %} {% endfor %}
 							</div>
 						</div>

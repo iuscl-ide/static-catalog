@@ -9,14 +9,26 @@
 /* Particular to the page */
 const StaticCatalogDev = (() => {
 
+	/* 8<---------------------------------------- */
+	
+	var searchSort = {
+		"sortFieldIndex": "-1",
+		"sortDirection:": ""
+	};
+	var searchPagination = {
+		"paginationPage": 1,
+		"paginationResultsPerPage": 10
+	};
+	var searchTotals = {};
+	
+	/* 8<---------------------------------------- */
+	
 	var pageFieldsFilters;
 	var pageFields = {};
 	var pageFilters = {};
 	var pageFieldLabels = [];
 	var pageFieldCsvIndexes = [];
 	var pageFieldTotalFilters = [];
-
-	var searchTotals = {};
 	
 	var $filterCheckboxes;
 	var $filters_count;
@@ -69,14 +81,20 @@ const StaticCatalogDev = (() => {
 		$paginationResultsPerPage.dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
-				 apply(findSearchSort(), findSearchPagination());
+				 searchPagination.paginationPage = 1;
+				 let paginationResultsPerPage = parseInt($paginationResultsPerPage.text(), 10);
+				 searchPagination.paginationResultsPerPage = paginationResultsPerPage;
+				 apply();
 			}
 		});
 		$sortDropdown = $("#scp-id--sort");
 		$sortDropdown.dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
-				 apply(findSearchSort(), findSearchPagination());
+				 searchSort.sortFieldIndex = $selectedItem.attr("data-sort-field-index");
+				 searchSort.sortDirection = $selectedItem.attr("data-sort-direction");
+				 searchPagination.paginationPage = 1;
+				 apply();
 			}
 		});
 		
@@ -122,13 +140,15 @@ const StaticCatalogDev = (() => {
 		/* events */
 		$("#sc-id--search-button").click( clickEvent => {
 			
-			apply(findSearchSort(), findSearchPagination());
+			searchPagination.paginationPage = 1;
+			apply();
         });
 		
 		$("#sc-id--filter-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
-			apply(findSearchSort(), findSearchPagination());
+			searchPagination.paginationPage = 1;
+			apply();
         });
 		
 		$("#sc-id--clear-menu").click( clickEvent => {
@@ -148,9 +168,8 @@ const StaticCatalogDev = (() => {
 				if ($paginationPage.hasClass("active")) {
 					return;
 				}
-				let searchPagination = findSearchPagination();
 				searchPagination.paginationPage = parseInt($paginationPage.prop("data-page"), 10); 
-				apply(searchPagination);
+				apply();
 		    }
 		}
 		
@@ -160,28 +179,26 @@ const StaticCatalogDev = (() => {
 		
 		$paginationFirst.click( clickEvent => {
 			
-			apply(findSearchSort(), findSearchPagination());
+			searchPagination.paginationPage = 1;
+			apply();
         });
 
 		$paginationPrevious.click( clickEvent => {
 			
-			let searchPagination = findSearchPagination();
 			searchPagination.paginationPage = pageIndex - 1;
-			apply(searchPagination);
+			apply();
         });
 
 		$paginationNext.click( clickEvent => {
 
-			let searchPagination = findSearchPagination();
 			searchPagination.paginationPage = pageIndex + 1;
-			apply(searchPagination);
+			apply();
         });
 
 		$paginationLast.click( clickEvent => {
 
-			let searchPagination = findSearchPagination();
 			searchPagination.paginationPage = lastPageIndex;
-			apply(searchPagination);
+			apply();
         });
 
 		$("#sc-id--debug-button").click( clickEvent => {
@@ -271,17 +288,6 @@ const StaticCatalogDev = (() => {
 				}
 		    }
 		}
-		
-//		/* The four ones */
-//		const loadFilterValue = (pageFieldValue, pageField) => {
-//			
-//			let pageFilter = {};
-//			pageFilter.fieldIndex = pageField.index;
-//			pageFilter.filterIndex = pageFieldValue.index;
-//			pageFilter.fieldName = pageField.name;
-//			
-//			pageFilters[pageFieldValue.identifier] = pageFilter;
-//		};
 		
 		/* static-catalog-fields.json */
 		$.ajax({
@@ -405,18 +411,8 @@ const StaticCatalogDev = (() => {
 		};
 	}
 	
-	/* New pagination */
-	const findSearchPagination = () => {
-
-		let paginationResultsPerPage = parseInt($paginationResultsPerPage.text(), 10);
-		return {
-			"paginationPage": 1,
-			"paginationResultsPerPage": paginationResultsPerPage
-		};
-	}
-	
 	/* Collect selected filter values and send them to the engine */
-	const apply = (searchSort, searchPagination) => {
+	const apply = () => {
 
 		$welcomeMessage.hide();
 		$noResultsMessage.hide();
