@@ -34,6 +34,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	private Combo typeCombo;
 	private Button useAsFilterCheckbox;
 	private Combo filterTypeCombo;
+	private Text intervalValueText;	
 	private Combo displayTypeCombo;
 	private Text maxDisplayValuesText;	
 	private Text minDisplayValuesText;
@@ -141,6 +142,11 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    filterTypeCombo.setLayoutData(ui.createWidth120GridData());
 	    filterTypeCombo.setItems(StaticCatalogGeneratorMainWindow.filterTypeNameValues);
 
+	    final Label intervalValueLabel = new Label(topGroup, SWT.NONE);
+	    intervalValueLabel.setText("Interval Value");
+	    intervalValueText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    intervalValueText.setLayoutData(ui.createWidth120GridData());
+	    
 	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
 	    displayTypeLabel.setText("Filter Display Type");
 	    displayTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -224,6 +230,9 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				
 				String filterTypeComboText = filterTypeCombo.getText();
 				staticCatalogField.setFilterType(filterTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.filterNameTypes.get(filterTypeComboText));
+
+				String intervalValue = intervalValueText.getText();
+				staticCatalogField.setIntervalValue(intervalValue.trim().equals("") ? null : intervalValue);
 				
 				String displayTypeComboText = displayTypeCombo.getText();
 				staticCatalogField.setDisplayType(displayTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeComboText));
@@ -281,6 +290,8 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		useAsFilterCheckbox.setSelection(staticCatalogField.getIsFilter());
 		String filterType = staticCatalogField.getFilterType();
 		filterTypeCombo.setText(filterType == null ? "" : StaticCatalogGeneratorMainWindow.filterTypeNames.get(filterType));
+		String intervalValue = staticCatalogField.getIntervalValue();
+		intervalValueText.setText(intervalValue == null ? "" : intervalValue);	
 		String displayType = staticCatalogField.getDisplayType();
 		displayTypeCombo.setText(displayType == null ? "" : StaticCatalogGeneratorMainWindow.displayTypeNames.get(displayType));
 		

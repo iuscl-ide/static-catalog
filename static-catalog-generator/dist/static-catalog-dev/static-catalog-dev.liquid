@@ -127,11 +127,11 @@
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
 						<a class="header active title"> <i class="dropdown icon"></i> {{ field.label }} <span
-							class="ui left pointing basic horizontal label">{{ field.total_values_count }}</span>
+							class="ui left pointing basic horizontal label">{{ field.totalValuesCount }}</span>
 						</a>
 						<div class="active content">
 							<div class="ui list">
-								{% assign display_values_count = field.total_values_count | minus: field.total_more_values_count %}
+								{% assign display_values_count = field.totalValuesCount | minus: field.totalMoreValuesCount %}
 								{% for field_value in field.values %} {% assign field_value_index = field_value.index | abs %} {% if field_value_index < display_values_count %}
 								<div class="item">
 									<div class="ui checkbox">
@@ -146,9 +146,9 @@
 									</div>
 								</div>
 								{% endif %} {% endfor %}
-								{% if field.total_more_values_count > 0 %}
+								{% if field.totalMoreValuesCount > 0 %}
 								<div class="item">
-									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.total_more_values_count }}</span></a>
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.totalMoreValuesCount }}</span></a>
 									<div class="content">
 										<div class="ui list">
 											{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %} {% if field_value_index >= display_values_count %}

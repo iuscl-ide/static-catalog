@@ -19,7 +19,11 @@ public class StaticCatalogPageField {
 	private String label;
 	
 	private boolean filter;
-	
+
+	private String filterType;
+
+	private String filterDisplayType;
+
 	private boolean sortAsc;
 	
 	private boolean sortDesc;
@@ -28,9 +32,9 @@ public class StaticCatalogPageField {
 
 	private String sortDescLabel;
 
-	private int total_values_count = 0;
+	private int totalValuesCount = 0;
 	
-	private int total_more_values_count = 0;
+	private int totalMoreValuesCount = 0;
 
 	private final ArrayList<StaticCatalogPageFieldValue> values = new ArrayList<>();
 	
@@ -91,6 +95,22 @@ public class StaticCatalogPageField {
 		this.filter = filter;
 	}
 
+	public String getFilterType() {
+		return filterType;
+	}
+
+	public void setFilterType(String filterType) {
+		this.filterType = filterType;
+	}
+
+	public String getFilterDisplayType() {
+		return filterDisplayType;
+	}
+
+	public void setFilterDisplayType(String filterDisplayType) {
+		this.filterDisplayType = filterDisplayType;
+	}
+
 	public boolean getSortAsc() {
 		return sortAsc;
 	}
@@ -123,20 +143,20 @@ public class StaticCatalogPageField {
 		this.sortDescLabel = sortDescLabel;
 	}
 
-	public int getTotal_values_count() {
-		return total_values_count;
+	public int getTotalValuesCount() {
+		return totalValuesCount;
 	}
 
-	public void setTotal_values_count(int total_values_count) {
-		this.total_values_count = total_values_count;
+	public void setTotalValuesCount(int totalValuesCount) {
+		this.totalValuesCount = totalValuesCount;
 	}
 
-	public int getTotal_more_values_count() {
-		return total_more_values_count;
+	public int getTotalMoreValuesCount() {
+		return totalMoreValuesCount;
 	}
 
-	public void setTotal_more_values_count(int total_more_values_count) {
-		this.total_more_values_count = total_more_values_count;
+	public void setTotalMoreValuesCount(int totalMoreValuesCount) {
+		this.totalMoreValuesCount = totalMoreValuesCount;
 	}
 
 	public ArrayList<StaticCatalogPageFieldValue> getValues() {
