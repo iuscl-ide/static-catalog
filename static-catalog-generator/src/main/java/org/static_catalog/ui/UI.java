@@ -16,11 +16,7 @@ import org.static_catalog.main.S;
 public class UI {
 
 	/** Separator, margin, padding */
-	public final static int sep8 = 8;
-
-	/** Label, button */
-	public final static int width120 = 120;
-
+	public final static int sep = 8;
 	
 	/** debug */
 	private boolean isDebug = false;
@@ -88,9 +84,9 @@ public class UI {
 	}
 
 	/** GridData width 120 */
-	public GridData createWidth120GridData() {
+	public GridData createWidthButtonGridData() {
 		
-	    return createWidthGridData(width120);
+	    return createWidthGridData(150);
 	}
 
 	/** GridData width */

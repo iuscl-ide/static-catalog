@@ -33,6 +33,8 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	private Text labelText;
 	private Combo typeCombo;
 	private Button useAsFilterCheckbox;
+	private Combo filterTypeCombo;
+	private Text intervalValueText;	
 	private Combo displayTypeCombo;
 	private Text maxDisplayValuesText;	
 	private Text minDisplayValuesText;
@@ -61,7 +63,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		/* Modal window */
 		fieldEditShell = new Shell(mainShell, SWT.NONE | SWT.TITLE | SWT.BORDER | SWT.CLOSE | SWT.APPLICATION_MODAL);
 		fieldEditShell.setText("static-catalog Generator");
-		fieldEditShell.setLayout(ui.createMarginsVerticalSpacingGridLayout(UI.sep8, UI.sep8));
+		fieldEditShell.setLayout(ui.createMarginsVerticalSpacingGridLayout(UI.sep, UI.sep));
 
 		/* Icon */
 		Image[] iconImages = new Image[9];
@@ -95,10 +97,10 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		Group topGroup = new Group(fieldEditShell, SWT.NONE);
 		topGroup.setText("Edit Field");
 		topGroup.setLayoutData(ui.createFillBothGridData());
-		GridLayout topGroupGridLayout = ui.createColumnsSpacingGridLayout(2, UI.sep8);
-		topGroupGridLayout.marginWidth = UI.sep8;
-		topGroupGridLayout.marginHeight = UI.sep8;
-		topGroupGridLayout.verticalSpacing = UI.sep8;
+		GridLayout topGroupGridLayout = ui.createColumnsSpacingGridLayout(2, UI.sep);
+		topGroupGridLayout.marginWidth = UI.sep;
+		topGroupGridLayout.marginHeight = UI.sep;
+		topGroupGridLayout.verticalSpacing = UI.sep;
 	    topGroup.setLayout(topGroupGridLayout);
 	    
 	    final Label indexLabel = new Label(topGroup, SWT.NONE);
@@ -127,17 +129,28 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    final Label typeLabel = new Label(topGroup, SWT.NONE);
 	    typeLabel.setText("Type");
 		typeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-		typeCombo.setLayoutData(ui.createWidth120GridData());
+		typeCombo.setLayoutData(ui.createWidthButtonGridData());
 		typeCombo.setItems(StaticCatalogGeneratorMainWindow.typeNameValues);
 
 	    final Label useAsFilterLabel = new Label(topGroup, SWT.NONE);
 	    useAsFilterLabel.setText("Use as Filter");
 		useAsFilterCheckbox = new Button(topGroup, SWT.CHECK);
-		
+
+	    final Label filterTypeLabel = new Label(topGroup, SWT.NONE);
+	    filterTypeLabel.setText("Filter Type");
+	    filterTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    filterTypeCombo.setLayoutData(ui.createWidth120GridData());
+	    filterTypeCombo.setItems(StaticCatalogGeneratorMainWindow.filterTypeNameValues);
+
+	    final Label intervalValueLabel = new Label(topGroup, SWT.NONE);
+	    intervalValueLabel.setText("Interval Value");
+	    intervalValueText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    intervalValueText.setLayoutData(ui.createWidth120GridData());
+	    
 	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
 	    displayTypeLabel.setText("Filter Display Type");
 	    displayTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-	    displayTypeCombo.setLayoutData(ui.createWidth120GridData());
+	    displayTypeCombo.setLayoutData(ui.createWidthButtonGridData());
 	    displayTypeCombo.setItems(StaticCatalogGeneratorMainWindow.displayTypeNameValues);
 		
 	    final Label maxDisplayValuesLabel = new Label(topGroup, SWT.NONE);
@@ -194,7 +207,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    final Composite bottomComposite = new Composite(fieldEditShell, SWT.NONE);
 	    ui.addDebug(bottomComposite);
 	    bottomComposite.setLayoutData(ui.createFillHorizontalGridData());
-	    bottomComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep8));
+	    bottomComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep));
 
 	    final Composite fillLeftBottomComposite = new Composite(bottomComposite, SWT.NONE);
 	    ui.addDebug(fillLeftBottomComposite);
@@ -203,7 +216,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    
 		final Button okButton = new Button(bottomComposite, SWT.NONE);
 		okButton.setText("OK");
-		okButton.setLayoutData(ui.createWidth120GridData());
+		okButton.setLayoutData(ui.createWidthButtonGridData());
 
 		okButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -215,7 +228,14 @@ public class StaticCatalogGeneratorFieldEditWindow {
 
 				staticCatalogField.setIsFilter(useAsFilterCheckbox.getSelection());
 				
-				staticCatalogField.setDisplayType(StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeCombo.getText()));
+				String filterTypeComboText = filterTypeCombo.getText();
+				staticCatalogField.setFilterType(filterTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.filterNameTypes.get(filterTypeComboText));
+
+				String intervalValue = intervalValueText.getText();
+				staticCatalogField.setIntervalValue(intervalValue.trim().equals("") ? null : intervalValue);
+				
+				String displayTypeComboText = displayTypeCombo.getText();
+				staticCatalogField.setDisplayType(displayTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeComboText));
 
 				String maxDisplay = maxDisplayValuesText.getText();
 				staticCatalogField.setMaxDisplayValues(maxDisplay.trim().equals("") ? null : Integer.parseInt(maxDisplay));
@@ -232,8 +252,10 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				staticCatalogField.setIsSortAsc(sortAscCheckbox.getSelection());
 				staticCatalogField.setIsSortDesc(sortDescCheckbox.getSelection());
 
-				staticCatalogField.setSortAscLabel(sortAscLabelText.getText());
-				staticCatalogField.setSortDescLabel(sortDescLabelText.getText());
+				String sortAscLabel = sortAscLabelText.getText();
+				staticCatalogField.setSortAscLabel(sortAscLabel.trim().equals("") ? null : sortAscLabel);
+				String sortDescLabel = sortDescLabelText.getText();
+				staticCatalogField.setSortDescLabel(sortDescLabel.trim().equals("") ? null : sortDescLabel);
 
 				fieldEditShell.setVisible(false);
 				callback.doCallback();
@@ -242,7 +264,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 
 		final Button cancelButton = new Button(bottomComposite, SWT.NONE);
 		cancelButton.setText("Cancel");
-		cancelButton.setLayoutData(ui.createWidth120GridData());
+		cancelButton.setLayoutData(ui.createWidthButtonGridData());
 		
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -266,7 +288,12 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		typeCombo.setText(StaticCatalogGeneratorMainWindow.typeNames.get(staticCatalogField.getType()));
 
 		useAsFilterCheckbox.setSelection(staticCatalogField.getIsFilter());
-		displayTypeCombo.setText(StaticCatalogGeneratorMainWindow.displayTypeNames.get(staticCatalogField.getDisplayType()));
+		String filterType = staticCatalogField.getFilterType();
+		filterTypeCombo.setText(filterType == null ? "" : StaticCatalogGeneratorMainWindow.filterTypeNames.get(filterType));
+		String intervalValue = staticCatalogField.getIntervalValue();
+		intervalValueText.setText(intervalValue == null ? "" : intervalValue);	
+		String displayType = staticCatalogField.getDisplayType();
+		displayTypeCombo.setText(displayType == null ? "" : StaticCatalogGeneratorMainWindow.displayTypeNames.get(displayType));
 		
 		Integer maxDisplayValues = staticCatalogField.getMaxDisplayValues();
 		maxDisplayValuesText.setText(maxDisplayValues == null ? "" : "" + maxDisplayValues);	
