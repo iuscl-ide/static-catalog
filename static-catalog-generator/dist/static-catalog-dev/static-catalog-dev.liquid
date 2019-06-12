@@ -111,13 +111,13 @@
 					<div style="flex-grow: 1;">
 						<div id="scp-id--sort" class="ui selection fluid dropdown" tabindex="0">
 							<input type="hidden" name="scp-name--sort" value="initial"><i class="dropdown icon"></i>
-							<div class="text">Initial</div>
+							<div class="text">CSV order</div>
 							<div class="menu" tabindex="-1">
-								<div class="item active selected" data-value="-1">Source order</div>
+								<div class="item active selected" data-sort-field-index="-1" data-sort-direction="">CSV order</div>
 								{% for field in fields %} {% if field.sortAsc  %}
-								<div class="item" data-value="{{ field.identifier }}___asc">{{ field.label }} <strong>Asc</strong></div>
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="asc">{% if field.sortAscLabel != null %}{{ field.sortAscLabel }}{% else %}{{ field.label }} <em>Asc</em>{% endif %}</div>
 								{% endif %} {% if field.sortDesc  %}
-								<div class="item" data-value="{{ field.identifier }}___desc">{{ field.label }} <strong>Desc</strong></div>
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="desc">{% if field.sortDescLabel != null %}{{ field.sortDescLabel }}{% else %}{{ field.label }} <em>Desc</em>{% endif %}</div>
 								{% endif %} {% endfor %}
 							</div>
 						</div>
@@ -127,11 +127,11 @@
 				<div class="ui vertical fluid accordion menu">
 					<div class="item">
 						<a class="header active title"> <i class="dropdown icon"></i> {{ field.label }} <span
-							class="ui left pointing basic horizontal label">{{ field.total_values_count }}</span>
+							class="ui left pointing basic horizontal label">{{ field.totalValuesCount }}</span>
 						</a>
 						<div class="active content">
 							<div class="ui list">
-								{% assign display_values_count = field.total_values_count | minus: field.total_more_values_count %}
+								{% assign display_values_count = field.totalValuesCount | minus: field.totalMoreValuesCount %}
 								{% for field_value in field.values %} {% assign field_value_index = field_value.index | abs %} {% if field_value_index < display_values_count %}
 								<div class="item">
 									<div class="ui checkbox">
@@ -146,9 +146,9 @@
 									</div>
 								</div>
 								{% endif %} {% endfor %}
-								{% if field.total_more_values_count > 0 %}
+								{% if field.totalMoreValuesCount > 0 %}
 								<div class="item">
-									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.total_more_values_count }}</span></a>
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.totalMoreValuesCount }}</span></a>
 									<div class="content">
 										<div class="ui list">
 											{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %} {% if field_value_index >= display_values_count %}
