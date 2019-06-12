@@ -1131,23 +1131,23 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn.setText("Index");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
-	    fieldGridColumn.setWidth(50);
+	    fieldGridColumn.setWidth(60);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("CSV Index");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
-	    fieldGridColumn.setWidth(75);
+	    fieldGridColumn.setWidth(90);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(150);
+	    fieldGridColumn.setWidth(160);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Label");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(160);
+	    fieldGridColumn.setWidth(170);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Type");
@@ -1157,17 +1157,17 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
 		fieldGridColumn.setText("Use as Filter");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(90);
+	    fieldGridColumn.setWidth(110);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Filter Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setWidth(110);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 		fieldGridColumn.setText("Display Type");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(100);
+	    fieldGridColumn.setWidth(110);
 	    
 //		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
 //		fieldGridColumn.setText("Max");
@@ -1194,12 +1194,12 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
 		fieldGridColumn.setText("Sort Asc.");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(80);
+	    fieldGridColumn.setWidth(90);
 
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
 		fieldGridColumn.setText("Sort Desc.");
 	    fieldGridColumn.setWordWrap(true);
-	    fieldGridColumn.setWidth(80);
+	    fieldGridColumn.setWidth(90);
 	    
 	    filtersGrid.addMouseListener(new MouseAdapter() {
 			@Override
