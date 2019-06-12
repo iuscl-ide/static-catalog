@@ -139,13 +139,13 @@ public class StaticCatalogGeneratorFieldEditWindow {
 	    final Label filterTypeLabel = new Label(topGroup, SWT.NONE);
 	    filterTypeLabel.setText("Filter Type");
 	    filterTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-	    filterTypeCombo.setLayoutData(ui.createWidth120GridData());
+	    filterTypeCombo.setLayoutData(ui.createWidthButtonGridData());
 	    filterTypeCombo.setItems(StaticCatalogGeneratorMainWindow.filterTypeNameValues);
 
 	    final Label intervalValueLabel = new Label(topGroup, SWT.NONE);
 	    intervalValueLabel.setText("Interval Value");
 	    intervalValueText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
-	    intervalValueText.setLayoutData(ui.createWidth120GridData());
+	    intervalValueText.setLayoutData(ui.createWidthButtonGridData());
 	    
 	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
 	    displayTypeLabel.setText("Filter Display Type");
