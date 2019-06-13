@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -204,11 +205,11 @@ public class StaticCatalogGeneratorMainWindow {
 	    mainShell.setLayout(ui.createMarginsVerticalSpacingGridLayout(UI.sep, UI.sep));
 
 		/* Icon */
-		Image[] iconImages = new Image[9];
-		String[] rez = { "16", "24", "32", "48", "64", "96", "128", "256", "512" };
-		for (int index = 0; index < 9; index++) {
+		String[] rez = { "16", "24", "32", "48" };
+		Image[] iconImages = new Image[rez.length];
+		for (int index = 0; index < rez.length; index++) {
 			String rezimg = rez[index];
-			iconImages[index] = ui.getResourceAsImage("org/static_catalog/res/icon/" + rezimg + "x" + rezimg + ".png");
+			iconImages[index] = ui.getResourceAsImage("org/static_catalog/res/icon/neutral/" + rezimg + "x" + rezimg + ".png");
 		}
 		mainShell.setImages(iconImages);
 		
@@ -235,18 +236,47 @@ public class StaticCatalogGeneratorMainWindow {
 	    Menu mainMenuBar = new Menu(mainShell, SWT.BAR);
 	    
 	    MenuItem fileMenuHeader = new MenuItem(mainMenuBar, SWT.CASCADE);
-	    fileMenuHeader.setText("File");
+	    fileMenuHeader.setText("\u2630");
 	    
 	    Menu fileMenu = new Menu(mainShell, SWT.DROP_DOWN);
 	    fileMenuHeader.setMenu(fileMenu);
 	    
-	    MenuItem settingsMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
-	    settingsMenuItem.setText("Settings");
-	    
+//	    MenuItem settingsMenuItem = new MenuItem(fileMenu, SWT.NONE);
+//	    settingsMenuItem.setText("Settings");
+//
+//	    new MenuItem(fileMenu, SWT.SEPARATOR);
+
+	    MenuItem homeMenuItem = new MenuItem(fileMenu, SWT.NONE);
+	    homeMenuItem.setText("Home");
+	    homeMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				Program.launch("https://static-catalog.org");
+			}
+		});
+
+	    MenuItem repoMenuItem = new MenuItem(fileMenu, SWT.NONE);
+	    repoMenuItem.setText("GitHub Repo");
+	    repoMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				Program.launch("https://github.com/iuscl-ide/static-catalog");
+			}
+		});
+
 	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    
-	    MenuItem exitMenuItem = new MenuItem(fileMenu, SWT.CASCADE);
+	    MenuItem exitMenuItem = new MenuItem(fileMenu, SWT.NONE);
 	    exitMenuItem.setText("Exit");
+	    exitMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent selectionEvent) {
+				
+				mainShell.close();
+			}
+		});
 
 	    mainShell.setMenuBar(mainMenuBar);
 

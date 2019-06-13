@@ -67,11 +67,12 @@ public class StaticCatalogGeneratorFieldEditWindow {
 		fieldEditShell.setLayout(ui.createMarginsVerticalSpacingGridLayout(UI.sep, UI.sep));
 
 		/* Icon */
-		Image[] iconImages = new Image[9];
-		String[] rez = { "16", "24", "32", "48", "64", "96", "128", "256", "512" };
-		for (int index = 0; index < 9; index++) {
+		//String[] rez = { "16", "24", "32", "48", "64", "96", "128", "256", "512" };
+		String[] rez = { "16", "24", "32", "48" };
+		Image[] iconImages = new Image[rez.length];
+		for (int index = 0; index < rez.length; index++) {
 			String rezimg = rez[index];
-			iconImages[index] = ui.getResourceAsImage("org/static_catalog/res/icon/" + rezimg + "x" + rezimg + ".png");
+			iconImages[index] = ui.getResourceAsImage("org/static_catalog/res/icon/neutral/" + rezimg + "x" + rezimg + ".png");
 		}
 		fieldEditShell.setImages(iconImages);
 

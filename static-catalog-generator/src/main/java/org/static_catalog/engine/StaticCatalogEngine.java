@@ -676,7 +676,6 @@ public class StaticCatalogEngine {
 						}
 					}
 					else if (configurationField.getFilterType().equals(FILTER_TYPE_MARKS_INTERVALS)) {
-						// TODO compact
 
 						String startInterval = null;
 						String endInterval = null;
@@ -692,56 +691,107 @@ public class StaticCatalogEngine {
 						
 						for (String valueKey : valueKeys) {
 
-							Long value = Long.parseLong(valueKey);
-							valueKeysIndex++;
+							if (configurationField.getType().equals(TYPE_LONG)) {
+								Long value = Long.parseLong(valueKey);
+								valueKeysIndex++;
 
-							if (startInterval == null) {
-								startInterval = valueKey; 
-								mark = value / markModulo;
-								markCount = values.get(valueKey);
-								continue;
-							}
-							
-							if (value < (mark + 1) * markModulo) {
-								/* Still in interval */
-								endInterval = valueKey;
-								markCount = markCount + values.get(valueKey);
+								if (startInterval == null) {
+									startInterval = valueKey; 
+									mark = value / markModulo;
+									markCount = values.get(valueKey);
+									continue;
+								}
 								
-								if (valueKeysIndex == valueKeysCount) {
+								if (value < (mark + 1) * markModulo) {
+									/* Still in interval */
+									endInterval = valueKey;
+									markCount = markCount + values.get(valueKey);
+									
+									if (valueKeysIndex == valueKeysCount) {
+										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
+										pageField.getValues().add(intervalValue);
+									}
+								}
+								else {
+									if (endInterval == null) {
+										endInterval = startInterval;
+									}
 									intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 											" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
 									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
 									pageField.getValues().add(intervalValue);
+									keyIndex++;
+
+									startInterval = valueKey;
+									mark = value / markModulo;
+									markCount = values.get(valueKey);
+									endInterval = null;
+										
+									if (valueKeysIndex == valueKeysCount) {
+										endInterval = startInterval;
+										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
+										pageField.getValues().add(intervalValue);
+									}
+								}
+							}
+							else if (configurationField.getType().equals(TYPE_DOUBLE)) {
+								Double value = Double.parseDouble(valueKey);
+								valueKeysIndex++;
+
+								if (startInterval == null) {
+									startInterval = valueKey; 
+									mark = Math.round(value) / markModulo;
+									markCount = values.get(valueKey);
+									continue;
+								}
+								
+								if (value < (mark + 1) * markModulo) {
+									/* Still in interval */
+									endInterval = valueKey;
+									markCount = markCount + values.get(valueKey);
+									
+									if (valueKeysIndex == valueKeysCount) {
+										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
+										pageField.getValues().add(intervalValue);
+									}
+								}
+								else {
+									if (endInterval == null) {
+										endInterval = startInterval;
+									}
+									intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+											" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
+									pageField.getValues().add(intervalValue);
+									keyIndex++;
+
+									startInterval = valueKey;
+									mark = Math.round(value) / markModulo;
+									markCount = values.get(valueKey);
+									endInterval = null;
+										
+									if (valueKeysIndex == valueKeysCount) {
+										endInterval = startInterval;
+										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
+										pageField.getValues().add(intervalValue);
+									}
 								}
 							}
 							else {
-								if (endInterval == null) {
-									endInterval = startInterval;
-								}
-								intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
-										" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-								intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
-								pageField.getValues().add(intervalValue);
-								keyIndex++;
-
-								startInterval = valueKey;
-								mark = value / markModulo;
-								markCount = values.get(valueKey);
-								endInterval = null;
-									
-								if (valueKeysIndex == valueKeysCount) {
-									endInterval = startInterval;
-									intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
-											" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, markCount);
-									pageField.getValues().add(intervalValue);
-								}
+								// TODO
 							}
 						}
 						pageField.setTotalValuesCount(pageField.getValues().size());
 						pageField.setTotalMoreValuesCount(0);
 					}
-
 				}
 				
 				/* SortAsc */
@@ -1074,15 +1124,32 @@ public class StaticCatalogEngine {
 		ArrayList<Long> lines = valueLines.get(fieldValue);
 		if (lines == null) {
 			if (pageField.getFilterType().equals(FILTER_TYPE_MARKS_INTERVALS)) {
-				Long fieldValueL = Long.parseLong(fieldValue);
-				for (String intervalName : valueLines.keySet()) {
-					String[] intervalStartEnd = intervalName.split("_i_");
-					Long startInterval = Long.parseLong(intervalStartEnd[0]);
-					Long endInterval = Long.parseLong(intervalStartEnd[1]);
-					if ((startInterval <= fieldValueL) && (endInterval >= fieldValueL)) {
-						lines = valueLines.get(intervalName);
-						break;
+				if (pageField.getType().equals(TYPE_LONG)) {
+					Long fieldValueL = Long.parseLong(fieldValue);
+					for (String intervalName : valueLines.keySet()) {
+						String[] intervalStartEnd = intervalName.split("_i_");
+						Long startInterval = Long.parseLong(intervalStartEnd[0]);
+						Long endInterval = Long.parseLong(intervalStartEnd[1]);
+						if ((startInterval <= fieldValueL) && (endInterval >= fieldValueL)) {
+							lines = valueLines.get(intervalName);
+							break;
+						}
 					}
+				}
+				else if (pageField.getType().equals(TYPE_DOUBLE)) {
+					Double fieldValueD = Double.parseDouble(fieldValue);
+					for (String intervalName : valueLines.keySet()) {
+						String[] intervalStartEnd = intervalName.split("_i_");
+						Double startInterval = Double.parseDouble(intervalStartEnd[0]);
+						Double endInterval = Double.parseDouble(intervalStartEnd[1]);
+						if ((startInterval <= fieldValueD) && (endInterval >= fieldValueD)) {
+							lines = valueLines.get(intervalName);
+							break;
+						}
+					}
+				}
+				else {
+					// TODO
 				}
 			}
 		}
