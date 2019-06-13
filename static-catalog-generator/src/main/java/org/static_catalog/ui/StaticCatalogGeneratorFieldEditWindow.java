@@ -2,6 +2,7 @@
 package org.static_catalog.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
@@ -76,7 +77,7 @@ public class StaticCatalogGeneratorFieldEditWindow {
 
 		/* Location */
 		int width = 640;
-		int height = 640;
+		int height = 444;
 
 		fieldEditShell.setSize(width, height);
 		
@@ -94,107 +95,120 @@ public class StaticCatalogGeneratorFieldEditWindow {
 			}
 		});
 
-		Group topGroup = new Group(fieldEditShell, SWT.NONE);
+		final Group topGroup = new Group(fieldEditShell, SWT.NONE);
 		topGroup.setText("Edit Field");
 		topGroup.setLayoutData(ui.createFillBothGridData());
-		GridLayout topGroupGridLayout = ui.createColumnsSpacingGridLayout(2, UI.sep);
-		topGroupGridLayout.marginWidth = UI.sep;
-		topGroupGridLayout.marginHeight = UI.sep;
-		topGroupGridLayout.verticalSpacing = UI.sep;
-	    topGroup.setLayout(topGroupGridLayout);
+		topGroup.setLayout(ui.createColumnsGridLayout(1));
 	    
-	    final Label indexLabel = new Label(topGroup, SWT.NONE);
+	    final ScrolledComposite scrolledComposite = new ScrolledComposite(topGroup, SWT.V_SCROLL);
+	    scrolledComposite.setLayoutData(ui.createFillBothGridData());
+	    scrolledComposite.setLayout(ui.createColumnsGridLayout(1));
+	    
+	    final Composite contentComposite = new Composite(scrolledComposite, SWT.NONE);
+	    contentComposite.setLayoutData(ui.createFillBothGridData());
+		GridLayout contentCompositeGridLayout = ui.createColumnsSpacingGridLayout(2, UI.sep);
+		contentCompositeGridLayout.marginWidth = UI.sep;
+		contentCompositeGridLayout.marginHeight = UI.sep;
+		contentCompositeGridLayout.verticalSpacing = UI.sep;
+		contentComposite.setLayout(contentCompositeGridLayout);
+	    
+	    final Label indexLabel = new Label(contentComposite, SWT.NONE);
 	    indexLabel.setText("Index");
-	    indexValueLabel = new Label(topGroup, SWT.NONE);
+	    indexValueLabel = new Label(contentComposite, SWT.NONE);
 	    indexValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    indexValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
-	    final Label indexInLineLabel = new Label(topGroup, SWT.NONE);
+	    final Label indexInLineLabel = new Label(contentComposite, SWT.NONE);
 	    indexInLineLabel.setText("Index in Line");
-	    indexInLineValueLabel = new Label(topGroup, SWT.NONE);
+	    indexInLineValueLabel = new Label(contentComposite, SWT.NONE);
 	    indexInLineValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    indexInLineValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 	    
-	    final Label nameLabel = new Label(topGroup, SWT.NONE);
+	    final Label nameLabel = new Label(contentComposite, SWT.NONE);
 	    nameLabel.setText("Field Name");
-	    nameValueLabel = new Label(topGroup, SWT.NONE);
+	    nameValueLabel = new Label(contentComposite, SWT.NONE);
 	    nameValueLabel.setLayoutData(ui.createFillHorizontalGridData());
 	    nameValueLabel.setFont(StaticCatalogGeneratorMainWindow.fontBold);
 
-	    final Label labelLabel = new Label(topGroup, SWT.NONE);
+	    final Label labelLabel = new Label(contentComposite, SWT.NONE);
 	    labelLabel.setText("Label");
-	    labelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    labelText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER);
 	    labelText.setLayoutData(ui.createFillHorizontalGridData());
 	    
-	    final Label typeLabel = new Label(topGroup, SWT.NONE);
+	    final Label typeLabel = new Label(contentComposite, SWT.NONE);
 	    typeLabel.setText("Type");
-		typeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		typeCombo = new Combo(contentComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		typeCombo.setLayoutData(ui.createWidthButtonGridData());
 		typeCombo.setItems(StaticCatalogGeneratorMainWindow.typeNameValues);
 
-	    final Label useAsFilterLabel = new Label(topGroup, SWT.NONE);
+	    final Label useAsFilterLabel = new Label(contentComposite, SWT.NONE);
 	    useAsFilterLabel.setText("Use as Filter");
-		useAsFilterCheckbox = new Button(topGroup, SWT.CHECK);
+		useAsFilterCheckbox = new Button(contentComposite, SWT.CHECK);
 
-	    final Label filterTypeLabel = new Label(topGroup, SWT.NONE);
+	    final Label filterTypeLabel = new Label(contentComposite, SWT.NONE);
 	    filterTypeLabel.setText("Filter Type");
-	    filterTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    filterTypeCombo = new Combo(contentComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    filterTypeCombo.setLayoutData(ui.createWidthButtonGridData());
 	    filterTypeCombo.setItems(StaticCatalogGeneratorMainWindow.filterTypeNameValues);
 
-	    final Label intervalValueLabel = new Label(topGroup, SWT.NONE);
+	    final Label intervalValueLabel = new Label(contentComposite, SWT.NONE);
 	    intervalValueLabel.setText("Interval Value");
-	    intervalValueText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    intervalValueText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
 	    intervalValueText.setLayoutData(ui.createWidthButtonGridData());
 	    
-	    final Label displayTypeLabel = new Label(topGroup, SWT.NONE);
+	    final Label displayTypeLabel = new Label(contentComposite, SWT.NONE);
 	    displayTypeLabel.setText("Filter Display Type");
-	    displayTypeCombo = new Combo(topGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    displayTypeCombo = new Combo(contentComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    displayTypeCombo.setLayoutData(ui.createWidthButtonGridData());
 	    displayTypeCombo.setItems(StaticCatalogGeneratorMainWindow.displayTypeNameValues);
 		
-	    final Label maxDisplayValuesLabel = new Label(topGroup, SWT.NONE);
+	    final Label maxDisplayValuesLabel = new Label(contentComposite, SWT.NONE);
 	    maxDisplayValuesLabel.setText("Filter Max. Display Values");
-	    maxDisplayValuesText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    maxDisplayValuesText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
 	    maxDisplayValuesText.setLayoutData(ui.createWidthGridData(50));
 
-	    final Label minDisplayValuesLabel = new Label(topGroup, SWT.NONE);
+	    final Label minDisplayValuesLabel = new Label(contentComposite, SWT.NONE);
 	    minDisplayValuesLabel.setText("Filter Min. Display Values");
-	    minDisplayValuesText = new Text(topGroup, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
+	    minDisplayValuesText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
 	    minDisplayValuesText.setLayoutData(ui.createWidthGridData(50));
 
-	    final Label formatLabel = new Label(topGroup, SWT.NONE);
+	    final Label formatLabel = new Label(contentComposite, SWT.NONE);
 	    formatLabel.setText("Filter Format Values");
-	    formatText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    formatText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER);
 	    formatText.setLayoutData(ui.createFillHorizontalGridData());
 	    
-	    final Label transformValuesLabel = new Label(topGroup, SWT.NONE);
+	    final Label transformValuesLabel = new Label(contentComposite, SWT.NONE);
 	    transformValuesLabel.setText("Filter Transform Values");
-	    transformValuesText = new Text(topGroup, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+	    transformValuesText = new Text(contentComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
 	    GridData transformValuesTextGridData = ui.createFillHorizontalGridData();
 	    transformValuesTextGridData.heightHint = 50;
 	    transformValuesTextGridData.minimumHeight = 50;
 	    //transformValuesText.sets
 	    transformValuesText.setLayoutData(transformValuesTextGridData);
 
-	    final Label sortAscLabel = new Label(topGroup, SWT.NONE);
+	    final Label sortAscLabel = new Label(contentComposite, SWT.NONE);
 	    sortAscLabel.setText("Sort Asc.");
-	    sortAscCheckbox = new Button(topGroup, SWT.CHECK);
+	    sortAscCheckbox = new Button(contentComposite, SWT.CHECK);
 
-	    final Label sortAscLabelLabel = new Label(topGroup, SWT.NONE);
+	    final Label sortAscLabelLabel = new Label(contentComposite, SWT.NONE);
 	    sortAscLabelLabel.setText("Sort Asc. Label");
-	    sortAscLabelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    sortAscLabelText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER);
 	    sortAscLabelText.setLayoutData(ui.createFillHorizontalGridData());
 	    
-	    final Label sortDescLabel = new Label(topGroup, SWT.NONE);
+	    final Label sortDescLabel = new Label(contentComposite, SWT.NONE);
 	    sortDescLabel.setText("Sort Desc.");
-	    sortDescCheckbox = new Button(topGroup, SWT.CHECK);
+	    sortDescCheckbox = new Button(contentComposite, SWT.CHECK);
 
-	    final Label sortDescLabelLabel = new Label(topGroup, SWT.NONE);
+	    final Label sortDescLabelLabel = new Label(contentComposite, SWT.NONE);
 	    sortDescLabelLabel.setText("Sort Desc. Label");
-	    sortDescLabelText = new Text(topGroup, SWT.SINGLE | SWT.BORDER);
+	    sortDescLabelText = new Text(contentComposite, SWT.SINGLE | SWT.BORDER);
 	    sortDescLabelText.setLayoutData(ui.createFillHorizontalGridData());
 
+	    
+	    scrolledComposite.setContent(contentComposite);
+	    scrolledComposite.setExpandHorizontal(true);
+	    scrolledComposite.setExpandVertical(true);
+	    scrolledComposite.setMinSize(contentComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	    
 //	    final Composite middleComposite = new Composite(fieldEditShell, SWT.NONE);
 //	    ui.addDebug(middleComposite);

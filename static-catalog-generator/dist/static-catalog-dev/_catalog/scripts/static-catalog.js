@@ -23,7 +23,7 @@ const StaticCatalog = (() => {
 //	}
 	
 	/* debug */
-	var isDebug = true;
+	var isDebug = false;
 	
 	/* debug console */
 	const c = (message, object) => {
@@ -457,10 +457,10 @@ const StaticCatalog = (() => {
 		}
 		else {
 			for (let sortLine of sortLines) {
+				
 				let sortLineStart = getLine(sortLine);
 
 				let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
-				
 				if (startIndex >= indexLinesLength) {
 					let lastIndexLine = indexLines[indexLinesLength - 1];
 					if (sortLineStart <= getEndLine(lastIndexLine)) {
@@ -483,8 +483,14 @@ const StaticCatalog = (() => {
 					while (found !== null) {
 						sortIndexLines.push(found);
 						startIndex++;
-						indexLine = indexLines[startIndex];
-						found = createIntervalIntersection(sortLine, indexLine);
+						if (startIndex < indexLinesLength - 1) {
+							startIndex++;
+							indexLine = indexLines[startIndex];
+							found = createIntervalIntersection(sortLine, indexLine);
+						}
+						else {
+							found = null;
+						}
 					}
 				}
 			}

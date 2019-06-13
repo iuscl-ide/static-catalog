@@ -1,7 +1,6 @@
 /* Search-able catalog for static generated sites - static-catalog.org 2019 */
 package org.static_catalog.main;
 
-import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.text.NumberFormat;
 import java.text.StringCharacterIterator;
@@ -26,120 +25,164 @@ public class U {
 		
 		return NumberFormat.getInstance(Locale.US).format(longValue);
 	}
+
+	/*
+	a,able,about,across,after,all,almost,also,am,among,an,and,any,are,as,at,be,because,been,but,by,can,cannot,could,dear,did,do,does,
+	either,else,ever,every,for,from,get,got,had,has,have,he,her,hers,him,his,how,however,i,if,in,into,is,it,its,just,least,let,like,
+	likely,may,me,might,most,must,my,neither,no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say,says,she,should,since,
+	so,some,than,that,the,their,them,then,there,these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where,which,while,who,
+	whom,why,will,with,would,yet,you,your
+	*/	
 	
 	/** Capitalize sentence */
 	public static String makeLabel(String name) {
 
-		String nameSpaces = name;
+		String nameSpaces = "";
 		if (!name.contains(" ")) {
-			
-			String nameLowercase = name.toLowerCase();
-			nameSpaces = "";
+			int nameLenght = name.length();
 			for (int index = 0; index < name.length(); index++) {
-				char ch = nameLowercase.charAt(index);
-				if (name.charAt(index) == ch) {
-					nameSpaces = nameSpaces + ch;
+				char ch = name.charAt(index);
+				if (Character.isUpperCase(ch)) {
+					if ((index > 0) && (Character.isLowerCase(name.charAt(index - 1)))) {
+						nameSpaces = nameSpaces + " ";
+					}
+					else if ((index < nameLenght - 1) && (Character.isLowerCase(name.charAt(index + 1)))) {
+						nameSpaces = nameSpaces + " ";
+					}
 				}
-				else {
-					nameSpaces = nameSpaces + " " + ch;
-				}
+				nameSpaces = nameSpaces + ch;
 			}
 		}
-		nameSpaces = nameSpaces.trim();
+		else {
+			nameSpaces = name;	
+		}
+		nameSpaces = nameSpaces.trim();	
+
+		if (nameSpaces.length() == 1) {
+			return nameSpaces.toUpperCase();
+		}
+		if (!nameSpaces.contains(" ")) {
+			if (nameSpaces.equals(nameSpaces.toUpperCase())) {
+				return nameSpaces;
+			}
+			else {
+				return nameSpaces.substring(0, 1).toUpperCase() + nameSpaces.substring(1);
+			}
+		}
 
 		String words[] = nameSpaces.split(" ");
-		String label = words[0].toLowerCase();
-		label = label.substring(0, 1).toUpperCase() + label.substring(1);
+		String label = words[0];
+		if (!label.equals(label.toUpperCase())) {
+			String labelCap = label.substring(0, 1).toUpperCase();
+			if (label.length() > 1) {
+				label = labelCap + label.substring(1);
+			}
+			else {
+				label = labelCap;
+			}
+		}
 		for (int index = 1; index < words.length; index++) {
 			String word = words[index];
-			if (replaceWords.containsKey(word)) {
-				word = replaceWords.get(word);
-			}
-			String drow = "";
-			for (int xedni = word.length() - 1; xedni >= 0; xedni--) {
-				char ch = word.charAt(xedni); 
-				if ((ch >= '0') && (ch <= '9')) {
-					drow = drow + ch;
+
+			if (!word.equals(word.toUpperCase())) {
+				String wordCap = word.substring(0, 1).toUpperCase();
+				if (word.length() > 1) {
+					word = wordCap + word.substring(1);
 				}
 				else {
-					if (drow.length() > 0) {
-						word = word.substring(0, xedni + 1) + " " + drow;
-					}
-					break;
+					word = wordCap;
 				}
 			}
+
+			
+//			if (replaceWords.containsKey(word)) {
+//				word = replaceWords.get(word);
+//			}
+//			String drow = "";
+//			for (int xedni = word.length() - 1; xedni >= 0; xedni--) {
+//				char ch = word.charAt(xedni); 
+//				if ((ch >= '0') && (ch <= '9')) {
+//					drow = drow + ch;
+//				}
+//				else {
+//					if (drow.length() > 0) {
+//						word = word.substring(0, xedni + 1) + " " + drow;
+//					}
+//					break;
+//				}
+//			}
 			label = label + " " + word;
 		}
 		return label;
 	}
 	
-	/** http://www.java2s.com/Code/Java/Data-Type/WordWrap.htm */
-    public static String wordWrap(String input, int width) {
-        // protect ourselves
-        if (input == null) {
-            return "";
-        }
-        else if (width < 5) {
-            return input;
-        }
-        else if (width >= input.length()) {
-            return input;
-        }
-
-  
-
-        StringBuilder buf = new StringBuilder(input);
-        boolean endOfLine = false;
-        int lineStart = 0;
-
-        for (int i = 0; i < buf.length(); i++) {
-            if (buf.charAt(i) == '\n') {
-                lineStart = i + 1;
-                endOfLine = true;
-            }
-
-            // handle splitting at width character
-            if (i > lineStart + width - 1) {
-                if (!endOfLine) {
-                    int limit = i - lineStart - 1;
-                    BreakIterator breaks = BreakIterator.getLineInstance();
-                    breaks.setText(buf.substring(lineStart, i));
-                    int end = breaks.last();
-
-                    // if the last character in the search string isn't a space,
-                    // we can't split on it (looks bad). Search for a previous
-                    // break character
-                    if (end == limit + 1) {
-                        if (!Character.isWhitespace(buf.charAt(lineStart + end))) {
-                            end = breaks.preceding(end - 1);
-                        }
-                    }
-
-                    // if the last character is a space, replace it with a \n
-                    if (end != BreakIterator.DONE && end == limit + 1) {
-                        buf.replace(lineStart + end, lineStart + end + 1, "\n");
-                        lineStart = lineStart + end;
-                    }
-                    // otherwise, just insert a \n
-                    else if (end != BreakIterator.DONE && end != 0) {
-                        buf.insert(lineStart + end, '\n');
-                        lineStart = lineStart + end + 1;
-                    }
-                    else {
-                        buf.insert(i, '\n');
-                        lineStart = i + 1;
-                    }
-                }
-                else {
-                    buf.insert(i, '\n');
-                    lineStart = i + 1;
-                    endOfLine = false;
-                }
-            }
-        }
-
-        return buf.toString();
-    }
+//	/** http://www.java2s.com/Code/Java/Data-Type/WordWrap.htm */
+//    public static String wordWrap(String input, int width) {
+//        // protect ourselves
+//        if (input == null) {
+//            return "";
+//        }
+//        else if (width < 5) {
+//            return input;
+//        }
+//        else if (width >= input.length()) {
+//            return input;
+//        }
+//
+//  
+//
+//        StringBuilder buf = new StringBuilder(input);
+//        boolean endOfLine = false;
+//        int lineStart = 0;
+//
+//        for (int i = 0; i < buf.length(); i++) {
+//            if (buf.charAt(i) == '\n') {
+//                lineStart = i + 1;
+//                endOfLine = true;
+//            }
+//
+//            // handle splitting at width character
+//            if (i > lineStart + width - 1) {
+//                if (!endOfLine) {
+//                    int limit = i - lineStart - 1;
+//                    BreakIterator breaks = BreakIterator.getLineInstance();
+//                    breaks.setText(buf.substring(lineStart, i));
+//                    int end = breaks.last();
+//
+//                    // if the last character in the search string isn't a space,
+//                    // we can't split on it (looks bad). Search for a previous
+//                    // break character
+//                    if (end == limit + 1) {
+//                        if (!Character.isWhitespace(buf.charAt(lineStart + end))) {
+//                            end = breaks.preceding(end - 1);
+//                        }
+//                    }
+//
+//                    // if the last character is a space, replace it with a \n
+//                    if (end != BreakIterator.DONE && end == limit + 1) {
+//                        buf.replace(lineStart + end, lineStart + end + 1, "\n");
+//                        lineStart = lineStart + end;
+//                    }
+//                    // otherwise, just insert a \n
+//                    else if (end != BreakIterator.DONE && end != 0) {
+//                        buf.insert(lineStart + end, '\n');
+//                        lineStart = lineStart + end + 1;
+//                    }
+//                    else {
+//                        buf.insert(i, '\n');
+//                        lineStart = i + 1;
+//                    }
+//                }
+//                else {
+//                    buf.insert(i, '\n');
+//                    lineStart = i + 1;
+//                    endOfLine = false;
+//                }
+//            }
+//        }
+//
+//        return buf.toString();
+//    }
 	
 	/** Apache lang, text */ 
     public static String wrap(final String str, int wrapLength, String newLineStr, final boolean wrapLongWords, String wrapOn) {

@@ -900,6 +900,10 @@ public class StaticCatalogGeneratorMainWindow {
 					
 					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
 						
+						String itemText = gridItem.getText(columnIndex);
+						if (itemText.trim().length() == 0) {
+							break;
+						}
 						Point gridP = csvExamineGrid.toDisplay(0, 0);
 						final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
 						popupComposite.setSize(480, 480);
@@ -909,7 +913,7 @@ public class StaticCatalogGeneratorMainWindow {
 
 						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL);
 						popupCompositeText.setBackground(whiteColor);
-						String wrap = U.wrap(gridItem.getText(columnIndex), 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
+						String wrap = U.wrap(itemText, 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
 						popupCompositeText.setText(wrap);
 						popupCompositeText.setLayoutData(ui.createFillBothGridData());
 						popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
