@@ -18,6 +18,40 @@
     "sortAscLabel" : null,
     "sortDescLabel" : null
   }, {
+    "csvIndex" : 5,
+    "name" : "GivenName",
+    "type" : "text",
+    "label" : "Given name",
+    "isFilter" : true,
+    "filterType" : "length_intervals",
+    "displayType" : "checkboxes",
+    "intervalValue" : "100",
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null,
+    "isSortAsc" : true,
+    "isSortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
+  }, {
+    "csvIndex" : 7,
+    "name" : "Surname",
+    "type" : "text",
+    "label" : "Surname",
+    "isFilter" : false,
+    "filterType" : null,
+    "displayType" : null,
+    "intervalValue" : null,
+    "maxDisplayValues" : null,
+    "minDisplayValues" : null,
+    "transformFormat" : null,
+    "transformValues" : null,
+    "isSortAsc" : false,
+    "isSortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null
+  }, {
     "csvIndex" : 10,
     "name" : "State",
     "type" : "text",
@@ -171,23 +205,6 @@
     "sortAscLabel" : null,
     "sortDescLabel" : null
   }, {
-    "csvIndex" : 5,
-    "name" : "GivenName",
-    "type" : "text",
-    "label" : "Given name",
-    "isFilter" : false,
-    "filterType" : null,
-    "displayType" : null,
-    "intervalValue" : null,
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null,
-    "isSortAsc" : false,
-    "isSortDesc" : false,
-    "sortAscLabel" : null,
-    "sortDescLabel" : null
-  }, {
     "csvIndex" : 6,
     "name" : "MiddleInitial",
     "type" : "text",
@@ -202,23 +219,6 @@
     "transformValues" : null,
     "isSortAsc" : false,
     "isSortDesc" : true,
-    "sortAscLabel" : null,
-    "sortDescLabel" : null
-  }, {
-    "csvIndex" : 7,
-    "name" : "Surname",
-    "type" : "text",
-    "label" : "Surname",
-    "isFilter" : false,
-    "filterType" : null,
-    "displayType" : null,
-    "intervalValue" : null,
-    "maxDisplayValues" : null,
-    "minDisplayValues" : null,
-    "transformFormat" : null,
-    "transformValues" : null,
-    "isSortAsc" : false,
-    "isSortDesc" : false,
     "sortAscLabel" : null,
     "sortDescLabel" : null
   }, {
