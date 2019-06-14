@@ -376,10 +376,11 @@ public class StaticCatalogEngine {
 		StaticCatalogPage page = new StaticCatalogPage();
 //		StaticCatalogContents contents = new StaticCatalogContents();
 
+		final LinkedHashMap<String, ArrayList<String>> fieldNameValues = new LinkedHashMap<>();
 		final LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues = new LinkedHashMap<>();
 		final LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues = new LinkedHashMap<>();
 		
-		generateFields(page, sourceCsvFileName, filtersFileName, destinationFolderName, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
+		generateFields(page, sourceCsvFileName, filtersFileName, destinationFolderName, fieldNameValues, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
 		
 		String filterFieldsFileName = destinationFolderName + File.separator + "static-catalog-fields.json";
 		S.saveObjectToJsonFileName(page, filterFieldsFileName);
@@ -408,7 +409,7 @@ public class StaticCatalogEngine {
 		}
 		
 		/* Generate catalog */
-		generateCatalog(sourceCsvFileName, page, destinationFolderName, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
+		generateCatalog(sourceCsvFileName, page, destinationFolderName, fieldNameValues, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
 		
 		loopProgress.doProgress("Generate completed in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 		
@@ -417,7 +418,7 @@ public class StaticCatalogEngine {
 
 	/** Generate filters */
 	public static void generateFields(StaticCatalogPage page, String sourceCsvFileName, String fieldsFiltersFileName, String destinationFolderName,
-			LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues,
+			LinkedHashMap<String, ArrayList<String>> fieldNameValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues,
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Fields and filters time */
@@ -638,6 +639,7 @@ public class StaticCatalogEngine {
 				String fieldType = pageField.getType();
 				ArrayList<String> valueKeys = new ArrayList<>(values.keySet());
 				sortTypeKey(fieldType, valueKeys);
+				fieldNameValues.put(fieldName, valueKeys);
 
 				/* Filter */
 				if (pageField.getFilter()) {
@@ -645,7 +647,7 @@ public class StaticCatalogEngine {
 					int keyIndex = 0;
 					String filterIdentifierPrefix = pageField.getIdentifier().replace("sc_field__", "sc_filter__");
 		
-					/* Exceptions */
+					/* Exceptions, common */
 					for (String exceptionKey : exceptionKeys) {
 						StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
 						filterValue.setIndex(keyIndex);
@@ -659,8 +661,9 @@ public class StaticCatalogEngine {
 						keyIndex++;
 					}
 
+					String filterType = configurationField.getFilterType();
 					/* Values */
-					if (configurationField.getFilterType().equals(FILTER_TYPE_VALUES)) {
+					if (filterType.equals(FILTER_TYPE_VALUES)) {
 						for (String valueKey : valueKeys) {
 			
 							StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
@@ -675,7 +678,8 @@ public class StaticCatalogEngine {
 							keyIndex++;
 						}
 					}
-					else if (configurationField.getFilterType().equals(FILTER_TYPE_MARKS_INTERVALS)) {
+					/* Marks */
+					else if (filterType.equals(FILTER_TYPE_MARKS_INTERVALS)) {
 
 						String startInterval = null;
 						String endInterval = null;
@@ -786,8 +790,44 @@ public class StaticCatalogEngine {
 								}
 							}
 							else {
-								// TODO
+								// TODO other FILTER_TYPE_MARKS_INTERVALS
 							}
+						}
+						pageField.setTotalValuesCount(pageField.getValues().size());
+						pageField.setTotalMoreValuesCount(0);
+					}
+					/* Length */
+					else if (filterType.equals(FILTER_TYPE_LENGTH_INTERVALS)) {
+
+						String startInterval = null;
+						String endInterval = null;
+						
+						int intervalLength = Integer.parseInt(configurationField.getIntervalValue());
+						int valueKeysCount = valueKeys.size();
+						String intervalLabel;
+						StaticCatalogPageFieldValue intervalValue;
+						
+						int intervalIndex = 0;
+						while (((intervalIndex + 1) * intervalLength - 1) < valueKeysCount) {
+							startInterval = valueKeys.get(intervalIndex * intervalLength);
+							intervalIndex++;
+							endInterval = valueKeys.get(intervalIndex * intervalLength - 1);
+
+							intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+									" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+							intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, intervalLength);
+							pageField.getValues().add(intervalValue);
+							keyIndex++;
+						}
+						int lastValuesSize = pageField.getValues().size();
+						if (lastValuesSize < valueKeysCount) {
+							startInterval = valueKeys.get(lastValuesSize);
+							endInterval = valueKeys.get(valueKeysCount - 1);
+
+							intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
+									" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
+							intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel, intervalLength);
+							pageField.getValues().add(intervalValue);
 						}
 						pageField.setTotalValuesCount(pageField.getValues().size());
 						pageField.setTotalMoreValuesCount(0);
@@ -878,7 +918,7 @@ public class StaticCatalogEngine {
 	
 	/** Generate catalog */
 	public static void generateCatalog(String sourceCsvFileName, StaticCatalogPage page, String destinationFolderName,
-			LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues,
+			LinkedHashMap<String, ArrayList<String>> fieldNameValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues,
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Indexes and blocks generation time */ 
@@ -1019,15 +1059,15 @@ public class StaticCatalogEngine {
 			
 			/* Indexes */
 			for (int index : filterIndexes) {
-				createLineInterval(pageFields, index, csvLine, fieldNameIndexValueLines, csvLineIndex, indexLinesModulo);
+				createLineInterval(pageFields, index, csvLine, fieldNameValues, fieldNameIndexValueLines, csvLineIndex, indexLinesModulo);
 			}
 			/* SortAsc */
 			for (int index : sortAscIndexes) {
-				createLineInterval(pageFields, index, csvLine, fieldNameSortAscValueLines, csvLineIndex, indexLinesModulo);
+				createLineInterval(pageFields, index, csvLine, fieldNameValues, fieldNameSortAscValueLines, csvLineIndex, indexLinesModulo);
 			}
 			/* SortDesc */
 			for (int index : sortDescIndexes) {
-				createLineInterval(pageFields, index, csvLine, fieldNameSortDescValueLines, csvLineIndex, indexLinesModulo);
+				createLineInterval(pageFields, index, csvLine, fieldNameValues, fieldNameSortDescValueLines, csvLineIndex, indexLinesModulo);
 			}
 			
 			csvLineIndex++;
@@ -1111,7 +1151,7 @@ public class StaticCatalogEngine {
 
 	/* Lines interval */
 	private static void createLineInterval(ArrayList<StaticCatalogPageField> pageFields, int index, String[] csvLine,
-			LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> fieldNameValueLines,
+			LinkedHashMap<String, ArrayList<String>> fieldNameValues, LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> fieldNameValueLines,
 			long csvLineIndex, long indexLinesModulo) {
 		
 		StaticCatalogPageField pageField = pageFields.get(index);
@@ -1123,6 +1163,8 @@ public class StaticCatalogEngine {
 		LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameValueLines.get(fieldName);
 		ArrayList<Long> lines = valueLines.get(fieldValue);
 		if (lines == null) {
+			ArrayList<String> fieldValues = fieldNameValues.get(fieldName);
+			
 			if (pageField.getFilterType().equals(FILTER_TYPE_MARKS_INTERVALS)) {
 				if (pageField.getType().equals(TYPE_LONG)) {
 					Long fieldValueL = Long.parseLong(fieldValue);
@@ -1149,7 +1191,20 @@ public class StaticCatalogEngine {
 					}
 				}
 				else {
-					// TODO
+					// TODO other FILTER_TYPE_MARKS_INTERVALS
+				}
+			}
+			else if (pageField.getFilterType().equals(FILTER_TYPE_LENGTH_INTERVALS)) {
+
+				int fieldIndex = fieldValues.indexOf(fieldValue);
+				for (String intervalName : valueLines.keySet()) {
+					String[] intervalStartEnd = intervalName.split("_i_");
+					int startInterval = fieldValues.indexOf(intervalStartEnd[0]);
+					int endInterval = fieldValues.indexOf(intervalStartEnd[1]);
+					if ((startInterval <= fieldIndex) && (endInterval >= fieldIndex)) {
+						lines = valueLines.get(intervalName);
+						break;
+					}
 				}
 			}
 		}
@@ -1218,86 +1273,84 @@ public class StaticCatalogEngine {
 //		
 //		return line % indexLinesModulo;
 //	}
-
-	/* Compact */
-	private static ArrayList<Long> compactLines(ArrayList<Long> srcLines, long indexLinesModulo) {
-		
-		ArrayList<Long> destLines = new ArrayList<>();
-		
-		for (long srcLine : srcLines) {
-
-			long srcStartLine = srcLine / indexLinesModulo;
-			long srcEndLine = srcLine % indexLinesModulo;
-
-			int destLinesSize = destLines.size();
-			if (destLinesSize == 0) {
-				destLines.add(srcLine);	
-			}
-			else {
-				int destLastIndex = destLinesSize - 1;
-				long destLastLine = destLines.get(destLastIndex);
-				long destStartLine = destLastLine / indexLinesModulo;
-				long destEndLine = destLastLine % indexLinesModulo;
-				
-				if (destStartLine == 0) {
-					/* One line destination */
-					if (srcStartLine == 0) {
-						/* One line source */
-						if (srcEndLine - destEndLine == 1) {
-							/* New interval */
-							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
-							destLines.set(destLastIndex, newLastLine);
-						}
-						else {
-							/* New line */
-							destLines.add(srcEndLine);
-						}
-					}
-					else {
-						/* Interval line source */
-						if (srcStartLine - destEndLine == 1) {
-							/* New interval */
-							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
-							destLines.set(destLastIndex, newLastLine);
-						}
-						else {
-							/* New line */
-							destLines.add(srcLine);
-						}
-					}
-				}
-				else {
-					/* Interval destination */
-					if (srcStartLine == 0) {
-						/* One line source */
-						if (srcEndLine - destEndLine == 1) {
-							/* Add to interval */
-							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
-							destLines.set(destLastIndex, newLastLine);
-						}
-						else {
-							/* New line */
-							destLines.add(srcEndLine);
-						}
-					}
-					else {
-						/* Interval line source */
-						if (srcStartLine - destEndLine == 1) {
-							/* Add to interval */
-							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
-							destLines.set(destLastIndex, newLastLine);
-						}
-						else {
-							/* New line */
-							destLines.add(srcLine);
-						}
-					}
-				}
-			}
-		}
-		
-		return destLines;
-	} 
-
-
+//
+//	/* Compact */
+//	private static ArrayList<Long> compactLines(ArrayList<Long> srcLines, long indexLinesModulo) {
+//		
+//		ArrayList<Long> destLines = new ArrayList<>();
+//		
+//		for (long srcLine : srcLines) {
+//
+//			long srcStartLine = srcLine / indexLinesModulo;
+//			long srcEndLine = srcLine % indexLinesModulo;
+//
+//			int destLinesSize = destLines.size();
+//			if (destLinesSize == 0) {
+//				destLines.add(srcLine);	
+//			}
+//			else {
+//				int destLastIndex = destLinesSize - 1;
+//				long destLastLine = destLines.get(destLastIndex);
+//				long destStartLine = destLastLine / indexLinesModulo;
+//				long destEndLine = destLastLine % indexLinesModulo;
+//				
+//				if (destStartLine == 0) {
+//					/* One line destination */
+//					if (srcStartLine == 0) {
+//						/* One line source */
+//						if (srcEndLine - destEndLine == 1) {
+//							/* New interval */
+//							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
+//							destLines.set(destLastIndex, newLastLine);
+//						}
+//						else {
+//							/* New line */
+//							destLines.add(srcEndLine);
+//						}
+//					}
+//					else {
+//						/* Interval line source */
+//						if (srcStartLine - destEndLine == 1) {
+//							/* New interval */
+//							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
+//							destLines.set(destLastIndex, newLastLine);
+//						}
+//						else {
+//							/* New line */
+//							destLines.add(srcLine);
+//						}
+//					}
+//				}
+//				else {
+//					/* Interval destination */
+//					if (srcStartLine == 0) {
+//						/* One line source */
+//						if (srcEndLine - destEndLine == 1) {
+//							/* Add to interval */
+//							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
+//							destLines.set(destLastIndex, newLastLine);
+//						}
+//						else {
+//							/* New line */
+//							destLines.add(srcEndLine);
+//						}
+//					}
+//					else {
+//						/* Interval line source */
+//						if (srcStartLine - destEndLine == 1) {
+//							/* Add to interval */
+//							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
+//							destLines.set(destLastIndex, newLastLine);
+//						}
+//						else {
+//							/* New line */
+//							destLines.add(srcLine);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		
+//		return destLines;
+//	} 
 }
