@@ -9,6 +9,9 @@ import java.util.Map.Entry;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
+import org.eclipse.swt.FileControlRecentsCombo;
+import org.eclipse.swt.FileControlRecentsComboSelectionEvent;
+import org.eclipse.swt.PopupComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTFontUtils;
 import org.eclipse.swt.events.FocusAdapter;
@@ -137,7 +140,7 @@ public class StaticCatalogGeneratorMainWindow {
 		super();
 		this.applicationRootFolder = applicationRootFolder;
 		
-		p = P.load(this, applicationRootFolder + "/static-catalog.config.json");
+		p = P.load(this, applicationRootFolder + "/conf/static-catalog.config.json");
 	}
 
 //	/** Concurrent */
@@ -319,20 +322,13 @@ public class StaticCatalogGeneratorMainWindow {
 	}
 	
 	/** Create file control */
-	private FileControl addFileControl(Composite parentComposite, String labelText, String fileType, FileControlProperties p) {
+	private FileControl addFileControl(Composite parentComposite, String labelText, String fileType, StaticCatalogFileControlProperties p) {
 		
 		return addFileControl(parentComposite, labelText, fileType, false, p);
 	}
 	
 	/** Create file control */
-	private FileControl addFileControl(Composite parentComposite, String labelText, String fileType, boolean isFolder, FileControlProperties p) {
-		
-		/*
-		 * TODO 
-		 * 1/ The Browse button
-		 * 2/ The text to be a combo with recent files
-		 * 
-		 */
+	private FileControl addFileControl(Composite parentComposite, String labelText, String fileType, boolean isFolder, StaticCatalogFileControlProperties p) {
 		
 		final Composite fileComposite = new Composite(parentComposite, SWT.NONE);
 		ui.addDebug(fileComposite);
@@ -362,7 +358,7 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		int recentFileNamesSize = p.getRecentFileNames().size(); 
 		if (recentFileNamesSize == 0) {
-			recentFilesCombo.add(FileControlProperties.NO_RECENT_FILES);
+			recentFilesCombo.add(StaticCatalogFileControlProperties.NO_RECENT_FILES);
 		}
 		else {
 			recentFilesCombo.setItems(p.getRecentFileNames().toArray(new String[recentFileNamesSize]));
@@ -374,7 +370,7 @@ public class StaticCatalogGeneratorMainWindow {
 			public void doEvent() {
 
 				String recentFileName = recentFilesCombo.getItem(recentFilesCombo.getSelectionIndex());
-				if (recentFileName.equals(FileControlProperties.NO_RECENT_FILES)) {
+				if (recentFileName.equals(StaticCatalogFileControlProperties.NO_RECENT_FILES)) {
 					return;
 				}
 
@@ -909,11 +905,6 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
-//	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
-//		fieldGridColumn.setText("Unique elements");
-//	    fieldGridColumn.setWordWrap(true);
-//	    fieldGridColumn.setWidth(300);
-
 	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements (count)");
 	    fieldGridColumn.setWordWrap(true);
@@ -927,9 +918,7 @@ public class StaticCatalogGeneratorMainWindow {
 				GridItem gridItem = csvExamineGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
 				
 				for (int columnIndex = 3; columnIndex <= 4; columnIndex++) {
-					
 					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
-						
 						String itemText = gridItem.getText(columnIndex);
 						if (itemText.trim().length() == 0) {
 							break;
@@ -1203,28 +1192,6 @@ public class StaticCatalogGeneratorMainWindow {
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(110);
 	    
-//		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-//		fieldGridColumn.setText("Max");
-//	    fieldGridColumn.setWordWrap(true);
-//	    fieldGridColumn.setAlignment(SWT.RIGHT);
-//	    fieldGridColumn.setWidth(40);
-//	    
-//		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-//		fieldGridColumn.setText("Min");
-//	    fieldGridColumn.setWordWrap(true);
-//	    fieldGridColumn.setAlignment(SWT.RIGHT);	    
-//	    fieldGridColumn.setWidth(40);
-//	    
-//		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-//		fieldGridColumn.setText("Format");
-//	    fieldGridColumn.setWordWrap(true);
-//	    fieldGridColumn.setWidth(140);
-//	    
-//		fieldGridColumn = new GridColumn(filtersGrid, SWT.NONE);
-//		fieldGridColumn.setText("Transform Values");
-//	    fieldGridColumn.setWordWrap(true);
-//	    fieldGridColumn.setWidth(120);
-
 		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
 		fieldGridColumn.setText("Sort Asc.");
 	    fieldGridColumn.setWordWrap(true);
@@ -1275,12 +1242,6 @@ public class StaticCatalogGeneratorMainWindow {
 					gridItem.setText(col++, filterType == null ? "" : filterTypeNames.get(filterType));
 					String displayType = staticCatalogField.getDisplayType();
 					gridItem.setText(col++, displayType == null ? "" : displayTypeNames.get(displayType));
-//					Integer minDisplayValues = staticCatalogField.getMinDisplayValues();e
-//					gridItem.setText(col++, minDisplayValues == null ? "" : minDisplayValues + "");
-//					String transformFormat = staticCatalogField.getTransformFormat();
-//					gridItem.setText(col++, transformFormat == null ? "" : transformFormat);
-//					String transformValues = staticCatalogField.getTransformValues();
-//					gridItem.setText(col++, transformValues == null ? "" : transformValues);
 					gridItem.setText(col++, staticCatalogField.getIsSortAsc() ? "Yes" : "");
 					gridItem.setText(col++, staticCatalogField.getIsSortDesc() ? "Yes" : "");
 				}

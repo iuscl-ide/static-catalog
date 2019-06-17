@@ -4,7 +4,7 @@ package org.static_catalog.main;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.static_catalog.ui.FileControlProperties;
+import org.static_catalog.ui.StaticCatalogFileControlProperties;
 import org.static_catalog.ui.StaticCatalogGeneratorMainWindow;
 
 /** Properties */
@@ -19,16 +19,16 @@ public class P {
 		}
 		
 		P p = new P();
-		p.viewCsvFileControl = new FileControlProperties();
+		p.viewCsvFileControl = new StaticCatalogFileControlProperties();
 		
-		p.examineCsvFileControl = new FileControlProperties();
+		p.examineCsvFileControl = new StaticCatalogFileControlProperties();
 		
-		p.filtersFileControl = new FileControlProperties();
+		p.filtersFileControl = new StaticCatalogFileControlProperties();
 
-		p.generateSourceCsvFileControl = new FileControlProperties();
-		p.generateFiltersFileControl = new FileControlProperties();
-		p.generateDestinationFolderFileControl = new FileControlProperties();
-		p.generateTemplateFileControl = new FileControlProperties();
+		p.generateSourceCsvFileControl = new StaticCatalogFileControlProperties();
+		p.generateFiltersFileControl = new StaticCatalogFileControlProperties();
+		p.generateDestinationFolderFileControl = new StaticCatalogFileControlProperties();
+		p.generateTemplateFileControl = new StaticCatalogFileControlProperties();
 		
 		if (jsonString != null) {
 			p = S.loadObjectFromJsonString(jsonString, P.class);
@@ -57,23 +57,23 @@ public class P {
 	
 	private String propertiesFileName = "";
 
-	private FileControlProperties viewCsvFileControl;
+	private StaticCatalogFileControlProperties viewCsvFileControl;
 	private int viewCsvMaxLines = 1001;
 	private boolean viewCsvUseFirstLineAsHeader = true;
 
-	private FileControlProperties examineCsvFileControl;
+	private StaticCatalogFileControlProperties examineCsvFileControl;
 	private int examineCsvTypeMaxExceptions = 1;
 	private int examineCsvFilterElementsMax = 50;
 	private int examineCsvFilterElementsMaxDisplay = 35;
 	private int examineCsvFilterElementsMinDisplay = 10;
 	private boolean examineCsvUseFirstLineasHeader = true;
 	
-	private FileControlProperties filtersFileControl;
+	private StaticCatalogFileControlProperties filtersFileControl;
 	
-	private FileControlProperties generateSourceCsvFileControl;
-	private FileControlProperties generateFiltersFileControl;
-	private FileControlProperties generateDestinationFolderFileControl;
-	private FileControlProperties generateTemplateFileControl;
+	private StaticCatalogFileControlProperties generateSourceCsvFileControl;
+	private StaticCatalogFileControlProperties generateFiltersFileControl;
+	private StaticCatalogFileControlProperties generateDestinationFolderFileControl;
+	private StaticCatalogFileControlProperties generateTemplateFileControl;
 	private int generateTypeMaxExceptions = 1;
 	private boolean generateUseFirstLineasHeader = true;
 
@@ -94,27 +94,27 @@ public class P {
 		this.viewCsvUseFirstLineAsHeader = viewCsvUseFirstLineAsHeader;
 	}
 
-	public FileControlProperties getViewCsvFileControl() {
+	public StaticCatalogFileControlProperties getViewCsvFileControl() {
 		return viewCsvFileControl;
 	}
 
-	public void setViewCsvFileControl(FileControlProperties viewCsvFileControl) {
+	public void setViewCsvFileControl(StaticCatalogFileControlProperties viewCsvFileControl) {
 		this.viewCsvFileControl = viewCsvFileControl;
 	}
 
-	public FileControlProperties getExamineCsvFileControl() {
+	public StaticCatalogFileControlProperties getExamineCsvFileControl() {
 		return examineCsvFileControl;
 	}
 
-	public void setExamineCsvFileControl(FileControlProperties examineCsvFileControl) {
+	public void setExamineCsvFileControl(StaticCatalogFileControlProperties examineCsvFileControl) {
 		this.examineCsvFileControl = examineCsvFileControl;
 	}
 
-	public FileControlProperties getFiltersFileControl() {
+	public StaticCatalogFileControlProperties getFiltersFileControl() {
 		return filtersFileControl;
 	}
 
-	public void setFiltersFileControl(FileControlProperties filtersFileControl) {
+	public void setFiltersFileControl(StaticCatalogFileControlProperties filtersFileControl) {
 		this.filtersFileControl = filtersFileControl;
 	}
 
@@ -142,27 +142,27 @@ public class P {
 		this.examineCsvUseFirstLineasHeader = examineCsvUseFirstLineasHeader;
 	}
 
-	public FileControlProperties getGenerateSourceCsvFileControl() {
+	public StaticCatalogFileControlProperties getGenerateSourceCsvFileControl() {
 		return generateSourceCsvFileControl;
 	}
 
-	public void setGenerateSourceCsvFileControl(FileControlProperties generateSourceCsvFileControl) {
+	public void setGenerateSourceCsvFileControl(StaticCatalogFileControlProperties generateSourceCsvFileControl) {
 		this.generateSourceCsvFileControl = generateSourceCsvFileControl;
 	}
 
-	public FileControlProperties getGenerateFiltersFileControl() {
+	public StaticCatalogFileControlProperties getGenerateFiltersFileControl() {
 		return generateFiltersFileControl;
 	}
 
-	public void setGenerateFiltersFileControl(FileControlProperties generateFiltersFileControl) {
+	public void setGenerateFiltersFileControl(StaticCatalogFileControlProperties generateFiltersFileControl) {
 		this.generateFiltersFileControl = generateFiltersFileControl;
 	}
 
-	public FileControlProperties getGenerateDestinationFolderFileControl() {
+	public StaticCatalogFileControlProperties getGenerateDestinationFolderFileControl() {
 		return generateDestinationFolderFileControl;
 	}
 
-	public void setGenerateDestinationFolderFileControl(FileControlProperties generateDestinationFolderFileControl) {
+	public void setGenerateDestinationFolderFileControl(StaticCatalogFileControlProperties generateDestinationFolderFileControl) {
 		this.generateDestinationFolderFileControl = generateDestinationFolderFileControl;
 	}
 
@@ -182,11 +182,11 @@ public class P {
 		this.generateUseFirstLineasHeader = generateUseFirstLineasHeader;
 	}
 
-	public FileControlProperties getGenerateTemplateFileControl() {
+	public StaticCatalogFileControlProperties getGenerateTemplateFileControl() {
 		return generateTemplateFileControl;
 	}
 
-	public void setGenerateTemplateFileControl(FileControlProperties generateTemplateFileControl) {
+	public void setGenerateTemplateFileControl(StaticCatalogFileControlProperties generateTemplateFileControl) {
 		this.generateTemplateFileControl = generateTemplateFileControl;
 	}
 

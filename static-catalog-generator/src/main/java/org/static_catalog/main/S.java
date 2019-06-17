@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/** XML serialization */
+/** Serialization, files */
 public class S {
 
 	/** Jackson */
@@ -37,10 +37,9 @@ public class S {
 			return new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
 		}
 		catch (IOException ioException) {
-			L.e("Error loading file", ioException);
+			L.e("saveStringToFile => fileName: " + fileName, ioException);
+			throw new E(ioException);
 		}
-
-		return null;
 	}
 
 	/** String into file */
@@ -50,7 +49,8 @@ public class S {
 			Files.write(Paths.get(fileName), source.getBytes(StandardCharsets.UTF_8));
 		}
 		catch (IOException ioException) {
-			L.e("Error writing file", ioException);
+			L.e("saveStringToFile => source: " + source + ", fileName: " + fileName, ioException);
+			throw new E(ioException);
 		}
 	}
 
@@ -61,16 +61,17 @@ public class S {
 			return (T) jsonEngine.readValue(jsonString, clazz);	
 		}
 		catch (JsonMappingException jsonMappingException) {
-			L.e("Error mapping json", jsonMappingException);
+			L.e("loadObjectFromJsonString => jsonString: " + jsonString, jsonMappingException);
+			throw new E(jsonMappingException);
 		}
 		catch (JsonProcessingException jsonProcessingException) {
-			L.e("Error processing json", jsonProcessingException);
+			L.e("loadObjectFromJsonString => jsonString: " + jsonString, jsonProcessingException);
+			throw new E(jsonProcessingException);
 		}
 		catch (IOException ioException) {
-			L.e("Error loading json", ioException);
+			L.e("loadObjectFromJsonString => jsonString: " + jsonString, ioException);
+			throw new E(ioException);
 		}
-
-		return null;
 	}
 
 	/** Object to JSON string */
@@ -80,10 +81,9 @@ public class S {
 			return jsonEngine.writerWithDefaultPrettyPrinter().writeValueAsString(t);
 		}
 		catch (JsonProcessingException jsonProcessingException) {
-			L.e("Error processing json", jsonProcessingException);
+			L.e("saveObjectToJsonString => t: " + t, jsonProcessingException);
+			throw new E(jsonProcessingException);
 		}
-		
-		return null;
 	}
 
 	/** JSON file to object */
@@ -111,7 +111,6 @@ public class S {
 		return loadInputStreamInString(getResourceAsInputStream(textResourceName));
 	}
 
-
 	/** Loads an entire input stream in one string */
 	public static String loadInputStreamInString(InputStream inputStream) {
 
@@ -124,13 +123,18 @@ public class S {
 			while ((len = reader.read(buffer)) > 0) {
 				sb.append(buffer, 0, len);
 			}
-		} catch (IOException ioException) {
-			L.e("IOException", ioException);
-		} finally {
+		}
+		catch (IOException ioException) {
+			L.e("loadInputStreamInString", ioException);
+			throw new E(ioException);
+		}
+		finally {
 			try {
 				reader.close();
-			} catch (IOException ioException) {
-				L.e("IOException", ioException);
+			}
+			catch (IOException ioException) {
+				L.e("loadInputStreamInString => close reader", ioException);
+				throw new E(ioException);
 			}
 		}
 
@@ -151,11 +155,12 @@ public class S {
 			fileOutputStream.flush();
 			fileOutputStream.close();
 		} catch (IOException ioException) {
-			L.e("IOException = " + file, ioException);
+			L.e("createFoldersIfNotExists => file: " + file.getAbsolutePath(), ioException);
+			throw new E(ioException);
 		}
 	}
 
-	/** Delete folder and contents */
+	/** Delete folder contents */
 	public static void deleteFolderContentsOnly(String folderName) {
 
 		deleteFolder(folderName, true);
@@ -167,7 +172,7 @@ public class S {
 		deleteFolder(folderName, false);
 	}
 
-	/** Delete folder and/or contents */
+	/** Delete folder and/only contents */
 	private static void deleteFolder(String folderName, boolean deleteContentsOnly) {
 
 		try {
@@ -182,8 +187,10 @@ public class S {
 			for(Path path : pathsToDelete) {
 			    Files.deleteIfExists(path);
 			}
-		} catch (IOException ioException) {
-			L.e("Delete folder and contents error = " + folderName, ioException);
+		}
+		catch (IOException ioException) {
+			L.e("deleteFolder => folderName: " + folderName + ", deleteContentsOnly: " + deleteContentsOnly, ioException);
+			throw new E(ioException);
 		}
 	}
 
@@ -195,8 +202,10 @@ public class S {
 			if (Files.notExists(catalogBlocksFolderPath)) {
 				Files.createDirectories(catalogBlocksFolderPath);
 			}
-		} catch (IOException ioException) {
-			L.e("Create folders error = " + folderName, ioException);
+		}
+		catch (IOException ioException) {
+			L.e("createFoldersIfNotExists => folderName: " + folderName, ioException);
+			throw new E(ioException);
 		}
 	}
 
@@ -206,10 +215,11 @@ public class S {
 		long fileSize = -1; 
 		try {
 			fileSize = Files.size(Paths.get(fileName)); 
-		} catch (IOException ioException) {
-			L.e("Find file size error = " + fileName, ioException);
 		}
-		
+		catch (IOException ioException) {
+			L.e("findFileSizeInBytes => fileName: " + fileName, ioException);
+			throw new E(ioException);
+		}
 		return fileSize;
 	}
 
@@ -233,9 +243,11 @@ public class S {
 
 		@Override
 		public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+			
 			if (sourcePath == null) {
 				sourcePath = dir;
-			} else {
+			}
+			else {
 				Files.createDirectories(targetPath.resolve(sourcePath.relativize(dir)));
 			}
 			return FileVisitResult.CONTINUE;
@@ -260,11 +272,23 @@ public class S {
 	}
 
 	/** Copy folders */
-	public static void copyFolders(Path sourcePath, Path targetPath, String ignoreExtensions) throws IOException {
-	
-		Files.walkFileTree(sourcePath, new CopyFileVisitor(targetPath, ignoreExtensions));
+	public static void copyFolders(String sourceFolder, String targetFolder, String ignoreForExtensions) {
+		
+		try {
+			Files.walkFileTree(Paths.get(sourceFolder), new CopyFileVisitor(Paths.get(targetFolder), ignoreForExtensions));	
+		}
+		catch (IOException ioException) {
+			L.e("copyFolders => sourceFolder: " + sourceFolder + ", targetFolder: " + targetFolder + ", ignoreForExtensions: " + ignoreForExtensions, ioException);
+			throw new E(ioException);
+		}
 	}
 
+	/** File path */
+	public static String getFileFolderName(String fileName) {
+		
+		return (Paths.get(fileName)).getParent().toString(); 
+	}
+	
 	/**
 	 * https://stackoverflow.com/questions/3571223/how-do-i-get-the-file-extension-of-a-file-in-java/21974043
 	 */

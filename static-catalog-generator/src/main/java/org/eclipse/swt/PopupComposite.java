@@ -1,5 +1,5 @@
 /** http://palea.cgrb.oregonstate.edu/svn/jaiswallab/Annotation/src/ie/dcu/swt/PopupComposite.java */
-package org.static_catalog.ui;
+package org.eclipse.swt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
@@ -7,6 +7,7 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.static_catalog.ui.UI;
 
 /** Pop-up composite in a shell */
 public class PopupComposite extends Composite {

@@ -1,4 +1,4 @@
-/* From stackoverflow, somewhere */
+/** https://github.com/SOLA-FAO/common_sola/blob/master/swing/src/main/java/org/flossola/common/swing/utils/InternalNumberComparator.java */
 package org.static_catalog.engine;
 
 import java.util.ArrayList;

@@ -1,8 +1,5 @@
 package org.static_catalog.test.json;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import liqp.Template;
 
 public class Test2 {
@@ -17,7 +14,7 @@ public class Test2 {
 
 	public void run() {
 		
-		Map<String, Object> data = new HashMap<String, Object>();
+//		Map<String, Object> data = new HashMap<String, Object>();
         //data.put("foo", "{ \"foo\": { \"a\": \"aa\" }}");
         //data.put("{ \"foo\": { \"a\": \"aa\" }}");
         Template fooAt = Template.parse("{{foo.a}}");

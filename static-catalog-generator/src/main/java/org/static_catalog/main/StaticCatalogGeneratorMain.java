@@ -29,7 +29,13 @@ public class StaticCatalogGeneratorMain {
 	    UncaughtExceptionHandler uncaughtExceptionHandler = new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread thread, Throwable throwable) {
-				L.e("Uncaught exception: " + throwable.toString(), throwable);
+				
+				if (throwable instanceof E) {
+					/* ILB */
+				}
+				else {
+					L.e("Uncaught exception: " + throwable.toString(), throwable);	
+				}
 			}
 		};
 	    Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);

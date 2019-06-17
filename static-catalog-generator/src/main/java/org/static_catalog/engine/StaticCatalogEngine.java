@@ -4,10 +4,6 @@ package org.static_catalog.engine;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +16,7 @@ import java.util.stream.IntStream;
 
 import org.eclipse.swt.program.Program;
 import org.pojava.datetime.DateTime;
+import org.static_catalog.main.E;
 import org.static_catalog.main.L;
 import org.static_catalog.main.S;
 import org.static_catalog.main.U;
@@ -267,7 +264,8 @@ public class StaticCatalogEngine {
 					if (searchTypes.contains("long")) {
 						try {
 							Long.parseLong(key); 
-						} catch (NumberFormatException numberFormatException) {
+						}
+						catch (NumberFormatException numberFormatException) {
 							if (typesExceptionValues.get("long").size() < maxExceptions) {
 								typesExceptionValues.get("long").add(key);
 							}
@@ -279,7 +277,8 @@ public class StaticCatalogEngine {
 					if (searchTypes.contains("double")) {
 						try {
 							Double.parseDouble(key); 
-						} catch (NumberFormatException numberFormatException) {
+						}
+						catch (NumberFormatException numberFormatException) {
 							if (typesExceptionValues.get("double").size() < maxExceptions) {
 								typesExceptionValues.get("double").add(key);
 							}
@@ -291,7 +290,8 @@ public class StaticCatalogEngine {
 					if (searchTypes.contains("date")) {
 						try {
 							DateTime.parse(key); 
-						} catch (Exception exception) {
+						}
+						catch (Exception exception) {
 							if (typesExceptionValues.get("date").size() < maxExceptions) {
 								typesExceptionValues.get("date").add(key);
 							}
@@ -355,21 +355,10 @@ public class StaticCatalogEngine {
 		
 		/* Structure */
 		loopProgress.doProgress("Verify template site...");
-		Path destinationPath = Paths.get(destinationFolderName);
-		if (Files.notExists(destinationPath, LinkOption.NOFOLLOW_LINKS)) {
-			try {
-				loopProgress.doProgress("Create template site...");
-				
-				Files.createDirectories(destinationPath);
-				Path templateFilePath = Paths.get(templateFilename);
-				Path templateFolderPath = templateFilePath.getParent(); 
-//				L.p(templateFolderPath.toString());
-				S.copyFolders(templateFolderPath, destinationPath, "gitignore; liquid");
-			} catch (IOException ioException) {
-				L.e("Generation - Can't create (write in ?) destination folder: " + destinationFolderName, ioException);
-				return;
-			}
-		}
+		//Path destinationPath = Paths.get(destinationFolderName);
+		
+		S.createFoldersIfNotExists(destinationFolderName);
+		S.copyFolders(S.getFileFolderName(templateFilename), destinationFolderName, "gitignore; liquid");
 		loopProgress.doProgress("Template site OK");
 		
 		/* Generate fields */
@@ -401,12 +390,7 @@ public class StaticCatalogEngine {
 		Template templateLiquid = Template.parse(templateString);
 		String filtersJson = S.saveObjectToJsonString(page);
 		String rendered = templateLiquid.render(filtersJson);
-		try {
-			Files.write(Paths.get(indexHtmlFileName), rendered.getBytes(StandardCharsets.UTF_8));
-		}
-		catch (IOException ioException) {
-			L.e("Error writing '" + templateBaseFileNameNoExtension + "' file", ioException);
-		}
+		S.saveStringToFile(rendered, indexHtmlFileName);
 		
 		/* Generate catalog */
 		generateCatalog(sourceCsvFileName, page, destinationFolderName, fieldNameValueIntervals, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
@@ -1080,8 +1064,10 @@ public class StaticCatalogEngine {
 				}
 				try {
 					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
-				} catch (IOException ioException) {
-					L.e("Cataloog write block " + blockIndex + " error = " + blockFileName, ioException);
+				}
+				catch (IOException ioException) {
+					L.e("generateCatalog => blockIndex: " + blockIndex + ", blockFileName: " + blockFileName, ioException);
+					throw new E(ioException);
 				}
 				//csvWriter.writeRow(headerLine);
 			}

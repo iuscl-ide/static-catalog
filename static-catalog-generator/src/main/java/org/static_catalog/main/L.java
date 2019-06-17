@@ -27,21 +27,16 @@ public class L {
     	logger.setLevel(Level.INFO);
 
         try {
-
         	Formatter formatter = new Formatter() {
-            	
                 @Override
                 public String format(LogRecord r) {
 
                     String levelName = r.getLevel().getName();
                     String logRecordText = "[" + "        ".substring(levelName.length()) + levelName + "] com.ehaviewer; on ";
-
                     String timeFormatted = dateFormat.format(r.getMillis());
-                    
 //                    String timeFormatted = DateUtils.formatDateTime(EpbApp.getAppContext(), r.getMillis(),
 //                            DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH | DateUtils.FORMAT_SHOW_YEAR |
 //                                    DateUtils.FORMAT_SHOW_TIME);
-
                     logRecordText = logRecordText + timeFormatted;
                     logRecordText = logRecordText + "\n" + r.getMessage() + "\n";
 
@@ -56,11 +51,10 @@ public class L {
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setFormatter(formatter);
             logger.addHandler(consoleHandler);
-//            System.out.println(logger.getHandlers().length + "");
         }
         catch (IOException ioException) {
-
-            L.logger.log(Level.SEVERE, "Log file", ioException);
+			L.e("init => logFilePath: " + logFilePath, ioException);
+			throw new E(ioException);
         }
     }
     
@@ -68,7 +62,6 @@ public class L {
     private static String logTextLines(String logText, Throwable throwable) {
 
         StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
-        
         String methodName = stackTraceElement.getMethodName();
         
         String fullClassName = stackTraceElement.getClassName();
@@ -120,7 +113,6 @@ public class L {
     public static void p(String devMessage) {
 
         for (String line : logTextLines(devMessage + "\n ", null).split("\n")) {
-
             System.out.println("ehaviewer [P] " + line);
         }
     }
@@ -142,6 +134,4 @@ public class L {
 
         logger.log(Level.SEVERE, logTextLines(message, throwable));
     }
-
-
 }
