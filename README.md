@@ -16,7 +16,7 @@ Data origin:
 3. Sample 3  
   names-generator  
   https://www.fakenamegenerator.com/  
-  FakeNameGenerator.com_*.csv  
+  FakeNameGenerator.com_26317008.csv  
 
 4. Sample 4  
   fake-names-generator-half-a-mil
