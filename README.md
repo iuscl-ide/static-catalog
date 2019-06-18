@@ -19,9 +19,9 @@ Data origin:
   FakeNameGenerator.com_*.csv  
 
 4. Sample 4  
-  upc-glns  
-  https://introcs.cs.princeton.edu/java/data/  
-  upc-glns.csv  
+  fake-names-generator-half-a-mil
+  https://www.fakenamegenerator.com/  
+  FakeNameGenerator.com_500000.csv  
 
 5. Sample 5  
   geneva-transport-2012  
