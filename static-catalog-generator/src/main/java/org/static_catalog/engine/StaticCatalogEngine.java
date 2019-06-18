@@ -128,10 +128,8 @@ public class StaticCatalogEngine {
 		long csvLineIndex = 0;
 		boolean load = true;
 		while (csvLine != null) {
-			
 			if (load) {
 				int lineLength = csvLine.length;
-				
 				if (useFirstLineAsHeader && (csvLineIndex == 0)) {
 					csvFileGridHeader.addAll(new ArrayList<String>(Arrays.asList(csvLine)));
 				}
@@ -144,20 +142,16 @@ public class StaticCatalogEngine {
 							}
 						}
 					}
-	
 					csvFileGridLines.add(csvLine);
 				}
 			}
-			
 			csvLineIndex++;
 			if (csvLineIndex % 100000 == 0) {
 				loopProgress.doProgress(U.w(csvLineIndex) + " lines read (" + wMaxLines + " loaded)...");
 			}
-
 			if (csvLineIndex == maxLines) {
 				load = false;
 			}
-
 			csvLine = csvParser.parseNext();
 		}
 		csvParser.stopParsing();
@@ -354,12 +348,12 @@ public class StaticCatalogEngine {
 		S.deleteFolder(destinationFolderName);
 		
 		/* Structure */
-		loopProgress.doProgress("Verify template site...");
+		loopProgress.doProgress("Start generation...");
 		//Path destinationPath = Paths.get(destinationFolderName);
 		
 		S.createFoldersIfNotExists(destinationFolderName);
 		S.copyFolders(S.getFileFolderName(templateFilename), destinationFolderName, "gitignore; liquid");
-		loopProgress.doProgress("Template site OK");
+		loopProgress.doProgress(null, "Template site OK");
 		
 		/* Generate fields */
 		StaticCatalogPage page = new StaticCatalogPage();
@@ -395,7 +389,8 @@ public class StaticCatalogEngine {
 		/* Generate catalog */
 		generateCatalog(sourceCsvFileName, page, destinationFolderName, fieldNameValueIntervals, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
 		
-		loopProgress.doProgress("Generate completed in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
+		String generationDone = "Generate completed in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.";
+		loopProgress.doProgress(generationDone, generationDone);
 		
 		Program.launch(indexHtmlFileName);
 	}
@@ -556,7 +551,7 @@ public class StaticCatalogEngine {
 
 			csvLineIndex++;
 			if (csvLineIndex % 100000 == 0) {
-				loopProgress.doProgress("Fields and filters " + U.w(csvLineIndex) + " lines examined...");
+				loopProgress.doProgress("Fields and filters " + U.w(csvLineIndex) + " lines closely examined...");
 			}
 			csvLine = csvParser.parseNext();
 		}
@@ -887,7 +882,8 @@ public class StaticCatalogEngine {
 		totals.setBlockLines(blockLinesCount);
 		totals.setIndexLinesModulo(indexLinesModulo);
 		
-		loopProgress.doProgress(U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
+		String filtersDone = "For " + U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.";
+		loopProgress.doProgress(filtersDone, filtersDone);
 	}
 	
 	/** Format, transform */
@@ -938,8 +934,9 @@ public class StaticCatalogEngine {
 			boolean useFirstLineAsHeader, LoopProgress loopProgress) {
 
 		/* Indexes and blocks generation time */ 
-		long start = System.currentTimeMillis();
-		loopProgress.doProgress("Start catalog generation...");
+		long start1 = System.currentTimeMillis();
+		long start = start1;
+		loopProgress.doProgress("Start catalog files generation...");
 		
 		/* Files */
 		String fsep = File.separator;
@@ -1090,7 +1087,7 @@ public class StaticCatalogEngine {
 			
 			csvLineIndex++;
 			if (csvLineIndex % 100000 == 0) {
-				loopProgress.doProgress("Catalog generation " + U.w(csvLineIndex) + " lines examined...");
+				loopProgress.doProgress("Catalog files generation " + U.w(csvLineIndex) + " lines taken into account...");
 			}
 			csvLine = csvParser.parseNext();
 		}
@@ -1099,21 +1096,26 @@ public class StaticCatalogEngine {
 			csvWriter.close();
 		}
 		
-		loopProgress.doProgress("Catalog blocks generated at " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the indexes...");
-
+		loopProgress.doProgress("Generate the index files...", "Catalog " + (blockIndex + 1) + " data block files generated in " + ((System.currentTimeMillis() - start1) / 1000) + " seconds.");
+		start1 = System.currentTimeMillis();
+		
 		/* INDEX_SPLIT_TYPE_VALUES */
+		int indexCnt = 0;
 		for (String fieldName : fieldNameIndexValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
 			int indexNameCnt = fieldNames.indexOf(fieldName);
 			int indexValueCnt = 0;
 			for (ArrayList<Long> lines : valueLines.values()) {
 				S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
+				indexCnt++;
 				indexValueCnt++;
 			}
 		}
 
-		loopProgress.doProgress("Catalog indexes generated at " + ((System.currentTimeMillis() - start) / 1000) + " seconds, now generate the sort...");
+		loopProgress.doProgress("Generate the sort files...", "Catalog " + indexCnt + " index files saved in " + ((System.currentTimeMillis() - start1) / 1000) + " seconds.");
+		start1 = System.currentTimeMillis();
 		
+		int sortCnt = 0;
 		for (String fieldName : fieldNameSortAscValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameSortAscValueLines.get(fieldName);
 			int indexNameCnt = fieldNames.indexOf(fieldName);
@@ -1123,6 +1125,7 @@ public class StaticCatalogEngine {
 			}
 //			ascSortedLines = compactLines(ascSortedLines, indexLinesModulo);
 			S.saveObjectToJsonFileName(ascSortedLines, sortFileNamePrefix + "-" + indexNameCnt + "-asc.json");
+			sortCnt++;
 		}
 
 		for (String fieldName : fieldNameSortDescValueLines.keySet()) {
@@ -1133,9 +1136,10 @@ public class StaticCatalogEngine {
 				descSortedLines.addAll(lines);
 			}
 			S.saveObjectToJsonFileName(descSortedLines, sortFileNamePrefix + "-" + indexNameCnt + "-desc.json");
+			sortCnt++;
 		}
 		
-		loopProgress.doProgress("Catalog sort generated at " + ((System.currentTimeMillis() - start) / 1000) + " seconds...");
+		loopProgress.doProgress("All files generated...", "Catalog " + sortCnt + " sort files saved in " + ((System.currentTimeMillis() - start1) / 1000) + " seconds.");
 		
 //		nameValuesLines.get(key)
 		
@@ -1163,8 +1167,9 @@ public class StaticCatalogEngine {
 //		else {
 //			S.saveObjectToJsonFileName(nameValuesLines, indexesValueFileNamePrefix + ".json");
 //		}
- 
-		loopProgress.doProgress(U.w(csvLineIndex) + " lines catalog generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
+
+		String catalogFilesDone = "For " + U.w(csvLineIndex) + " lines catalog files generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.";
+		loopProgress.doProgress(catalogFilesDone, catalogFilesDone);
 	}
 
 	/* Lines interval */

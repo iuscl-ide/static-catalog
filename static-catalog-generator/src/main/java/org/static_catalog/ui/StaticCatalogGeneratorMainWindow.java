@@ -110,12 +110,17 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		public String getCompleteFileName();
 	}
-
 	
 	/** Progress */
-	public interface LoopProgress {
-		
-		public void doProgress(String progressMessage);
+	public class LoopProgress {
+		/** Status message */
+		public void doProgress(String progressMessage) {
+			/* ILB */
+		};
+		/** Status message and line */
+		public void doProgress(String progressMessage, String stepMessage) {
+			/* ILB */
+		};
 	}
 
 	/** Change tab */
@@ -587,20 +592,20 @@ public class StaticCatalogGeneratorMainWindow {
 		
 		final FileControl viewCsvFileControl = addFileControl(viewCsvTabComposite, "CSV file", "csv", p.getViewCsvFileControl());
 		
-		final Composite csvButtonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		ui.addDebug(csvButtonsComposite);
-		csvButtonsComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(2, UI.sep));
+		final Composite buttonsComposite = new Composite(viewCsvTabComposite, SWT.NONE);
+		ui.addDebug(buttonsComposite);
+		buttonsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsComposite.setLayout(ui.createColumnsSpacingGridLayout(2, UI.sep));
 		
-		final Button csvLoadButton = new Button(csvButtonsComposite, SWT.NONE);
+		final Button csvLoadButton = new Button(buttonsComposite, SWT.NONE);
 		csvLoadButton.setText("Load");
 		csvLoadButton.setLayoutData(ui.createWidthButtonGridData());
 
-		final Composite csvButtonsMiddleComposite = new Composite(csvButtonsComposite, SWT.NONE);
-		csvButtonsMiddleComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsMiddleComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep));
+		final Composite buttonsMiddleComposite = new Composite(buttonsComposite, SWT.NONE);
+		buttonsMiddleComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsMiddleComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep));
 		
-		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsMiddleComposite, SWT.CHECK);
+		final Button useFirstLineAsHeaderCheckBox = new Button(buttonsMiddleComposite, SWT.CHECK);
 //		GridData useFirstLineAsHeaderCheckBoxGridData = ui.createWidthGridData(140);
 //		useFirstLineAsHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
 //		useFirstLineAsHeaderCheckBox.setLayoutData(useFirstLineAsHeaderCheckBoxGridData);
@@ -614,54 +619,54 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 
-		final Text csvLoadLinesText = new Text(csvButtonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
-		csvLoadLinesText.setLayoutData(ui.createWidthGridData(100));
-		csvLoadLinesText.setText(p.getViewCsvMaxLines() + "");
-		csvLoadLinesText.addFocusListener(new FocusAdapter() {
+		final Text loadLinesText = new Text(buttonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		loadLinesText.setLayoutData(ui.createWidthGridData(100));
+		loadLinesText.setText(p.getViewCsvMaxLines() + "");
+		loadLinesText.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
 				
 				int viewCsvMaxLines = p.getViewCsvMaxLines();
 				try {
-					viewCsvMaxLines = Integer.parseInt(csvLoadLinesText.getText().trim());
+					viewCsvMaxLines = Integer.parseInt(loadLinesText.getText().trim());
 				}
 				catch (NumberFormatException numberFormatException) {
-					csvLoadLinesText.setText(viewCsvMaxLines + "");
+					loadLinesText.setText(viewCsvMaxLines + "");
 				}		
 				p.setViewCsvMaxLines(viewCsvMaxLines);		
 				p.save();
 			}
 		});
 
-		final Label csvMaxLinesLabel = new Label(csvButtonsMiddleComposite, SWT.NONE);
+		final Label maxLinesLabel = new Label(buttonsMiddleComposite, SWT.NONE);
 //		csvMaxLinesLabel.setLayoutData(ui.createWidthGridData(60));
-		csvMaxLinesLabel.setText("max lines");
+		maxLinesLabel.setText("max lines");
 
-		final Composite csvStatusComposite = new Composite(viewCsvTabComposite, SWT.NONE);
-		csvStatusComposite.setBackground(whiteColor);
-		csvStatusComposite.setLayoutData(ui.createFillHorizontalGridData());
-		GridLayout csvStatusCompositeGridLayout = ui.createColumnsGridLayout(2);
-		csvStatusCompositeGridLayout.marginWidth = UI.sep;
-		csvStatusCompositeGridLayout.marginHeight = UI.sep;
-		csvStatusComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
+		final Composite statusComposite = new Composite(viewCsvTabComposite, SWT.NONE);
+		statusComposite.setBackground(whiteColor);
+		statusComposite.setLayoutData(ui.createFillHorizontalGridData());
+		GridLayout statusCompositeGridLayout = ui.createColumnsGridLayout(2);
+		statusCompositeGridLayout.marginWidth = UI.sep;
+		statusCompositeGridLayout.marginHeight = UI.sep;
+		statusComposite.setLayoutData(ui.createFillHorizontalGridData());
+		statusComposite.setLayout(statusCompositeGridLayout);
 
-		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
-		csvStatusLabel.setBackground(whiteColor);
-		csvStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
-		csvStatusLabel.setText("Status");
+		final Label statusLabel = new Label(statusComposite, SWT.NONE);
+		statusLabel.setBackground(whiteColor);
+		statusLabel.setLayoutData(ui.createFillHorizontalGridData());
+		statusLabel.setText("Status");
 
 		
 //		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL);
-		final Grid csvFileGrid = new Grid(viewCsvTabComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		csvFileGrid.setLayoutData(ui.createFillBothGridData());
-		csvFileGrid.setHeaderVisible(true);
+		final Grid fileGrid = new Grid(viewCsvTabComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		fileGrid.setLayoutData(ui.createFillBothGridData());
+		fileGrid.setHeaderVisible(true);
 		//csvFileGrid.setAutoHeight(true);
-		csvFileGrid.setLinesVisible(true);
+		fileGrid.setLinesVisible(true);
 		
 		/* Events */
-		final ArrayList<String[]> csvFileGridLines = new ArrayList<>();
-		final ArrayList<String> csvFileGridHeader = new ArrayList<>();
+		final ArrayList<String[]> fileGridLines = new ArrayList<>();
+		final ArrayList<String> fileGridHeader = new ArrayList<>();
 		
 		/* Load */
 		csvLoadButton.addSelectionListener(new SelectionAdapter() {
@@ -670,53 +675,52 @@ public class StaticCatalogGeneratorMainWindow {
 				
 		    	long start = System.currentTimeMillis();
 		    	
-				csvFileGrid.clearItems();
-				csvFileGrid.disposeAllItems();
-				csvFileGridLines.clear();
-				while (csvFileGrid.getColumnCount() > 0) {
-					csvFileGrid.getColumns()[0].dispose();
+				fileGrid.clearItems();
+				fileGrid.disposeAllItems();
+				fileGridLines.clear();
+				while (fileGrid.getColumnCount() > 0) {
+					fileGrid.getColumns()[0].dispose();
 				}
-				csvFileGridHeader.clear();
+				fileGridHeader.clear();
 				
-				long maxLines = Long.parseLong(csvLoadLinesText.getText());
+				long maxLines = Long.parseLong(loadLinesText.getText());
 				boolean useFirstLineAsHeader = useFirstLineAsHeaderCheckBox.getSelection();
 				
 				String csvCompleteFileName = viewCsvFileControl.getCompleteFileName();
 
-				long totalLines = StaticCatalogEngine.loadViewCsv(csvCompleteFileName, csvFileGridLines, csvFileGridHeader,
+				long totalLines = StaticCatalogEngine.loadViewCsv(csvCompleteFileName, fileGridLines, fileGridHeader,
 				maxLines, useFirstLineAsHeader,
 				new LoopProgress() {
 					@Override
 					public void doProgress(String progressMessage) {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
-								csvStatusLabel.setText(progressMessage);
+								statusLabel.setText(progressMessage);
 								Display.getDefault().readAndDispatch();
 							}
 						});
 					}
 				});
 
-				GridColumn fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+				GridColumn fieldGridColumn = new GridColumn(fileGrid, SWT.NONE);
 			    fieldGridColumn.setWidth(50);
 			    fieldGridColumn.setText("Index");
 			    fieldGridColumn.setAlignment(SWT.RIGHT);
-				for (String columnName : csvFileGridHeader) {
-					fieldGridColumn = new GridColumn(csvFileGrid, SWT.NONE);
+				for (String columnName : fileGridHeader) {
+					fieldGridColumn = new GridColumn(fileGrid, SWT.NONE);
 				    fieldGridColumn.setWordWrap(true);
 				    fieldGridColumn.setText(columnName);
 				}
 
-				for (GridColumn gridColumn : csvFileGrid.getColumns()) {
+				for (GridColumn gridColumn : fileGrid.getColumns()) {
 					gridColumn.pack();
 					gridColumn.setWidth(gridColumn.getWidth() + 24);
 				}
 
-				int linesCount = csvFileGridLines.size();
-//				csvFileGrid.setItemCount(linesCount);
+				int linesCount = fileGridLines.size();
 				long csvLineIndex = 0;
-				for (String[] csvLine : csvFileGridLines) {
-					GridItem csvGridItem = new GridItem(csvFileGrid, SWT.NONE);
+				for (String[] csvLine : fileGridLines) {
+					GridItem csvGridItem = new GridItem(fileGrid, SWT.NONE);
 					csvLineIndex++;
 					csvGridItem.setText(0, csvLineIndex + "");
 					for (int index = 0; index < csvLine.length; index++) {
@@ -725,13 +729,13 @@ public class StaticCatalogGeneratorMainWindow {
 				}
 
 				if (linesCount < 1500) {
-					for (GridColumn gridColumn : csvFileGrid.getColumns()) {
+					for (GridColumn gridColumn : fileGrid.getColumns()) {
 						gridColumn.pack();
 						gridColumn.setWidth(gridColumn.getWidth() + 24);
 					}
 				}
 				
-				csvStatusLabel.setText(U.w(linesCount) + " lines (of total " + U.w(totalLines) + ") done loading in " + ((System.currentTimeMillis() - start) / 1000) + " seconds.");
+				statusLabel.setText(U.w(linesCount) + " lines (of total " + U.w(totalLines) + ") done loading in " + ((System.currentTimeMillis() - start) / 1000) + " seconds");
 			}
 		});
 	}
@@ -741,20 +745,20 @@ public class StaticCatalogGeneratorMainWindow {
 		
 	    final FileControl examineCsvFileControl = addFileControl(parentComposite, "Examine file", "csv", p.getExamineCsvFileControl());
 		
-		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
-		ui.addDebug(csvButtonsComposite);
-		csvButtonsComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep));
+		final Composite buttonsComposite = new Composite(parentComposite, SWT.NONE);
+		ui.addDebug(buttonsComposite);
+		buttonsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsComposite.setLayout(ui.createColumnsSpacingGridLayout(3, UI.sep));
 		
-		final Button csvExamineButton = new Button(csvButtonsComposite, SWT.NONE);
-		csvExamineButton.setText("Examine");
-		csvExamineButton.setLayoutData(ui.createWidthButtonGridData());
+		final Button examineButton = new Button(buttonsComposite, SWT.NONE);
+		examineButton.setText("Examine");
+		examineButton.setLayoutData(ui.createWidthButtonGridData());
 
-		final Composite csvButtonsMiddleComposite = new Composite(csvButtonsComposite, SWT.NONE);
-		csvButtonsMiddleComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsMiddleComposite.setLayout(ui.createColumnsSpacingGridLayout(9, UI.sep));
+		final Composite buttonsMiddleComposite = new Composite(buttonsComposite, SWT.NONE);
+		buttonsMiddleComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsMiddleComposite.setLayout(ui.createColumnsSpacingGridLayout(9, UI.sep));
 		
-		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsMiddleComposite, SWT.CHECK);
+		final Button useFirstLineAsHeaderCheckBox = new Button(buttonsMiddleComposite, SWT.CHECK);
 //		GridData useFirstLineasHeaderCheckBoxGridData = ui.createWidthGridData(140);
 //		useFirstLineasHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
 //		useFirstLineAsHeaderCheckBox.setLayoutData(useFirstLineasHeaderCheckBoxGridData);
@@ -769,7 +773,7 @@ public class StaticCatalogGeneratorMainWindow {
 		});
 
 		
-		final Text typeMaxExceptionsText = new Text(csvButtonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		final Text typeMaxExceptionsText = new Text(buttonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
 		typeMaxExceptionsText.setLayoutData(ui.createWidthGridData(25));
 		typeMaxExceptionsText.setText(p.getExamineCsvTypeMaxExceptions() + "");
 		typeMaxExceptionsText.addFocusListener(new FocusAdapter() {
@@ -787,12 +791,12 @@ public class StaticCatalogGeneratorMainWindow {
 				p.save();
 			}
 		});
-		final Label typeMaxExceptionsLabel = new Label(csvButtonsMiddleComposite, SWT.NONE);
+		final Label typeMaxExceptionsLabel = new Label(buttonsMiddleComposite, SWT.NONE);
 //		typeMaxExceptionsLabel.setLayoutData(ui.createWidthGridData(170));
 		typeMaxExceptionsLabel.setText("max type exception values");
 
 		
-		final Text filterElementsMaxText = new Text(csvButtonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		final Text filterElementsMaxText = new Text(buttonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
 		filterElementsMaxText.setLayoutData(ui.createWidthGridData(25));
 		filterElementsMaxText.setText(p.getExamineCsvFilterElementsMax() + "");
 		filterElementsMaxText.addFocusListener(new FocusAdapter() {
@@ -810,12 +814,12 @@ public class StaticCatalogGeneratorMainWindow {
 				p.save();
 			}
 		});
-		final Label filterElementsMaxLabel = new Label(csvButtonsMiddleComposite, SWT.NONE);
+		final Label filterElementsMaxLabel = new Label(buttonsMiddleComposite, SWT.NONE);
 //		filterElementsMaxLabel.setLayoutData(ui.createWidthGridData(110));
 		filterElementsMaxLabel.setText("max filter values");
 
 		
-		final Text filterElementsMaxDisplayText = new Text(csvButtonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		final Text filterElementsMaxDisplayText = new Text(buttonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
 		filterElementsMaxDisplayText.setLayoutData(ui.createWidthGridData(25));
 		filterElementsMaxDisplayText.setText(p.getExamineCsvFilterElementsMaxDisplay() + "");
 		filterElementsMaxDisplayText.addFocusListener(new FocusAdapter() {
@@ -833,12 +837,12 @@ public class StaticCatalogGeneratorMainWindow {
 				p.save();
 			}
 		});
-		final Label filterElementsMaxDisplayLabel = new Label(csvButtonsMiddleComposite, SWT.NONE);
+		final Label filterElementsMaxDisplayLabel = new Label(buttonsMiddleComposite, SWT.NONE);
 //		filterElementsMaxDisplayLabel.setLayoutData(ui.createWidthGridData(150));
 		filterElementsMaxDisplayLabel.setText("max display values");
 
 		
-		final Text filterElementsMinDisplayText = new Text(csvButtonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
+		final Text filterElementsMinDisplayText = new Text(buttonsMiddleComposite, SWT.RIGHT | SWT.SINGLE | SWT.BORDER);
 		filterElementsMinDisplayText.setLayoutData(ui.createWidthGridData(25));
 		filterElementsMinDisplayText.setText(p.getExamineCsvFilterElementsMinDisplay() + "");
 		filterElementsMinDisplayText.addFocusListener(new FocusAdapter() {
@@ -856,12 +860,12 @@ public class StaticCatalogGeneratorMainWindow {
 				p.save();
 			}
 		});
-		final Label filterElementsMinDisplayLabel = new Label(csvButtonsMiddleComposite, SWT.NONE);
+		final Label filterElementsMinDisplayLabel = new Label(buttonsMiddleComposite, SWT.NONE);
 //		filterElementsMinDisplayLabel.setLayoutData(ui.createWidthGridData(150));
 		filterElementsMinDisplayLabel.setText("min display values");
 
 		
-		final Button createFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
+		final Button createFiltersButton = new Button(buttonsComposite, SWT.NONE);
 		GridData createFiltersButtonGridData = ui.createWidthButtonGridData();
 //		createFiltersButtonGridData.horizontalAlignment = SWT.END;
 //		createFiltersButtonGridData.grabExcessHorizontalSpace = true;
@@ -869,56 +873,56 @@ public class StaticCatalogGeneratorMainWindow {
 		createFiltersButton.setText("Create New Filters");
 
 		
-		final Composite csvStatusComposite = new Composite(parentComposite, SWT.NONE);
-		csvStatusComposite.setBackground(whiteColor);
-		csvStatusComposite.setLayoutData(ui.createFillHorizontalGridData());
-		GridLayout csvStatusCompositeGridLayout = ui.createColumnsGridLayout(2);
-		csvStatusCompositeGridLayout.marginWidth = UI.sep;
-		csvStatusCompositeGridLayout.marginHeight = UI.sep;
-		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
+		final Composite statusComposite = new Composite(parentComposite, SWT.NONE);
+		statusComposite.setBackground(whiteColor);
+		statusComposite.setLayoutData(ui.createFillHorizontalGridData());
+		GridLayout statusCompositeGridLayout = ui.createColumnsGridLayout(2);
+		statusCompositeGridLayout.marginWidth = UI.sep;
+		statusCompositeGridLayout.marginHeight = UI.sep;
+		statusComposite.setLayout(statusCompositeGridLayout);
 
-		final Label csvStatusLabel = new Label(csvStatusComposite, SWT.NONE);
-		csvStatusLabel.setBackground(whiteColor);
-		csvStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
-		csvStatusLabel.setText("Status");
+		final Label statusLabel = new Label(statusComposite, SWT.NONE);
+		statusLabel.setBackground(whiteColor);
+		statusLabel.setLayoutData(ui.createFillHorizontalGridData());
+		statusLabel.setText("Status");
 
-		final Grid csvExamineGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		csvExamineGrid.setLayoutData(ui.createFillBothGridData());
-		csvExamineGrid.setHeaderVisible(true);
-		csvExamineGrid.setLinesVisible(true);
+		final Grid examineGrid = new Grid(parentComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		examineGrid.setLayoutData(ui.createFillBothGridData());
+		examineGrid.setHeaderVisible(true);
+		examineGrid.setLinesVisible(true);
 		
-		GridColumn fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+		GridColumn fieldGridColumn = new GridColumn(examineGrid, SWT.NONE);
 		fieldGridColumn.setText("Field");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(200);
 
-		fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+		fieldGridColumn = new GridColumn(examineGrid, SWT.NONE);
 		fieldGridColumn.setText("Type");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(120);
 
-	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+	    fieldGridColumn = new GridColumn(examineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements count");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setAlignment(SWT.RIGHT);
 	    fieldGridColumn.setWidth(180);
 
-	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+	    fieldGridColumn = new GridColumn(examineGrid, SWT.NONE);
 		fieldGridColumn.setText("Exceptions (count)");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(250);
 
-	    fieldGridColumn = new GridColumn(csvExamineGrid, SWT.NONE);
+	    fieldGridColumn = new GridColumn(examineGrid, SWT.NONE);
 		fieldGridColumn.setText("Unique elements (count)");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(480);
 
 		/* Events */
-	    csvExamineGrid.addMouseListener(new MouseAdapter() {
+	    examineGrid.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent mouseEvent) {
 
-				GridItem gridItem = csvExamineGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
+				GridItem gridItem = examineGrid.getItem(new Point(mouseEvent.x, mouseEvent.y));
 				
 				for (int columnIndex = 3; columnIndex <= 4; columnIndex++) {
 					if (gridItem.getBounds(columnIndex).contains(mouseEvent.x, mouseEvent.y)) {
@@ -926,12 +930,12 @@ public class StaticCatalogGeneratorMainWindow {
 						if (itemText.trim().length() == 0) {
 							break;
 						}
-						Point gridP = csvExamineGrid.toDisplay(0, 0);
+						Point gridP = examineGrid.toDisplay(0, 0);
 						final PopupComposite popupComposite = new PopupComposite(parentComposite.getShell(), SWT.NONE, ui);
 						popupComposite.setSize(480, 480);
 						popupComposite.setLocation(
-								gridP.x + ((csvExamineGrid.getSize().x - popupComposite.getSize().x) / 2),
-								gridP.y + ((csvExamineGrid.getSize().y - popupComposite.getSize().y) / 2));
+								gridP.x + ((examineGrid.getSize().x - popupComposite.getSize().x) / 2),
+								gridP.y + ((examineGrid.getSize().y - popupComposite.getSize().y) / 2));
 
 						final Text popupCompositeText = new Text(popupComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL);
 						popupCompositeText.setBackground(whiteColor);
@@ -947,15 +951,15 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 	    
-		final ArrayList<String[]> csvExamineGridLines = new ArrayList<String[]>();
+		final ArrayList<String[]> examineGridLines = new ArrayList<String[]>();
 		
-		csvExamineButton.addSelectionListener(new SelectionAdapter() {
+		examineButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
-				csvExamineGrid.clearItems();
-				csvExamineGrid.disposeAllItems();
-				csvExamineGridLines.clear();
+				examineGrid.clearItems();
+				examineGrid.disposeAllItems();
+				examineGridLines.clear();
 				
 				StaticCatalogExamineFields staticCatalogExamine = new StaticCatalogExamineFields();
 				
@@ -968,7 +972,7 @@ public class StaticCatalogGeneratorMainWindow {
 					public void doProgress(String progressMessage) {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
-								csvStatusLabel.setText(progressMessage);
+								statusLabel.setText(progressMessage);
 								Display.getDefault().readAndDispatch();
 							}
 						});
@@ -983,18 +987,18 @@ public class StaticCatalogGeneratorMainWindow {
 					
 					StaticCatalogExamineField  examineField = examineFields.get(index);
 					
-					GridItem csvGridItem = new GridItem(csvExamineGrid, SWT.NONE);
+					GridItem gridItem = new GridItem(examineGrid, SWT.NONE);
 					
-					csvGridItem.setText(0, examineField.getName());
+					gridItem.setText(0, examineField.getName());
 
 					String fieldType = examineField.getType();
-					csvGridItem.setData("type", fieldType);
-					csvGridItem.setText(1, typeNames.get(fieldType));
+					gridItem.setData("type", fieldType);
+					gridItem.setText(1, typeNames.get(fieldType));
 					
 					HashMap<String, Long> uniqueValueCounts = examineField.getUniqueValueCounts();
 					
 					int diff = uniqueValueCounts.keySet().size(); 
-					csvGridItem.setText(2, diff + "");
+					gridItem.setText(2, diff + "");
 					
 					if (diff < maxDiff) {
 						ArrayList<String> keys = new ArrayList<>(uniqueValueCounts.keySet());
@@ -1006,7 +1010,7 @@ public class StaticCatalogGeneratorMainWindow {
 							for (String exceptionKey : exceptionKeys) {
 								exceptionKeysValues.add(exceptionKey + " (" + uniqueValueCounts.get(exceptionKey) + ")");
 							}
-							csvGridItem.setText(3, String.join(", ", exceptionKeysValues));
+							gridItem.setText(3, String.join(", ", exceptionKeysValues));
 							
 							keys.removeAll(exceptionKeys);
 						}
@@ -1017,7 +1021,7 @@ public class StaticCatalogGeneratorMainWindow {
 						for (String key : keys) {
 							keysValues.add(key + " (" + uniqueValueCounts.get(key) + ")");
 						}
-						csvGridItem.setText(4, String.join(", ", keysValues));
+						gridItem.setText(4, String.join(", ", keysValues));
 					}
 				}
 			}
@@ -1034,7 +1038,7 @@ public class StaticCatalogGeneratorMainWindow {
 				
 				StaticCatalogConfigurationFields staticCatalogFilters = new StaticCatalogConfigurationFields();
 				int indexInLine = 0; 
-				for (GridItem gridItem : csvExamineGrid.getItems()) {
+				for (GridItem gridItem : examineGrid.getItems()) {
 					
 					StaticCatalogConfigurationField staticCatalogField = new StaticCatalogConfigurationField();
 					String name = gridItem.getText(0);
@@ -1075,17 +1079,17 @@ public class StaticCatalogGeneratorMainWindow {
 		
 	    final FileControl filtersFileControl = addFileControl(parentComposite, "Filters file", "json", p.getFiltersFileControl());
 		
-		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
-		ui.addDebug(csvButtonsComposite);
-		csvButtonsComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(5, UI.sep));
+		final Composite buttonsComposite = new Composite(parentComposite, SWT.NONE);
+		ui.addDebug(buttonsComposite);
+		buttonsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsComposite.setLayout(ui.createColumnsSpacingGridLayout(5, UI.sep));
 
 		
-		final Button loadFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
+		final Button loadFiltersButton = new Button(buttonsComposite, SWT.NONE);
 		loadFiltersButton.setText("Load");
 		loadFiltersButton.setLayoutData(ui.createWidthButtonGridData());
 
-		final Button saveFiltersButton = new Button(csvButtonsComposite, SWT.NONE);
+		final Button saveFiltersButton = new Button(buttonsComposite, SWT.NONE);
 		saveFiltersButton.setText("Save");
 		saveFiltersButton.setLayoutData(ui.createWidthButtonGridData());
 
@@ -1283,16 +1287,16 @@ public class StaticCatalogGeneratorMainWindow {
 
 	    final FileControl destinationFileControl = addFileControl(parentComposite, "Destination folder", "", true, p.getGenerateDestinationFolderFileControl());
 
-		final Composite csvButtonsComposite = new Composite(parentComposite, SWT.NONE);
-		ui.addDebug(csvButtonsComposite);
-		csvButtonsComposite.setLayoutData(ui.createFillHorizontalGridData());
-		csvButtonsComposite.setLayout(ui.createColumnsSpacingGridLayout(7, UI.sep));
+		final Composite buttonsComposite = new Composite(parentComposite, SWT.NONE);
+		ui.addDebug(buttonsComposite);
+		buttonsComposite.setLayoutData(ui.createFillHorizontalGridData());
+		buttonsComposite.setLayout(ui.createColumnsSpacingGridLayout(7, UI.sep));
 		
-		final Button csvGenerateButton = new Button(csvButtonsComposite, SWT.NONE);
-		csvGenerateButton.setText("Generate");
-		csvGenerateButton.setLayoutData(ui.createWidthButtonGridData());
+		final Button generateButton = new Button(buttonsComposite, SWT.NONE);
+		generateButton.setText("Generate");
+		generateButton.setLayoutData(ui.createWidthButtonGridData());
 
-		final Button useFirstLineAsHeaderCheckBox = new Button(csvButtonsComposite, SWT.CHECK);
+		final Button useFirstLineAsHeaderCheckBox = new Button(buttonsComposite, SWT.CHECK);
 		GridData useFirstLineasHeaderCheckBoxGridData = ui.createWidthGridData(200);
 		useFirstLineasHeaderCheckBoxGridData.verticalIndent = 1; // Perfectionist
 		useFirstLineAsHeaderCheckBox.setLayoutData(useFirstLineasHeaderCheckBoxGridData);
@@ -1306,24 +1310,25 @@ public class StaticCatalogGeneratorMainWindow {
 			}
 		});
 		
-		final Composite csvStatusComposite = new Composite(parentComposite, SWT.NONE);
-		csvStatusComposite.setBackground(whiteColor);
-		csvStatusComposite.setLayoutData(ui.createFillHorizontalGridData());
-		GridLayout csvStatusCompositeGridLayout = ui.createColumnsGridLayout(2);
-		csvStatusCompositeGridLayout.marginWidth = UI.sep;
-		csvStatusCompositeGridLayout.marginHeight = UI.sep;
-		csvStatusComposite.setLayout(csvStatusCompositeGridLayout);
+		final Composite statusComposite = new Composite(parentComposite, SWT.NONE);
+		statusComposite.setBackground(whiteColor);
+		statusComposite.setLayoutData(ui.createFillHorizontalGridData());
+		GridLayout statusCompositeGridLayout = ui.createColumnsGridLayout(2);
+		statusCompositeGridLayout.marginWidth = UI.sep;
+		statusCompositeGridLayout.marginHeight = UI.sep;
+		statusComposite.setLayout(statusCompositeGridLayout);
 
-		final Label generateStatusLabel = new Label(csvStatusComposite, SWT.NONE);
+		final Label generateStatusLabel = new Label(statusComposite, SWT.NONE);
 		generateStatusLabel.setBackground(whiteColor);
 		generateStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
 		generateStatusLabel.setText("Status");
 
 		final StyledText statusStyledText = new StyledText(parentComposite, SWT.BORDER | SWT.V_SCROLL);
 		statusStyledText.setLayoutData(ui.createFillBothGridData());
+		statusStyledText.setWordWrap(true);
 		statusStyledText.setFont(fontMonospaced);
 		
-		csvGenerateButton.addSelectionListener(new SelectionAdapter() {
+		generateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				
@@ -1334,13 +1339,31 @@ public class StaticCatalogGeneratorMainWindow {
 					new LoopProgress() {
 						@Override
 						public void doProgress(String progressMessage) {
-							Display.getDefault().syncExec(new Runnable() {
-								public void run() {
-									generateStatusLabel.setText(progressMessage);
-//									statusStyledText.
-									Display.getDefault().readAndDispatch();
-								}
-							});
+							doProgress(progressMessage, null);
+						}
+						@Override
+						public void doProgress(String progressMessage, String stepMessage) {
+							
+//							L.p(progressMessage);
+							if (progressMessage != null) {
+								generateStatusLabel.setText(progressMessage);	
+							}
+							if (stepMessage != null) {
+								statusStyledText.append(stepMessage + "\n");	
+							}
+							
+//							Display.getDefault().syncExec(new Runnable() {
+//								public void run() {
+//									
+//									if (progressMessage != null) {
+//										generateStatusLabel.setText(progressMessage);	
+//									}
+//									if (stepMessage != null) {
+//										statusStyledText.append(stepMessage + "\n");	
+//									}
+//									Display.getDefault().readAndDispatch();
+//								}
+//							});
 						}
 					}
 				);
