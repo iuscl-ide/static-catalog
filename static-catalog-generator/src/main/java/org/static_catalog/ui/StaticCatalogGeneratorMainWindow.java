@@ -14,6 +14,7 @@ import org.eclipse.swt.FileControlRecentsComboSelectionEvent;
 import org.eclipse.swt.PopupComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTFontUtils;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -158,7 +159,8 @@ public class StaticCatalogGeneratorMainWindow {
 	public static Font fontBigger;
 	public static Font fontRecents;
 	public static Font fontSmaller;
-
+	public static Font fontMonospaced;
+	
 	/* Colors */
 	public static Color whiteColor;
 //	private Color gridBackgroundColor;
@@ -198,7 +200,7 @@ public class StaticCatalogGeneratorMainWindow {
 //		}
 		
 		/* Display */
-		Display.setAppName("static-catalog");
+//		Display.setAppName("static-catalog");
 		display = new Display();
 		ui = new UI(false, display);
 
@@ -227,6 +229,7 @@ public class StaticCatalogGeneratorMainWindow {
 		fontBigger = ui.newFontSize(fontBold, fontNormalHeight + 5);
 		fontRecents = ui.newFontSize(fontNormal,fontNormalHeight  + 1);
 		fontSmaller = ui.newFontSize(fontNormal,fontNormalHeight - 3);
+		fontMonospaced = SWTFontUtils.getMonospacedFont(display);
 
 		/* Colors */
 		whiteColor = new Color(display, 255, 255, 255);
@@ -935,7 +938,7 @@ public class StaticCatalogGeneratorMainWindow {
 						String wrap = U.wrap(itemText, 60, ",\n", true, ", ").replace(",\n ", ",\n"); 
 						popupCompositeText.setText(wrap);
 						popupCompositeText.setLayoutData(ui.createFillBothGridData());
-						popupCompositeText.setFont(SWTFontUtils.getMonospacedFont(display));
+						popupCompositeText.setFont(fontMonospaced);
 	
 						popupComposite.show(popupComposite.getLocation());
 						break;
@@ -1316,6 +1319,10 @@ public class StaticCatalogGeneratorMainWindow {
 		generateStatusLabel.setLayoutData(ui.createFillHorizontalGridData());
 		generateStatusLabel.setText("Status");
 
+		final StyledText statusStyledText = new StyledText(parentComposite, SWT.BORDER | SWT.V_SCROLL);
+		statusStyledText.setLayoutData(ui.createFillBothGridData());
+		statusStyledText.setFont(fontMonospaced);
+		
 		csvGenerateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -1330,6 +1337,7 @@ public class StaticCatalogGeneratorMainWindow {
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
 									generateStatusLabel.setText(progressMessage);
+//									statusStyledText.
 									Display.getDefault().readAndDispatch();
 								}
 							});

@@ -12,6 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 /** Common desktop log, standard JRE */
 public class L {
 
@@ -113,25 +118,36 @@ public class L {
     public static void p(String devMessage) {
 
         for (String line : logTextLines(devMessage + "\n ", null).split("\n")) {
-            System.out.println("ehaviewer [P] " + line);
+            System.out.println("static-catalog [P] " + line);
         }
     }
 
-    /** Log.i replacement, for jUnits */
+    /** Log.i replacement */
     public static void i(String message) {
 
         logger.log(Level.INFO, logTextLines(message, null));
     }
 
-    /** Log.w replacement, for jUnits */
+    /** Log.w replacement */
     public static void w(String message) {
 
         logger.log(Level.WARNING, logTextLines(message, null));
     }
 
-    /** Log.e replacement, for jUnits */
+    /** Log.e replacement */
     public static void e(String message, Throwable throwable) {
 
         logger.log(Level.SEVERE, logTextLines(message, throwable));
+        
+        Display currentDisplay = Display.getCurrent(); 
+        if (currentDisplay != null) {
+        	Shell currentShell = currentDisplay.getActiveShell();
+        	if (currentShell != null) {
+                MessageBox errorMessageBox = new MessageBox(currentShell, SWT.OK | SWT.ICON_ERROR);
+                errorMessageBox.setText("static-catalog Error, the program will exit");
+                errorMessageBox.setMessage(throwable.getClass().getSimpleName() + ":\n" + throwable.getMessage());
+                errorMessageBox.open();
+        	}
+        }
     }
 }
