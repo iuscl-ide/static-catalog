@@ -30,6 +30,7 @@ const StaticCatalogDev = (() => {
 	var pageFieldCsvIndexes = [];
 	var pageFieldTotalFilters = [];
 	
+	var $filterDropdowns;
 	var $filterCheckboxes;
 	var $filters_count;
 	var $filter_count_template;
@@ -69,13 +70,29 @@ const StaticCatalogDev = (() => {
 	var $expand_collapse_menu;
 	var areFiltersExpanded;
 	
-	var filterCountClickEvent;
+	var filterCountCloseClickEvent;
 	var filterCountLabelClickEvent;
 
 	/* On jQuery document loaded completely */
 	const init = () => {
 		
 		/* semantic-ui stuff */
+		$filterDropdowns = $("[id^=scp-id-dropdown-filter-]");
+		$filterDropdowns.dropdown({
+			onChange: function(value, text, $selectedItem) {
+
+				let $this = $(this);
+				let dataValue = $selectedItem.attr("data-value");
+				if (dataValue) {
+					$this.attr("data-value", dataValue);
+				}
+				else {
+					$this.removeAttr("data-value");
+				}
+				displayFiltersCount();
+			}
+		});
+		
 		$paginationResultsPerPage = $("#scp-id--pagination-results-per-page");
 //		$('.ui.dropdown').dropdown({
 		$paginationResultsPerPage.dropdown({
@@ -157,6 +174,11 @@ const StaticCatalogDev = (() => {
 			$filters_count.empty();
 			$filterCheckboxes.each( (index, element) => {
 				element.checked = false;
+			});
+			$filterDropdowns.each( (index, element) => {
+				let $filterDropdown = $(element);
+				$filterDropdown.dropdown('set selected', '');
+				$filterDropdown.removeAttr("data-value");
 			});
         });
 		
@@ -258,13 +280,20 @@ const StaticCatalogDev = (() => {
         });
 
 		/* Filter name clear */
-		filterCountClickEvent = (fieldName) => {
+		filterCountCloseClickEvent = (fieldName) => {
 			
 			return (clickEvent) => {
 				
 				for (let checkbox of $filterCheckboxes) {
 					if (pageFilters[checkbox.id].fieldName === fieldName) {
 						checkbox.checked = false;
+					}
+				}
+				for (let dropdown of $filterDropdowns) {
+					let $filterDropdown = $(dropdown);
+					if (pageFilters[$filterDropdown.attr("data-value")].fieldName === fieldName) {
+						$filterDropdown.dropdown('set selected', '');
+						$filterDropdown.removeAttr("data-value");
 					}
 				}
 				displayFiltersCount();
@@ -279,6 +308,17 @@ const StaticCatalogDev = (() => {
 				for (let checkbox of $filterCheckboxes) {
 					if (pageFilters[checkbox.id].fieldName === fieldName) {
 						let $filterAccordion = $($(checkbox).parents(".ui.vertical.fluid.accordion.menu")[0]);
+						$filterAccordion.accordion("open", 0);
+						$([document.documentElement, document.body]).animate({
+					        scrollTop: $filterAccordion.offset().top
+					    }, 100);
+						break;
+					}
+				}
+				for (let dropdown of $filterDropdowns) {
+					let $filterDropdown = $(dropdown);
+					if (pageFilters[$filterDropdown.attr("data-value")].fieldName === fieldName) {
+						let $filterAccordion = $($filterDropdown.parents(".ui.vertical.fluid.accordion.menu")[0]);
 						$filterAccordion.accordion("open", 0);
 						$([document.documentElement, document.body]).animate({
 					        scrollTop: $filterAccordion.offset().top
@@ -353,31 +393,27 @@ const StaticCatalogDev = (() => {
 			}
 		}
 		
-		
-//		let keys = [];
-//		let searchFieldsValues = [];
-//		
-//		let filters = pageFieldsFilters.filters;
-//		for (let checkbox of $filterCheckboxes) {
-//			if (checkbox.checked) {
-//				let filterFieldValue = filters[checkbox.id];
-//				
-//				let filterField = filterFieldValue.field;
-//				let filterValue = filterFieldValue.value;
-//				
-//				if (!keys.includes(filterField)) {
-//					keys.push(filterField);
-//					searchFieldsValues.push({
-//						"field": filterField,
-//						"values": []
-//					});
-//				}
-//
-//				let index = keys.indexOf(filterField, 0);
-//				searchFieldsValues[index].values.push(filterValue);
-//			}
-//		}
-		//console.log(searchFieldsValues);
+		for (let dropdown of $filterDropdowns) {
+			
+			let dataValue = $(dropdown).attr("data-value");
+			if (dataValue) {
+				let pageFilter = pageFilters[dataValue];
+				
+				let fieldIndex = pageFilter.fieldIndex;
+				let filterIndex = pageFilter.filterIndex;
+				
+				if (!keys.includes(fieldIndex)) {
+					keys.push(fieldIndex);
+					searchFieldsValues.push({
+						"fieldIndex": fieldIndex,
+						"filterIndexes": []
+					});
+				}
+
+				let index = keys.indexOf(fieldIndex, 0);
+				searchFieldsValues[index].filterIndexes.push(filterIndex);
+			}
+		}
 		
 		return searchFieldsValues;
 	}
@@ -397,7 +433,7 @@ const StaticCatalogDev = (() => {
 			$filter_count.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(pageField.name));
 			let sumDetail = searchFieldsValue.filterIndexes.length + " (" + pageFieldTotalFilters[fieldIndex] + ")";
 			$filter_count.find("div[data-name=scp-name--filter-count-sum]").html(sumDetail);
-			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountClickEvent(pageField.name));
+			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountCloseClickEvent(pageField.name));
 		}
 	}
 

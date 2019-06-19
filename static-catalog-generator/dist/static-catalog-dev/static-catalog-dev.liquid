@@ -130,17 +130,24 @@
 							class="ui left pointing basic horizontal label">{{ field.totalValuesCount }}</span>
 						</a>
 						<div class="active content">
+							{% if field.filterDisplayType == 'checkboxes' or field.filterDisplayType == 'radiobuttons' %}
 							<div class="ui list">
 								{% assign display_values_count = field.totalValuesCount | minus: field.totalMoreValuesCount %}
+								{% if field.filterDisplayType == 'radiobuttons' %}
+									{% assign is_radio = true %}
+								{% else %}
+									{% assign is_radio = false %}
+								{% endif %}
+								
 								{% for field_value in field.values %} {% assign field_value_index = field_value.index | abs %} {% if field_value_index < display_values_count %}
 								<div class="item">
-									<div class="ui checkbox">
-										<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+									<div class="ui {% if is_radio %}radio {% endif %}checkbox">
+										<input id="{{ field_value.identifier }}" type="{% if is_radio %}radio{% else %}checkbox{% endif %}" name="{{ field.identifier }}" value="{{ field_value.name }}">
 										<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
 									</div>
 									<div class="right floated content">
 										<div class="ui basic horizontal label"
-											{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top center"{% endif %}>
+											{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
 											{{ field_value.count | w }}
 										</div>
 									</div>
@@ -153,13 +160,13 @@
 										<div class="ui list">
 											{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %} {% if field_value_index >= display_values_count %}
 											<div class="item">
-												<div class="ui checkbox">
-													<input id="{{ field_value.identifier }}" type="checkbox" name="{{ field_value.identifier }}" value="{{ field_value.name }}">
+												<div class="ui {% if is_radio %}radio {% endif %}checkbox">
+													<input id="{{ field_value.identifier }}" type="{% if is_radio %}radio{% else %}checkbox{% endif %}" name="{{ field.identifier }}" value="{{ field_value.name }}">
 													<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
 												</div>
 												<div class="right floated content">
 													<div class="ui basic horizontal label"
-														{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top center"{% endif %}>
+														{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
 														{{ field_value.count | w }}
 													</div>
 												</div>
@@ -170,6 +177,25 @@
 								</div>
 								{% endif %}
 							</div>
+							{% else %} {% if field.filterDisplayType == 'dropdown' %}
+							<div id="scp-id-dropdown-filter-{{ field.identifier }}" class="ui selection fluid dropdown" tabindex="0">
+								<input type="hidden" name="{{ field.identifier }}" value="initial"><i class="dropdown icon"></i>
+								<div class="text" style="display: block;"></div>
+								<div class="menu" tabindex="-1">
+									<div class="item active selected"></div>
+									{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %}
+									<div class="item" id="{{ field_value.identifier }}" data-value="{{ field_value.identifier }}">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" {% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
+												{{ field_value.count | w }}
+											</div>
+										</div>
+										{{ field_value.label }}
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							{% endif %} {% endif %}
 						</div>
 					</div>
 				</div>
