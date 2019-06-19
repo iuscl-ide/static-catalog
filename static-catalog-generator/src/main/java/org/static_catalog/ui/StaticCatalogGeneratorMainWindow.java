@@ -1344,26 +1344,14 @@ public class StaticCatalogGeneratorMainWindow {
 						@Override
 						public void doProgress(String progressMessage, String stepMessage) {
 							
-//							L.p(progressMessage);
+							Display.getDefault().readAndDispatch();
 							if (progressMessage != null) {
 								generateStatusLabel.setText(progressMessage);	
 							}
 							if (stepMessage != null) {
 								statusStyledText.append(stepMessage + "\n");	
 							}
-							
-//							Display.getDefault().syncExec(new Runnable() {
-//								public void run() {
-//									
-//									if (progressMessage != null) {
-//										generateStatusLabel.setText(progressMessage);	
-//									}
-//									if (stepMessage != null) {
-//										statusStyledText.append(stepMessage + "\n");	
-//									}
-//									Display.getDefault().readAndDispatch();
-//								}
-//							});
+							Display.getDefault().readAndDispatch();
 						}
 					}
 				);
