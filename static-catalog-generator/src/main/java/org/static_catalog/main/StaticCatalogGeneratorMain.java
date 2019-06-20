@@ -34,7 +34,8 @@ public class StaticCatalogGeneratorMain {
 					/* ILB */
 				}
 				else {
-					L.e("Uncaught exception: " + throwable.toString(), throwable);	
+					L.e("Uncaught exception: " + throwable.toString(), throwable);
+					System.exit(0);
 				}
 			}
 		};

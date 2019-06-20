@@ -73,7 +73,7 @@ public class StaticCatalogGeneratorMainWindow {
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_VALUES, "Values");
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_MARKS_INTERVALS, "Marks Intervals");
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_LENGTH_INTERVALS, "Length Intervals");
-		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_WORD, "Keyword");
+		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_KEYWORDS, "Keywords");
 		
 		for (Entry<String, String> entry : filterTypeNames.entrySet()) {
 			filterNameTypes.put(entry.getValue(), entry.getKey());
@@ -89,6 +89,7 @@ public class StaticCatalogGeneratorMainWindow {
 		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_CHECKBOXES, "Checkboxes");
 		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_DROPDOWN, "Dropdown");
 		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_RADIOBUTTONS, "Radio Buttons");
+		displayTypeNames.put(StaticCatalogEngine.DISPLAY_TYPE_SEARCHBOX, "Search Box");
 		
 		for (Entry<String, String> entry : displayTypeNames.entrySet()) {
 			displayNameTypes.put(entry.getValue(), entry.getKey());
