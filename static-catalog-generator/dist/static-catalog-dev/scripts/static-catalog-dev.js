@@ -31,6 +31,7 @@ const StaticCatalogDev = (() => {
 	var pageFieldTotalFilters = [];
 	
 	var $filterDropdowns;
+	var $filterSearchboxes;
 	var $filterCheckboxes;
 	var $filters_count;
 	var $filter_count_template;
@@ -92,6 +93,24 @@ const StaticCatalogDev = (() => {
 				displayFiltersCount();
 			}
 		});
+		
+		// https://embed.plnkr.co/plunk/aITHOT
+		$filterSearchboxes = $("[id^=scp-id-searchbox-filter-]");
+		$filterSearchboxes.search({
+		    apiSettings: {
+		    	'response': function (e) {
+		    		var searchTerm = e.urlData.query;
+					console.log(searchTerm);
+		    		
+		    	}
+		    }
+		});
+		
+//		$filterSearchboxes.onSearchQuery('query', function(query) {
+//			console.log("mjmo");
+//		});
+		
+
 		
 		$paginationResultsPerPage = $("#scp-id--pagination-results-per-page");
 //		$('.ui.dropdown').dropdown({

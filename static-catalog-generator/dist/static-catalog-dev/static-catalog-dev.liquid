@@ -177,7 +177,8 @@
 								</div>
 								{% endif %}
 							</div>
-							{% else %} {% if field.filterDisplayType == 'dropdown' %}
+							{% endif %}
+							{% if field.filterDisplayType == 'dropdown' %}
 							<div id="scp-id-dropdown-filter-{{ field.identifier }}" class="ui selection fluid dropdown" tabindex="0">
 								<input type="hidden" name="{{ field.identifier }}" value="initial"><i class="dropdown icon"></i>
 								<div class="text" style="display: block;"></div>
@@ -195,7 +196,16 @@
 									{% endfor %}
 								</div>
 							</div>
-							{% endif %} {% endif %}
+							{% endif %}
+							{% if field.filterDisplayType == 'searchbox' %}
+							<div id="scp-id-searchbox-filter-{{ field.identifier }}" class="ui search">
+								<div class="ui fluid icon input">
+									<input class="prompt" type="text" placeholder="Search {{ field.label }}...">
+									<i class="search icon"></i>
+								</div>
+								<div class="results"></div>
+							</div>
+							{% endif %}
 						</div>
 					</div>
 				</div>
