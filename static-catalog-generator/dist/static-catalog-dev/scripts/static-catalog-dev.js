@@ -9,6 +9,29 @@
 /* Particular to the page */
 const StaticCatalogDev = (() => {
 
+	/*
+	Parameters of a search:
+	
+	searchData
+		searchSort
+			sortFieldIndex
+			sortDirection
+		searchPagination
+			paginationPage
+			paginationResultsPerPage
+		searchTotals
+			totalLines
+			blockLines
+			indexLinesModulo
+		searchFieldsValues []
+			fieldIndex
+			filterIndexes []
+		searchFieldsKeywords []
+			fieldIndex
+			filterIndex
+			keywordPrefix
+	*/
+	
 	/* 8<---------------------------------------- */
 	
 	var searchSort = {
@@ -19,40 +42,49 @@ const StaticCatalogDev = (() => {
 		"paginationPage": 1,
 		"paginationResultsPerPage": 10
 	};
-	var searchTotals = {};
+	const searchTotals = {
+		"totalLines": -1,
+		"blockLines": -1,
+		"indexLinesModulo": -1
+	};
 	
 	/* 8<---------------------------------------- */
 	
-	var pageFieldsFilters;
+	/* Catalog */
 	var pageFields = {};
-	var pageFilters = {};
-	var pageFieldLabels = [];
-	var pageFieldCsvIndexes = [];
-	var pageFieldTotalFilters = [];
+	var pageFieldsProp = [];
+	var pageValueFilterValues = {};
+	var pageKeywordFields = {};
 	
+	/* Search */
 	var $filterDropdowns;
 	var $filterSearchboxes;
 	var $filterCheckboxes;
-	var $filters_count;
-	var $filter_count_template;
+	var $filtersCount;
+	var $filterCountTemplate;
+	var $filterAccordions;
+
+	var areFiltersExpanded;
+
+	var filterCountCloseClickEvent;
+	var filterCountLabelClickEvent;
+
+	/* Results */
+	var $resultsPanel;
+	var $noResultsPanel;
 	var $tilesOrList;
-	var $no_results_panel;
-	var $results_panel;
 	var $tileTemplate;
 	var $tileFieldTemplate; 
 	
-	var $sortDropdown;
-	
+	/* Messages */
 	var $messageArea;
 	var $welcomeMessage;
 	var $searchingMessage;
 	var $noResultsMessage;
 	var $successMessage;
 
-	var $resultsPanel;
-
+	/* Pagination */
 	var $paginationPages;
-	var $paginationResultsPerPage;
 	var $paginationEllipsis1;
 	var $paginationEllipsis2;
 	var $paginationPage1;
@@ -65,20 +97,20 @@ const StaticCatalogDev = (() => {
 	
 	var pageIndex = -1;
 	var lastPageIndex = -1;
-	
-	
-	var $filter_accordions;
-	var $expand_collapse_menu;
-	var areFiltersExpanded;
-	
-	var filterCountCloseClickEvent;
-	var filterCountLabelClickEvent;
 
 	/* On jQuery document loaded completely */
 	const init = () => {
 		
-		/* semantic-ui stuff */
-		$filterDropdowns = $("[id^=scp-id-dropdown-filter-]");
+		/* SEMANTIC UI initializations */
+		
+		$(".overlay").visibility({
+			type: "fixed"
+		});
+		//$("ui.table").tablesort();
+		$(".ui.accordion").accordion();
+
+		/* Filter values */
+		$filterDropdowns = $("[data-filter-display-type=dropdown]");
 		$filterDropdowns.dropdown({
 			onChange: function(value, text, $selectedItem) {
 
@@ -93,38 +125,40 @@ const StaticCatalogDev = (() => {
 				displayFiltersCount();
 			}
 		});
-		
+
+		/* Filter keywords */
 		// https://embed.plnkr.co/plunk/aITHOT
-		$filterSearchboxes = $("[id^=scp-id-searchbox-filter-]");
+		$filterSearchboxes = $("[data-filter-display-type=searchbox]");
 		$filterSearchboxes.search({
 		    apiSettings: {
 		    	'response': function (e) {
+
+					let pageKeywordField = pageKeywordFields[this.id];
+					console.log(pageKeywordField);
+
 		    		var searchTerm = e.urlData.query;
 					console.log(searchTerm);
-		    		
+
+					let results = [];
+					if (searchTerm.length === 1) {
+						for (let prefix of Object.keys(pageKeywordField.prefixes)) {
+							if (prefix.startsWith(searchTerm)) {
+								results.push({
+									"title": prefix
+								});
+							}
+						}
+					}
+
+					return {
+						"results": results
+					};
 		    	}
 		    }
 		});
-		
-//		$filterSearchboxes.onSearchQuery('query', function(query) {
-//			console.log("mjmo");
-//		});
-		
 
-		
-		$paginationResultsPerPage = $("#scp-id--pagination-results-per-page");
-//		$('.ui.dropdown').dropdown({
-		$paginationResultsPerPage.dropdown({
-			 onChange: function(value, text, $selectedItem) {
-				 
-				 searchPagination.paginationPage = 1;
-				 let paginationResultsPerPage = parseInt($paginationResultsPerPage.text(), 10);
-				 searchPagination.paginationResultsPerPage = paginationResultsPerPage;
-				 apply();
-			}
-		});
-		$sortDropdown = $("#scp-id--sort");
-		$sortDropdown.dropdown({
+		/* Sort */
+		$("#scp-id--sort").dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
 				 searchSort.sortFieldIndex = $selectedItem.attr("data-sort-field-index");
@@ -133,17 +167,22 @@ const StaticCatalogDev = (() => {
 				 apply();
 			}
 		});
-		
-		$(".overlay").visibility({
-			type: "fixed"
-		});
-		//$("ui.table").tablesort();
-		$(".ui.accordion").accordion();
 
-		/* load variables */
+		/* Pagination */
+		$("#scp-id--pagination-results-per-page").dropdown({
+			 onChange: function(value, text, $selectedItem) {
+				 
+				 searchPagination.paginationPage = 1;
+				 let paginationResultsPerPage = parseInt(text, 10);
+				 searchPagination.paginationResultsPerPage = paginationResultsPerPage;
+				 apply();
+			}
+		});
+		
+		/* Load controls variables */
 		$filterCheckboxes = $("input[id*='sc_filter__']");
-		$filters_count = $("#scp-id--filters-count");
-		$filter_count_template = $("#scp-id--filter-count-template");
+		$filtersCount = $("#scp-id--filters-count");
+		$filterCountTemplate = $("#scp-id--filter-count-template");
 		$tilesOrList = $("#scp-id--tiles-or-list");
 		$tileTemplate = $("#scp-id--tile-template");
 		$tileFieldTemplate = $("#scp-id--tile-field-template");
@@ -156,7 +195,6 @@ const StaticCatalogDev = (() => {
 		
 		$resultsPanel = $("#scp-id--results");
 		
-		
 		$paginationPages = $("#scp-id--pagination-pages");
 		$paginationFirst = $("#scp-id--pagination-first");
 		$paginationPrevious = $("#scp-id--pagination-previous");
@@ -168,29 +206,35 @@ const StaticCatalogDev = (() => {
 		$paginationPage2 = $("#scp-id--pagination-page-2");
 		$paginationPage3 = $("#scp-id--pagination-page-3");
 		
-		
-		$filter_accordions = $(".ui.vertical.fluid.accordion.menu");
-		$expand_collapse_menu = $("#sc-id--expand-collapse-menu");
+		$filterAccordions = $(".ui.vertical.fluid.accordion.menu");
 		areFiltersExpanded = true;
 		
-		/* events */
+		/* "Search" button */
 		$("#sc-id--search-button").click( clickEvent => {
 			
 			searchPagination.paginationPage = 1;
 			apply();
         });
+
+		/* Check value */
+		$filterCheckboxes.click( clickEvent => {
+			
+			displayFiltersCount();
+        });
 		
+		/* "Search" lateral menu item */
 		$("#sc-id--filter-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
 			searchPagination.paginationPage = 1;
 			apply();
         });
-		
+
+		/* "Clear" lateral menu item */
 		$("#sc-id--clear-menu").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
-			$filters_count.empty();
+			$filtersCount.empty();
 			$filterCheckboxes.each( (index, element) => {
 				element.checked = false;
 			});
@@ -200,8 +244,31 @@ const StaticCatalogDev = (() => {
 				$filterDropdown.removeAttr("data-value");
 			});
         });
+
+		/* "Expand / Collapse" lateral menu item */
+		const $expandCollapseMenu = $("#sc-id--expand-collapse-menu");
+		$expandCollapseMenu.click( clickEvent => {
+			
+			if (areFiltersExpanded) {
+				$filterAccordions.accordion("close", 0);
+				areFiltersExpanded = false;
+				$expandCollapseMenu.html("<i class='expand icon'></i> Expand")
+			}
+			else {
+				$filterAccordions.accordion("open", 0);
+				areFiltersExpanded = true;
+				$expandCollapseMenu.html("<i class='compress icon'></i> Collapse")
+				
+			}
+			window.scrollTo(0, 0);
+        });
+
+		/* "Top" lateral menu item */
+		$("#sc-id--top-menu").click( clickEvent => {
+			window.scrollTo(0, 0);
+        });
 		
-		/* Page click */
+		/* Pagination clicks */
 		let paginationPageClickEvent = ($paginationPage) => {
 			
 			return (clickEvent) => {
@@ -223,25 +290,23 @@ const StaticCatalogDev = (() => {
 			searchPagination.paginationPage = 1;
 			apply();
         });
-
 		$paginationPrevious.click( clickEvent => {
 			
 			searchPagination.paginationPage = pageIndex - 1;
 			apply();
         });
-
 		$paginationNext.click( clickEvent => {
 
 			searchPagination.paginationPage = pageIndex + 1;
 			apply();
         });
-
 		$paginationLast.click( clickEvent => {
 
 			searchPagination.paginationPage = lastPageIndex;
 			apply();
         });
 
+		/* Debugs */
 		$("#sc-id--debug-button").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
@@ -250,67 +315,44 @@ const StaticCatalogDev = (() => {
 				element.value = element.value.toLocaleString();
 			});
         });
-		
-		$expand_collapse_menu.click( clickEvent => {
-			
-			if (areFiltersExpanded) {
-				$filter_accordions.accordion("close", 0);
-				areFiltersExpanded = false;
-				$expand_collapse_menu.html("<i class='expand icon'></i> Expand ")
-				
-			}
-			else {
-				$filter_accordions.accordion("open", 0);
-				areFiltersExpanded = true;
-				$expand_collapse_menu.html("<i class='compress icon'></i> Collapse ")
-				
-			}
-			window.scrollTo(0, 0);
-        });
-		
-		$("#sc-id--top-menu").click( clickEvent => {
-			window.scrollTo(0, 0);
-        });
 
-		$filterCheckboxes.click( clickEvent => {
-			
-			displayFiltersCount();
-        });
-
-		const $see_as_tiles = $("#scp-id--see-as-tiles");
-		const $see_as_list = $("#scp-id--see-as-list");
+		/* Results list / tiles */
+		const $seeAsTiles = $("#scp-id--see-as-tiles");
+		const $seeAsList = $("#scp-id--see-as-list");
 		
-		$see_as_tiles.click( clickEvent => {
-			const $tile_grid = $("div[data-name=scp-name--tile-grid]");
+		$seeAsTiles.click( clickEvent => {
 			
-			$see_as_list.removeClass("active");
+			const $tileGrid = $("div[data-name=scp-name--tile-grid]");
+			
+			$seeAsList.removeClass("active");
 			$tilesOrList.removeClass().addClass("ui three column grid");
-			$tile_grid.removeClass().addClass("ui one column grid");
-			$see_as_tiles.removeClass("item").addClass("active item");
+			$tileGrid.removeClass().addClass("ui one column grid");
+			$seeAsTiles.removeClass("item").addClass("active item");
         });
 		
-		$see_as_list.click( clickEvent => {
-			const $tile_grid = $("div[data-name=scp-name--tile-grid]");
+		$seeAsList.click( clickEvent => {
 			
-			$see_as_tiles.removeClass("active");
+			const $tileGrid = $("div[data-name=scp-name--tile-grid]");
+			
+			$seeAsTiles.removeClass("active");
 			$tilesOrList.removeClass().addClass("ui one column grid");
-			$tile_grid.removeClass().addClass("ui four column grid");
-			$see_as_list.removeClass("item").addClass("active item");
+			$tileGrid.removeClass().addClass("ui four column grid");
+			$seeAsList.removeClass("item").addClass("active item");
         });
 
-		/* Filter name clear */
+		/* Filter count close - check false all */
 		filterCountCloseClickEvent = (fieldName) => {
 			
 			return (clickEvent) => {
 				
 				for (let checkbox of $filterCheckboxes) {
-					if (pageFilters[checkbox.id].fieldName === fieldName) {
+					if (pageValueFilterValues[checkbox.id].fieldName === fieldName) {
 						checkbox.checked = false;
 					}
 				}
 				for (let dropdown of $filterDropdowns) {
 					let $filterDropdown = $(dropdown);
-					if (pageFilters[$filterDropdown.attr("data-value")].fieldName === fieldName) {
+					if (pageValueFilterValues[$filterDropdown.attr("data-value")].fieldName === fieldName) {
 						$filterDropdown.dropdown('set selected', '');
 						$filterDropdown.removeAttr("data-value");
 					}
@@ -319,13 +361,13 @@ const StaticCatalogDev = (() => {
 		    }
 		}
 		
-		/* Filter name display */
+		/* Filter count label - go to filter */
 		filterCountLabelClickEvent = (fieldName) => {
 			
 			return (clickEvent) => {
 				
 				for (let checkbox of $filterCheckboxes) {
-					if (pageFilters[checkbox.id].fieldName === fieldName) {
+					if (pageValueFilterValues[checkbox.id].fieldName === fieldName) {
 						let $filterAccordion = $($(checkbox).parents(".ui.vertical.fluid.accordion.menu")[0]);
 						$filterAccordion.accordion("open", 0);
 						$([document.documentElement, document.body]).animate({
@@ -336,7 +378,7 @@ const StaticCatalogDev = (() => {
 				}
 				for (let dropdown of $filterDropdowns) {
 					let $filterDropdown = $(dropdown);
-					if (pageFilters[$filterDropdown.attr("data-value")].fieldName === fieldName) {
+					if (pageValueFilterValues[$filterDropdown.attr("data-value")].fieldName === fieldName) {
 						let $filterAccordion = $($filterDropdown.parents(".ui.vertical.fluid.accordion.menu")[0]);
 						$filterAccordion.accordion("open", 0);
 						$([document.documentElement, document.body]).animate({
@@ -354,33 +396,51 @@ const StaticCatalogDev = (() => {
 			url: "static-catalog-fields.json",
 			mimeType: "application/json",
 			success: result => {
-				pageFieldsFilters = result;
+				//console.log(result);
 				let fieldIndex = 0;
-				pageFieldsFilters.fields.map( (pageField) => {
+				result.fields.map( (pageField) => {
 					
+					/* Field */
 					pageFields[pageField.index] = pageField;
-					pageFieldLabels[fieldIndex] = pageField.label;
-					pageFieldCsvIndexes[fieldIndex] = pageField.csvIndex;
-					pageFieldTotalFilters[fieldIndex] = pageField.values.length;
-					fieldIndex++;
-
-					pageField.values.map((pageFieldValue) => {
-//						loadFilterValue(pageFieldValue, pageField);
-						let pageFilter = {};
-						pageFilter.fieldIndex = pageField.index;
-						pageFilter.filterIndex = pageFieldValue.index;
-						pageFilter.fieldName = pageField.name;
-						
-						pageFilters[pageFieldValue.identifier] = pageFilter;
-					});
+					pageFieldsProp[fieldIndex++] = {
+						"label": pageField.label,
+						"csvIndex": pageField.csvIndex,
+						"totalFilters": pageField.values.length
+					};
 					
-					let totals = pageFieldsFilters.totals;
+					if (pageField.filterType === "keywords") {
+						/* Filter keywords */
+						
+						let pageKeywordFieldPrefixes = {};
+						pageField.values.map((pageFieldValue) => {
+							
+							pageKeywordFieldPrefixes[pageFieldValue.name] = {
+								"filterIndex": pageFieldValue.index
+							};
+						});
+						pageKeywordFields[pageField.identifier] = {
+							"prefixes": pageKeywordFieldPrefixes
+						}
+					}
+					else {
+						/* Filter values */
+						pageField.values.map((pageFieldValue) => {
+							
+							pageValueFilterValues[pageFieldValue.identifier] = {
+								"fieldIndex": pageField.index,
+								"filterIndex": pageFieldValue.index,
+								"fieldName": pageField.name
+							};
+						});
+					}
+					
+					/* Totals */
+					const totals = result.totals;
 					searchTotals.totalLines = totals.totalLines;
 					searchTotals.blockLines = totals.blockLines;
 					searchTotals.indexLinesModulo = totals.indexLinesModulo;
 				});
 				
-				//console.log(pageFieldsFilters);
 				displayFiltersCount();				
 			}
 		});
@@ -394,116 +454,59 @@ const StaticCatalogDev = (() => {
 		
 		for (let checkbox of $filterCheckboxes) {
 			if (checkbox.checked) {
-				let pageFilter = pageFilters[checkbox.id];
-				
-				let fieldIndex = pageFilter.fieldIndex;
-				let filterIndex = pageFilter.filterIndex;
-				
-				if (!keys.includes(fieldIndex)) {
-					keys.push(fieldIndex);
-					searchFieldsValues.push({
-						"fieldIndex": fieldIndex,
-						"filterIndexes": []
-					});
-				}
-
-				let index = keys.indexOf(fieldIndex, 0);
-				searchFieldsValues[index].filterIndexes.push(filterIndex);
+				createSearchFieldValue(checkbox.id, pageValueFilterValues, keys, searchFieldsValues);
 			}
 		}
-		
 		for (let dropdown of $filterDropdowns) {
-			
 			let dataValue = $(dropdown).attr("data-value");
 			if (dataValue) {
-				let pageFilter = pageFilters[dataValue];
-				
-				let fieldIndex = pageFilter.fieldIndex;
-				let filterIndex = pageFilter.filterIndex;
-				
-				if (!keys.includes(fieldIndex)) {
-					keys.push(fieldIndex);
-					searchFieldsValues.push({
-						"fieldIndex": fieldIndex,
-						"filterIndexes": []
-					});
-				}
-
-				let index = keys.indexOf(fieldIndex, 0);
-				searchFieldsValues[index].filterIndexes.push(filterIndex);
+				createSearchFieldValue(dataValue, pageValueFilterValues, keys, searchFieldsValues);
 			}
 		}
 		
 		return searchFieldsValues;
 	}
 
+	/* Collect selected filter values */
+	const createSearchFieldValue = (valId, pageValueFilterValues, keys, searchFieldsValues) => {
+
+		let pageFilter = pageValueFilterValues[valId];
+		
+		let fieldIndex = pageFilter.fieldIndex;
+		let filterIndex = pageFilter.filterIndex;
+		
+		if (!keys.includes(fieldIndex)) {
+			keys.push(fieldIndex);
+			searchFieldsValues.push({
+				"fieldIndex": fieldIndex,
+				"filterIndexes": []
+			});
+		}
+		let index = keys.indexOf(fieldIndex, 0);
+		searchFieldsValues[index].filterIndexes.push(filterIndex);
+	}
+
 	/* Filter counts */
 	const displayFiltersCount = () => {
 		
-		$filters_count.empty();
+		$filtersCount.empty();
 		
 		let searchFieldsValues = findSearchFieldValues();
 		for (let searchFieldsValue of searchFieldsValues) {
-			let $filter_count = $filter_count_template.clone();
-			$filter_count.appendTo($filters_count);
+			let $filterCount = $filterCountTemplate.clone();
+			$filterCount.appendTo($filtersCount);
 			
 			let fieldIndex = searchFieldsValue.fieldIndex;
 			let pageField = pageFields[fieldIndex];
-			$filter_count.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(pageField.name));
-			let sumDetail = searchFieldsValue.filterIndexes.length + " (" + pageFieldTotalFilters[fieldIndex] + ")";
-			$filter_count.find("div[data-name=scp-name--filter-count-sum]").html(sumDetail);
-			$filter_count.find("i[data-name=scp-name--filter-count-close]").click(filterCountCloseClickEvent(pageField.name));
+			$filterCount.find("a[data-name=scp-name--filter-count-name]").html(pageField.label).click(filterCountLabelClickEvent(pageField.name));
+			let sumDetail = searchFieldsValue.filterIndexes.length + " (" + pageFieldsProp[fieldIndex].totalFilters + ")";
+			$filterCount.find("div[data-name=scp-name--filter-count-sum]").html(sumDetail);
+			$filterCount.find("i[data-name=scp-name--filter-count-close]").click(filterCountCloseClickEvent(pageField.name));
 		}
 	}
 
-	/* Sort */
-	const findSearchSort = () => {
-
-		let sortValue = $sortDropdown.text();
-		return {
-//			"paginationPage": 1,
-//			"paginationResultsPerPage": paginationResultsPerPage
-		};
-	}
-	
-	/* Collect selected filter values and send them to the engine */
-	const apply = () => {
-
-		$welcomeMessage.hide();
-		$noResultsMessage.hide();
-		$successMessage.hide();
-		$searchingMessage.show();
-		$resultsPanel.hide()
-		$tilesOrList.empty();
-		
-		let searchFieldsValues = findSearchFieldValues();
-		let searchData = {
-			"searchSort": searchSort,
-			"searchFieldsValues": searchFieldsValues,
-			"searchPagination": searchPagination,
-			"searchTotals": searchTotals
-		};
-
-		StaticCatalog.applyFilters(searchData, resultsCallback);
-	}
-
-	/* Back in page from search */
-	const resultsCallback = (searchData, lines, foundLinesCount, totalSearchMs) => {
-
-		/* Message */
-
-		$searchingMessage.hide();
-
-		if (foundLinesCount === 0) {
-			$noResultsMessage.show();
-			$("#scp-id--no-results-seconds").html((totalSearchMs / 1000).toLocaleString());
-			return;
-		}
-
-		$successMessage.show();
-		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
-		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
-		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
+	/* Pagination */
+	const updatePagination = (searchData, foundLinesCount) => {
 
 		/* Pagination */
 		let linesPerPage = searchData.searchPagination.paginationResultsPerPage;
@@ -511,7 +514,6 @@ const StaticCatalogDev = (() => {
 		lastPageIndex = Math.trunc(foundLinesCount / linesPerPage) + ((foundLinesCount % linesPerPage) > 0 ? 1 : 0);
 		
 		$paginationPages.html(lastPageIndex.toLocaleString());
-		//$("#scp-id--seconds").html(lastPageIndex.toLocaleString());
 		
 		if (pageIndex === 1) {
 			$paginationFirst.removeClass().addClass("disabled item");
@@ -631,9 +633,27 @@ const StaticCatalogDev = (() => {
 			$paginationPage3.html((pageIndex + 1).toLocaleString());
 			$paginationPage3.prop("data-page", pageIndex + 1);
 		}
+	}
+	
+	/* Back in page from search */
+	const resultsCallback = (searchData, lines, foundLinesCount, totalSearchMs) => {
+
+		/* Message */
+		$searchingMessage.hide();
+		if (foundLinesCount === 0) {
+			$noResultsMessage.show();
+			$("#scp-id--no-results-seconds").html((totalSearchMs / 1000).toLocaleString());
+			return;
+		}
+		$successMessage.show();
+		$("#scp-id--returned-lines").html(lines.length.toLocaleString());
+		$("#scp-id--found-lines").html(foundLinesCount.toLocaleString());
+		$("#scp-id--seconds").html((totalSearchMs / 1000).toLocaleString());
+
+		/* Pagination */
+		updatePagination(searchData, foundLinesCount);
 		
 		/* Result lines */
-		
 		for (let line of lines) {
 			let $tile = $tileTemplate.clone();
 			$tile.appendTo($tilesOrList);
@@ -643,13 +663,34 @@ const StaticCatalogDev = (() => {
 			for (let lineField in line) {
 				let $tileField = $tileFieldTemplate.clone();
 				$tileField.appendTo($tileFields);
-				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldLabels[lineField]);
-				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldCsvIndexes[lineField] - 1]);
+				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldsProp[lineField].label);
+				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldsProp[lineField].csvIndex - 1]);
 			}
 //			let $map = $('<div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=' + line[43] + '%2C%20%20' + line[44] + '&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>Google Maps Generator by <a href="https://www.embedgooglemap.net">embedgooglemap.net</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>');
 //			$map.appendTo($tile);
 		}
 		$resultsPanel.show();
+	}
+	
+	/* Collect selected filter values and send them to the engine */
+	const apply = () => {
+
+		$welcomeMessage.hide();
+		$noResultsMessage.hide();
+		$successMessage.hide();
+		$searchingMessage.show();
+		$resultsPanel.hide()
+		$tilesOrList.empty();
+		
+		let searchFieldsValues = findSearchFieldValues();
+		let searchData = {
+			"searchSort": searchSort,
+			"searchFieldsValues": searchFieldsValues,
+			"searchPagination": searchPagination,
+			"searchTotals": searchTotals
+		};
+
+		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}
 
 	return {

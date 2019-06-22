@@ -179,7 +179,7 @@
 							</div>
 							{% endif %}
 							{% if field.filterDisplayType == 'dropdown' %}
-							<div id="scp-id-dropdown-filter-{{ field.identifier }}" class="ui selection fluid dropdown" tabindex="0">
+							<div id="{{ field.identifier }}" class="ui selection fluid dropdown" tabindex="0" data-filter-display-type="dropdown">
 								<input type="hidden" name="{{ field.identifier }}" value="initial"><i class="dropdown icon"></i>
 								<div class="text" style="display: block;"></div>
 								<div class="menu" tabindex="-1">
@@ -198,7 +198,7 @@
 							</div>
 							{% endif %}
 							{% if field.filterDisplayType == 'searchbox' %}
-							<div id="scp-id-searchbox-filter-{{ field.identifier }}" class="ui search">
+							<div id="{{ field.identifier }}" class="ui search" data-filter-display-type="searchbox">
 								<div class="ui fluid icon input">
 									<input class="prompt" type="text" placeholder="Search {{ field.label }}...">
 									<i class="search icon"></i>
