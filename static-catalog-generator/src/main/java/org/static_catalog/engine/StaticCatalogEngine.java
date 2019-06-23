@@ -345,6 +345,7 @@ public class StaticCatalogEngine {
 
 		/* Total time */
 		long start = System.currentTimeMillis();
+		String fs = File.separator;
 		
 		S.deleteFolder(destinationFolderName);
 		
@@ -366,9 +367,11 @@ public class StaticCatalogEngine {
 		
 		generateFields(page, sourceCsvFileName, filtersFileName, destinationFolderName, fieldNameValueIntervals, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
 		
-		String filterFieldsFileName = destinationFolderName + File.separator + "static-catalog-fields.json";
+		String filterFieldsFolderName = destinationFolderName + fs + "_catalog-page";
+		S.createFoldersIfNotExists(filterFieldsFolderName);
+		String filterFieldsFileName = filterFieldsFolderName + fs + "static-catalog-page.json";
 		S.saveObjectToJsonFileName(page, filterFieldsFileName);
-		String catalogFolderName = destinationFolderName + File.separator + "_catalog";
+		String catalogFolderName = destinationFolderName + fs + "_catalog";
 		S.createFoldersIfNotExists(catalogFolderName);
 //		String catalogContentsFileName = catalogFolderName + File.separator + "static-catalog.json";
 //		S.saveObjectToJsonFileName(contents, catalogContentsFileName);
@@ -381,7 +384,7 @@ public class StaticCatalogEngine {
 			templateBaseFileNameNoExtension = templateBaseFileNameNoExtension.substring(0, templateBaseFileNameNoExtension.length() - (ext.length() + 1));
 		}
 		
-		String indexHtmlFileName = destinationFolderName + File.separator + templateBaseFileNameNoExtension + ".html";
+		String indexHtmlFileName = destinationFolderName + fs + templateBaseFileNameNoExtension + ".html";
 		Template templateLiquid = Template.parse(templateString);
 		String filtersJson = S.saveObjectToJsonString(page);
 		String rendered = templateLiquid.render(filtersJson);
@@ -841,20 +844,8 @@ public class StaticCatalogEngine {
 						pageField.setTotalValuesCount(pageField.getValues().size());
 						pageField.setTotalMoreValuesCount(0);
 					}
+					/* Keywords */
 					else if (filterType.equals(FILTER_TYPE_KEYWORDS)) {
-//						for (String valueKey : valueKeys) {
-//			
-//							StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
-//							filterValue.setIndex(keyIndex);
-//							filterValue.setIsException(false);
-//							filterValue.setIdentifier(filterIdentifierPrefix + "__" + keyIndex + "__" + U.makeIdentifier(valueKey));
-//							filterValue.setName(valueKey);
-//							filterValue.setLabel(createFormatTransformValue(valueKey, fieldType, transformFormat, transformValues, transformValuesLabels));
-//							filterValue.setCount(values.get(valueKey));
-//
-//							pageField.getValues().add(filterValue);
-//							keyIndex++;
-//						}
 						
 						HashMap<String, String> valueIntervals = new HashMap<String, String>();
 						fieldNameValueIntervals.put(fieldName, valueIntervals);
@@ -1034,13 +1025,16 @@ public class StaticCatalogEngine {
 		String catalogIndexesFolderName = destinationFolderName + fsep + "_catalog" + fsep + "indexes";
 		S.createFoldersIfNotExists(catalogIndexesFolderName);
 		S.deleteFolderContentsOnly(catalogIndexesFolderName);
-		String indexesValueFileNamePrefix = catalogIndexesFolderName + fsep + "static-catalog-index-value";
+		String indexesValueFileNamePrefix = catalogIndexesFolderName + fsep + "static-catalog-index";
 
 		String catalogKeywordsFolderName = destinationFolderName + fsep + "_catalog" + fsep + "keywords";
 		S.createFoldersIfNotExists(catalogKeywordsFolderName);
 		S.deleteFolderContentsOnly(catalogKeywordsFolderName);
 		String keywordsFileNamePrefix = catalogKeywordsFolderName + fsep + "static-catalog-keywords";
-		
+
+		String catalogPageKeywordsFolderName = destinationFolderName + fsep + "_catalog-page";
+		String pageKeywordsFileNamePrefix = catalogPageKeywordsFolderName + fsep + "static-catalog-page-keywords";
+
 		String catalogSortFolderName = destinationFolderName + fsep + "_catalog" + fsep + "sort";
 		S.createFoldersIfNotExists(catalogSortFolderName);
 		S.deleteFolderContentsOnly(catalogSortFolderName);
@@ -1198,6 +1192,7 @@ public class StaticCatalogEngine {
 		}
 		
 		/* INDEX_SPLIT_TYPE_VALUES */
+		/* Indexes */
 		int indexCnt = 0;
 		for (String fieldName : fieldNameIndexValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
@@ -1210,18 +1205,36 @@ public class StaticCatalogEngine {
 			}
 		}
 
+		/* Keywords */
 		int keywordsCnt = 0;
 		for (String fieldName : fieldNameIndexValueCsvValueLines.keySet()) {
 			LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> indexValueCsvValueLines = fieldNameIndexValueCsvValueLines.get(fieldName);
 			int keywordsNameCnt = fieldNames.indexOf(fieldName);
 			int keywordsValueCnt = 0;
+			
 			for (LinkedHashMap<String, ArrayList<Long>> csvValueLines : indexValueCsvValueLines.values()) {
-				S.saveObjectToJsonFileName(csvValueLines, keywordsFileNamePrefix + "-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+				
+				ArrayList<String> csvValueKeys = new ArrayList<>(csvValueLines.keySet());
+				sortTypeKey("text", csvValueKeys);
+				
+				LinkedHashMap<String, Integer> csvValueCounts = new LinkedHashMap<>();
+				LinkedHashMap<String, ArrayList<Long>> sortedCsvValueLines = new LinkedHashMap<>();
+				
+				for (String csvValueKey : csvValueKeys) {
+					
+					ArrayList<Long> lines = csvValueLines.get(csvValueKey);
+					csvValueCounts.put(csvValueKey, lines.size());
+					sortedCsvValueLines.put(csvValueKey, lines);
+				}
+				S.saveObjectToJsonFileName(csvValueCounts, pageKeywordsFileNamePrefix + "-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+				keywordsCnt++;
+				S.saveObjectToJsonFileName(sortedCsvValueLines, keywordsFileNamePrefix + "-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
 				keywordsCnt++;
 				keywordsValueCnt++;
 			}
 		}
 
+		/* Sort */
 		int sortCnt = 0;
 		for (String fieldName : fieldNameSortAscValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameSortAscValueLines.get(fieldName);
@@ -1234,7 +1247,6 @@ public class StaticCatalogEngine {
 			S.saveObjectToJsonFileName(ascSortedLines, sortFileNamePrefix + "-" + indexNameCnt + "-asc.json");
 			sortCnt++;
 		}
-
 		for (String fieldName : fieldNameSortDescValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameSortDescValueLines.get(fieldName);
 			int indexNameCnt = fieldNames.indexOf(fieldName);

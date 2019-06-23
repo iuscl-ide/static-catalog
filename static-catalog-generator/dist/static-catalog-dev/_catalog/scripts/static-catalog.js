@@ -615,7 +615,7 @@ const StaticCatalog = (() => {
 			for (let filterIndex of searchFilter.filterIndexes) {
 				//let searchFilterValueIndex = filterNameValueIndex[searchFilterName][searchFilterValue];
 				//indexFiles.push("static-catalog-index-value-" + searchFilterNameIndex + "-" + searchFilterValueIndex + ".json");
-				indexFiles.push("static-catalog-index-value-" + fieldIndex + "-" + filterIndex + ".json");
+				indexFiles.push("static-catalog-index-" + fieldIndex + "-" + filterIndex + ".json");
 			}
 		}
 		c("indexTypeFiles", indexTypeFiles);

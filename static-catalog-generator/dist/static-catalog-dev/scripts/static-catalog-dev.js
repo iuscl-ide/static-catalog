@@ -55,7 +55,9 @@ const StaticCatalogDev = (() => {
 	var pageFieldsProp = [];
 	var pageValueFilterValues = {};
 	var pageKeywordFields = {};
-	
+
+	var pageKeywordFieldPrefixValues = {};
+
 	/* Search */
 	var $filterDropdowns;
 	var $filterSearchboxes;
@@ -109,6 +111,43 @@ const StaticCatalogDev = (() => {
 		//$("ui.table").tablesort();
 		$(".ui.accordion").accordion();
 
+//		$.fn.search.settings.templates : {
+//			escape: function(string) {
+//				// returns escaped string for injected results
+//			},
+//			message: function(message, type) {
+//				// returns html for message with given message and type
+//			},
+//			category: function(response) {
+//				// returns results html for category results
+//			},
+//			standard: function(response) {
+//				// returns results html for standard results
+//			}
+//		}
+		
+		$.fn.search.settings.templates.staticCatalogSearch = function(response) {
+
+			console.log(response);
+			let html = "";
+			for (let responseItem of response.results) {
+				
+				html = html + '<a class="result">\n';
+				html = html + '<div class="content">\n';
+				
+				html = html + '<div class="right floated content" style="float: right !important;">\n';
+				html = html + '<div class="ui basic horizontal label" style="margin-right: 0em !important; margin-left: 1em !important; margin-bottom: -2px;">\n';
+				html = html + responseItem.description + '\n';
+				html = html + '</div>\n';
+				html = html + '</div>\n';
+				html = html + '<div class="title" style="padding-top: 2px;">' + responseItem.title +'</div>\n';
+				html = html + '</div>\n';
+				html = html + '</a>\n';
+			}
+						
+			return html;
+		} 
+		
 		/* Filter values */
 		$filterDropdowns = $("[data-filter-display-type=dropdown]");
 		$filterDropdowns.dropdown({
@@ -125,7 +164,7 @@ const StaticCatalogDev = (() => {
 				displayFiltersCount();
 			}
 		});
-
+		
 		/* Filter keywords */
 		// https://embed.plnkr.co/plunk/aITHOT
 		$filterSearchboxes = $("[data-filter-display-type=searchbox]");
@@ -133,28 +172,96 @@ const StaticCatalogDev = (() => {
 		    apiSettings: {
 		    	'response': function (e) {
 
-					let pageKeywordField = pageKeywordFields[this.id];
-					console.log(pageKeywordField);
-
-		    		var searchTerm = e.urlData.query;
-					console.log(searchTerm);
-
-					let results = [];
-					if (searchTerm.length === 1) {
-						for (let prefix of Object.keys(pageKeywordField.prefixes)) {
-							if (prefix.startsWith(searchTerm)) {
-								results.push({
-									"title": prefix
-								});
+//		    		(async () => {
+		    			
+			    		let $this = $(this);
+			    		let id = this.id;
+						let pageKeywordField = pageKeywordFields[id];
+			    		let searchTerm = e.urlData.query;
+						console.log(pageKeywordField);
+			    		console.log(searchTerm);
+	
+						let results = [];
+						if (searchTerm.length === 1) {
+							$this.removeAttr("data-prefix");
+							for (let prefix of Object.keys(pageKeywordField.prefixes)) {
+								if (prefix.startsWith(searchTerm)) {
+									results.push({
+										"title": prefix,
+										"description": pageKeywordField.prefixes[prefix].count
+									});
+								}
 							}
 						}
-					}
-
+						else {
+							let currentPrefix = $this.attr("data-prefix");
+							let prefix = searchTerm.substr(0, 2).toLowerCase();
+							let pageKeywordFieldPrefix = pageKeywordField.prefixes[prefix];
+							if (!pageKeywordFieldPrefix) {
+								return {
+									"results": []
+								};
+							}
+							let pageKeywordPrefixValues = pageKeywordFieldPrefixValues[id];
+							if (!pageKeywordPrefixValues) {
+								pageKeywordFieldPrefixValues[id] = {};
+							}
+							let pageKeywordValues = pageKeywordFieldPrefixValues[prefix];
+							if (!pageKeywordValues) {
+								/* static-catalog-page-keywords-field-value.json */
+	
+								let pr = new Promise((resolve, reject) => {
+									$.ajax({
+										dataType: "json",
+										url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
+										mimeType: "application/json",
+										success: result => {
+											console.log(result);
+	//										console.log($this);
+											let results = [];
+											for (let keyword of Object.keys(result)) {
+												if (keyword.toLowerCase().startsWith(searchTerm)) {
+													results.push({
+														"title": keyword,
+														"description": result[keyword]
+													});
+												}
+											}
+											resolve(results);
+										}
+									});
+								}).then((results) => {
+									console.log("then");
+									
+									$this.search({
+										source : results
+									});
+								});
+								
+//								let results = await pr;
+								console.log("dupa");
+								return {
+									"results": results
+								};
+	
+								
+							}
+						}
+//		    		})();
+		    		
 					return {
 						"results": results
 					};
 		    	}
-		    }
+		    },
+		    onResponse : function(resp) {
+		    	console.log("resp");
+//		    	return {
+//		    		results: response.myresults
+//		    	}
+		    },
+		    maxResults: 100,
+		    type: 'staticCatalogSearch'
 		});
 
 		/* Sort */
@@ -393,7 +500,7 @@ const StaticCatalogDev = (() => {
 		/* static-catalog-fields.json */
 		$.ajax({
 			dataType: "json",
-			url: "static-catalog-fields.json",
+			url: "_catalog-page/static-catalog-page.json",
 			mimeType: "application/json",
 			success: result => {
 				//console.log(result);
@@ -415,7 +522,9 @@ const StaticCatalogDev = (() => {
 						pageField.values.map((pageFieldValue) => {
 							
 							pageKeywordFieldPrefixes[pageFieldValue.name] = {
-								"filterIndex": pageFieldValue.index
+								"fieldIndex": pageField.index,
+								"filterIndex": pageFieldValue.index,
+								"count": pageFieldValue.count
 							};
 						});
 						pageKeywordFields[pageField.identifier] = {
@@ -692,7 +801,7 @@ const StaticCatalogDev = (() => {
 
 		StaticCatalog.applyFilters(searchData, resultsCallback);
 	}
-
+	
 	return {
 		init: init,
 		apply: apply
