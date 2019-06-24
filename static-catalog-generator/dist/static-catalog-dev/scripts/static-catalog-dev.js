@@ -111,21 +111,7 @@ const StaticCatalogDev = (() => {
 		//$("ui.table").tablesort();
 		$(".ui.accordion").accordion();
 
-//		$.fn.search.settings.templates : {
-//			escape: function(string) {
-//				// returns escaped string for injected results
-//			},
-//			message: function(message, type) {
-//				// returns html for message with given message and type
-//			},
-//			category: function(response) {
-//				// returns results html for category results
-//			},
-//			standard: function(response) {
-//				// returns results html for standard results
-//			}
-//		}
-		
+		/* Search item template */
 		$.fn.search.settings.templates.staticCatalogSearch = function(response) {
 
 			console.log(response);
@@ -213,10 +199,8 @@ const StaticCatalogDev = (() => {
 								dataType: "json",
 								url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
 								mimeType: "application/json",
-//								async: false,
 								success: result => {
 									console.log(result);
-//										console.log($this);
 									let results = [];
 									for (let keyword of Object.keys(result)) {
 										if (keyword.toLowerCase().startsWith(searchTerm)) {
@@ -231,27 +215,13 @@ const StaticCatalogDev = (() => {
 									});
 								}
 							});
-//							console.log("dupa");
-//							while (results.length === 0) {
-//								setTimeout(()=>{}, 1000);
-//							};
-//							return {
-//								"results": results
-//							};
 						}
 					};
 					setTimeout(function() {
-				        callback({
+						callback({
 							"results": results
-							});
-				      }, 1);
-					
-//					callback({
-//						"results": results
-//					});
-//					return {
-//						"results": results
-//					};
+						});
+					}, 1);
 		    	}
 		    },
 		    onResponse : function(resp) {
