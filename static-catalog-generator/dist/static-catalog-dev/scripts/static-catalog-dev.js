@@ -170,88 +170,88 @@ const StaticCatalogDev = (() => {
 		$filterSearchboxes = $("[data-filter-display-type=searchbox]");
 		$filterSearchboxes.search({
 		    apiSettings: {
-		    	'response': function (e) {
+		    	responseAsync: function (settings, callback) {
 
-//		    		(async () => {
-		    			
-			    		let $this = $(this);
-			    		let id = this.id;
-						let pageKeywordField = pageKeywordFields[id];
-			    		let searchTerm = e.urlData.query;
-						console.log(pageKeywordField);
-			    		console.log(searchTerm);
-	
-						let results = [];
-						if (searchTerm.length === 1) {
-							$this.removeAttr("data-prefix");
-							for (let prefix of Object.keys(pageKeywordField.prefixes)) {
-								if (prefix.startsWith(searchTerm)) {
-									results.push({
-										"title": prefix,
-										"description": pageKeywordField.prefixes[prefix].count
+		    		let $this = $(this);
+		    		let id = this.id;
+					let pageKeywordField = pageKeywordFields[id];
+		    		let searchTerm = settings.urlData.query;
+					console.log(pageKeywordField);
+		    		console.log(searchTerm);
+
+					let results = [];
+					if (searchTerm.length === 1) {
+						$this.removeAttr("data-prefix");
+						for (let prefix of Object.keys(pageKeywordField.prefixes)) {
+							if (prefix.startsWith(searchTerm)) {
+								results.push({
+									"title": prefix,
+									"description": pageKeywordField.prefixes[prefix].count
+								});
+							}
+						}
+					}
+					else {
+						let currentPrefix = $this.attr("data-prefix");
+						let prefix = searchTerm.substr(0, 2).toLowerCase();
+						let pageKeywordFieldPrefix = pageKeywordField.prefixes[prefix];
+						if (!pageKeywordFieldPrefix) {
+//							callback([]);
+//							return;
+//							return {
+//								"results": []
+//							};
+						}
+						let pageKeywordPrefixValues = pageKeywordFieldPrefixValues[id];
+						if (!pageKeywordPrefixValues) {
+							pageKeywordFieldPrefixValues[id] = {};
+						}
+						let pageKeywordValues = pageKeywordFieldPrefixValues[id][prefix];
+						if (!pageKeywordValues) {
+							/* static-catalog-page-keywords-field-value.json */
+							$.ajax({
+								dataType: "json",
+								url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
+								mimeType: "application/json",
+//								async: false,
+								success: result => {
+									console.log(result);
+//										console.log($this);
+									let results = [];
+									for (let keyword of Object.keys(result)) {
+										if (keyword.toLowerCase().startsWith(searchTerm)) {
+											results.push({
+												"title": keyword,
+												"description": result[keyword]
+											});
+										}
+									};
+									callback({
+										"results": results
 									});
 								}
-							}
+							});
+//							console.log("dupa");
+//							while (results.length === 0) {
+//								setTimeout(()=>{}, 1000);
+//							};
+//							return {
+//								"results": results
+//							};
 						}
-						else {
-							let currentPrefix = $this.attr("data-prefix");
-							let prefix = searchTerm.substr(0, 2).toLowerCase();
-							let pageKeywordFieldPrefix = pageKeywordField.prefixes[prefix];
-							if (!pageKeywordFieldPrefix) {
-								return {
-									"results": []
-								};
-							}
-							let pageKeywordPrefixValues = pageKeywordFieldPrefixValues[id];
-							if (!pageKeywordPrefixValues) {
-								pageKeywordFieldPrefixValues[id] = {};
-							}
-							let pageKeywordValues = pageKeywordFieldPrefixValues[prefix];
-							if (!pageKeywordValues) {
-								/* static-catalog-page-keywords-field-value.json */
-	
-								let pr = new Promise((resolve, reject) => {
-									$.ajax({
-										dataType: "json",
-										url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
-										mimeType: "application/json",
-										success: result => {
-											console.log(result);
-	//										console.log($this);
-											let results = [];
-											for (let keyword of Object.keys(result)) {
-												if (keyword.toLowerCase().startsWith(searchTerm)) {
-													results.push({
-														"title": keyword,
-														"description": result[keyword]
-													});
-												}
-											}
-											resolve(results);
-										}
-									});
-								}).then((results) => {
-									console.log("then");
-									
-									$this.search({
-										source : results
-									});
-								});
-								
-//								let results = await pr;
-								console.log("dupa");
-								return {
-									"results": results
-								};
-	
-								
-							}
-						}
-//		    		})();
-		    		
-					return {
-						"results": results
 					};
+					setTimeout(function() {
+				        callback({
+							"results": results
+							});
+				      }, 1);
+					
+//					callback({
+//						"results": results
+//					});
+//					return {
+//						"results": results
+//					};
 		    	}
 		    },
 		    onResponse : function(resp) {
