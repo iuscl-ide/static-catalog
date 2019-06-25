@@ -162,66 +162,89 @@ const StaticCatalogDev = (() => {
 		    		let id = this.id;
 					let pageKeywordField = pageKeywordFields[id];
 		    		let searchTerm = settings.urlData.query;
+		    		let searchTermLowerCase = searchTerm.toLowerCase();
 					console.log(pageKeywordField);
 		    		console.log(searchTerm);
 
-					let results = [];
 					if (searchTerm.length === 1) {
 						$this.removeAttr("data-prefix");
+						let results = [];
 						for (let prefix of Object.keys(pageKeywordField.prefixes)) {
-							if (prefix.startsWith(searchTerm)) {
+							if (prefix.startsWith(searchTermLowerCase)) {
 								results.push({
-									"title": prefix,
+									"title": pageKeywordField.prefixes[prefix].title,
 									"description": pageKeywordField.prefixes[prefix].count
 								});
 							}
 						}
+						setTimeout(function() {
+							callback({
+								"results": results
+							});
+						}, 1);
 					}
 					else {
 						let currentPrefix = $this.attr("data-prefix");
-						let prefix = searchTerm.substr(0, 2).toLowerCase();
-						let pageKeywordFieldPrefix = pageKeywordField.prefixes[prefix];
+						let searchTerm2LowerCase = searchTerm.substr(0, 2).toLowerCase();
+						let pageKeywordFieldPrefix = pageKeywordField.prefixes[searchTerm2LowerCase];
 						if (!pageKeywordFieldPrefix) {
-//							callback([]);
-//							return;
-//							return {
-//								"results": []
-//							};
+							setTimeout(function() {
+								callback({
+									"results": []
+								});
+							}, 1);
 						}
-						let pageKeywordPrefixValues = pageKeywordFieldPrefixValues[id];
-						if (!pageKeywordPrefixValues) {
-							pageKeywordFieldPrefixValues[id] = {};
-						}
-						let pageKeywordValues = pageKeywordFieldPrefixValues[id][prefix];
-						if (!pageKeywordValues) {
-							/* static-catalog-page-keywords-field-value.json */
-							$.ajax({
-								dataType: "json",
-								url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
-								mimeType: "application/json",
-								success: result => {
-									console.log(result);
-									let results = [];
-									for (let keyword of Object.keys(result)) {
-										if (keyword.toLowerCase().startsWith(searchTerm)) {
-											results.push({
+						else {
+							let pageKeywordPrefixValues = pageKeywordFieldPrefixValues[id];
+							if (!pageKeywordPrefixValues) {
+								pageKeywordFieldPrefixValues[id] = {};
+							}
+							let pageKeywordValues = pageKeywordFieldPrefixValues[id][searchTerm2LowerCase];
+							if (!pageKeywordValues) {
+								/* static-catalog-page-keywords-field-value.json */
+								$.ajax({
+									dataType: "json",
+									url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
+									mimeType: "application/json",
+									success: result => {
+										console.log(result);
+
+										let pageKeywordValues = [];
+										for (let keyword of Object.keys(result)) {
+											pageKeywordValues.push({
 												"title": keyword,
 												"description": result[keyword]
 											});
-										}
-									};
+										};
+										pageKeywordFieldPrefixValues[id][searchTerm2LowerCase] = pageKeywordValues;
+										
+										let results = [];
+										for (let pageKeywordValue of pageKeywordValues) {
+											if (pageKeywordValue.title.toLowerCase().startsWith(searchTermLowerCase)) {
+												results.push(pageKeywordValue);
+											}
+										};
+										callback({
+											"results": results
+										});
+									}
+								});
+							}
+							else {
+								let results = [];
+								for (let pageKeywordValue of pageKeywordValues) {
+									if (pageKeywordValue.title.toLowerCase().startsWith(searchTermLowerCase)) {
+										results.push(pageKeywordValue);
+									}
+								};
+								setTimeout(function() {
 									callback({
 										"results": results
 									});
-								}
-							});
+								}, 1);
+							}
 						}
 					};
-					setTimeout(function() {
-						callback({
-							"results": results
-						});
-					}, 1);
 		    	}
 		    },
 		    onResponse : function(resp) {
@@ -491,9 +514,10 @@ const StaticCatalogDev = (() => {
 						let pageKeywordFieldPrefixes = {};
 						pageField.values.map((pageFieldValue) => {
 							
-							pageKeywordFieldPrefixes[pageFieldValue.name] = {
+							pageKeywordFieldPrefixes[pageFieldValue.name.toLowerCase()] = {
 								"fieldIndex": pageField.index,
 								"filterIndex": pageFieldValue.index,
+								"title": pageFieldValue.label,
 								"count": pageFieldValue.count
 							};
 						});
@@ -545,7 +569,7 @@ const StaticCatalogDev = (() => {
 		
 		return searchFieldsValues;
 	}
-
+	
 	/* Collect selected filter values */
 	const createSearchFieldValue = (valId, pageValueFilterValues, keys, searchFieldsValues) => {
 
@@ -563,6 +587,32 @@ const StaticCatalogDev = (() => {
 		}
 		let index = keys.indexOf(fieldIndex, 0);
 		searchFieldsValues[index].filterIndexes.push(filterIndex);
+	}
+
+	/* Collect selected filter keywords */
+	const findSearchFieldKeywords = () => {
+
+		let searchFieldsKeywords = [];
+		
+		for (let searchbox of $filterSearchboxes) {
+
+			let searchTerm = $(searchbox).search("get value");
+			let searchTerm2LowerCase = searchTerm.substr(0, 2).toLowerCase();
+			if (searchTerm2LowerCase.length >= 2) {
+				let pageKeywordField = pageKeywordFields[searchbox.id];
+//				console.log(pageKeywordField);
+				let prefixFilter = pageKeywordField.prefixes[searchTerm2LowerCase];
+				if (prefixFilter) {
+					searchFieldsKeywords.push({
+						"fieldIndex": prefixFilter.fieldIndex,
+						"filterIndex": prefixFilter.filterIndex,
+						"keywordPrefix": searchTerm
+					})
+				}
+			}
+		}
+		
+		return searchFieldsKeywords;
 	}
 
 	/* Filter counts */
@@ -762,9 +812,11 @@ const StaticCatalogDev = (() => {
 		$tilesOrList.empty();
 		
 		let searchFieldsValues = findSearchFieldValues();
+		let searchFieldKeywords = findSearchFieldKeywords();
 		let searchData = {
 			"searchSort": searchSort,
 			"searchFieldsValues": searchFieldsValues,
+			"searchFieldKeywords": searchFieldKeywords,
 			"searchPagination": searchPagination,
 			"searchTotals": searchTotals
 		};

@@ -857,14 +857,14 @@ public class StaticCatalogEngine {
 						
 						int valueKeysIndex = 0;
 						int valueKeysCount = valueKeys.size();
-						String intervalLabel;
 						StaticCatalogPageFieldValue intervalValue;
 						
 						for (int valueKeyIndex = 0; valueKeyIndex < valueKeys.size(); valueKeyIndex++) {
 
 							String valueKey = valueKeys.get(valueKeyIndex);
 							
-							String value = valueKey.substring(0, 2).toLowerCase();
+							//String value = valueKey.substring(0, 2).toLowerCase();
+							String value = valueKey.substring(0, 2);
 							valueKeysIndex++;
 
 							if (startInterval == null) {
@@ -879,8 +879,7 @@ public class StaticCatalogEngine {
 								i2 = valueKeyIndex;
 								
 								if (valueKeysIndex == valueKeysCount) {
-									intervalLabel = startInterval.toUpperCase();
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
+									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
 											values, valueIntervals, i1, i2, valueKeys);
 									pageField.getValues().add(intervalValue);
 								}
@@ -890,8 +889,7 @@ public class StaticCatalogEngine {
 									endInterval = startInterval;
 									i2 = i1;
 								}
-								intervalLabel = startInterval.toUpperCase();
-								intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
+								intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
 										values, valueIntervals, i1, i2, valueKeys);
 								pageField.getValues().add(intervalValue);
 								keyIndex++;
@@ -904,8 +902,7 @@ public class StaticCatalogEngine {
 								if (valueKeysIndex == valueKeysCount) {
 									endInterval = startInterval;
 									i2 = i1;
-									intervalLabel = startInterval.toUpperCase();
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
+									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
 											values, valueIntervals, i1, i2, valueKeys);
 									pageField.getValues().add(intervalValue);
 								}
