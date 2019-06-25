@@ -338,115 +338,136 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
+	/* s */
 	const getJson = async (url) => {
 		
-		const xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.onreadystatechange = () => {
-			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+		return await new Promise( (resolve, reject) => {
+
+			const xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.onreadystatechange = () => {
 				
-				return JSON.parse(xmlHttpRequest.responseText);
-//				c("indexFile " + indexFile, lines);
-				indexNameValuesLines[indexFiles.indexOf(indexFile)] = lines; 
-				resolve();
-			}
-		};
-		xmlHttpRequest.open("GET", url, true);
-		xmlHttpRequest.overrideMimeType("text/json");
-		xmlHttpRequest.send();
-	}
+				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+					resolve(JSON.parse(xmlHttpRequest.responseText));
+				}
+			};
+			xmlHttpRequest.open("GET", url, true);
+			xmlHttpRequest.overrideMimeType("text/json");
+			xmlHttpRequest.send();
+		});
+	};
 	
-	/* */
+	/* d */
 	const loadIndexes = async (searchData) => {
 		
-		let searchFilters = searchData.searchFieldsValues;
+		let searchFieldsValues = searchData.searchFieldsValues;
 		
-		let indexTypeFiles = [];
-		for (let searchFilter of searchFilters) {
-			let fieldIndex = searchFilter.fieldIndex;
-			let indexFiles = [];
-			indexTypeFiles.push(indexFiles);
-			for (let filterIndex of searchFilter.filterIndexes) {
-				indexFiles.push("static-catalog-index-" + fieldIndex + "-" + filterIndex + ".json");
+		let indexFieldsFiles = [];
+		for (let searchFieldValues of searchFieldsValues) {
+			let fieldIndex = searchFieldValues.fieldIndex;
+			let indexFieldFiles = [];
+			for (let filterIndex of searchFieldValues.filterIndexes) {
+				indexFieldFiles.push("static-catalog-index-" + fieldIndex + "-" + filterIndex + ".json");
 			}
+			indexFieldsFiles.push(indexFieldFiles);
 		}
-		c("indexTypeFiles", indexTypeFiles);
+		c("indexFieldsFiles", indexFieldsFiles);
+		console.log(indexFieldsFiles);
 		
 		/* Indexes */
-		var indexLines = null;
-		if (indexTypeFiles.length === 0) {
-			indexLines = [];
-			indexLines.push(indexLinesModulo + totalLinesCount);
+		var indexFieldIntersectLines = null;
+		if (indexFieldsFiles.length === 0) {
+			indexFieldIntersectLines = [];
+			indexFieldIntersectLines.push(indexLinesModulo + totalLines);
 		}
 		else {
-			for (let indexTypeFileIndex = 0; indexTypeFileIndex < indexTypeFiles.length; indexTypeFileIndex++) {
+			for (let indexFieldsFileIndex = 0; indexFieldsFileIndex < indexFieldsFiles.length; indexFieldsFileIndex++) {
 				
+				let indexFieldFiles = indexFieldsFiles[indexFieldsFileIndex];
+
+				let indexFieldValuesLines = [];
+				let indexFieldFilesPromises = indexFieldFiles.map( (indexFieldFile) => {
+					
+					return (async () => {
+						
+						indexFieldValuesLines[indexFieldFiles.indexOf(indexFieldFile)] = await getJson("_catalog/indexes/" + indexFieldFile);
+					})();
+				});
+				
+				await Promise.all(indexFieldFilesPromises);
+				console.log("All lines for name index finished downloading");
+				console.log(indexFieldValuesLines);
+				
+				/* Union */
+		    	let indexFieldUnionLines = [];
+		    	for (let indexFieldValueLines of indexFieldValuesLines) {
+		    		if (indexFieldUnionLines.length === 0) {
+		    			indexFieldUnionLines = indexFieldValueLines;
+		    		}
+		    		else {
+		    			indexFieldUnionLines = createUnion(indexFieldValueLines, indexFieldUnionLines);
+		    		}
+		    	}
+		    	console.log("union");
+		    	console.log(indexFieldUnionLines);
+		    	
+		    	/* Intersection */
+		    	if (indexFieldIntersectLines === null) {
+		    		indexFieldIntersectLines = indexFieldUnionLines;
+		    	}
+		    	else {
+		    		indexFieldIntersectLines = createIntersection(indexFieldIntersectLines, indexFieldUnionLines);
+		    	}
+		    	console.log("intersect");
+		    	console.log(indexFieldIntersectLines);
+	    		if (indexFieldIntersectLines.length === 0) {
+	    			console.log("Intersection empty, exit");
+	    			return indexFieldIntersectLines;
+	    		}
 			}
 			
-			let indexFiles = indexTypeFiles[indexTypeFileIndex];
-			let indexNameValuesLines = [];
-			let indexFilePromises = indexFiles.map( (indexFile) => {
-
-				return new Promise( (resolve, reject) => {
-					
-					const xmlHttpRequest = new XMLHttpRequest();
-					xmlHttpRequest.onreadystatechange = () => {
-						if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-							
-							let lines = JSON.parse(xmlHttpRequest.responseText);
-//							c("indexFile " + indexFile, lines);
-							indexNameValuesLines[indexFiles.indexOf(indexFile)] = lines; 
-							resolve();
-						}
-					};
-					xmlHttpRequest.open("GET", "_catalog/indexes/" + indexFile, true);
-					xmlHttpRequest.overrideMimeType("text/json");
-					xmlHttpRequest.send();
-				});
-			});  
-			
-		    Promise.all(indexFilePromises).then( () => {
-		    	
-//		    	c("All lines for name index finished downloading", indexTypeFileIndex);
-		    	let indexNameLines = [];
-		    	for (let indexNameValuesLine of indexNameValuesLines) {
-//		    		c("indexNameValuesLine", indexNameValuesLine);
-		    		if (indexNameLines.length === 0) {
-		    			indexNameLines = indexNameValuesLine;
-		    		}
-		    		else {
-		    			indexNameLines = createUnion(indexNameValuesLine, indexNameLines);
-		    		}
-		    	}
-//		    	c("union indexNameLines", indexNameLines);
-		    	
-		    	if (indexLines === null) {
-		    		indexLines = indexNameLines;
-		    	}
-		    	else {
-		    		indexLines = createIntersection(indexLines, indexNameLines);
-		    		if (indexLines.length === 0) {
-		    			c("Intersection empty, exit", indexLines);
-		    			loadIndexResolve(indexLines);
-		    			return;
-		    		}
-		    		else {
-//		    			c("intersection", indexLines);
-		    		}
-		    	}
-		    	
-		    	indexTypeFileIndex++;
-		    	if (indexTypeFileIndex < indexTypeFiles.length) {
-		    		loadIndex(indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve);
-		    	}
-		    	else {
-		    		c("all files downloaded and union", "");
-		    		loadIndexResolve(indexLines);
-		    	}
-		    });
+//		    Promise.all(indexFilePromises).then( () => {
+//		    	
+////		    	c("All lines for name index finished downloading", indexTypeFileIndex);
+//		    	let indexNameLines = [];
+//		    	for (let indexNameValuesLine of indexNameValuesLines) {
+////		    		c("indexNameValuesLine", indexNameValuesLine);
+//		    		if (indexNameLines.length === 0) {
+//		    			indexNameLines = indexNameValuesLine;
+//		    		}
+//		    		else {
+//		    			indexNameLines = createUnion(indexNameValuesLine, indexNameLines);
+//		    		}
+//		    	}
+////		    	c("union indexNameLines", indexNameLines);
+//		    	
+//		    	if (indexLines === null) {
+//		    		indexLines = indexNameLines;
+//		    	}
+//		    	else {
+//		    		indexLines = createIntersection(indexLines, indexNameLines);
+//		    		if (indexLines.length === 0) {
+//		    			c("Intersection empty, exit", indexLines);
+//		    			loadIndexResolve(indexLines);
+//		    			return;
+//		    		}
+//		    		else {
+////		    			c("intersection", indexLines);
+//		    		}
+//		    	}
+//		    	
+//		    	indexTypeFileIndex++;
+//		    	if (indexTypeFileIndex < indexTypeFiles.length) {
+//		    		loadIndex(indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve);
+//		    	}
+//		    	else {
+//		    		c("all files downloaded and union", "");
+//		    		loadIndexResolve(indexLines);
+//		    	}
+//		    });
 
 		}
 		
-		return indexLines;
+		return indexFieldIntersectLines;
 	}
 	
 	/* Load an index name */
@@ -709,12 +730,36 @@ const StaticCatalog = (() => {
 	/* Search received */
 	const applyFiltersAsync = async (searchData, resultsCallback) => {
 		
-		let startMs = (new Date()).getTime();
-		cl();
+//		let resl = await getJson("_catalog/indexes/static-catalog-index-1-0.json");
+//		console.log(resl);
 		
+//		let indexDownloadPromises = [];
+//		for (let i = 0; i < 10; i++) {
+//			indexDownloadPromises.push((async () => {
+//				console.log(i);
+//				let rr = await getJson("_catalog/indexes/static-catalog-index-1-" + i + ".json");
+//				console.log(i);
+//				console.log(rr);
+//			})());
+//		}
+////		console.log(pr);
+//		await Promise.all(indexDownloadPromises);
+//		console.log("after all pr");
+
 		totalLinesCount = searchData.searchTotals.totalLines;
 		blockLinesCount = searchData.searchTotals.blockLines;
 		indexLinesModulo = searchData.searchTotals.indexLinesModulo;
+		
+		let indexesLines = await loadIndexes(searchData);
+		console.log("after loadIndexes");
+		console.log(indexesLines);
+		
+		let startMs = (new Date()).getTime();
+		cl();
+		
+//		totalLinesCount = searchData.searchTotals.totalLines;
+//		blockLinesCount = searchData.searchTotals.blockLines;
+//		indexLinesModulo = searchData.searchTotals.indexLinesModulo;
 
 		//c(createUnion([1, 3, 5], [2, 4]));
 		
