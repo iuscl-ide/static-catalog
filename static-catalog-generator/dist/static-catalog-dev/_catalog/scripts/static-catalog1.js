@@ -287,45 +287,86 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
-	/* s */
-	const getUrlPromise = (url, type) => {
-		
-		return new Promise( (resolve, reject) => {
+	
+//	/* s */
+//	const getUrlPromise = (url, type) => {
+//		
+//		return new Promise( (resolve, reject) => {
+//
+//			let mimeType = "text/json";
+//			if (type === "csv") {
+//				mimeType = "text/csv";
+//			}
+//
+//			const xmlHttpRequest = new XMLHttpRequest();
+//			xmlHttpRequest.onreadystatechange = () => {
+//				
+//				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+//					const responseText = xmlHttpRequest.responseText;
+//					if (type === "json") {
+//						resolve(JSON.parse(responseText));
+//					}
+//					else if (type === "csv") {
+//						const results = Papa.parse(responseText, {
+//							header: false
+//						});
+//						resolve(results.data);
+//					}
+//					else {
+//						resolve(responseText)
+//					}
+//				}
+//			};
+//			xmlHttpRequest.open("GET", url, true);
+//			xmlHttpRequest.overrideMimeType(mimeType);
+//			xmlHttpRequest.send();
+//		});
+//	};
 
-			let mimeType = "text/json";
-			if (type === "csv") {
-				mimeType = "text/csv";
-			}
-			
-			const xmlHttpRequest = new XMLHttpRequest();
-			xmlHttpRequest.onreadystatechange = () => {
-				
-				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-					const responseText = xmlHttpRequest.responseText;
-					if (type === "json") {
-						resolve(JSON.parse(responseText));
-					}
-					else if (type === "csv") {
-						const results = Papa.parse(responseText, {
-							header: false
-						});
-						resolve(results.data);
-					}
-					else {
-						resolve(responseText)
-					}
-				}
-			};
-			xmlHttpRequest.open("GET", url, true);
-			xmlHttpRequest.overrideMimeType(mimeType);
-			xmlHttpRequest.send();
-		});
-	};
+
+//	/* s */
+//	const getUrlPromise = (url, type) => {
+//		
+//		return new Promise( (resolve, reject) => {
+//
+//			let mimeType = "text/json";
+//			if (type === "csv") {
+//				mimeType = "text/csv";
+//			}
+//
+//			const xmlHttpRequest = new XMLHttpRequest();
+//			xmlHttpRequest.onreadystatechange = () => {
+//				
+//				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+//					const responseText = xmlHttpRequest.responseText;
+//					if (type === "json") {
+//						resolve(JSON.parse(responseText));
+//					}
+//					else if (type === "csv") {
+//						const results = Papa.parse(responseText, {
+//							header: false
+//						});
+//						resolve(results.data);
+//					}
+//					else {
+//						resolve(responseText)
+//					}
+//				}
+//			};
+//			xmlHttpRequest.open("GET", url, true);
+//			xmlHttpRequest.overrideMimeType(mimeType);
+//			xmlHttpRequest.send();
+//		});
+//	};
 
 	/* s */
 	const getJson = async (url) => {
 		
-		return await getUrlPromise(url, "json");
+		let responseText = await fetch(url);
+		return responseText.json();
+		
+		
+		//return await getUrlPromise(url, "json");
 	};
 
 	/* s */
@@ -371,20 +412,75 @@ const StaticCatalog = (() => {
 		//console.log(indexFieldsFiles);
 		
 		if (1 === 1) {
-			let indexFieldFilesPromises = debFiles.map( (indexFieldFile) => {
+			let ts = {};
+			let ind = 0;
+
+			for (let indexFieldFile of debFiles) {
+				ind++;
+				if (ind > 3) {
+				continue;
+			}
+
+				const startMsT = (new Date()).getTime();
+//			console.log("File start _catalog/indexes/" + indexFieldFile);
+			let j = await getJson("_catalog/indexes/" + indexFieldFile);
+			ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+			//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
+//			console.log("_catalog/indexes/" + indexFieldFile);
 				
-				return (async () => {
-					const startMsT = (new Date()).getTime();
-					console.log("File start _catalog/indexes/" + indexFieldFile);
-					let j = await getJson("_catalog/indexes/" + indexFieldFile);
-					console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
-//					console.log("_catalog/indexes/" + indexFieldFile);
-				})();
-			});
-			
-			await Promise.all(indexFieldFilesPromises);
+			}
+			console.log(ts);
 			return [1, 2, 3];
 		}
+		
+		
+//		let ts = {};
+//		if (1 === 1) {
+//			let ind = 0;
+//			let indexFieldFilesPromises = debFiles.map( (indexFieldFile) => {
+//				ind++;
+//				if (ind > 3) {
+//					return;
+//				}
+//				return (async () => {
+//					const startMsT = (new Date()).getTime();
+////					console.log("File start _catalog/indexes/" + indexFieldFile);
+//					let j = await getJson("_catalog/indexes/" + indexFieldFile);
+//					ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+//					//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
+////					console.log("_catalog/indexes/" + indexFieldFile);
+//				})();
+//			});
+//			
+//			await Promise.all(indexFieldFilesPromises);
+//			console.log(ts);
+//			return [1, 2, 3];
+//		}
+
+//		const startMsA = (new Date()).getTime();
+//		let ts = {};
+//		if (1 === 1) {
+//			let ind = 0;
+//			let indexFieldFilesPromises = debFiles.map( (indexFieldFile) => {
+//				ind++;
+//				if (ind > 3) {
+//					return;
+//				}
+//				const startMsT = (new Date()).getTime();
+////				console.log("File start _catalog/indexes/" + indexFieldFile);
+//				let j = getJson("_catalog/indexes/" + indexFieldFile);
+//				ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+//				
+//				return j; 
+//			});
+//			
+//			let data = await Promise.all(indexFieldFilesPromises);
+//			console.log("File done in " + ((new Date()).getTime() - startMsA));
+//			console.log(ts);
+//			//console.log(data);
+//			return [1, 2, 3];
+//		}
+		
 		
 		/* Indexes */
 		var indexFieldIntersectLines = null;
