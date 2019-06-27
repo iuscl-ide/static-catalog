@@ -287,113 +287,24 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
-	
-//	/* s */
-//	const getUrlPromise = (url, type) => {
-//		
-//		return new Promise( (resolve, reject) => {
-//
-//			let mimeType = "text/json";
-//			if (type === "csv") {
-//				mimeType = "text/csv";
-//			}
-//
-//			const xmlHttpRequest = new XMLHttpRequest();
-//			xmlHttpRequest.onreadystatechange = () => {
-//				
-//				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-//					const responseText = xmlHttpRequest.responseText;
-//					if (type === "json") {
-//						resolve(JSON.parse(responseText));
-//					}
-//					else if (type === "csv") {
-//						const results = Papa.parse(responseText, {
-//							header: false
-//						});
-//						resolve(results.data);
-//					}
-//					else {
-//						resolve(responseText)
-//					}
-//				}
-//			};
-//			xmlHttpRequest.open("GET", url, true);
-//			xmlHttpRequest.overrideMimeType(mimeType);
-//			xmlHttpRequest.send();
-//		});
-//	};
-
-
-//	/* s */
-//	const getUrlPromise = (url, type) => {
-//		
-//		return new Promise( (resolve, reject) => {
-//
-//			let mimeType = "text/json";
-//			if (type === "csv") {
-//				mimeType = "text/csv";
-//			}
-//
-//			const xmlHttpRequest = new XMLHttpRequest();
-//			xmlHttpRequest.onreadystatechange = () => {
-//				
-//				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-//					const responseText = xmlHttpRequest.responseText;
-//					if (type === "json") {
-//						resolve(JSON.parse(responseText));
-//					}
-//					else if (type === "csv") {
-//						const results = Papa.parse(responseText, {
-//							header: false
-//						});
-//						resolve(results.data);
-//					}
-//					else {
-//						resolve(responseText)
-//					}
-//				}
-//			};
-//			xmlHttpRequest.open("GET", url, true);
-//			xmlHttpRequest.overrideMimeType(mimeType);
-//			xmlHttpRequest.send();
-//		});
-//	};
-
-	/* s */
+	/* Json */
 	const getJson = async (url) => {
 		
 		let responseText = await fetch(url);
 		return responseText.json();
-		
-		
-		//return await getUrlPromise(url, "json");
 	};
 
-	/* s */
+	/* Csv */
 	const getCsv = async (url) => {
-		
-		return await getUrlPromise(url, "csv");
+
+        let responseText = await fetch(url);
+        let text = await responseText.text();
+        return Papa.parse(text, {
+			header: false
+		}).data;
 	};
 	
-//	/* s */
-//	const getJson = async (url) => {
-//		
-//		return await new Promise( (resolve, reject) => {
-//
-//			const xmlHttpRequest = new XMLHttpRequest();
-//			xmlHttpRequest.onreadystatechange = () => {
-//				
-//				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-//					resolve(JSON.parse(xmlHttpRequest.responseText));
-//				}
-//			};
-//			xmlHttpRequest.open("GET", url, true);
-//			xmlHttpRequest.overrideMimeType("text/json");
-//			xmlHttpRequest.send();
-//		});
-//	};
-	
-	/* d */
+	/* Indexes */
 	const loadIndexes = async (searchData) => {
 		
 		let searchFieldsValues = searchData.searchFieldsValues;
@@ -411,51 +322,72 @@ const StaticCatalog = (() => {
 		}
 		//console.log(indexFieldsFiles);
 		
-		if (1 === 1) {
-			let ts = {};
-			let ind = 0;
-
-			for (let indexFieldFile of debFiles) {
-				ind++;
-				if (ind > 3) {
-				continue;
-			}
-
-				const startMsT = (new Date()).getTime();
-//			console.log("File start _catalog/indexes/" + indexFieldFile);
-			let j = await getJson("_catalog/indexes/" + indexFieldFile);
-			ts[indexFieldFile] = (new Date()).getTime() - startMsT;
-			//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
-//			console.log("_catalog/indexes/" + indexFieldFile);
-				
-			}
-			console.log(ts);
-			return [1, 2, 3];
-		}
-		
-		
-//		let ts = {};
 //		if (1 === 1) {
+//			let ts = {};
 //			let ind = 0;
-//			let indexFieldFilesPromises = debFiles.map( (indexFieldFile) => {
+
+//			for (let indexFieldFile of debFiles) {
 //				ind++;
-//				if (ind > 3) {
-//					return;
-//				}
-//				return (async () => {
-//					const startMsT = (new Date()).getTime();
-////					console.log("File start _catalog/indexes/" + indexFieldFile);
-//					let j = await getJson("_catalog/indexes/" + indexFieldFile);
-//					ts[indexFieldFile] = (new Date()).getTime() - startMsT;
-//					//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
-////					console.log("_catalog/indexes/" + indexFieldFile);
-//				})();
-//			});
-//			
-//			await Promise.all(indexFieldFilesPromises);
+//			//	if (ind > 3) {
+//			//	continue;
+//			//}
+
+//				const startMsT = (new Date()).getTime();
+////			console.log("File start _catalog/indexes/" + indexFieldFile);
+//			let j = await getJson("_catalog/indexes/" + indexFieldFile);
+//			ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+//			//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
+////			console.log("_catalog/indexes/" + indexFieldFile);
+				
+//			}
 //			console.log(ts);
 //			return [1, 2, 3];
 //		}
+		
+		
+		
+        if (1 > 1) {
+            let ts = {};
+            //let ind = 0;
+            let indexFieldFilesPromises = [];
+            for (let inde = 0; inde < debFiles.length; inde++) {
+
+                let indexFieldFile = debFiles[inde];
+                indexFieldFilesPromises.push(getJson("_catalog/indexes/" + indexFieldFile));
+                //indexFieldFilesPromises.push(fetch("_catalog/indexes/" + indexFieldFile));
+
+                //indexFieldFilesPromises.push((async () => {
+                //    let indexFieldFile = debFiles[inde];
+                
+                //    const startMsT = (new Date()).getTime();
+                //    //					console.log("File start _catalog/indexes/" + indexFieldFile);
+                //    let j = await getJson("_catalog/indexes/" + indexFieldFile);
+                //    ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+                //    //console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
+                //    //					console.log("_catalog/indexes/" + indexFieldFile);
+                //})() );
+            }
+
+////			let indexFieldFilesPromises = debFiles.map( (indexFieldFile) => {
+////				ind++;
+////				if (ind > 3) {
+////					return;
+////				}
+////				return (async () => {
+////					const startMsT = (new Date()).getTime();
+//////					console.log("File start _catalog/indexes/" + indexFieldFile);
+////					let j = await getJson("_catalog/indexes/" + indexFieldFile);
+////					ts[indexFieldFile] = (new Date()).getTime() - startMsT;
+////					//console.log("File done in " + ((new Date()).getTime() - startMsT) + " _catalog/indexes/" + indexFieldFile);
+//////					console.log("_catalog/indexes/" + indexFieldFile);
+////				})();
+////			});
+            let data = await Promise.all(indexFieldFilesPromises);
+//			//let data = await Promise.all(indexFieldFilesPromises);
+//            //console.log(ts);
+            console.log(data);
+			return [1, 2, 3];
+		}
 
 //		const startMsA = (new Date()).getTime();
 //		let ts = {};
@@ -503,36 +435,45 @@ const StaticCatalog = (() => {
 				});
 				
 				await Promise.all(indexFieldFilesPromises);
-				console.log("All lines for name index finished downloading"); //console.log(indexFieldValuesLines);
+				//console.log("All lines for name index finished downloading"); //console.log(indexFieldValuesLines);
+
+                //let indexFieldFilesPromises = indexFieldFiles.map((indexFieldFile) => {
+
+                //    return getJson("_catalog/indexes/" + indexFieldFile);
+                //});
+
+                //let indexFieldValuesLines = await Promise.all(indexFieldFilesPromises);
+
+
 				
-//				/* Union */
-//		    	let indexFieldUnionLines = [];
-//		    	for (let indexFieldValueLines of indexFieldValuesLines) {
-//		    		if (indexFieldUnionLines.length === 0) {
-//		    			indexFieldUnionLines = indexFieldValueLines;
-//		    		}
-//		    		else {
-//		    			indexFieldUnionLines = createUnion(indexFieldValueLines, indexFieldUnionLines);
-//		    		}
-//		    	}
-//		    	console.log("union"); //console.log(indexFieldUnionLines);
-//		    	
-//		    	/* Intersection */
-//		    	if (indexFieldIntersectLines === null) {
-//		    		indexFieldIntersectLines = indexFieldUnionLines;
-//		    	}
-//		    	else {
-//		    		indexFieldIntersectLines = createIntersection(indexFieldIntersectLines, indexFieldUnionLines);
-//		    	}
-//		    	console.log("intersect"); //console.log(indexFieldIntersectLines);
-//	    		if (indexFieldIntersectLines.length === 0) {
-//	    			console.log("Intersection empty, exit");
-//	    			return indexFieldIntersectLines;
-//	    		}
+				/* Union */
+		    	let indexFieldUnionLines = [];
+		    	for (let indexFieldValueLines of indexFieldValuesLines) {
+		    		if (indexFieldUnionLines.length === 0) {
+		    			indexFieldUnionLines = indexFieldValueLines;
+		    		}
+		    		else {
+		    			indexFieldUnionLines = createUnion(indexFieldValueLines, indexFieldUnionLines);
+		    		}
+		    	}
+		    	//console.log("union"); console.log(indexFieldUnionLines);
+		    	
+		    	/* Intersection */
+		    	if (indexFieldIntersectLines === null) {
+		    		indexFieldIntersectLines = indexFieldUnionLines;
+		    	}
+		    	else {
+		    		indexFieldIntersectLines = createIntersection(indexFieldIntersectLines, indexFieldUnionLines);
+		    	}
+		    	//console.log("intersect"); console.log(indexFieldIntersectLines);
+	    		if (indexFieldIntersectLines.length === 0) {
+	    			console.log("Intersection empty, exit");
+	    			return indexFieldIntersectLines;
+	    		}
 			}
 		}
-		indexFieldIntersectLines = [1, 2];
-		return indexFieldIntersectLines;
+
+        return indexFieldIntersectLines;
 	}
 	
 	/* Load sort */
@@ -712,14 +653,14 @@ const StaticCatalog = (() => {
 		const startMsIndexes = (new Date()).getTime();
 		const indexesLines = await loadIndexes(searchData);
 		const foundLinesCount = getLinesCount(indexesLines);
-		console.log("Indexes done in " + ((new Date()).getTime() - startMsIndexes)); //console.log(indexesLines);
+		console.log("Indexes done in " + ((new Date()).getTime() - startMsIndexes)); console.log(indexesLines);
 		
 		/* Sort */
 		const startMsSort = (new Date()).getTime();
 		const sortLines = await loadSort(searchData);
-		console.log("Sort done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortLines);
+		console.log("Sort done in " + ((new Date()).getTime() - startMsSort)); console.log(sortLines);
 		const sortedIndexLines = sortIndexLines(indexesLines, sortLines);
-		console.log("Sorting done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortLines);
+        console.log("Sorting done in " + ((new Date()).getTime() - startMsSort)); console.log(sortedIndexLines);
 		
 		/* Blocks */
 		const startMsBlocks = (new Date()).getTime();
