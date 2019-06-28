@@ -1202,6 +1202,21 @@ public class StaticCatalogEngine {
 			}
 		}
 
+		/* INDEX_SPLIT_TYPE_NAMES */
+		/* Indexes */
+//		int indexCnt = 0;
+		for (String fieldName : fieldNameIndexValueLines.keySet()) {
+			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
+			int indexNameCnt = fieldNames.indexOf(fieldName);
+			int indexValueCnt = 0;
+			LinkedHashMap<Integer, ArrayList<Long>> indexValueCntLines = new LinkedHashMap<>();
+			for (ArrayList<Long> lines : valueLines.values()) {
+				indexValueCntLines.put(indexValueCnt, lines);
+				indexValueCnt++;
+			}
+			S.saveObjectToJsonFileName(indexValueCntLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
+		}
+
 		/* Keywords */
 		int keywordsCnt = 0;
 		for (String fieldName : fieldNameIndexValueCsvValueLines.keySet()) {
