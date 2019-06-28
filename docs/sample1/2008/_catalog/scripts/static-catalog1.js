@@ -290,7 +290,10 @@ const StaticCatalog = (() => {
 	/* Json */
 	const getJson = async (url) => {
 		
+		const startMsGh = (new Date()).getTime();
 		let responseText = await fetch(url);
+		console.log("Download in " + ((new Date()).getTime() - startMsGh) + " -- " + url);
+		
 		return responseText.json();
 	};
 
