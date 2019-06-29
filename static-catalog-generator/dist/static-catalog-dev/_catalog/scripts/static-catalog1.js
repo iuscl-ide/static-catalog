@@ -290,8 +290,16 @@ const StaticCatalog = (() => {
 	/* Json */
 	const getJson = async (url) => {
 		
+		const startMs1 = (new Date()).getTime();
 		let responseText = await fetch(url);
-		return responseText.json();
+		let fs = "-- " + ((new Date()).getTime() - startMs1);
+        //console.log("-- " + ((new Date()).getTime() - startMs1) + " -- " + url);
+        
+        const startMs2 = (new Date()).getTime();
+        let responseJson = await responseText.json();
+        console.log(fs + " -- " + ((new Date()).getTime() - startMs2) + " --- " + url);
+        
+		return responseJson;
 	};
 
 	/* Csv */
@@ -461,7 +469,7 @@ const StaticCatalog = (() => {
                 let indexFieldFile = indexFieldsFiles[indexFieldsFileIndex];
                 const startMs11 = (new Date()).getTime();
                 let indexFieldAllValuesLines = await getJson("_catalog/indexes/" + indexFieldFile);
-                console.log("File done in " + ((new Date()).getTime() - startMs11) + " _catalog/indexes/" + indexFieldFile);
+                //console.log("File done in " + ((new Date()).getTime() - startMs11) + " _catalog/indexes/" + indexFieldFile);
                 let indexFieldIndexValues = indexFieldsIndexValues[indexFieldsFileIndex];
                 let indexFieldValuesLines = [];
                 for (let ind11 of indexFieldIndexValues) {
