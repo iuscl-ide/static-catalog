@@ -501,7 +501,8 @@ const StaticCatalog = (() => {
                 let fs = "-- " + ((new Date()).getTime() - startMs1);
                 const startMs2 = (new Date()).getTime();
                 let indexFieldAllValuesLines = JSON.parse(indexFieldAllValuesLinesS);
-                console.log(fs + " -- " + ((new Date()).getTime() - startMs2) + " --- " + indexFieldFile);
+                let msF = (new Date()).getTime();
+                console.log(fs + " -- " + (msF - startMs2) + " -- " + (msF - startMs1) + " --- " + indexFieldFile);
 
 
 
@@ -550,7 +551,19 @@ const StaticCatalog = (() => {
 			return null;
 		}
 
-		return await getJson("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
+
+        const startMs1 = (new Date()).getTime();
+        //let indexFieldAllValuesLines = await getJson2("_catalog/indexes/" + indexFieldFile);
+        let indexFieldAllValuesLinesS = await getJson2("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
+        let fs = "-- " + ((new Date()).getTime() - startMs1);
+        const startMs2 = (new Date()).getTime();
+        let indexFieldAllValuesLines = JSON.parse(indexFieldAllValuesLinesS);
+        let msF = (new Date()).getTime();
+        console.log(fs + " -- " + (msF - startMs2) + " -- " + (msF - startMs1) + " --- " + "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
+
+        return indexFieldAllValuesLines;
+
+		//return await getJson("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
 	}
 	
 	/* Sort the index lines */
