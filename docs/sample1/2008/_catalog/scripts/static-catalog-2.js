@@ -495,15 +495,15 @@ const StaticCatalog = (() => {
 
                 let indexFieldFile = indexFieldsFiles[indexFieldsFileIndex];
                 //const startMs11 = (new Date()).getTime();
-                const startMs1 = (new Date()).getTime();
+                //const startMs1 = (new Date()).getTime();
                 let indexFieldAllValuesLines = await getJson("_catalog/indexes/" + indexFieldFile);
                 //let indexFieldAllValuesLinesS = await getJson2("_catalog/indexes/" + indexFieldFile);
                 //let fs = "-- " + ((new Date()).getTime() - startMs1);
                 //const startMs2 = (new Date()).getTime();
                 //let indexFieldAllValuesLines = JSON.parse(indexFieldAllValuesLinesS);
-                let msF = (new Date()).getTime();
+                //let msF = (new Date()).getTime();
                 //console.log(fs + " -- " + (msF - startMs2) + " -- " + (msF - startMs1) + " --- " + indexFieldFile);
-		console.log((msF - startMs1) + " --- " + indexFieldFile);
+		//console.log((msF - startMs1) + " --- " + indexFieldFile);
 
 
 
@@ -553,15 +553,15 @@ const StaticCatalog = (() => {
 		}
 
 
-        const startMs1 = (new Date()).getTime();
+        //const startMs1 = (new Date()).getTime();
         let indexFieldAllValuesLines = await getJson("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
         //let indexFieldAllValuesLinesS = await getJson2("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
         //let fs = "-- " + ((new Date()).getTime() - startMs1);
         //const startMs2 = (new Date()).getTime();
         //let indexFieldAllValuesLines = JSON.parse(indexFieldAllValuesLinesS);
-        let msF = (new Date()).getTime();
+        //let msF = (new Date()).getTime();
         //console.log(fs + " -- " + (msF - startMs2) + " -- " + (msF - startMs1) + " --- " + "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
-	console.log((msF - startMs1) + "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
+	//console.log((msF - startMs1) + "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
 
         return indexFieldAllValuesLines;
 
