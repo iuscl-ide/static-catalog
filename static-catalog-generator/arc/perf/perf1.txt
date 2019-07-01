@@ -36,35 +36,71 @@
 -- 813 ---_catalog/sort/static-catalog-sort-17-desc.json
 
 -- 55 -- 4 --- _catalog/indexes/static-catalog-index-0.json
-static-catalog1.js:300 -- 9 -- 1 --- _catalog/indexes/static-catalog-index-1.json
-static-catalog1.js:300 -- 29 -- 1225 --- _catalog/indexes/static-catalog-index-2.json
-static-catalog1.js:300 -- 26 -- 719 --- _catalog/indexes/static-catalog-index-3.json
-static-catalog1.js:300 -- 11 -- 4 --- _catalog/indexes/static-catalog-index-8.json
-static-catalog1.js:300 -- 19 -- 559 --- _catalog/indexes/static-catalog-index-16.json
-static-catalog1.js:300 -- 26 -- 832 --- _catalog/indexes/static-catalog-index-17.json
-static-catalog1.js:300 -- 22 -- 873 --- _catalog/indexes/static-catalog-index-18.json
-static-catalog1.js:300 -- 13 -- 125 --- _catalog/indexes/static-catalog-index-21.json
-static-catalog1.js:300 -- 11 -- 120 --- _catalog/indexes/static-catalog-index-22.json
-static-catalog1.js:300 -- 7 -- 19 --- _catalog/indexes/static-catalog-index-23.json
+-- 9 -- 1 --- _catalog/indexes/static-catalog-index-1.json
+-- 29 -- 1225 --- _catalog/indexes/static-catalog-index-2.json
+-- 26 -- 719 --- _catalog/indexes/static-catalog-index-3.json
+-- 11 -- 4 --- _catalog/indexes/static-catalog-index-8.json
+-- 19 -- 559 --- _catalog/indexes/static-catalog-index-16.json
+-- 26 -- 832 --- _catalog/indexes/static-catalog-index-17.json
+-- 22 -- 873 --- _catalog/indexes/static-catalog-index-18.json
+-- 13 -- 125 --- _catalog/indexes/static-catalog-index-21.json
+-- 11 -- 120 --- _catalog/indexes/static-catalog-index-22.json
+-- 7 -- 19 --- _catalog/indexes/static-catalog-index-23.json
 static-catalog1.js:686 Indexes done in 10137
-static-catalog1.js:300 -- 48 -- 1658 --- _catalog/sort/static-catalog-sort-10-asc.json
+-- 48 -- 1658 --- _catalog/sort/static-catalog-sort-10-asc.json
 static-catalog1.js:691 Sort done in 1707
 static-catalog1.js:693 Sorting done in 2612
 static-catalog1.js:698 Blocks done in 139
 
 -- 297 -- 19 --- _catalog/indexes/static-catalog-index-0.json
-static-catalog1.js:300 -- 145 -- 5 --- _catalog/indexes/static-catalog-index-1.json
-static-catalog1.js:300 -- 138 -- 1058 --- _catalog/indexes/static-catalog-index-2.json
-static-catalog1.js:300 -- 148 -- 853 --- _catalog/indexes/static-catalog-index-3.json
-static-catalog1.js:300 -- 152 -- 2 --- _catalog/indexes/static-catalog-index-8.json
-static-catalog1.js:300 -- 141 -- 616 --- _catalog/indexes/static-catalog-index-16.json
-static-catalog1.js:300 -- 156 -- 1022 --- _catalog/indexes/static-catalog-index-17.json
-static-catalog1.js:300 -- 134 -- 1383 --- _catalog/indexes/static-catalog-index-18.json
-static-catalog1.js:300 -- 161 -- 204 --- _catalog/indexes/static-catalog-index-21.json
-static-catalog1.js:300 -- 136 -- 208 --- _catalog/indexes/static-catalog-index-22.json
-static-catalog1.js:300 -- 138 -- 24 --- _catalog/indexes/static-catalog-index-23.json
+-- 145 -- 5 --- _catalog/indexes/static-catalog-index-1.json
+-- 138 -- 1058 --- _catalog/indexes/static-catalog-index-2.json
+-- 148 -- 853 --- _catalog/indexes/static-catalog-index-3.json
+-- 152 -- 2 --- _catalog/indexes/static-catalog-index-8.json
+-- 141 -- 616 --- _catalog/indexes/static-catalog-index-16.json
+-- 156 -- 1022 --- _catalog/indexes/static-catalog-index-17.json
+-- 134 -- 1383 --- _catalog/indexes/static-catalog-index-18.json
+-- 161 -- 204 --- _catalog/indexes/static-catalog-index-21.json
+-- 136 -- 208 --- _catalog/indexes/static-catalog-index-22.json
+-- 138 -- 24 --- _catalog/indexes/static-catalog-index-23.json
 static-catalog1.js:686 Indexes done in 12396
-static-catalog1.js:300 -- 149 -- 9693 --- _catalog/sort/static-catalog-sort-10-asc.json
+-- 149 -- 9693 --- _catalog/sort/static-catalog-sort-10-asc.json
 static-catalog1.js:691 Sort done in 9842
 static-catalog1.js:693 Sorting done in 10719
 static-catalog1.js:698 Blocks done in 341
+
+localhost 11.358
+-- 52 -- 0 -- 52 --- static-catalog-index-0.json
+-- 12 -- 0 -- 12 --- static-catalog-index-1.json
+-- 767 -- 278 -- 1045 --- static-catalog-index-2.json
+-- 391 -- 270 -- 661 --- static-catalog-index-3.json
+-- 15 -- 0 -- 15 --- static-catalog-index-8.json
+-- 272 -- 197 -- 469 --- static-catalog-index-16.json
+-- 505 -- 291 -- 796 --- static-catalog-index-17.json
+-- 352 -- 314 -- 666 --- static-catalog-index-18.json
+-- 77 -- 43 -- 120 --- static-catalog-index-21.json
+-- 70 -- 34 -- 105 --- static-catalog-index-22.json
+-- 35 -- 6 -- 41 --- static-catalog-index-23.json
+static-catalog1.js:735 Indexes done in 9055
+-- 679 -- 608 -- 1287 --- static-catalog-sort-10-asc.json
+static-catalog1.js:740 Sort done in 1287
+static-catalog1.js:742 Sorting done in 2198
+static-catalog1.js:747 Blocks done in 105
+
+github 18.449
+-- 336 -- 0 -- 336 --- static-catalog-index-0.json
+-- 145 -- 0 -- 145 --- static-catalog-index-1.json
+-- 2034 -- 243 -- 2277 --- static-catalog-index-2.json
+-- 1603 -- 243 -- 1846 --- static-catalog-index-3.json
+-- 138 -- 0 -- 138 --- static-catalog-index-8.json
+-- 1901 -- 211 -- 2112 --- static-catalog-index-16.json
+-- 1958 -- 289 -- 2247 --- static-catalog-index-17.json
+-- 495 -- 306 -- 801 --- static-catalog-index-18.json
+-- 109 -- 41 -- 150 --- static-catalog-index-21.json
+-- 90 -- 34 -- 124 --- static-catalog-index-22.json
+-- 45 -- 7 -- 52 --- static-catalog-index-23.json
+static-catalog1.js:735 Indexes done in 15397
+-- 1329 -- 571 -- 1900 --- static-catalog-sort-10-asc.json
+static-catalog1.js:740 Sort done in 1901
+static-catalog1.js:742 Sorting done in 2832
+static-catalog1.js:747 Blocks done in 218
