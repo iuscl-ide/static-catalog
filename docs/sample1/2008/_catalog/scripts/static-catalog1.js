@@ -287,6 +287,33 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
+	const getJson2 = async (url) => {
+
+		return new Promise( (resolve, reject) => {
+
+            //const startMs1 = (new Date()).getTime();
+			const xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.onreadystatechange = () => {
+				if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
+
+//                    let fs = "-- " + ((new Date()).getTime() - startMs1);
+//                    const startMs2 = (new Date()).getTime();
+//                    let lines = JSON.parse(xmlHttpRequest.responseText);
+//                    console.log(fs + " -- " + ((new Date()).getTime() - startMs2) + " --- " + url);
+//					c("indexFile " + indexFile, lines);
+//					indexNameValuesLines[indexFiles.indexOf(indexFile)] = lines; 
+
+                    let lines = xmlHttpRequest.responseText;
+					resolve(lines);
+				}
+            };
+			xmlHttpRequest.open("GET", url, true);
+			xmlHttpRequest.overrideMimeType("text/json");
+            xmlHttpRequest.send();
+		});
+		
+	}
+	
 	/* Json */
 	const getJson = async (url) => {
 		
@@ -467,8 +494,17 @@ const StaticCatalog = (() => {
                 //let indexFieldValuesLines = await Promise.all(indexFieldFilesPromises);
 
                 let indexFieldFile = indexFieldsFiles[indexFieldsFileIndex];
-                const startMs11 = (new Date()).getTime();
-                let indexFieldAllValuesLines = await getJson("_catalog/indexes/" + indexFieldFile);
+                //const startMs11 = (new Date()).getTime();
+                const startMs1 = (new Date()).getTime();
+                //let indexFieldAllValuesLines = await getJson2("_catalog/indexes/" + indexFieldFile);
+                let indexFieldAllValuesLinesS = await getJson2("_catalog/indexes/" + indexFieldFile);
+                let fs = "-- " + ((new Date()).getTime() - startMs1);
+                const startMs2 = (new Date()).getTime();
+                let indexFieldAllValuesLines = JSON.parse(indexFieldAllValuesLinesS);
+                console.log(fs + " -- " + ((new Date()).getTime() - startMs2) + " --- " + indexFieldFile);
+
+
+
                 //console.log("File done in " + ((new Date()).getTime() - startMs11) + " _catalog/indexes/" + indexFieldFile);
                 let indexFieldIndexValues = indexFieldsIndexValues[indexFieldsFileIndex];
                 let indexFieldValuesLines = [];

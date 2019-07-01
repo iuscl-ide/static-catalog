@@ -34,3 +34,37 @@
 
 -- 15 ---_catalog/sort/static-catalog-sort-17-desc 26,5 M
 -- 813 ---_catalog/sort/static-catalog-sort-17-desc.json
+
+-- 55 -- 4 --- _catalog/indexes/static-catalog-index-0.json
+static-catalog1.js:300 -- 9 -- 1 --- _catalog/indexes/static-catalog-index-1.json
+static-catalog1.js:300 -- 29 -- 1225 --- _catalog/indexes/static-catalog-index-2.json
+static-catalog1.js:300 -- 26 -- 719 --- _catalog/indexes/static-catalog-index-3.json
+static-catalog1.js:300 -- 11 -- 4 --- _catalog/indexes/static-catalog-index-8.json
+static-catalog1.js:300 -- 19 -- 559 --- _catalog/indexes/static-catalog-index-16.json
+static-catalog1.js:300 -- 26 -- 832 --- _catalog/indexes/static-catalog-index-17.json
+static-catalog1.js:300 -- 22 -- 873 --- _catalog/indexes/static-catalog-index-18.json
+static-catalog1.js:300 -- 13 -- 125 --- _catalog/indexes/static-catalog-index-21.json
+static-catalog1.js:300 -- 11 -- 120 --- _catalog/indexes/static-catalog-index-22.json
+static-catalog1.js:300 -- 7 -- 19 --- _catalog/indexes/static-catalog-index-23.json
+static-catalog1.js:686 Indexes done in 10137
+static-catalog1.js:300 -- 48 -- 1658 --- _catalog/sort/static-catalog-sort-10-asc.json
+static-catalog1.js:691 Sort done in 1707
+static-catalog1.js:693 Sorting done in 2612
+static-catalog1.js:698 Blocks done in 139
+
+-- 297 -- 19 --- _catalog/indexes/static-catalog-index-0.json
+static-catalog1.js:300 -- 145 -- 5 --- _catalog/indexes/static-catalog-index-1.json
+static-catalog1.js:300 -- 138 -- 1058 --- _catalog/indexes/static-catalog-index-2.json
+static-catalog1.js:300 -- 148 -- 853 --- _catalog/indexes/static-catalog-index-3.json
+static-catalog1.js:300 -- 152 -- 2 --- _catalog/indexes/static-catalog-index-8.json
+static-catalog1.js:300 -- 141 -- 616 --- _catalog/indexes/static-catalog-index-16.json
+static-catalog1.js:300 -- 156 -- 1022 --- _catalog/indexes/static-catalog-index-17.json
+static-catalog1.js:300 -- 134 -- 1383 --- _catalog/indexes/static-catalog-index-18.json
+static-catalog1.js:300 -- 161 -- 204 --- _catalog/indexes/static-catalog-index-21.json
+static-catalog1.js:300 -- 136 -- 208 --- _catalog/indexes/static-catalog-index-22.json
+static-catalog1.js:300 -- 138 -- 24 --- _catalog/indexes/static-catalog-index-23.json
+static-catalog1.js:686 Indexes done in 12396
+static-catalog1.js:300 -- 149 -- 9693 --- _catalog/sort/static-catalog-sort-10-asc.json
+static-catalog1.js:691 Sort done in 9842
+static-catalog1.js:693 Sorting done in 10719
+static-catalog1.js:698 Blocks done in 341
