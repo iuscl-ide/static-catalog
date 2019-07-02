@@ -205,7 +205,7 @@ const StaticCatalog = (() => {
 		}
 		addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
 //		c("before", sortedUnion);
-		sortedUnion = compactLines(sortedUnion);
+		//sortedUnion = compactLines(sortedUnion);
 //		c("after", sortedUnion);
 
 		return sortedUnion;
