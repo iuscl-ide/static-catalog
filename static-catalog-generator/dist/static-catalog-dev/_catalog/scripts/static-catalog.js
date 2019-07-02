@@ -10,39 +10,11 @@
 const StaticCatalog = (() => {
 
 	/* _catalog/static-catalog.json */
-//	var filterNameIndex;
-//	var filterNameValueIndex;
-//	var indexSplitType;
 	var totalLinesCount;
 	var blockLinesCount;
 	var indexLinesModulo;
 
-//	var cachePagination = {
-//		"paginationPage": 0,
-//		"paginationResultsPerPage": 0
-//	}
-	
-	/* debug */
-	var isDebug = false;
-	
-	/* debug console */
-	const c = (message, object) => {
-		
-		if (isDebug) {
-			console.log(message);
-			console.log(object);
-		}
-	}
-
-	/* debug console */
-	const cl = () => {
-		
-		if (isDebug) {
-			console.clear();
-		}
-	}
-
-	/* _underscore.js */
+	/* binary search from _underscore.js */
 	const findInsertionIndex = (array, value) => {
 
 		let low = 0;
@@ -56,31 +28,9 @@ const StaticCatalog = (() => {
 				high = mid;
 			}
 		}
+		
 		return low;
 	};
-
-//	/* Initialize */
-//	const initialize = () => {
-//		
-//		const xmlHttpRequest = new XMLHttpRequest();
-//		xmlHttpRequest.onreadystatechange = () => {
-//			
-//			if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-//				let contents = JSON.parse(xmlHttpRequest.responseText);
-////				c("contents", contents);
-//				
-//				filterNameIndex = contents.filterNameIndex;
-//				filterNameValueIndex = contents.filterNameValueIndex;
-//				indexSplitType = contents.indexSplitType;
-//				totalLinesCount = contents.totalLinesCount;
-//				blockLinesCount = contents.blockLinesCount;
-//				indexLinesModulo = contents.indexLinesModulo;
-//			}
-//		};
-//		xmlHttpRequest.open("GET", "_catalog/static-catalog.json", true);
-//		xmlHttpRequest.overrideMimeType("text/json");
-//		xmlHttpRequest.send();
-//	};
 	
 	/* Modulo */
 	const getLine = (line) => {
@@ -89,7 +39,7 @@ const StaticCatalog = (() => {
 		if (value === 0) {
 			value = line % indexLinesModulo;
 		}
-
+		
 		return value;
 	}
 
@@ -112,6 +62,7 @@ const StaticCatalog = (() => {
 		if (startLine === 0) {
 			return 1;
 		}
+		
 		return (getEndLine(line) - startLine) + 1;
 	}
 
@@ -122,6 +73,7 @@ const StaticCatalog = (() => {
 		for (let line of lines) {
 			count = count + getLineCount(line);
 		}
+		
 		return count;
 	}
 	
@@ -224,7 +176,7 @@ const StaticCatalog = (() => {
 		return destLines;
 	} 
 
-	/* Reunion */
+	/* Union */
 	const createUnion = (array1, array2) => {
 		
 		let sortedUnion = [];
@@ -255,10 +207,8 @@ const StaticCatalog = (() => {
 			otherIndex = tempIndex;
 		}
 		addUntil(currentArray, sortedUnion, currentIndex, Number.MAX_SAFE_INTEGER);
-//		c("before", sortedUnion);
 		sortedUnion = compactLines(sortedUnion);
-//		c("after", sortedUnion);
-
+		
 		return sortedUnion;
 	}
 
@@ -290,6 +240,7 @@ const StaticCatalog = (() => {
 				else {
 					let startLine = (startLine1 >= startLine2) ? startLine1 : startLine2;
 					let endLine = (endLine1 <= endLine2) ? endLine1 : endLine2;
+		
 					return (startLine === endLine) ? startLine : startLine * indexLinesModulo + endLine;
 				}
 			}
@@ -308,9 +259,7 @@ const StaticCatalog = (() => {
 		
 		while ((index1 < array1Length) && (index2 < array2Length)) {
 			let line1 = array1[index1];
-//			c("index1", index1);
 			while (index2 < array2Length) {
-//				c("index2", index2);
 				let line2 = array2[index2];
 				let line = createIntervalIntersection(line1, line2);
 				if (line === null) {
@@ -338,174 +287,172 @@ const StaticCatalog = (() => {
 		return intersection;
 	};
 
-	/* Load an index name */
-	const loadIndex = (indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve) => {
+	/* JSON */
+	const getJson = async (url) => {
 		
-		let indexFiles = indexTypeFiles[indexTypeFileIndex];
-		let indexNameValuesLines = [];
-		let indexFilePromises = indexFiles.map( (indexFile) => {
+		let responseText = await fetch(url);
+        let responseJson = await responseText.json();
+        
+		return responseJson;
+	};
 
-			return new Promise( (resolve, reject) => {
+	/* CSV */
+	const getCsv = async (url) => {
+
+        let responseText = await fetch(url);
+        let text = await responseText.text();
+        return Papa.parse(text, {
+			header: false
+		}).data;
+	};
+	
+	/* Indexes */
+	const loadIndexes = async (searchData) => {
+		
+		let searchFieldsValues = searchData.searchFieldsValues;
+		
+		let indexFieldsFiles = [];
+        let indexFieldsIndexValues = [];
+		for (let searchFieldValues of searchFieldsValues) {
+			let fieldIndex = searchFieldValues.fieldIndex;
+            indexFieldsFiles.push("static-catalog-index-" + fieldIndex + ".json");
+            let indexFieldIndexValues = [];
+            for (let filterIndex of searchFieldValues.filterIndexes) {
+            	indexFieldIndexValues.push(filterIndex);
+            }
+            indexFieldsIndexValues.push(indexFieldIndexValues);
+		}
+		
+		/* Indexes */
+		var indexFieldIntersectLines = null;
+		if (indexFieldsFiles.length === 0) {
+			indexFieldIntersectLines = [];
+			indexFieldIntersectLines.push(indexLinesModulo + totalLinesCount);
+		}
+		else {
+			for (let indexFieldsFileIndex = 0; indexFieldsFileIndex < indexFieldsFiles.length; indexFieldsFileIndex++) {
 				
-				const xmlHttpRequest = new XMLHttpRequest();
-				xmlHttpRequest.onreadystatechange = () => {
-					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-						
-						let lines = JSON.parse(xmlHttpRequest.responseText);
-//						c("indexFile " + indexFile, lines);
-						indexNameValuesLines[indexFiles.indexOf(indexFile)] = lines; 
-						resolve();
-					}
-				};
-				xmlHttpRequest.open("GET", "_catalog/indexes/" + indexFile, true);
-				xmlHttpRequest.overrideMimeType("text/json");
-				xmlHttpRequest.send();
-			});
-		});  
-		
-	    Promise.all(indexFilePromises).then( () => {
-	    	
-//	    	c("All lines for name index finished downloading", indexTypeFileIndex);
-	    	let indexNameLines = [];
-	    	for (let indexNameValuesLine of indexNameValuesLines) {
-//	    		c("indexNameValuesLine", indexNameValuesLine);
-	    		if (indexNameLines.length === 0) {
-	    			indexNameLines = indexNameValuesLine;
-	    		}
-	    		else {
-	    			indexNameLines = createUnion(indexNameValuesLine, indexNameLines);
-	    		}
-	    	}
-//	    	c("union indexNameLines", indexNameLines);
-	    	
-	    	if (indexLines === null) {
-	    		indexLines = indexNameLines;
-	    	}
-	    	else {
-	    		indexLines = createIntersection(indexLines, indexNameLines);
-	    		if (indexLines.length === 0) {
-	    			c("Intersection empty, exit", indexLines);
-	    			loadIndexResolve(indexLines);
-	    			return;
-	    		}
-	    		else {
-//	    			c("intersection", indexLines);
-	    		}
-	    	}
-	    	
-	    	indexTypeFileIndex++;
-	    	if (indexTypeFileIndex < indexTypeFiles.length) {
-	    		loadIndex(indexTypeFiles, indexTypeFileIndex, searchData, indexLines, loadIndexResolve);
-	    	}
-	    	else {
-	    		c("all files downloaded and union", "");
-	    		loadIndexResolve(indexLines);
-	    	}
-	    });
-	}
-
-	/* Load sort */
-	const loadSort = (searchSort, loadSortResolve) => {
-		
-		var sortLines;
-		//let sortFiles = sortTypeFiles[sortTypeFileIndex];
-		let sortFiles = [];
-		sortFiles[0] = "static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json"; 
-		
-		let sortNameValuesLines = [];
-		let sortFilePromises = sortFiles.map( (sortFile) => {
-
-			return new Promise( (resolve, reject) => {
+                let indexFieldFile = indexFieldsFiles[indexFieldsFileIndex];
+                //const startMs11 = (new Date()).getTime();
+                let indexFieldAllValuesLines = await getJson("_catalog/indexes/" + indexFieldFile);
+                //console.log("File done in " + ((new Date()).getTime() - startMs11) + " _catalog/indexes/" + indexFieldFile);
+                let indexFieldIndexValues = indexFieldsIndexValues[indexFieldsFileIndex];
+                let indexFieldValuesLines = [];
+                for (let indexFieldIndexValue of indexFieldIndexValues) {
+                    indexFieldValuesLines.push(indexFieldAllValuesLines[indexFieldIndexValue]);
+                }
 				
-				const xmlHttpRequest = new XMLHttpRequest();
-				xmlHttpRequest.onreadystatechange = () => {
-					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-						
-						sortLines = JSON.parse(xmlHttpRequest.responseText);
-//						c("sortFile " + sortFile, lines);
-						//sortNameValuesLines[sortFiles.sortOf(sortFile)] = lines; 
-						resolve();
-					}
-				};
-				xmlHttpRequest.open("GET", "_catalog/sort/" + sortFile, true);
-				xmlHttpRequest.overrideMimeType("text/json");
-				xmlHttpRequest.send();
-			});
-		});  
-		
-	    Promise.all(sortFilePromises).then( () => {
-	    	
-	    	c("all sort files downloaded", "");
-	    	loadSortResolve(sortLines);
-	    });
+				/* Union */
+		    	let indexFieldUnionLines = [];
+		    	for (let indexFieldValueLines of indexFieldValuesLines) {
+		    		if (indexFieldUnionLines.length === 0) {
+		    			indexFieldUnionLines = indexFieldValueLines;
+		    		}
+		    		else {
+		    			indexFieldUnionLines = createUnion(indexFieldValueLines, indexFieldUnionLines);
+		    		}
+		    	}
+		    	//console.log("union"); console.log(indexFieldUnionLines);
+		    	
+		    	/* Intersection */
+		    	if (indexFieldIntersectLines === null) {
+		    		indexFieldIntersectLines = indexFieldUnionLines;
+		    	}
+		    	else {
+		    		indexFieldIntersectLines = createIntersection(indexFieldIntersectLines, indexFieldUnionLines);
+		    	}
+		    	//console.log("intersection"); console.log(indexFieldIntersectLines);
+		    	
+	    		if (indexFieldIntersectLines.length === 0) {
+	    			//console.log("Intersection empty, exit");
+	    			return indexFieldIntersectLines;
+	    		}
+			}
+		}
+
+        return indexFieldIntersectLines;
 	}
 	
-	/* Load the CSV blocks */
-	const loadBlocks = (indexLines, sortLines, searchData, resultLines, loadBlocksResolve) => {
+	/* Load sort */
+	const loadSort = async (searchData) => {
 		
-		let startMs1 = (new Date()).getTime();
-		
+		let searchSort = searchData.searchSort;
+		if (searchSort.sortFieldIndex === "-1") {
+			return null;
+		}
+
+		return await getJson("_catalog/sort/static-catalog-sort-" + searchSort.sortFieldIndex + "-" + searchSort.sortDirection + ".json");
+	}
+	
+	/* Sort the index lines */
+	const sortIndexLines = (indexLines, sortLines) => {
+
+		if (sortLines === null) {
+			return indexLines;
+		}
+
 		let indexLinesLength = indexLines.length;
-		let sortIndexLines = [];
+		let sortedIndexLines = [];
 		let indexLinesStarts = [];
 		for (let indexLine of indexLines) {
 			indexLinesStarts.push(getLine(indexLine));
 		}
+		
+		for (let sortLine of sortLines) {
+			
+			let sortLineStart = getLine(sortLine);
 
-		if (sortLines === null) {
-			sortIndexLines = indexLines;
-		}
-		else {
-			for (let sortLine of sortLines) {
-				
-				let sortLineStart = getLine(sortLine);
-
-				let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
-				if (startIndex >= indexLinesLength) {
-					let lastIndexLine = indexLines[indexLinesLength - 1];
-					if (sortLineStart <= getEndLine(lastIndexLine)) {
-						let found = createIntervalIntersection(sortLine, lastIndexLine);
-						if (found !== null) {
-							sortIndexLines.push(found);
-						}
-					}
-				}
-				else {
-					if (startIndex > 0) {
-						let prevIndexLine = indexLines[startIndex - 1];
-						let found = createIntervalIntersection(sortLine, prevIndexLine);
-						if (found !== null) {
-							sortIndexLines.push(found);
-						}
-					}
-					let indexLine = indexLines[startIndex];
-					let found = createIntervalIntersection(sortLine, indexLine);
-					while (found !== null) {
-						sortIndexLines.push(found);
-						startIndex++;
-						if (startIndex < indexLinesLength - 1) {
-							startIndex++;
-							indexLine = indexLines[startIndex];
-							found = createIntervalIntersection(sortLine, indexLine);
-						}
-						else {
-							found = null;
-						}
+			let startIndex = findInsertionIndex(indexLinesStarts, sortLineStart);
+			if (startIndex >= indexLinesLength) {
+				let lastIndexLine = indexLines[indexLinesLength - 1];
+				if (sortLineStart <= getEndLine(lastIndexLine)) {
+					let found = createIntervalIntersection(sortLine, lastIndexLine);
+					if (found !== null) {
+						sortedIndexLines.push(found);
 					}
 				}
 			}
-			c("sortIndexLines done in " + ((new Date()).getTime() - startMs1), sortIndexLines);
+			else {
+				if (startIndex > 0) {
+					let prevIndexLine = indexLines[startIndex - 1];
+					let found = createIntervalIntersection(sortLine, prevIndexLine);
+					if (found !== null) {
+						sortedIndexLines.push(found);
+					}
+				}
+				let indexLine = indexLines[startIndex];
+				let found = createIntervalIntersection(sortLine, indexLine);
+				while (found !== null) {
+					sortedIndexLines.push(found);
+					startIndex++;
+					if (startIndex < indexLinesLength - 1) {
+						startIndex++;
+						indexLine = indexLines[startIndex];
+						found = createIntervalIntersection(sortLine, indexLine);
+					}
+					else {
+						found = null;
+					}
+				}
+			}
 		}
+		
+		return sortedIndexLines;
+	}
+	
+	/* Load the CSV blocks */
+	const loadBlocks = async (searchData, sortedIndexLines) => {
+		
+		let startMs1 = (new Date()).getTime();
 		
 		let searchLinesCount = searchData.searchPagination.paginationResultsPerPage;
 		let firstSearchIndexLine = (searchData.searchPagination.paginationPage - 1) * searchLinesCount + 1;
-		
 		
 		/* Find result lines indexes */
 		let resultIndexLines = [];
 		let linesCnt = 0;
 		break_lines:
-		for (let indexLine of sortIndexLines) {
+		for (let indexLine of sortedIndexLines) {
 
 			let newLinesCnt = linesCnt + getLineCount(indexLine);
 			
@@ -534,139 +481,77 @@ const StaticCatalog = (() => {
 			}
 			linesCnt = newLinesCnt;
 		}
-		c("result index lines", resultIndexLines);
 
 		/* Find result blocks indexes */
 		let resultIndexBlocks = [];
-		
 		for (let resultIndexLine of resultIndexLines) {
 			let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
 			if (!resultIndexBlocks.includes(resultIndexBlock)) {
 				resultIndexBlocks.push(resultIndexBlock);
 			}
 		}
-		c("result index blocks", resultIndexBlocks);
 		
 		/* Download result blocks */
 		let blockResults = {};
 		let blockFilePromises = resultIndexBlocks.map( (indexBlock) => {
 
-			return new Promise( (resolve, reject) => {
+			return (async () => {
 				
-				const xmlHttpRequest = new XMLHttpRequest();
-				xmlHttpRequest.onreadystatechange = () => {
-					if ((xmlHttpRequest.readyState == 4) && (xmlHttpRequest.status == 200)) {
-						
-						const csvString = xmlHttpRequest.responseText;
-						const results = Papa.parse(csvString, {
-							header: false
-						});
-
-						blockResults[indexBlock] = results.data;
-						resolve();
-					}
-				};
-				xmlHttpRequest.open("GET", "_catalog/data/block-" + indexBlock + ".csv", true);
-				xmlHttpRequest.overrideMimeType("text/csv");
-				xmlHttpRequest.send();
-				c("Download..", "_catalog/data/block-" + indexBlock + ".csv");
-			});
+				blockResults[indexBlock] = await getCsv("_catalog/data/block-" + indexBlock + ".csv");
+			})();
 		});  
 		
-	    Promise.all(blockFilePromises).then( () => {
-	    	
-	    	c("All blocks finished downloading", blockResults);
-	    	for (let resultIndexLine of resultIndexLines) {
-	    		let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
-	    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount + 1);
-	    		//let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount);
-	    		
-	    		//c("Line in block", resultIndexBlockLine);
-	    		resultLines.push(blockResults[resultIndexBlock][resultIndexBlockLine]);
-	    	}
-	    	
-	    	loadBlocksResolve(resultLines);
-	    });
+		await Promise.all(blockFilePromises);
+
+		let resultLines = [];
+    	for (let resultIndexLine of resultIndexLines) {
+    		let resultIndexBlock = Math.trunc(resultIndexLine / blockLinesCount);
+    		let resultIndexBlockLine = resultIndexLine - (resultIndexBlock * blockLinesCount + 1);
+    		resultLines.push(blockResults[resultIndexBlock][resultIndexBlockLine]);
+    	}
+    	
+    	return resultLines;
 	}
 
 	/* Search received */
 	const applyFilters = (searchData, resultsCallback) => {
+
+		applyFiltersAsync(searchData, resultsCallback);
+	}
+
+	/* Search received */
+	const applyFiltersAsync = async (searchData, resultsCallback) => {
 		
-		let startMs = (new Date()).getTime();
-		cl();
-		
+		const startMs = (new Date()).getTime();
+		//console.clear();
+
+		/* Global */
 		totalLinesCount = searchData.searchTotals.totalLines;
 		blockLinesCount = searchData.searchTotals.blockLines;
 		indexLinesModulo = searchData.searchTotals.indexLinesModulo;
-
-		//c(createUnion([1, 3, 5], [2, 4]));
-		
-		let searchFilters = searchData.searchFieldsValues;
-		
-		let indexTypeFiles = [];
-		for (let searchFilter of searchFilters) {
-			
-//			let searchFilterName = searchFilter.field;
-//			let searchFilterNameIndex = filterNameIndex[searchFilterName];
-			let fieldIndex = searchFilter.fieldIndex;
-			let indexFiles = [];
-			indexTypeFiles.push(indexFiles);
-
-			for (let filterIndex of searchFilter.filterIndexes) {
-				//let searchFilterValueIndex = filterNameValueIndex[searchFilterName][searchFilterValue];
-				//indexFiles.push("static-catalog-index-value-" + searchFilterNameIndex + "-" + searchFilterValueIndex + ".json");
-				indexFiles.push("static-catalog-index-" + fieldIndex + "-" + filterIndex + ".json");
-			}
-		}
-		c("indexTypeFiles", indexTypeFiles);
 		
 		/* Indexes */
-		var indexLines = null;
-		new Promise( (loadIndexResolve, loadIndexReject) => {
+		const startMsIndexes = (new Date()).getTime();
+		const indexesLines = await loadIndexes(searchData);
+		const foundLinesCount = getLinesCount(indexesLines);
+		//console.log("Indexes done in " + ((new Date()).getTime() - startMsIndexes)); //console.log(indexesLines);
+		
+		/* Sort */
+		const startMsSort = (new Date()).getTime();
+		const sortLines = await loadSort(searchData);
+		//console.log("Sort done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortLines);
+		const sortedIndexLines = sortIndexLines(indexesLines, sortLines);
+        //console.log("Sorting done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortedIndexLines);
+		
+		/* Blocks */
+		const startMsBlocks = (new Date()).getTime();
+		const resultLines = await loadBlocks(searchData, sortedIndexLines);
+		//console.log("Blocks done in " + ((new Date()).getTime() - startMsBlocks)); //console.log(resultLines);
 
-			if (indexTypeFiles.length === 0) {
-				indexLines = [];
-				indexLines.push(indexLinesModulo + totalLinesCount);
-				loadIndexResolve(indexLines);
-			}
-			else {
-				loadIndex(indexTypeFiles, 0, searchData, indexLines, loadIndexResolve);	
-			}
-		}).then((indexLines) => {
-
-			c("Indexes done in " + ((new Date()).getTime() - startMs), indexLines);
-			/* Sort */
-			new Promise( (loadSortResolve, loadSortReject) => {
-
-				let searchSort = searchData.searchSort;
-				if (searchSort.sortFieldIndex === "-1") {
-					loadSortResolve(null);
-				}
-				else {
-					loadSort(searchSort, loadSortResolve);	
-				}
-			}).then((sortLines) => {
-	
-				c("Sort loaded done in " + ((new Date()).getTime() - startMs), sortLines);
-				
-				/* Blocks */
-				var resultLines = [];
-				new Promise( (loadBlocksResolve, loadBlocksReject) => {
-	
-					loadBlocks(indexLines, sortLines, searchData, resultLines, loadBlocksResolve);
-				}).then((resultLines) => {
-					
-					c("Blocks done in " + ((new Date()).getTime() - startMs), resultLines);
-					let foundLinesCount = getLinesCount(indexLines);
-					resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
-				});
-			});
-		});
+		/* Return callback */
+		resultsCallback(searchData, resultLines, foundLinesCount, (new Date()).getTime() - startMs);
 	}
 
-	/* Constructor */
-//	initialize();
-	
 	/* Publish public */
 	return {
 		applyFilters: applyFilters
