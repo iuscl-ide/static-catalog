@@ -337,6 +337,10 @@ const StaticCatalogDev = (() => {
 				$filterDropdown.dropdown('set selected', '');
 				$filterDropdown.removeAttr("data-value");
 			});
+			$filterSearchboxes.each( (index, element) => {
+				let $filterSearchbox = $(element);
+				$filterSearchbox.search("set value", "");
+			});
         });
 
 		/* "Expand / Collapse" lateral menu item */
@@ -401,12 +405,27 @@ const StaticCatalogDev = (() => {
         });
 
 		/* Debugs */
-		$("#sc-id--debug-button").click( clickEvent => {
+		$("#sc-id--debug-all-values-button").click( clickEvent => {
 			
 			window.scrollTo(0, 0);
 			$filterCheckboxes.each( (index, element) => {
 				element.checked = true;
 				element.value = element.value.toLocaleString();
+			});
+        });
+
+		$("#sc-id--debug-first-value-button").click( clickEvent => {
+			
+			window.scrollTo(0, 0);
+			let names = {};
+			$filterCheckboxes.each( (index, element) => {
+				
+				let elementName = element.name;
+				if (!names[elementName]) {
+					names[elementName] = elementName;
+					element.checked = true;
+					element.value = element.value.toLocaleString();
+				}
 			});
         });
 
