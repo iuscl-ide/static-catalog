@@ -1027,10 +1027,12 @@ public class StaticCatalogEngine {
 		String catalogKeywordsFolderName = destinationFolderName + fsep + "_catalog" + fsep + "keywords";
 		S.createFoldersIfNotExists(catalogKeywordsFolderName);
 		S.deleteFolderContentsOnly(catalogKeywordsFolderName);
-		String keywordsFileNamePrefix = catalogKeywordsFolderName + fsep + "static-catalog-keywords";
+		//String keywordsFileNamePrefix = catalogKeywordsFolderName + fsep + "static-catalog-keywords";
 
-		String catalogPageKeywordsFolderName = destinationFolderName + fsep + "_catalog-page";
-		String pageKeywordsFileNamePrefix = catalogPageKeywordsFolderName + fsep + "static-catalog-page-keywords";
+		String catalogPageKeywordsFolderName = destinationFolderName + fsep + "_catalog-page" + fsep + "keywords";
+		S.createFoldersIfNotExists(catalogPageKeywordsFolderName);
+		S.deleteFolderContentsOnly(catalogPageKeywordsFolderName);
+		//String pageKeywordsFileNamePrefix = catalogPageKeywordsFolderName + fsep + "static-catalog-page-keywords";
 
 		String catalogSortFolderName = destinationFolderName + fsep + "_catalog" + fsep + "sort";
 		S.createFoldersIfNotExists(catalogSortFolderName);
@@ -1224,6 +1226,10 @@ public class StaticCatalogEngine {
 			int keywordsNameCnt = fieldNames.indexOf(fieldName);
 			int keywordsValueCnt = 0;
 			
+			if (indexValueCsvValueLines.size() == 0) {
+				S.deleteFolder(catalogKeywordsFolderName);
+				S.deleteFolder(catalogPageKeywordsFolderName);
+			}
 			for (LinkedHashMap<String, ArrayList<Long>> csvValueLines : indexValueCsvValueLines.values()) {
 				
 				ArrayList<String> csvValueKeys = new ArrayList<>(csvValueLines.keySet());
@@ -1238,9 +1244,13 @@ public class StaticCatalogEngine {
 					csvValueCounts.put(csvValueKey, lines.size());
 					sortedCsvValueLines.put(csvValueKey, lines);
 				}
-				S.saveObjectToJsonFileName(csvValueCounts, pageKeywordsFileNamePrefix + "-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+				String pageKeywordsFolder = catalogPageKeywordsFolderName + fsep + "keywords-" + keywordsNameCnt;
+				S.createFoldersIfNotExists(pageKeywordsFolder);
+				S.saveObjectToJsonFileName(csvValueCounts, pageKeywordsFolder + fsep + "static-catalog-page-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
 				keywordsCnt++;
-				S.saveObjectToJsonFileName(sortedCsvValueLines, keywordsFileNamePrefix + "-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+				String keywordsFolder = catalogKeywordsFolderName + fsep + "keywords-" + keywordsNameCnt;
+				S.createFoldersIfNotExists(keywordsFolder);
+				S.saveObjectToJsonFileName(sortedCsvValueLines, keywordsFolder + fsep + "static-catalog-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
 				keywordsCnt++;
 				keywordsValueCnt++;
 			}

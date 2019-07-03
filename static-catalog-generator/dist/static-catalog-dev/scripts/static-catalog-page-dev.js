@@ -202,9 +202,10 @@ const StaticCatalogDev = (() => {
 							let pageKeywordValues = pageKeywordFieldPrefixValues[id][searchTerm2LowerCase];
 							if (!pageKeywordValues) {
 								/* static-catalog-page-keywords-field-value.json */
+								let fieldIndex = pageKeywordFieldPrefix.fieldIndex;
 								$.ajax({
 									dataType: "json",
-									url: "_catalog-page/static-catalog-page-keywords-" + pageKeywordFieldPrefix.fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
+									url: "_catalog-page/keywords/keywords-" + fieldIndex + "/static-catalog-page-keywords-" + fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
 									mimeType: "application/json",
 									success: result => {
 										console.log(result);

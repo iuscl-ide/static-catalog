@@ -372,7 +372,49 @@ const StaticCatalog = (() => {
 
         return indexFieldIntersectLines;
 	}
-	
+
+	/* Keywords */
+	const loadKeywords = async (searchData) => {
+		
+		let searchFieldKeywords = searchData.searchFieldKeywords;
+		
+		var keywordIntersectLines = null;
+		for (let searchFieldKeyword of searchFieldKeywords) {
+			
+			let fieldIndex = searchFieldKeyword.fieldIndex;
+			let filterIndex = searchFieldKeyword.filterIndex;
+			let keywordPrefix = searchFieldKeyword.keywordPrefix.toLowerCase();
+
+			let keywordValuesLines = await getJson("_catalog/keywords/keywords-" + fieldIndex + "/static-catalog-keywords-" + fieldIndex + "-" + filterIndex + ".json");
+			/* Union */
+	    	let keywordUnionLines = [];
+			for (let keywordValue of Object.keys(keywordValuesLines)) {
+				
+				if (keywordValue.toLowerCase().startsWith(keywordPrefix)) {
+					
+					let keywordValueLines = keywordValuesLines[keywordValue];
+					
+		    		if (keywordUnionLines.length === 0) {
+		    			keywordUnionLines = keywordValueLines;
+		    		}
+		    		else {
+		    			keywordUnionLines = createUnion(keywordUnionLines, keywordValueLines);
+		    		}
+				}
+			}
+			
+	    	/* Intersection */
+	    	if (keywordIntersectLines === null) {
+	    		keywordIntersectLines = keywordUnionLines;
+	    	}
+	    	else {
+	    		keywordIntersectLines = createIntersection(keywordIntersectLines, keywordUnionLines);
+	    	}
+		}
+
+		return keywordIntersectLines;
+	}
+
 	/* Load sort */
 	const loadSort = async (searchData) => {
 		
@@ -531,20 +573,30 @@ const StaticCatalog = (() => {
 		indexLinesModulo = searchData.searchTotals.indexLinesModulo;
 		
 		/* Indexes */
-		const startMsIndexes = (new Date()).getTime();
+		//const startMsIndexes = (new Date()).getTime();
 		const indexesLines = await loadIndexes(searchData);
-		const foundLinesCount = getLinesCount(indexesLines);
 		//console.log("Indexes done in " + ((new Date()).getTime() - startMsIndexes)); //console.log(indexesLines);
+
+		/* Keywords */
+		//const startMsKeywords = (new Date()).getTime();
+		const keywordLines = await loadKeywords(searchData);
+		//console.log("Keywords done in " + ((new Date()).getTime() - startMsKeywords)); //console.log(keywordLines);
+
+		let searchedLines = indexesLines;
+		if (!(keywordLines === null)) {
+			searchedLines = createIntersection(searchedLines, keywordLines);	
+		}
+		const foundLinesCount = getLinesCount(searchedLines);
 		
 		/* Sort */
-		const startMsSort = (new Date()).getTime();
+		//const startMsSort = (new Date()).getTime();
 		const sortLines = await loadSort(searchData);
 		//console.log("Sort done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortLines);
-		const sortedIndexLines = sortIndexLines(indexesLines, sortLines);
+		const sortedIndexLines = sortIndexLines(searchedLines, sortLines);
         //console.log("Sorting done in " + ((new Date()).getTime() - startMsSort)); //console.log(sortedIndexLines);
 		
 		/* Blocks */
-		const startMsBlocks = (new Date()).getTime();
+		//const startMsBlocks = (new Date()).getTime();
 		const resultLines = await loadBlocks(searchData, sortedIndexLines);
 		//console.log("Blocks done in " + ((new Date()).getTime() - startMsBlocks)); //console.log(resultLines);
 
