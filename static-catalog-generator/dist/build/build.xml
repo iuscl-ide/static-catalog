@@ -1,0 +1,162 @@
+<!-- Build static-catalog distribution -->
+
+<project name="BuildStaticCatalogDistribution" default="create.distributions">
+
+	<property name="dist.version" value="0.9"/>
+
+	<property name="project.folder" location="${basedir}/../.."/>
+		
+	<property name="src.folder" location="${project.folder}/src/main/java"/>
+	<property name="res.folder" location="${project.folder}/src/main/resources"/>
+	
+	<tstamp>
+		<format property="dist.date" pattern="yyyyMMdd-HHmmss" locale="en,UK" />
+	</tstamp>
+	<property name="dist.target.folder" location="${project.folder}/dist/target/static-catalog--${dist.date}"/>
+
+	<target name="create.distributions">
+	
+		<mkdir dir="${dist.target.folder}"/>
+			
+		<!--
+    	<antcall target="create.platform.distribution">
+            <param name="dist.platform" value="linux-64"/>
+    	</antcall>
+
+    	<antcall target="create.platform.distribution">
+            <param name="dist.platform" value="mac-64"/>
+    	</antcall>
+		-->
+    	<antcall target="create.platform.distribution">
+            <param name="dist.platform" value="win32-win32-x86_64"/>
+    	</antcall>	
+		
+	</target>
+	
+	<target name="create.platform.distribution">
+
+		<property name="target.folder" location="${dist.target.folder}/${dist.platform}"/>
+		<mkdir dir="${target.folder}"/>
+
+		<property name="zip.folder" location="${target.folder}/static-catalog-${dist.version}"/>
+		<mkdir dir="${zip.folder}"/>
+
+    	<!-- lib -->
+       	<copy todir="${zip.folder}">
+   			<fileset dir="${project.folder}">
+   				<include name="lib/**/*"/>
+   				
+   				<exclude name="lib/src.zip"/>
+   				<exclude name="lib/swt.jar"/>
+   			</fileset>
+       	</copy>
+
+       	<copy todir="${zip.folder}">
+   			<fileset dir="${project.folder}/dist">
+   				<include name="static-catalog-dev/**/*"/>
+   			</fileset>
+       	</copy>
+
+       	<copy todir="${zip.folder}">
+   			<fileset dir="${project.folder}/dist/platforms/${dist.platform}">
+   				<include name="start*.*"/>
+   			</fileset>
+       	</copy>
+
+       	<copy todir="${zip.folder}/lib">
+   			<fileset dir="${project.folder}/dist/platforms/${dist.platform}">
+   				<include name="swt.jar"/>
+   			</fileset>
+       	</copy>
+		
+		<mkdir dir="${zip.folder}/conf"/>
+		<mkdir dir="${zip.folder}/log"/>
+		
+    	<property name="dist.jar.file" value="${zip.folder}/lib/static-catalog.jar"/>
+
+    	<path id="dist.jar.classpath">
+    		<pathelement path="${zip.folder}/conf"/>
+   			<fileset dir="${zip.folder}/lib">
+   				<include name="**/*.jar"/>
+   			</fileset>
+    	</path>
+    	
+    	<manifestclasspath property="dist.jar.manifestclasspath" jarfile="${dist.jar.file}">
+    		<classpath refid="dist.jar.classpath"/>
+    	</manifestclasspath>
+    	
+		<jar destfile="${dist.jar.file}">
+			
+			<manifest>
+				<attribute name="Implementation-Title" value="static-catalog" />
+				<attribute name="Implementation-Vendor" value="static-catalog.org" />
+				<attribute name="Implementation-Version" value="${dist.version}" />
+				<attribute name="Main-Class" value="org.static_catalog.main.StaticCatalogGeneratorMain"/>
+				<attribute name="Class-Path" value="${dist.jar.manifestclasspath}"/>	
+	        </manifest>
+			
+			<fileset dir="${project.folder}/target/classes">
+				<include name="**/*"/>
+				<exclude name="org/static_catalog/test"/>
+			</fileset>
+
+			<fileset dir="${project.folder}/src/main">
+				<include name="resources/**/*"/>
+			</fileset>
+
+		</jar>
+    	
+		
+		
+	</target>
+	
+	<!-- main 
+    <target name="create">
+    	
+    	<delete includeEmptyDirs="true" quiet="true">
+    		
+			<fileset dir="${zip.folder}"/>
+		</delete>
+
+    	<mkdir dir="${dist.folder}"/>
+    	<mkdir dir="${dist.folder}/Captures"/>
+      	<mkdir dir="${dist.folder}/Constructions"/>
+
+    	<copy todir="${dist.folder}/Constructions">
+       		
+   			<fileset dir="${src.folder}/Constructions/Dist">
+
+   				<include name="**/*"/>
+   			</fileset>
+       	</copy>
+    	
+       	<copy todir="${dist.folder}">
+       		
+   			<fileset dir="${src.folder}">
+
+   				<include name="Backgrounds/**/*"/>
+   				<include name="Cursors/**/*"/>
+				<include name="Help/**/*"/>
+   				<include name="Kits/**/*"/>
+   				
+   				<include name="Constrial.exe"/>
+   				<include name="LICENSE-Constrial.txt"/>
+   			</fileset>
+       	</copy>
+
+		<zip destfile="${zip.folder}/constrial-${dist.version}.zip">
+			
+			<fileset dir="${zip.folder}">
+				
+				<include name="Constrial-${dist.version}/**/*"/>
+			</fileset>
+		</zip>
+
+    	<delete includeEmptyDirs="true">
+    		
+			<fileset dir="${dist.folder}"/>
+		</delete>
+
+    </target>
+	-->
+</project>
