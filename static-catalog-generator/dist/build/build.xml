@@ -18,11 +18,11 @@
 	
 		<mkdir dir="${dist.target.folder}"/>
 			
-		<!--
+		
     	<antcall target="create.platform.distribution">
-            <param name="dist.platform" value="linux-64"/>
+            <param name="dist.platform" value="gtk-linux-x86_64"/>
     	</antcall>
-
+		<!--
     	<antcall target="create.platform.distribution">
             <param name="dist.platform" value="mac-64"/>
     	</antcall>
