@@ -47,7 +47,7 @@ public abstract class AbstractRenderer implements IRenderer
     private Display display;
     
     /** Dragging state. */
-    private boolean dragging;
+//    private boolean dragging;
 
     /**
      * Returns the bounds.

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Listener;
  * </p>
  */
 public class GridVisibleRangeSupport {
-	private Collection rangeChangeListener;
+	private Collection<VisibleRangeChangedListener> rangeChangeListener;
 	private Grid grid;
 	private GridVisibleRange oldRange = new GridVisibleRange();
 
@@ -100,7 +100,7 @@ public class GridVisibleRangeSupport {
 	 */
 	public void addRangeChangeListener(VisibleRangeChangedListener listener) {
 		if (rangeChangeListener == null) {
-			rangeChangeListener = new ArrayList();
+			rangeChangeListener = new ArrayList<>();
 		}
 		rangeChangeListener.add(listener);
 	}
@@ -124,23 +124,23 @@ public class GridVisibleRangeSupport {
 		if (rangeChangeListener != null) {
 			GridVisibleRange range = grid.getVisibleRange();
 
-			ArrayList lOrigItems = new ArrayList();
+			ArrayList<GridItem> lOrigItems = new ArrayList<>();
 			lOrigItems.addAll(Arrays.asList(oldRange.getItems()));
 
-			ArrayList lNewItems = new ArrayList();
+			ArrayList<GridItem> lNewItems = new ArrayList<>();
 			lNewItems.addAll(Arrays.asList(range.getItems()));
 
-			Iterator it = lNewItems.iterator();
+			Iterator<?> it = lNewItems.iterator();
 			while (it.hasNext()) {
 				if (lOrigItems.remove(it.next())) {
 					it.remove();
 				}
 			}
 
-			ArrayList lOrigColumns = new ArrayList();
+			ArrayList<GridColumn> lOrigColumns = new ArrayList<>();
 			lOrigColumns.addAll(Arrays.asList(oldRange.getColumns()));
 
-			ArrayList lNewColumns = new ArrayList();
+			ArrayList<GridColumn> lNewColumns = new ArrayList<>();
 			lNewColumns.addAll(Arrays.asList(range.getColumns()));
 
 			it = lNewColumns.iterator();

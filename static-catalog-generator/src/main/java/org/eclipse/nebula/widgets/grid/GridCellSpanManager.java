@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.Rectangle;
 
 class GridCellSpanManager {
-	List listOfCellSpanRectangles = new ArrayList();
+	List<Rectangle> listOfCellSpanRectangles = new ArrayList<>();
 	Rectangle lastUsedCellSpanRectangle = null;
 
 	protected void addCellSpanInfo(int colIndex, int rowIndex, int colSpan,
@@ -28,7 +28,7 @@ class GridCellSpanManager {
 	}
 
 	private Rectangle findSpanRectangle(int columnIndex, int rowIndex) {
-		Iterator iter = listOfCellSpanRectangles.iterator();
+		Iterator<Rectangle> iter = listOfCellSpanRectangles.iterator();
 		while (iter.hasNext()) {
 			Rectangle cellSpanRectangle = (Rectangle) iter.next();
 			if (cellSpanRectangle.contains(columnIndex, rowIndex)) {

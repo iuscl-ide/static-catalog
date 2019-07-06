@@ -578,11 +578,11 @@ public class GridColumn extends Item {
 			}
 
 			GridColumn[] colsOrdered = parent.getColumnsInOrder();
-			boolean fire = false;
+			//boolean fire = false;
 			for (int i = 0; i < colsOrdered.length; i++) {
 				GridColumn column = colsOrdered[i];
 				if (column == this) {
-					fire = true;
+					//fire = true;
 				} else {
 					if (column.isVisible())
 						column.fireMoved();

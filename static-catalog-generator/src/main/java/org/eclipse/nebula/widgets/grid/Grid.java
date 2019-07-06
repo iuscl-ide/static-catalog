@@ -264,7 +264,7 @@ public class Grid extends Canvas {
 	/**
 	 * List of selected items.
 	 */
-	private final List selectedItems = new ArrayList();
+	private final List<GridItem> selectedItems = new ArrayList<>();
 
 	/**
 	 * Reference to the item in focus.
@@ -273,8 +273,8 @@ public class Grid extends Canvas {
 
 	private boolean cellSelectionEnabled = false;
 
-	private final List selectedCells = new ArrayList();
-	private final List selectedCellsBeforeRangeSelect = new ArrayList();
+	private final List<Point> selectedCells = new ArrayList<>();
+	private final List<Point> selectedCellsBeforeRangeSelect = new ArrayList<>();
 
 	private boolean cellDragSelectionOccuring = false;
 	private boolean cellRowDragSelectionOccuring = false;
@@ -290,7 +290,7 @@ public class Grid extends Canvas {
 
 	private GridColumn focusColumn;
 
-	private final List selectedColumns = new ArrayList();
+	private final List<GridColumn> selectedColumns = new ArrayList<>();
 
 	/**
 	 * This is the column that the user last navigated to, but may not be the focusColumn because
@@ -304,12 +304,12 @@ public class Grid extends Canvas {
 	/**
 	 * List of table columns in creation/index order.
 	 */
-	private final List columns = new ArrayList();
+	private final List<GridColumn> columns = new ArrayList<>();
 
 	/**
 	 * List of the table columns in the order they are displayed.
 	 */
-	private final List displayOrderedColumns = new ArrayList();
+	private final List<GridColumn> displayOrderedColumns = new ArrayList<>();
 
 	private GridColumnGroup[] columnGroups = new GridColumnGroup[0];
 
@@ -1250,7 +1250,7 @@ public class Grid extends Canvas {
 
 		x2 -= getHScrollSelectionInPixels();
 
-		for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+		for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 			GridColumn column = (GridColumn) columnIterator.next();
 
 			if (!column.isVisible()) {
@@ -1345,7 +1345,7 @@ public class Grid extends Canvas {
 
 		int[] order = new int[columns.size()];
 		int i = 0;
-		for (Iterator colIterator = displayOrderedColumns.iterator(); colIterator.hasNext();) {
+		for (Iterator<GridColumn> colIterator = displayOrderedColumns.iterator(); colIterator.hasNext();) {
 			GridColumn col = (GridColumn) colIterator.next();
 			order[i] = columns.indexOf(col);
 			i++;
@@ -2274,10 +2274,10 @@ public class Grid extends Canvas {
 			return (GridItem[]) selectedItems.toArray(new GridItem[selectedItems.size()]);
 		}
 		else {
-			Vector items = new Vector();
+			Vector<GridItem> items = new Vector<>();
 			int itemCount = getItemCount();
 
-			for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+			for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 				Point cell = (Point) iter.next();
 				if (cell.y >= 0 && cell.y < itemCount) {
 					GridItem item = getItem(cell.y);
@@ -2308,8 +2308,8 @@ public class Grid extends Canvas {
 			return selectedItems.size();
 		}
 		else {
-			Vector items = new Vector();
-			for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+			Vector<GridItem> items = new Vector<>();
+			for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 				Point cell = (Point) iter.next();
 				GridItem item = getItem(cell.y);
 				if (!items.contains(item))
@@ -2391,7 +2391,7 @@ public class Grid extends Canvas {
 		if (!cellSelectionEnabled) {
 			int[] indices = new int[selectedItems.size()];
 			int i = 0;
-			for (Iterator itemIterator = selectedItems.iterator(); itemIterator.hasNext();) {
+			for (Iterator<GridItem> itemIterator = selectedItems.iterator(); itemIterator.hasNext();) {
 				GridItem item = (GridItem) itemIterator.next();
 				indices[i] = item.getRowIndex();
 				i++;
@@ -2399,8 +2399,8 @@ public class Grid extends Canvas {
 			return indices;
 		}
 		else {
-			Vector selectedRows = new Vector();
-			for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+			Vector<GridItem> selectedRows = new Vector<>();
+			for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 				Point cell = (Point) iter.next();
 				GridItem item = getItem(cell.y);
 				if (!selectedRows.contains(item))
@@ -2408,7 +2408,7 @@ public class Grid extends Canvas {
 			}
 			int[] indices = new int[selectedRows.size()];
 			int i = 0;
-			for (Iterator itemIterator = selectedRows.iterator(); itemIterator.hasNext();) {
+			for (Iterator<GridItem> itemIterator = selectedRows.iterator(); itemIterator.hasNext();) {
 				GridItem item = (GridItem) itemIterator.next();
 				indices[i] = item.getRowIndex();
 				i++;
@@ -2444,7 +2444,7 @@ public class Grid extends Canvas {
 			int firstVisibleIndex = vScroll.getSelection();
 
 			if (isTree) {
-				Iterator itemsIter = items.iterator();
+				Iterator<GridItem> itemsIter = items.iterator();
 				int row = firstVisibleIndex + 1;
 
 				while (row > 0 && itemsIter.hasNext()) {
@@ -2902,7 +2902,7 @@ public class Grid extends Canvas {
 			return isSelected(items.get(index));
 		}
 		else {
-			for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+			for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 				Point cell = (Point) iter.next();
 				if (cell.y == index)
 					return true;
@@ -2937,7 +2937,7 @@ public class Grid extends Canvas {
 			int index = item.getRowIndex();
 			if (index == -1)
 				return false;
-			for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+			for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 				Point cell = (Point) iter.next();
 				if (cell.y == index)
 					return true;
@@ -3631,7 +3631,7 @@ public class Grid extends Canvas {
 		if (show && isAutoWidth()) {
 			rowHeaderWidth = 1;
 
-			for (Iterator iter = items.iterator(); iter.hasNext();) {
+			for (Iterator<GridItem> iter = items.iterator(); iter.hasNext();) {
 				GridItem iterItem = (GridItem) iter.next();
 				rowHeaderWidth = Math.max(rowHeaderWidth,
 						rowHeaderRenderer.computeSize(sizingGC, SWT.DEFAULT, SWT.DEFAULT, iterItem).x);
@@ -4220,7 +4220,7 @@ public class Grid extends Canvas {
 	private void computeHeaderHeight(GC gc) {
 
 		int colHeaderHeight = 0;
-		for (Iterator columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
+		for (Iterator<GridColumn> columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
 			GridColumn column = (GridColumn) columnsIterator.next();
 			colHeaderHeight = Math.max(
 					column.getHeaderHeight(gc),
@@ -4241,7 +4241,7 @@ public class Grid extends Canvas {
 	private void computeFooterHeight(GC gc) {
 
 		int colFooterHeight = 0;
-		for (Iterator columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
+		for (Iterator<GridColumn> columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
 			GridColumn column = (GridColumn) columnsIterator.next();
 			colFooterHeight = Math.max(
 					column.getFooterHeight(gc),
@@ -4267,7 +4267,7 @@ public class Grid extends Canvas {
 			return height;
 		}
 
-		for (Iterator columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
+		for (Iterator<GridColumn> columnsIterator = columns.iterator(); columnsIterator.hasNext();) {
 			GridColumn column = (GridColumn) columnsIterator.next();
 			column.getCellRenderer().setColumn(indexOf(column));
 			height = Math.max(height, column.getCellRenderer().computeSize(gc, SWT.DEFAULT, SWT.DEFAULT, item).y);
@@ -4299,7 +4299,7 @@ public class Grid extends Canvas {
 		if (rowHeaderVisible) {
 			x += rowHeaderWidth;
 		}
-		for (Iterator column2Iterator = displayOrderedColumns.iterator(); column2Iterator.hasNext();) {
+		for (Iterator<GridColumn> column2Iterator = displayOrderedColumns.iterator(); column2Iterator.hasNext();) {
 			GridColumn column2 = (GridColumn) column2Iterator.next();
 
 			if (!column2.isVisible()) {
@@ -4357,7 +4357,7 @@ public class Grid extends Canvas {
 			x += rowHeaderWidth;
 		}
 
-		for (Iterator columnIterator = columns.iterator(); columnIterator.hasNext();) {
+		for (Iterator<GridColumn> columnIterator = columns.iterator(); columnIterator.hasNext();) {
 			GridColumn column = (GridColumn) columnIterator.next();
 			if (column.isVisible()) {
 				x += column.getWidth();
@@ -4387,14 +4387,14 @@ public class Grid extends Canvas {
 
 		x2 -= getHScrollSelectionInPixels();
 
-		int i = 0;
+		//int i = 0;
 		GridColumn previousVisibleCol = null;
 		boolean nextVisibleColumnIsBeforeCol = false;
 		GridColumn firstVisibleCol = null;
 		GridColumn lastVisibleCol = null;
 
 		if (x < x2) {
-			for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+			for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 				GridColumn column = (GridColumn) columnIterator.next();
 				if (!column.isVisible()) {
 					continue;
@@ -4405,13 +4405,13 @@ public class Grid extends Canvas {
 			local_dragDropAfterColumn = null;
 		}
 		else {
-			for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+			for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 				GridColumn column = (GridColumn) columnIterator.next();
 				if (!column.isVisible()) {
 					continue;
 				}
 
-				i++;
+				//i++;
 
 				if (firstVisibleCol == null) {
 					firstVisibleCol = column;
@@ -4628,7 +4628,7 @@ public class Grid extends Canvas {
 		int width = 0;
 		boolean firstCol = false;
 
-		for (Iterator colIterator = displayOrderedColumns.iterator(); colIterator.hasNext();) {
+		for (Iterator<GridColumn> colIterator = displayOrderedColumns.iterator(); colIterator.hasNext();) {
 			GridColumn col = (GridColumn) colIterator.next();
 			if (col.getColumnGroup() == overThis && col.isVisible()) {
 				firstCol = true;
@@ -4817,7 +4817,7 @@ public class Grid extends Canvas {
 
 			x2 -= getHScrollSelectionInPixels();
 
-			for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+			for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 				GridColumn column = (GridColumn) columnIterator.next();
 				if (!column.isVisible()) {
 					continue;
@@ -4997,7 +4997,7 @@ public class Grid extends Canvas {
 				int colIndex = 0;
 
 				int maxRowSpanForItem = 0;
-				for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+				for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 					GridColumn column = (GridColumn) columnIterator.next();
 
 					if (!column.isVisible()) {
@@ -5061,7 +5061,7 @@ public class Grid extends Canvas {
 				int colIndex = 0;
 
 				// draw regular cells for each column
-				for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+				for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 
 					GridColumn column = (GridColumn) columnIterator.next();
 					boolean skipCell = cellSpanManager.skipCell(colIndex, row);
@@ -5225,7 +5225,7 @@ public class Grid extends Canvas {
 				emptyCellRenderer.setSelected(false);
 				emptyCellRenderer.setRow(i + 1);
 
-				for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+				for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 					GridColumn column = (GridColumn) columnIterator.next();
 
 					if (column.isVisible()) {
@@ -5375,7 +5375,7 @@ public class Grid extends Canvas {
 
 		GridColumnGroup previousPaintedGroup = null;
 
-		for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+		for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 			if (x > getClientArea().width)
 				break;
 
@@ -5521,7 +5521,7 @@ public class Grid extends Canvas {
 			x += rowHeaderWidth;
 		}
 
-		for (Iterator columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
+		for (Iterator<GridColumn> columnIterator = displayOrderedColumns.iterator(); columnIterator.hasNext();) {
 			if (x > getClientArea().width)
 				break;
 
@@ -5665,7 +5665,7 @@ public class Grid extends Canvas {
 
 				// max should never be greater than the number of visible cols
 				int visCols = 0;
-				for (Iterator iter = columns.iterator(); iter.hasNext();) {
+				for (Iterator<GridColumn> iter = columns.iterator(); iter.hasNext();) {
 					GridColumn element = (GridColumn) iter.next();
 					if (element.isVisible()) {
 						visCols++;
@@ -5834,7 +5834,7 @@ public class Grid extends Canvas {
 	 * @return selection event that will need to be fired or null.
 	 */
 	private Event updateCellSelection(Point newCell, int stateMask, boolean dragging, boolean reverseDuplicateSelections) {
-		Vector v = new Vector();
+		Vector<Point> v = new Vector<>();
 		v.add(newCell);
 		return updateCellSelection(v, stateMask, dragging, reverseDuplicateSelections);
 	}
@@ -5849,7 +5849,7 @@ public class Grid extends Canvas {
 	 *
 	 * @return selection event that will need to be fired or null.
 	 */
-	private Event updateCellSelection(Vector newCells, int stateMask, boolean dragging,
+	private Event updateCellSelection(Vector<Point> newCells, int stateMask, boolean dragging,
 			boolean reverseDuplicateSelections) {
 		boolean shift = false;
 		boolean ctrl = false;
@@ -5998,7 +5998,7 @@ public class Grid extends Canvas {
 			return;
 
 		if (getColumn(newCell.x).getCellSelectionEnabled()) {
-			Iterator it = selectedCells.iterator();
+			Iterator<Point> it = selectedCells.iterator();
 			boolean found = false;
 			while (it.hasNext()) {
 				Point p = (Point) it.next();
@@ -6018,7 +6018,7 @@ public class Grid extends Canvas {
 		//Update the list of which columns have all their cells selected
 		selectedColumns.clear();
 
-		for (Iterator iter = selectedCells.iterator(); iter.hasNext();) {
+		for (Iterator<Point> iter = selectedCells.iterator(); iter.hasNext();) {
 			Point cell = (Point) iter.next();
 
 			GridColumn col = getColumn(cell.x);
@@ -6189,7 +6189,7 @@ public class Grid extends Canvas {
 
 		cellHeaderSelectionBackground.dispose();
 
-		for (Iterator iterator = items.iterator(); iterator.hasNext();) {
+		for (Iterator<GridItem> iterator = items.iterator(); iterator.hasNext();) {
 			GridItem item = (GridItem) iterator.next();
 			item.dispose();
 		}
@@ -6198,7 +6198,7 @@ public class Grid extends Canvas {
 			columnGroups[i].dispose();
 		}
 
-		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+		for (Iterator<GridColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			GridColumn col = (GridColumn) iterator.next();
 			col.dispose();
 		}
@@ -6325,7 +6325,7 @@ public class Grid extends Canvas {
 								ctrl = ((e.stateMask & SWT.MOD1) != 0);
 							}
 
-							Vector cells = new Vector();
+							Vector<Point> cells = new Vector<>();
 
 							if (shift) {
 								getCells(item, focusItem, cells);
@@ -6406,7 +6406,7 @@ public class Grid extends Canvas {
 			if (getItemCount() == 0)
 				return;
 
-			Vector cells = new Vector();
+			Vector<Point> cells = new Vector<>();
 
 			GridColumnGroup group = col.getColumnGroup();
 			if (group != null && e.y < groupHeaderHeight) {
@@ -6473,7 +6473,7 @@ public class Grid extends Canvas {
 				return;
 			}
 			else if (rowsResizeable && hoveringOnRowResizer) {
-				List sel = Arrays.asList(getSelection());
+				List<GridItem> sel = Arrays.asList(getSelection());
 				if (sel.contains(rowBeingResized)) {
 					// the user double-clicked a row resizer of a selected row
 					// so update all selected rows
@@ -6695,7 +6695,7 @@ public class Grid extends Canvas {
 						}
 					}
 
-					Vector cells = new Vector();
+					Vector<Point> cells = new Vector<>();
 
 					getCells(intentItem, focusItem, cells);
 
@@ -6719,7 +6719,7 @@ public class Grid extends Canvas {
 
 					GridColumn iterCol = intentCol;
 
-					Vector newSelected = new Vector();
+					Vector<Point> newSelected = new Vector<>();
 
 					boolean decreasing = (displayOrderedColumns.indexOf(iterCol) > displayOrderedColumns
 							.indexOf(focusColumn));
@@ -7130,7 +7130,7 @@ public class Grid extends Canvas {
 			boolean checkFirstCol = false;
 			boolean first = true;
 
-			for (Iterator iter = columns.iterator(); iter.hasNext();) {
+			for (Iterator<GridColumn> iter = columns.iterator(); iter.hasNext();) {
 				GridColumn col = (GridColumn) iter.next();
 
 				if (first) {
@@ -7208,7 +7208,7 @@ public class Grid extends Canvas {
 
 		x -= getHScrollSelectionInPixels();
 
-		for (Iterator colIterIterator = displayOrderedColumns.iterator(); colIterIterator.hasNext();) {
+		for (Iterator<GridColumn> colIterIterator = displayOrderedColumns.iterator(); colIterIterator.hasNext();) {
 			GridColumn colIter = (GridColumn) colIterIterator.next();
 
 			if (colIter == column) {
@@ -7512,7 +7512,7 @@ public class Grid extends Canvas {
 
 		updatePrimaryCheckColumn();
 
-		for (Iterator iterator = items.iterator(); iterator.hasNext();) {
+		for (Iterator<GridItem> iterator = items.iterator(); iterator.hasNext();) {
 			GridItem item = (GridItem) iterator.next();
 			item.columnAdded(index);
 		}
@@ -7534,9 +7534,9 @@ public class Grid extends Canvas {
 		int index = indexOf(column);
 
 		if (cellSelectionEnabled) {
-			Vector removeSelectedCells = new Vector();
+			Vector<Point> removeSelectedCells = new Vector<>();
 
-			for (Iterator iterator = selectedCells.iterator(); iterator.hasNext();) {
+			for (Iterator<Point> iterator = selectedCells.iterator(); iterator.hasNext();) {
 				Point cell = (Point) iterator.next();
 				if (cell.x == index) {
 					removeSelectedCells.add(cell);
@@ -7548,7 +7548,7 @@ public class Grid extends Canvas {
 				selectionModified = true;
 			}
 
-			for (Iterator iterator = selectedCells.iterator(); iterator.hasNext();) {
+			for (Iterator<Point> iterator = selectedCells.iterator(); iterator.hasNext();) {
 				Point cell = (Point) iterator.next();
 				if (cell.x >= index) {
 					cell.x--;
@@ -7572,7 +7572,7 @@ public class Grid extends Canvas {
 		redraw();
 
 		int i = 0;
-		for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+		for (Iterator<GridColumn> iterator = columns.iterator(); iterator.hasNext();) {
 			GridColumn col = (GridColumn) iterator.next();
 			col.setColumnIndex(i);
 			i++;
@@ -7592,7 +7592,7 @@ public class Grid extends Canvas {
 		if ((getStyle() & SWT.CHECK) == SWT.CHECK) {
 			boolean firstCol = true;
 
-			for (Iterator iter = columns.iterator(); iter.hasNext();) {
+			for (Iterator<GridColumn> iter = columns.iterator(); iter.hasNext();) {
 				GridColumn col = (GridColumn) iter.next();
 				col.setTableCheck(firstCol);
 				firstCol = false;
@@ -8353,7 +8353,7 @@ public class Grid extends Canvas {
 	 */
 	public void selectColumn(int col) {
 		checkWidget();
-		Vector cells = new Vector();
+		Vector<Point> cells = new Vector<>();
 		getCells(getColumn(col), cells);
 		selectCells((Point[]) cells.toArray(new Point[0]));
 	}
@@ -8388,7 +8388,7 @@ public class Grid extends Canvas {
 	 */
 	public void selectColumnGroup(GridColumnGroup colGroup) {
 		checkWidget();
-		Vector cells = new Vector();
+		Vector<Point> cells = new Vector<>();
 		getCells(colGroup, cells);
 		selectCells((Point[]) cells.toArray(new Point[0]));
 	}
@@ -8514,11 +8514,11 @@ public class Grid extends Canvas {
 		}
 	}
 
-	private void getCells(GridColumn col, Vector cells) {
+	private void getCells(GridColumn col, Vector<Point> cells) {
 		int colIndex = indexOf(col);
 
 		int columnAtPosition = 0;
-		for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+		for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 			GridColumn nextCol = (GridColumn) iter.next();
 			if (!nextCol.isVisible())
 				continue;
@@ -8537,7 +8537,7 @@ public class Grid extends Canvas {
 			//is cell spanned
 			int position = -1;
 			boolean spanned = false;
-			for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+			for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 				GridColumn nextCol = (GridColumn) iter.next();
 				if (!nextCol.isVisible())
 					continue;
@@ -8561,19 +8561,19 @@ public class Grid extends Canvas {
 		}
 	}
 
-	private void getCells(GridColumnGroup colGroup, Vector cells) {
+	private void getCells(GridColumnGroup colGroup, Vector<Point> cells) {
 		GridColumn[] cols = colGroup.getColumns();
 		for (int i = 0; i < cols.length; i++) {
 			getCells(cols[i], cells);
 		}
 	}
 
-	private void getCells(GridItem item, Vector cells) {
+	private void getCells(GridItem item, Vector<Point> cells) {
 		int itemIndex = item.getRowIndex();
 
 		int span = 0;
 
-		for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+		for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 			GridColumn nextCol = (GridColumn) iter.next();
 
 			if (span > 0) {
@@ -8591,13 +8591,13 @@ public class Grid extends Canvas {
 	}
 
 	private Point[] getCells(GridItem item) {
-		Vector cells = new Vector();
+		Vector<Point> cells = new Vector<>();
 
 		int itemIndex = item.getRowIndex();
 
 		int span = 0;
 
-		for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+		for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 			GridColumn nextCol = (GridColumn) iter.next();
 
 			if (span > 0) {
@@ -8615,7 +8615,7 @@ public class Grid extends Canvas {
 		return (Point[]) cells.toArray(new Point[] {});
 	}
 
-	private void getCells(GridItem fromItem, GridItem toItem, Vector cells) {
+	private void getCells(GridItem fromItem, GridItem toItem, Vector<Point> cells) {
 		boolean descending = (fromItem.getRowIndex() < toItem.getRowIndex());
 
 		GridItem iterItem = toItem;
@@ -8717,7 +8717,7 @@ public class Grid extends Canvas {
 		int spanningColIndex = -1;
 		boolean spanningBeyondToCol = false;
 
-		for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+		for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 			GridColumn col = (GridColumn) iter.next();
 
 			if (!col.isVisible()) {
@@ -8771,7 +8771,7 @@ public class Grid extends Canvas {
 		int span = 0;
 		GridColumn spanningCol = null;
 
-		for (Iterator iter = displayOrderedColumns.iterator(); iter.hasNext();) {
+		for (Iterator<GridColumn> iter = displayOrderedColumns.iterator(); iter.hasNext();) {
 			GridColumn col = (GridColumn) iter.next();
 
 			if (col == column) {
@@ -8894,7 +8894,7 @@ public class Grid extends Canvas {
 			//if the changed width is smaller, and the previous width of that rows header was equal
 			//to the current row header width then its possible that we may need to make the new
 			//row header width smaller, but to do that we need to ask all the rows all over again
-			for (Iterator iter = items.iterator(); iter.hasNext();) {
+			for (Iterator<GridItem> iter = items.iterator(); iter.hasNext();) {
 				GridItem iterItem = (GridItem) iter.next();
 				newWidth = Math.max(newWidth,
 						rowHeaderRenderer.computeSize(sizingGC, SWT.DEFAULT, SWT.DEFAULT, iterItem).x);
@@ -9782,7 +9782,7 @@ public class Grid extends Canvas {
 
 		if (startColumnIndex <= endColumnIndex) {
 			if (displayOrderedColumns.size() > 0) {
-				ArrayList cols = new ArrayList();
+				ArrayList<GridColumn> cols = new ArrayList<>();
 				for (int i = startColumnIndex; i <= endColumnIndex; i++) {
 					GridColumn col = (GridColumn) displayOrderedColumns.get(i);
 					if (col.isVisible()) {

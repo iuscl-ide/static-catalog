@@ -85,7 +85,7 @@ public class GridDragSourceEffect extends DragSourceEffect {
 		if(grid.getCellSelectionEnabled()){
 			selection = grid.getCellSelection();
 		} else {
-			List l = new ArrayList();
+			List<Point> l = new ArrayList<>();
 			GridItem[] selItems = grid.getSelection();
 			for (int i = 0; i < selItems.length; i++){
 				for (int j = 0; j < grid.getColumnCount() ; j++){

@@ -308,7 +308,7 @@ public class GridColumnGroup extends Item
 
         if (!expanded && getParent().getCellSelectionEnabled())
         {
-            Vector collapsedCols = new Vector();
+            Vector<Integer> collapsedCols = new Vector<>();
             for (int j = 0; j < columns.length; j++)
             {
                 if (!columns[j].isSummary())

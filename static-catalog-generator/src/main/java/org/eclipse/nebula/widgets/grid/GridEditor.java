@@ -165,7 +165,7 @@ public class GridEditor extends ControlEditor
      * 
      * @return bounds of the editor.
      */
-    protected Rectangle computeBounds()
+    protected Rectangle computeBounds2()
     {
         if (item == null || column == -1 || item.isDisposed())
             return new Rectangle(0, 0, 0, 0);
@@ -387,7 +387,7 @@ public class GridEditor extends ControlEditor
         } // this doesn't work because
         // resizing the column takes the focus away
         // before we get here
-        getEditor().setBounds(computeBounds());
+        getEditor().setBounds(computeBounds2());
         if (hadFocus)
         {
             if (getEditor() == null || getEditor().isDisposed())
