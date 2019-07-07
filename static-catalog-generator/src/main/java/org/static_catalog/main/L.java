@@ -132,6 +132,17 @@ public class L {
     public static void w(String message) {
 
         logger.log(Level.WARNING, logTextLines(message, null));
+
+        Display currentDisplay = Display.getCurrent(); 
+        if (currentDisplay != null) {
+        	Shell currentShell = currentDisplay.getActiveShell();
+        	if (currentShell != null) {
+                MessageBox warningMessageBox = new MessageBox(currentShell, SWT.OK | SWT.ICON_WARNING);
+                warningMessageBox.setText("static-catalog Warning");
+                warningMessageBox.setMessage(message);
+                warningMessageBox.open();
+        	}
+        }
     }
 
     /** Log.e replacement */

@@ -1006,7 +1006,7 @@ public class StaticCatalogGeneratorMainWindow {
 						
 						ArrayList<String> exceptionKeys = new ArrayList<>(examineField.getFieldTypesExceptionValues().get(fieldType));
 						if (exceptionKeys.size() > 0) {
-							StaticCatalogEngine.sortTypeKey("text", keys);
+							StaticCatalogEngine.sortTypeKey(StaticCatalogEngine.TYPE_TEXT, keys);
 							ArrayList<String> exceptionKeysValues = new ArrayList<>();
 							for (String exceptionKey : exceptionKeys) {
 								exceptionKeysValues.add(exceptionKey + " (" + uniqueValueCounts.get(exceptionKey) + ")");

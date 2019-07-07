@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.static_catalog.engine.StaticCatalogEngine;
+import org.static_catalog.main.L;
 import org.static_catalog.model.src.StaticCatalogConfigurationField;
 
 /** Edit a field window */
@@ -244,13 +246,21 @@ public class StaticCatalogGeneratorFieldEditWindow {
 				staticCatalogField.setIsFilter(useAsFilterCheckbox.getSelection());
 				
 				String filterTypeComboText = filterTypeCombo.getText();
-				staticCatalogField.setFilterType(filterTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.filterNameTypes.get(filterTypeComboText));
+				String filterType = filterTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.filterNameTypes.get(filterTypeComboText);
+				staticCatalogField.setFilterType(filterType);
 
 				String intervalValue = intervalValueText.getText();
 				staticCatalogField.setIntervalValue(intervalValue.trim().equals("") ? null : intervalValue);
 				
 				String displayTypeComboText = displayTypeCombo.getText();
-				staticCatalogField.setDisplayType(displayTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeComboText));
+				String displayType = displayTypeComboText.equals("") ? null : StaticCatalogGeneratorMainWindow.displayNameTypes.get(displayTypeComboText);
+				if ((filterType != null) && (filterType == StaticCatalogEngine.FILTER_TYPE_KEYWORDS)) {
+					if ((displayType == null) || (displayType != StaticCatalogEngine.DISPLAY_TYPE_SEARCHBOX)) {
+						L.w("For filter type \"Keywords\" the filter diplay type must be \"Search Box\"");
+						return;
+					}
+				}
+				staticCatalogField.setDisplayType(displayType);
 
 				String maxDisplay = maxDisplayValuesText.getText();
 				staticCatalogField.setMaxDisplayValues(maxDisplay.trim().equals("") ? null : Integer.parseInt(maxDisplay));

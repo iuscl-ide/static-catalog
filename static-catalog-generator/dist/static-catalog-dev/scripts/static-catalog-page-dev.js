@@ -114,7 +114,6 @@ const StaticCatalogDev = (() => {
 		/* Search item template */
 		$.fn.search.settings.templates.staticCatalogSearch = function(response) {
 
-			console.log(response);
 			let html = "";
 			for (let responseItem of response.results) {
 				
@@ -163,17 +162,16 @@ const StaticCatalogDev = (() => {
 					let pageKeywordField = pageKeywordFields[id];
 		    		let searchTerm = settings.urlData.query;
 		    		let searchTermLowerCase = searchTerm.toLowerCase();
-					console.log(pageKeywordField);
-		    		console.log(searchTerm);
 
 					if (searchTerm.length === 1) {
-						$this.removeAttr("data-prefix");
 						let results = [];
 						for (let prefix of Object.keys(pageKeywordField.prefixes)) {
 							if (prefix.startsWith(searchTermLowerCase)) {
+								let pageKeywordFieldPrefix = pageKeywordField.prefixes[prefix];
+								/* TODO the natural order */
 								results.push({
-									"title": pageKeywordField.prefixes[prefix].title,
-									"description": pageKeywordField.prefixes[prefix].count
+									"title": pageKeywordFieldPrefix.title,
+									"description": pageKeywordFieldPrefix.count
 								});
 							}
 						}
@@ -184,7 +182,6 @@ const StaticCatalogDev = (() => {
 						}, 1);
 					}
 					else {
-						let currentPrefix = $this.attr("data-prefix");
 						let searchTerm2LowerCase = searchTerm.substr(0, 2).toLowerCase();
 						let pageKeywordFieldPrefix = pageKeywordField.prefixes[searchTerm2LowerCase];
 						if (!pageKeywordFieldPrefix) {
@@ -208,7 +205,6 @@ const StaticCatalogDev = (() => {
 									url: "_catalog-page/keywords/keywords-" + fieldIndex + "/static-catalog-page-keywords-" + fieldIndex + "-" + pageKeywordFieldPrefix.filterIndex + ".json",
 									mimeType: "application/json",
 									success: result => {
-										console.log(result);
 
 										let pageKeywordValues = [];
 										for (let keyword of Object.keys(result)) {
@@ -510,7 +506,7 @@ const StaticCatalogDev = (() => {
 			url: "_catalog-page/static-catalog-page.json",
 			mimeType: "application/json",
 			success: result => {
-				//console.log(result);
+
 				let fieldIndex = 0;
 				result.fields.map( (pageField) => {
 					
@@ -614,7 +610,6 @@ const StaticCatalogDev = (() => {
 			let searchTerm2LowerCase = searchTerm.substr(0, 2).toLowerCase();
 			if (searchTerm2LowerCase.length >= 2) {
 				let pageKeywordField = pageKeywordFields[searchbox.id];
-//				console.log(pageKeywordField);
 				let prefixFilter = pageKeywordField.prefixes[searchTerm2LowerCase];
 				if (prefixFilter) {
 					searchFieldsKeywords.push({
