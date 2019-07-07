@@ -415,20 +415,20 @@ const StaticCatalogDev = (() => {
 			});
         });
 
-		$("#sc-id--debug-first-value-button").click( clickEvent => {
-			
-			window.scrollTo(0, 0);
-			let names = {};
-			$filterCheckboxes.each( (index, element) => {
-				
-				let elementName = element.name;
-				if (!names[elementName]) {
-					names[elementName] = elementName;
-					element.checked = true;
-					element.value = element.value.toLocaleString();
-				}
-			});
-        });
+//		$("#sc-id--debug-first-value-button").click( clickEvent => {
+//			
+//			window.scrollTo(0, 0);
+//			let names = {};
+//			$filterCheckboxes.each( (index, element) => {
+//				
+//				let elementName = element.name;
+//				if (!names[elementName]) {
+//					names[elementName] = elementName;
+//					element.checked = true;
+//					element.value = element.value.toLocaleString();
+//				}
+//			});
+//        });
 
 		/* Results list / tiles */
 		const $seeAsTiles = $("#scp-id--see-as-tiles");

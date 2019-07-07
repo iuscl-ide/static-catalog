@@ -2,7 +2,7 @@
 package org.static_catalog.engine;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,6 +41,9 @@ import liqp.filters.Filter;
 /** Generator engine */
 public class StaticCatalogEngine {
 
+	/** Path file separator */
+	public static String fs = File.separator;
+	
 	/** Format long in liquid */
 	static {
 		Filter.registerFilter(new Filter("w") {
@@ -70,7 +73,7 @@ public class StaticCatalogEngine {
 	/** Filter types */
 	public static final String FILTER_TYPE_NONE = "none";
 	public static final String FILTER_TYPE_VALUES = "values"; 
-	public static final String FILTER_TYPE_MARKS_INTERVALS = "marks_intervals"; 
+	public static final String FILTER_TYPE_VALUE_INTERVALS = "value_intervals"; 
 	public static final String FILTER_TYPE_LENGTH_INTERVALS = "length_intervals"; 
 	public static final String FILTER_TYPE_KEYWORDS = "keywords"; 
 
@@ -139,7 +142,7 @@ public class StaticCatalogEngine {
 						int fieldsSize = csvFileGridHeader.size();
 						if (fieldsSize < lineLength) {
 							for (int index = fieldsSize; index < lineLength; index++) {
-								csvFileGridHeader.add(index, "Column " + (index + 1));
+								csvFileGridHeader.add(index, "Field " + (index + 1));
 							}
 						}
 					}
@@ -229,7 +232,7 @@ public class StaticCatalogEngine {
 			}
 
 			csvLineIndex++;
-			if (csvLineIndex % 500000 == 0) {
+			if (csvLineIndex % 100000 == 0) {
 				loopProgress.doProgress(U.w(csvLineIndex) + " lines examined...");
 			}
 
@@ -345,21 +348,17 @@ public class StaticCatalogEngine {
 
 		/* Total time */
 		long start = System.currentTimeMillis();
-		String fs = File.separator;
 		
 		S.deleteFolder(destinationFolderName);
 		
 		/* Structure */
 		loopProgress.doProgress("Start generation...");
-		//Path destinationPath = Paths.get(destinationFolderName);
 		
 		S.createFoldersIfNotExists(destinationFolderName);
 		S.copyFolders(S.getFileFolderName(templateFilename), destinationFolderName, "gitignore; liquid");
-		//loopProgress.doProgress(null, "Template site OK");
 		
 		/* Generate fields */
 		StaticCatalogPage page = new StaticCatalogPage();
-//		StaticCatalogContents contents = new StaticCatalogContents();
 
 		final HashMap<String, HashMap<String, String>> fieldNameValueIntervals = new HashMap<>();
 		final LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues = new LinkedHashMap<>();
@@ -367,15 +366,6 @@ public class StaticCatalogEngine {
 		
 		generateFields(page, sourceCsvFileName, filtersFileName, destinationFolderName, fieldNameValueIntervals, fieldNameSortAscValues, fieldNameSortDescValues, useFirstLineAsHeader, loopProgress);
 		
-		String filterFieldsFolderName = destinationFolderName + fs + "_catalog-page";
-		S.createFoldersIfNotExists(filterFieldsFolderName);
-		String filterFieldsFileName = filterFieldsFolderName + fs + "static-catalog-page.json";
-		S.saveObjectToJsonFileName(page, filterFieldsFileName);
-		String catalogFolderName = destinationFolderName + fs + "_catalog";
-		S.createFoldersIfNotExists(catalogFolderName);
-//		String catalogContentsFileName = catalogFolderName + File.separator + "static-catalog.json";
-//		S.saveObjectToJsonFileName(contents, catalogContentsFileName);
-
 		/* HTML */
 		String templateString = S.loadFileInString(templateFilename);
 		String templateBaseFileNameNoExtension = Paths.get(templateFilename).getFileName().toString();
@@ -383,7 +373,6 @@ public class StaticCatalogEngine {
 		if (ext.trim().length() > 0) {
 			templateBaseFileNameNoExtension = templateBaseFileNameNoExtension.substring(0, templateBaseFileNameNoExtension.length() - (ext.length() + 1));
 		}
-		
 		String indexHtmlFileName = destinationFolderName + fs + templateBaseFileNameNoExtension + ".html";
 		Template templateLiquid = Template.parse(templateString);
 		String filtersJson = S.saveObjectToJsonString(page);
@@ -408,6 +397,13 @@ public class StaticCatalogEngine {
 		long start = System.currentTimeMillis();
 		loopProgress.doProgress("Start fields and filters generation...");
 		
+		String filterFieldsFolderName = destinationFolderName + fs + "_catalog-page";
+		S.createFoldersIfNotExists(filterFieldsFolderName);
+		
+		String catalogPageKeywordsFolderName = filterFieldsFolderName + fs + "keywords";
+		S.createFoldersIfNotExists(catalogPageKeywordsFolderName);
+		S.deleteFolderContentsOnly(catalogPageKeywordsFolderName);
+
 		/* Filters */
 		boolean dev = false;
 		if (dev) {
@@ -496,7 +492,9 @@ public class StaticCatalogEngine {
 				String csvFieldName = csvFieldNames.get(index);
 				if (!fieldNames.containsKey(csvFieldName)) {
 					/* Is not a field filter */
-					L.e("Inconsistent filters with the file", new Exception());
+					Exception exception = new Exception("Is not a field filter, filters inconsistent with the file");
+					L.e("generateFields => csvFieldName: " + csvFieldName, exception);
+					throw new E(exception);
 				}
 
 				StaticCatalogConfigurationField configurationField = fieldNames.get(csvFieldName);
@@ -547,10 +545,10 @@ public class StaticCatalogEngine {
 					values.put(csvFieldValue, cnt);
 				}
 				
-				if (configurationField.getIsSortAsc()) {
-					
-					
-				}
+//				if (configurationField.getIsSortAsc()) {
+//					
+//					
+//				}
 			}
 
 			csvLineIndex++;
@@ -635,7 +633,8 @@ public class StaticCatalogEngine {
 					
 					int keyIndex = 0;
 					String filterIdentifierPrefix = pageField.getIdentifier().replace("sc_field__", "sc_filter__");
-		
+					ArrayList<StaticCatalogPageFieldValue> pageFieldValues = pageField.getValues();
+					
 					/* Exceptions, common */
 					for (String exceptionKey : exceptionKeys) {
 						StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
@@ -646,7 +645,7 @@ public class StaticCatalogEngine {
 						filterValue.setLabel(transformValues != null ? transformValuesLabels.get(exceptionKey) : exceptionKey);
 						filterValue.setCount(exceptions.get(exceptionKey));
 						
-						pageField.getValues().add(filterValue);
+						pageFieldValues.add(filterValue);
 						keyIndex++;
 					}
 
@@ -663,12 +662,12 @@ public class StaticCatalogEngine {
 							filterValue.setLabel(createFormatTransformValue(valueKey, fieldType, transformFormat, transformValues, transformValuesLabels));
 							filterValue.setCount(values.get(valueKey));
 
-							pageField.getValues().add(filterValue);
+							pageFieldValues.add(filterValue);
 							keyIndex++;
 						}
 					}
-					/* Marks */
-					else if (filterType.equals(FILTER_TYPE_MARKS_INTERVALS)) {
+					/* Value interval */
+					else if (filterType.equals(FILTER_TYPE_VALUE_INTERVALS)) {
 
 						HashMap<String, String> valueIntervals = new HashMap<String, String>();
 						fieldNameValueIntervals.put(fieldName, valueIntervals);
@@ -684,7 +683,6 @@ public class StaticCatalogEngine {
 						int valueKeysIndex = 0;
 						int valueKeysCount = valueKeys.size();
 						String intervalLabel;
-						StaticCatalogPageFieldValue intervalValue;
 						
 						for (int valueKeyIndex = 0; valueKeyIndex < valueKeys.size(); valueKeyIndex++) {
 
@@ -709,9 +707,9 @@ public class StaticCatalogEngine {
 									if (valueKeysIndex == valueKeysCount) {
 										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-												values, valueIntervals, i1, i2, valueKeys);
-										pageField.getValues().add(intervalValue);
+										pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+												startInterval, endInterval, intervalLabel,
+												values, valueIntervals, i1, i2, valueKeys));
 									}
 								}
 								else {
@@ -721,9 +719,9 @@ public class StaticCatalogEngine {
 									}
 									intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 											" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-											values, valueIntervals, i1, i2, valueKeys);
-									pageField.getValues().add(intervalValue);
+									pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+											startInterval, endInterval, intervalLabel,
+											values, valueIntervals, i1, i2, valueKeys));
 									keyIndex++;
 
 									startInterval = valueKey;
@@ -737,9 +735,9 @@ public class StaticCatalogEngine {
 										i2 = i1;
 										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-												values, valueIntervals, i1, i2, valueKeys);
-										pageField.getValues().add(intervalValue);
+										pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+												startInterval, endInterval, intervalLabel,
+												values, valueIntervals, i1, i2, valueKeys));
 									}
 								}
 							}
@@ -762,9 +760,9 @@ public class StaticCatalogEngine {
 									if (valueKeysIndex == valueKeysCount) {
 										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-												values, valueIntervals, i1, i2, valueKeys);
-										pageField.getValues().add(intervalValue);
+										pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+												startInterval, endInterval, intervalLabel,
+												values, valueIntervals, i1, i2, valueKeys));
 									}
 								}
 								else {
@@ -774,9 +772,9 @@ public class StaticCatalogEngine {
 									}
 									intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 											" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-											values, valueIntervals, i1, i2, valueKeys);
-									pageField.getValues().add(intervalValue);
+									pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+											startInterval, endInterval, intervalLabel,
+											values, valueIntervals, i1, i2, valueKeys));
 									keyIndex++;
 
 									startInterval = valueKey;
@@ -790,17 +788,20 @@ public class StaticCatalogEngine {
 										i2 = i1;
 										intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 												" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-										intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-												values, valueIntervals, i1, i2, valueKeys);
-										pageField.getValues().add(intervalValue);
+										pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+												startInterval, endInterval, intervalLabel,
+												values, valueIntervals, i1, i2, valueKeys));
 									}
 								}
 							}
 							else {
-								// TODO other FILTER_TYPE_MARKS_INTERVALS
+								/* Is not an integer or double */
+								Exception exception = new Exception("The field is not integer and not double, cannot create value intervals filter on it");
+								L.e("generateFields => configurationField: " + configurationField.getName(), exception);
+								throw new E(exception);
 							}
 						}
-						pageField.setTotalValuesCount(pageField.getValues().size());
+						pageField.setTotalValuesCount(pageFieldValues.size());
 						pageField.setTotalMoreValuesCount(0);
 					}
 					/* Length */
@@ -815,7 +816,6 @@ public class StaticCatalogEngine {
 						int intervalLength = Integer.parseInt(configurationField.getIntervalValue());
 						int valueKeysCount = valueKeys.size();
 						String intervalLabel;
-						StaticCatalogPageFieldValue intervalValue;
 						
 						int intervalIndex = 0;
 						while (((intervalIndex + 1) * intervalLength - 1) < valueKeysCount) {
@@ -826,9 +826,9 @@ public class StaticCatalogEngine {
 							endInterval = valueKeys.get(i2);
 							intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 									" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-							intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-									values, valueIntervals, i1, i2, valueKeys);
-							pageField.getValues().add(intervalValue);
+							pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+									startInterval, endInterval, intervalLabel,
+									values, valueIntervals, i1, i2, valueKeys));
 							keyIndex++;
 						}
 						int lastValuesCount = intervalIndex * intervalLength;
@@ -837,11 +837,11 @@ public class StaticCatalogEngine {
 							endInterval = valueKeys.get(valueKeysCount - 1);
 							intervalLabel = createFormatTransformValue(startInterval, fieldType, transformFormat, transformValues, transformValuesLabels) + 
 									" - " + createFormatTransformValue(endInterval, fieldType, transformFormat, transformValues, transformValuesLabels);
-							intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, intervalLabel,
-									values, valueIntervals, lastValuesCount, valueKeysCount - 1, valueKeys);
-							pageField.getValues().add(intervalValue);
+							pageFieldValues.add(createFilterInterval(keyIndex, filterIdentifierPrefix,
+									startInterval, endInterval, intervalLabel,
+									values, valueIntervals, lastValuesCount, valueKeysCount - 1, valueKeys));
 						}
-						pageField.setTotalValuesCount(pageField.getValues().size());
+						pageField.setTotalValuesCount(pageFieldValues.size());
 						pageField.setTotalMoreValuesCount(0);
 					}
 					/* Keywords */
@@ -857,7 +857,8 @@ public class StaticCatalogEngine {
 						
 						int valueKeysIndex = 0;
 						int valueKeysCount = valueKeys.size();
-						StaticCatalogPageFieldValue intervalValue;
+						
+						ArrayList<LinkedHashMap<String, Long>> keywordIndexValueCounts = new ArrayList<>();
 						
 						for (int valueKeyIndex = 0; valueKeyIndex < valueKeys.size(); valueKeyIndex++) {
 
@@ -879,9 +880,9 @@ public class StaticCatalogEngine {
 								i2 = valueKeyIndex;
 								
 								if (valueKeysIndex == valueKeysCount) {
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
-											values, valueIntervals, i1, i2, valueKeys);
-									pageField.getValues().add(intervalValue);
+									pageFieldValues.add(createKeywordsFilterInterval(keyIndex, filterIdentifierPrefix,
+											startInterval, startInterval,
+											values, valueIntervals, i1, i2, valueKeys, keywordIndexValueCounts));
 								}
 							}
 							else {
@@ -889,9 +890,9 @@ public class StaticCatalogEngine {
 									endInterval = startInterval;
 									i2 = i1;
 								}
-								intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
-										values, valueIntervals, i1, i2, valueKeys);
-								pageField.getValues().add(intervalValue);
+								pageFieldValues.add(createKeywordsFilterInterval(keyIndex, filterIdentifierPrefix,
+										startInterval, startInterval,
+										values, valueIntervals, i1, i2, valueKeys, keywordIndexValueCounts));
 								keyIndex++;
 
 								startInterval = value;
@@ -902,12 +903,22 @@ public class StaticCatalogEngine {
 								if (valueKeysIndex == valueKeysCount) {
 									endInterval = startInterval;
 									i2 = i1;
-									intervalValue = createFilterInterval(keyIndex, filterIdentifierPrefix, startInterval, endInterval, startInterval,
-											values, valueIntervals, i1, i2, valueKeys);
-									pageField.getValues().add(intervalValue);
+									pageFieldValues.add(createKeywordsFilterInterval(keyIndex, filterIdentifierPrefix,
+											startInterval, startInterval,
+											values, valueIntervals, i1, i2, valueKeys, keywordIndexValueCounts));
 								}
 							}
-						}						
+						}
+						
+						int keywordsNameCnt = fieldNames.get(fieldName).getCsvIndex() - 1;
+						String pageKeywordsFolder = catalogPageKeywordsFolderName + fs + "keywords-" + keywordsNameCnt;
+						S.createFoldersIfNotExists(pageKeywordsFolder);
+
+						int keywordsValueCnt = 0;
+						for (LinkedHashMap<String, Long> keywordValueCounts : keywordIndexValueCounts) {
+							S.saveObjectToJsonFileName(keywordValueCounts, pageKeywordsFolder + fs + "static-catalog-page-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+							keywordsValueCnt++;
+						}
 					}
 				}
 				
@@ -950,6 +961,9 @@ public class StaticCatalogEngine {
 		totals.setTotalFilters(filtersCnt);
 		totals.setBlockLines(blockLinesCount);
 		totals.setIndexLinesModulo(indexLinesModulo);
+		
+		String filterFieldsFileName = filterFieldsFolderName + fs + "static-catalog-page.json";
+		S.saveObjectToJsonFileName(page, filterFieldsFileName);
 		
 		String filtersDone = "For " + U.w(csvLineIndex) + " lines, fields and filters generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds";
 		loopProgress.doProgress(filtersDone, filtersDone);
@@ -1002,7 +1016,37 @@ public class StaticCatalogEngine {
 		
 		return filterValue;
 	}
-	
+
+	/** Create filter interval */
+	private static StaticCatalogPageFieldValue createKeywordsFilterInterval(int keyIndex, String filterIdentifierPrefix, String startInterval, String label,
+			HashMap<String, Long> values, HashMap<String, String> valueIntervals, int i1, int i2, ArrayList<String> valueKeys,
+			ArrayList<LinkedHashMap<String, Long>> keywordIndexValueCounts) {
+
+		StaticCatalogPageFieldValue filterValue = new StaticCatalogPageFieldValue();
+		filterValue.setIndex(keyIndex);
+		filterValue.setIsException(false);
+		String intervalName = startInterval;
+		filterValue.setIdentifier(filterIdentifierPrefix + "__" + keyIndex + "__" + U.makeIdentifier(intervalName));
+		filterValue.setName(intervalName);
+		filterValue.setLabel(label);
+
+		LinkedHashMap<String, Long> keywordValueCounts = new LinkedHashMap<>(); 
+		
+		long intervalCount = 0;
+		for (int index = i1; index <= i2; index++) {
+			String keywordValue = valueKeys.get(index); 
+			valueIntervals.put(keywordValue, intervalName);
+			long keywordCount = values.get(keywordValue);
+			intervalCount = intervalCount + keywordCount;
+			
+			keywordValueCounts.put(keywordValue, keywordCount);
+		}
+		filterValue.setCount(intervalCount);
+		keywordIndexValueCounts.add(keywordValueCounts);
+		
+		return filterValue;
+	}
+
 	/** Generate catalog */
 	public static void generateCatalog(String sourceCsvFileName, StaticCatalogPage page, String destinationFolderName,
 			HashMap<String, HashMap<String, String>> fieldNameValueIntervals, LinkedHashMap<String, ArrayList<String>> fieldNameSortAscValues, LinkedHashMap<String, ArrayList<String>> fieldNameSortDescValues,
@@ -1013,31 +1057,27 @@ public class StaticCatalogEngine {
 		loopProgress.doProgress("Start catalog files generation...");
 		
 		/* Files */
-		String fsep = File.separator;
-		String catalogBlocksFolderName = destinationFolderName + fsep + "_catalog" + fsep + "data";
+		String catalogFolderName = destinationFolderName + fs + "_catalog";
+		S.createFoldersIfNotExists(catalogFolderName);
+		
+		String catalogBlocksFolderName = catalogFolderName + fs + "data";
 		S.createFoldersIfNotExists(catalogBlocksFolderName);
 		S.deleteFolderContentsOnly(catalogBlocksFolderName);
-		String blockFilePrefix = catalogBlocksFolderName + fsep + "block-";
+		String blockFilePrefix = catalogBlocksFolderName + fs + "block-";
 		
-		String catalogIndexesFolderName = destinationFolderName + fsep + "_catalog" + fsep + "indexes";
+		String catalogIndexesFolderName = catalogFolderName + fs + "indexes";
 		S.createFoldersIfNotExists(catalogIndexesFolderName);
 		S.deleteFolderContentsOnly(catalogIndexesFolderName);
-		String indexesValueFileNamePrefix = catalogIndexesFolderName + fsep + "static-catalog-index";
+		String indexesValueFileNamePrefix = catalogIndexesFolderName + fs + "static-catalog-index";
 
-		String catalogKeywordsFolderName = destinationFolderName + fsep + "_catalog" + fsep + "keywords";
+		String catalogKeywordsFolderName = catalogFolderName + fs + "keywords";
 		S.createFoldersIfNotExists(catalogKeywordsFolderName);
 		S.deleteFolderContentsOnly(catalogKeywordsFolderName);
-		//String keywordsFileNamePrefix = catalogKeywordsFolderName + fsep + "static-catalog-keywords";
 
-		String catalogPageKeywordsFolderName = destinationFolderName + fsep + "_catalog-page" + fsep + "keywords";
-		S.createFoldersIfNotExists(catalogPageKeywordsFolderName);
-		S.deleteFolderContentsOnly(catalogPageKeywordsFolderName);
-		//String pageKeywordsFileNamePrefix = catalogPageKeywordsFolderName + fsep + "static-catalog-page-keywords";
-
-		String catalogSortFolderName = destinationFolderName + fsep + "_catalog" + fsep + "sort";
+		String catalogSortFolderName = catalogFolderName + fs + "sort";
 		S.createFoldersIfNotExists(catalogSortFolderName);
 		S.deleteFolderContentsOnly(catalogSortFolderName);
-		String sortFileNamePrefix = catalogSortFolderName + fsep + "static-catalog-sort";
+		String sortFileNamePrefix = catalogSortFolderName + fs + "static-catalog-sort";
 
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>> fieldNameIndexValueLines = new LinkedHashMap<>();
 		LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, ArrayList<Long>>>> fieldNameIndexValueCsvValueLines = new LinkedHashMap<>();
@@ -1113,34 +1153,19 @@ public class StaticCatalogEngine {
 		long blockLinesCount = page.getTotals().getBlockLines();
 		long indexLinesModulo = page.getTotals().getIndexLinesModulo();
 		
-//		String[] headerLine = null;
 		String[] csvLine = csvParser.parseNext();
 		while (csvLine != null) {
 
-//			/* CSV field names */
-//			if ((csvLineIndex == 0) && (fieldNames.size() == 0)) {
-//				if (useFirstLineAsHeader) {
-//					for (int index = 0; index < lineLength; index++) {
-//						fieldNames.add(csvLine[index]);
-//					}
-//					csvLine = csvParser.parseNext();
-//					csvLineIndex++;
-//					continue;
-//				}
-//				else {
-//					for (int index = 0; index < lineLength; index++) {
-//						fieldNames.add("Field " + (index + 1));
-//					}
-//				}
-//			}
-
 			/* CSV field names */
-			if ((csvLineIndex == 0) && (useFirstLineAsHeader)) {
-//				headerLine = csvLine;
-				// TODO
-				csvLine = csvParser.parseNext();
-				csvLineIndex++;
-				continue;
+			if (csvLineIndex == 0) {
+				if (useFirstLineAsHeader) {
+					csvLine = csvParser.parseNext();
+					csvLineIndex++;
+					continue;
+				}
+				else {
+					csvLineIndex++;
+				}
 			}
 			
 			/* Blocks */
@@ -1154,7 +1179,8 @@ public class StaticCatalogEngine {
 					csvWriter.close();
 				}
 				try {
-					csvWriter = new CsvWriter(new FileWriter(blockFileName), new CsvWriterSettings());
+					FileOutputStream blockOutputStream = new FileOutputStream(blockFileName);
+					csvWriter = new CsvWriter(blockOutputStream, "UTF-8", new CsvWriterSettings());
 				}
 				catch (IOException ioException) {
 					L.e("generateCatalog => blockIndex: " + blockIndex + ", blockFileName: " + blockFileName, ioException);
@@ -1192,21 +1218,21 @@ public class StaticCatalogEngine {
 		
 		/* INDEX_SPLIT_TYPE_VALUES */
 		/* Indexes */
-		int indexCnt = 0;
-		for (String fieldName : fieldNameIndexValueLines.keySet()) {
-			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
-			int indexNameCnt = fieldNames.indexOf(fieldName);
-			int indexValueCnt = 0;
-			for (ArrayList<Long> lines : valueLines.values()) {
-				S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
-				indexCnt++;
-				indexValueCnt++;
-			}
-		}
+//		int indexCnt = 0;
+//		for (String fieldName : fieldNameIndexValueLines.keySet()) {
+//			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
+//			int indexNameCnt = fieldNames.indexOf(fieldName);
+//			int indexValueCnt = 0;
+//			for (ArrayList<Long> lines : valueLines.values()) {
+//				S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
+//				indexCnt++;
+//				indexValueCnt++;
+//			}
+//		}
 
 		/* INDEX_SPLIT_TYPE_NAMES */
 		/* Indexes */
-//		int indexCnt = 0;
+		int indexCnt = 0;
 		for (String fieldName : fieldNameIndexValueLines.keySet()) {
 			LinkedHashMap<String, ArrayList<Long>> valueLines = fieldNameIndexValueLines.get(fieldName);
 			int indexNameCnt = fieldNames.indexOf(fieldName);
@@ -1228,7 +1254,6 @@ public class StaticCatalogEngine {
 			
 			if (indexValueCsvValueLines.size() == 0) {
 				S.deleteFolder(catalogKeywordsFolderName);
-				S.deleteFolder(catalogPageKeywordsFolderName);
 			}
 			for (LinkedHashMap<String, ArrayList<Long>> csvValueLines : indexValueCsvValueLines.values()) {
 				
@@ -1244,13 +1269,9 @@ public class StaticCatalogEngine {
 					csvValueCounts.put(csvValueKey, lines.size());
 					sortedCsvValueLines.put(csvValueKey, lines);
 				}
-				String pageKeywordsFolder = catalogPageKeywordsFolderName + fsep + "keywords-" + keywordsNameCnt;
-				S.createFoldersIfNotExists(pageKeywordsFolder);
-				S.saveObjectToJsonFileName(csvValueCounts, pageKeywordsFolder + fsep + "static-catalog-page-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
-				keywordsCnt++;
-				String keywordsFolder = catalogKeywordsFolderName + fsep + "keywords-" + keywordsNameCnt;
+				String keywordsFolder = catalogKeywordsFolderName + fs + "keywords-" + keywordsNameCnt;
 				S.createFoldersIfNotExists(keywordsFolder);
-				S.saveObjectToJsonFileName(sortedCsvValueLines, keywordsFolder + fsep + "static-catalog-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
+				S.saveObjectToJsonFileName(sortedCsvValueLines, keywordsFolder + fs + "static-catalog-keywords-" + keywordsNameCnt + "-" + keywordsValueCnt + ".json");
 				keywordsCnt++;
 				keywordsValueCnt++;
 			}
@@ -1279,32 +1300,6 @@ public class StaticCatalogEngine {
 			S.saveObjectToJsonFileName(descSortedLines, sortFileNamePrefix + "-" + indexNameCnt + "-desc.json");
 			sortCnt++;
 		}
-		
-//		nameValuesLines.get(key)
-//		contents.setIndexSplitType(INDEX_SPLIT_TYPE_NAMES);
-		
-//		String indexSplitType = contents.getIndexSplitType();
-//		if (indexSplitType.equals(INDEX_SPLIT_TYPE_VALUES)) {
-//			int indexNameCnt = 0;
-//			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
-//				int indexValueCnt = 0;
-//				for (ArrayList<Long> lines : valueLines.values()) {
-//					S.saveObjectToJsonFileName(lines, indexesValueFileNamePrefix + "-" + indexNameCnt + "-" + indexValueCnt + ".json");
-//					indexValueCnt++;
-//				}
-//				indexNameCnt++;
-//			}
-//		}
-//		else if (indexSplitType.equals(INDEX_SPLIT_TYPE_NAMES)) {
-//			int indexNameCnt = 0;
-//			for (LinkedHashMap<String, ArrayList<Long>> valueLines : nameValuesLines.values()) {
-//				S.saveObjectToJsonFileName(valueLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
-//				indexNameCnt++;
-//			}
-//		}
-//		else {
-//			S.saveObjectToJsonFileName(nameValuesLines, indexesValueFileNamePrefix + ".json");
-//		}
 
 		String catalogFilesDone = "For " + U.w(csvLineIndex) + " lines: " + (blockIndex + 1) + " data block, " + indexCnt + " index, " + keywordsCnt + " keywords, " + sortCnt + " sort catalog files generated in " + ((System.currentTimeMillis() - start) / 1000) + " seconds";
 		loopProgress.doProgress(catalogFilesDone, catalogFilesDone);
@@ -1334,7 +1329,7 @@ public class StaticCatalogEngine {
 			if (filterType.equals(FILTER_TYPE_VALUES)) {
 				lines = fieldNameIndexValueLines.get(fieldName).get(csvFieldValue);
 			}
-			else if (filterType.equals(FILTER_TYPE_MARKS_INTERVALS) || filterType.equals(FILTER_TYPE_LENGTH_INTERVALS)) {
+			else if (filterType.equals(FILTER_TYPE_VALUE_INTERVALS) || filterType.equals(FILTER_TYPE_LENGTH_INTERVALS)) {
 				lines = fieldNameIndexValueLines.get(fieldName).get(fieldNameValueIntervals.get(fieldName).get(csvFieldValue));
 			}
 			else if (filterType.equals(FILTER_TYPE_KEYWORDS)) {
@@ -1401,96 +1396,4 @@ public class StaticCatalogEngine {
 			Collections.sort(keys, stringAsNumberComparator);
 		}
 	}
-	
-//	/* Modulo start */
-//	private static long getStartLine(long line, long indexLinesModulo) {
-//		
-//		return line / indexLinesModulo;
-//	}
-//
-//	/* Modulo end */
-//	private static long getEndLine(long line, long indexLinesModulo) {
-//		
-//		return line % indexLinesModulo;
-//	}
-//
-//	/* Compact */
-//	private static ArrayList<Long> compactLines(ArrayList<Long> srcLines, long indexLinesModulo) {
-//		
-//		ArrayList<Long> destLines = new ArrayList<>();
-//		
-//		for (long srcLine : srcLines) {
-//
-//			long srcStartLine = srcLine / indexLinesModulo;
-//			long srcEndLine = srcLine % indexLinesModulo;
-//
-//			int destLinesSize = destLines.size();
-//			if (destLinesSize == 0) {
-//				destLines.add(srcLine);	
-//			}
-//			else {
-//				int destLastIndex = destLinesSize - 1;
-//				long destLastLine = destLines.get(destLastIndex);
-//				long destStartLine = destLastLine / indexLinesModulo;
-//				long destEndLine = destLastLine % indexLinesModulo;
-//				
-//				if (destStartLine == 0) {
-//					/* One line destination */
-//					if (srcStartLine == 0) {
-//						/* One line source */
-//						if (srcEndLine - destEndLine == 1) {
-//							/* New interval */
-//							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
-//							destLines.set(destLastIndex, newLastLine);
-//						}
-//						else {
-//							/* New line */
-//							destLines.add(srcEndLine);
-//						}
-//					}
-//					else {
-//						/* Interval line source */
-//						if (srcStartLine - destEndLine == 1) {
-//							/* New interval */
-//							long newLastLine = destEndLine * indexLinesModulo + srcEndLine;
-//							destLines.set(destLastIndex, newLastLine);
-//						}
-//						else {
-//							/* New line */
-//							destLines.add(srcLine);
-//						}
-//					}
-//				}
-//				else {
-//					/* Interval destination */
-//					if (srcStartLine == 0) {
-//						/* One line source */
-//						if (srcEndLine - destEndLine == 1) {
-//							/* Add to interval */
-//							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
-//							destLines.set(destLastIndex, newLastLine);
-//						}
-//						else {
-//							/* New line */
-//							destLines.add(srcEndLine);
-//						}
-//					}
-//					else {
-//						/* Interval line source */
-//						if (srcStartLine - destEndLine == 1) {
-//							/* Add to interval */
-//							long newLastLine = destStartLine * indexLinesModulo + srcEndLine;
-//							destLines.set(destLastIndex, newLastLine);
-//						}
-//						else {
-//							/* New line */
-//							destLines.add(srcLine);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		return destLines;
-//	} 
 }

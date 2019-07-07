@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 /** Natural sort */
 public class StringAsNumberComparator implements Comparator<String> {
 
-	public final Pattern NUMBER_PATTERN = Pattern.compile("(\\-?\\d+\\.\\d+)|(\\-?\\.\\d+)|(\\-?\\d+)");
-//	public final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+\\.\\d+)|(\\.\\d+)|(\\d+)");
+//	public final Pattern NUMBER_PATTERN = Pattern.compile("(\\-?\\d+\\.\\d+)|(\\-?\\.\\d+)|(\\-?\\d+)");
+	public final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+)");
 
 	/**
 	 * Splits strings into parts sorting each instance of a number as a number if

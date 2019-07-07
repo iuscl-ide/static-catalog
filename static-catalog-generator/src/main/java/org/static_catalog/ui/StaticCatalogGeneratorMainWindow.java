@@ -71,7 +71,7 @@ public class StaticCatalogGeneratorMainWindow {
 	static {
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_NONE, "");
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_VALUES, "Values");
-		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_MARKS_INTERVALS, "Marks Intervals");
+		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_VALUE_INTERVALS, "Value Intervals");
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_LENGTH_INTERVALS, "Length Intervals");
 		filterTypeNames.put(StaticCatalogEngine.FILTER_TYPE_KEYWORDS, "Keywords");
 		
@@ -1209,7 +1209,17 @@ public class StaticCatalogGeneratorMainWindow {
 		fieldGridColumn.setText("Sort Desc.");
 	    fieldGridColumn.setWordWrap(true);
 	    fieldGridColumn.setWidth(90);
-	    
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
+		fieldGridColumn.setText("Format");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(80);
+
+		fieldGridColumn = new GridColumn(filtersGrid, SWT.CENTER);
+		fieldGridColumn.setText("Replace");
+	    fieldGridColumn.setWordWrap(true);
+	    fieldGridColumn.setWidth(80);
+
 	    filtersGrid.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent mouseEvent) {
@@ -1252,6 +1262,8 @@ public class StaticCatalogGeneratorMainWindow {
 					gridItem.setText(col++, displayType == null ? "" : displayTypeNames.get(displayType));
 					gridItem.setText(col++, staticCatalogField.getIsSortAsc() ? "Yes" : "");
 					gridItem.setText(col++, staticCatalogField.getIsSortDesc() ? "Yes" : "");
+					gridItem.setText(col++, staticCatalogField.getTransformFormat() == null ? "" : "Yes");
+					gridItem.setText(col++, staticCatalogField.getTransformValues() == null ? "" : "Yes");
 				}
 			}
 		};
