@@ -51,27 +51,41 @@
    			</fileset>
        	</copy>
 
+    	<!-- samples -->
+       	<copy todir="${zip.folder}">
+   			<fileset dir="${project.folder}/dist">
+   				<include name="samples/**/*"/>
+   			</fileset>
+       	</copy>
+
+    	<!-- dev -->
        	<copy todir="${zip.folder}">
    			<fileset dir="${project.folder}/dist">
    				<include name="static-catalog-dev/**/*"/>
    			</fileset>
        	</copy>
 
+    	<!-- start -->
        	<copy todir="${zip.folder}">
    			<fileset dir="${project.folder}/dist/platforms/${dist.platform}">
    				<include name="start*.*"/>
    			</fileset>
        	</copy>
 
+    	<!-- swt -->
        	<copy todir="${zip.folder}/lib">
    			<fileset dir="${project.folder}/dist/platforms/${dist.platform}">
    				<include name="swt.jar"/>
    			</fileset>
        	</copy>
 		
+		<!-- conf -->
 		<mkdir dir="${zip.folder}/conf"/>
+		
+		<!-- log -->
 		<mkdir dir="${zip.folder}/log"/>
 		
+		<!-- jar -->
     	<property name="dist.jar.file" value="${zip.folder}/lib/static-catalog.jar"/>
 
     	<path id="dist.jar.classpath">
@@ -105,58 +119,13 @@
 			</fileset>
 
 		</jar>
-    	
 		
+		<!-- zip -->
+		<zip destfile="${target.folder}/static-catalog-${dist.version}-${dist.platform}.zip">
 		
-	</target>
-	
-	<!-- main 
-    <target name="create">
-    	
-    	<delete includeEmptyDirs="true" quiet="true">
-    		
-			<fileset dir="${zip.folder}"/>
-		</delete>
-
-    	<mkdir dir="${dist.folder}"/>
-    	<mkdir dir="${dist.folder}/Captures"/>
-      	<mkdir dir="${dist.folder}/Constructions"/>
-
-    	<copy todir="${dist.folder}/Constructions">
-       		
-   			<fileset dir="${src.folder}/Constructions/Dist">
-
-   				<include name="**/*"/>
-   			</fileset>
-       	</copy>
-    	
-       	<copy todir="${dist.folder}">
-       		
-   			<fileset dir="${src.folder}">
-
-   				<include name="Backgrounds/**/*"/>
-   				<include name="Cursors/**/*"/>
-				<include name="Help/**/*"/>
-   				<include name="Kits/**/*"/>
-   				
-   				<include name="Constrial.exe"/>
-   				<include name="LICENSE-Constrial.txt"/>
-   			</fileset>
-       	</copy>
-
-		<zip destfile="${zip.folder}/constrial-${dist.version}.zip">
-			
-			<fileset dir="${zip.folder}">
-				
-				<include name="Constrial-${dist.version}/**/*"/>
+			<fileset dir="${target.folder}">
+				<include name="static-catalog-${dist.version}/**/*"/>
 			</fileset>
 		</zip>
-
-    	<delete includeEmptyDirs="true">
-    		
-			<fileset dir="${dist.folder}"/>
-		</delete>
-
-    </target>
-	-->
+	</target>
 </project>

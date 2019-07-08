@@ -432,7 +432,7 @@ const StaticCatalog = (() => {
 		if (sortLines === null) {
 			return indexLines;
 		}
-
+                                                           
 		let indexLinesLength = indexLines.length;
 		let sortedIndexLines = [];
 		let indexLinesStarts = [];
@@ -468,7 +468,6 @@ const StaticCatalog = (() => {
 					sortedIndexLines.push(found);
 					startIndex++;
 					if (startIndex < indexLinesLength - 1) {
-						startIndex++;
 						indexLine = indexLines[startIndex];
 						found = createIntervalIntersection(sortLine, indexLine);
 					}
