@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog.org                                 static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic-button-github.css">
+
+<script src="scripts/jquery-3.4.0.js"></script>
+<script src="semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="styles/static-catalog.css">
+
+<script src="scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+<!-- 		<div class="ui vertical basic segment">Search-able catalog for static generated sites - <em>static-catalog.org</em> 2019</div> -->
+
+		<div class="ui inverted menu">
+			<div class="header item">
+				<img class="logo" src="assets/images/logo.png" width="35" height="35">
+				static-catalog
+			</div>
+			<a id="sc-id--home-menu" class="item" href="https://static-catalog.org" target="_blank">
+				<i class="home icon"></i>
+				Home
+			</a>
+			<a id="sc-id--repo-menu" class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank">
+				<i class="github icon"></i>
+				GitHub Repo
+			</a>
+			<div class="right menu" style="display: none;">
+				<div class="header item">
+					Debug 
+				</div>
+				<div class="item" style="width: 150px;">
+					<div id="sc-id--debug-all-values-button" class="ui fluid red button">All checks</div>
+				</div>				
+			</div>
+		</div>
+		<div class="ui menu">
+			<div class="header item">
+				<img class="logo" src="assets/images/logo.png" width="35" height="35">
+				static-catalog
+			</div>
+			<a id="sc-id--home-menu" class="item" href="https://static-catalog.org" target="_blank">
+				<i class="home icon"></i>
+				Home
+			</a>
+			<a id="sc-id--repo-menu" class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank">
+				<i class="github icon"></i>
+				GitHub Repo
+			</a>
+			<div class="right menu" style="display: none;">
+				<div class="header item">
+					Debug 
+				</div>
+				<div class="item" style="width: 150px;">
+					<div id="sc-id--debug-all-values-button" class="ui fluid red button">All checks</div>
+				</div>				
+			</div>
+		</div>
+		
+		<div class="ui grid">
+			<div class="five wide column">
+			</div>
+			<div class="eleven wide column">
+			</div>
+		</div>
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<h4 class="ui inverted header">Distribution Requirements</h4>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">
+								Papaparse
+							</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<h4 class="ui inverted header">Development Requirements</h4>
+						<h5 class="ui inverted header">Java</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">
+								SWT
+							</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">
+								Datetime
+							</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">
+								liqp
+							</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">
+								Univocity CSV Parser
+							</a>
+						</div>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">
+								jQuery
+							</a>
+						</div>
+						<h5 class="ui inverted header">CSS</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">
+								Semantic-UI
+							</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<h4 class="ui inverted header">About static-catalog</h4>
+						<p>The missing piece of static generated sites.</p>
+						<p>All the searches in this page are done on static data, without any server side code, micro services or database.</p>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalog.init();			
+		});
+	</script>
+</body>
+</html>
