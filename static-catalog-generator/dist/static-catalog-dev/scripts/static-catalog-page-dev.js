@@ -58,6 +58,9 @@ const StaticCatalogDev = (() => {
 
 	var pageKeywordFieldPrefixValues = {};
 
+	/* Sort */
+	var $sortDropdown;
+	
 	/* Search */
 	var $filterDropdowns;
 	var $filterSearchboxes;
@@ -249,7 +252,8 @@ const StaticCatalogDev = (() => {
 		});
 
 		/* Sort */
-		$("#scp-id--sort").dropdown({
+		$sortDropdown = $("#scp-id--sort");
+		$sortDropdown.dropdown({
 			 onChange: function(value, text, $selectedItem) {
 				 
 				 searchSort.sortFieldIndex = $selectedItem.attr("data-sort-field-index");
@@ -326,12 +330,13 @@ const StaticCatalogDev = (() => {
 			
 			window.scrollTo(0, 0);
 			$filtersCount.empty();
+			$sortDropdown.dropdown("set selected", "CSV order");
 			$filterCheckboxes.each( (index, element) => {
 				element.checked = false;
 			});
 			$filterDropdowns.each( (index, element) => {
 				let $filterDropdown = $(element);
-				$filterDropdown.dropdown('set selected', '');
+				$filterDropdown.dropdown("set selected", "");
 				$filterDropdown.removeAttr("data-value");
 			});
 			$filterSearchboxes.each( (index, element) => {

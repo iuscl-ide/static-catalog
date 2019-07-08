@@ -913,7 +913,7 @@ public class StaticCatalogEngine {
 							}
 						}
 						
-						int keywordsNameCnt = fieldNames.get(fieldName).getCsvIndex() - 1;
+						int keywordsNameCnt = (new ArrayList<>(fieldNames.keySet())).indexOf(fieldName);
 						String pageKeywordsFolder = catalogPageKeywordsFolderName + fs + "keywords-" + keywordsNameCnt;
 						S.createFoldersIfNotExists(pageKeywordsFolder);
 

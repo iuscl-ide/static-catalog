@@ -19,9 +19,9 @@ Data origin:
   FakeNameGenerator.com_26317008.csv  
 
 4. Sample 4  
-  fake-names-generator-half-a-mil  
-  https://www.fakenamegenerator.com/  
-  FakeNameGenerator.com_500000.csv  
+  sample-csv-file-53000kb  
+  https://sample-videos.com/download-sample-csv.php  
+  SampleCSVFile_53000kb.csv  
 
 5. Sample 5  
   geneva-transport-2012  
