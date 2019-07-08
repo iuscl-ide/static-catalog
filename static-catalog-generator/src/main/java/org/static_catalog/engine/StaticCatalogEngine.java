@@ -126,6 +126,7 @@ public class StaticCatalogEngine {
 		String wMaxLines = U.w(maxLines);
 	
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
+		csvParserSettings.setDelimiterDetectionEnabled(true);
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(csvCompleteFileName));
@@ -176,6 +177,7 @@ public class StaticCatalogEngine {
 		ArrayList<StaticCatalogExamineField> examineFields = staticCatalogExamine.getExamineFields();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
+		csvParserSettings.setDelimiterDetectionEnabled(true);
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(csvCompleteFileName));
@@ -456,6 +458,7 @@ public class StaticCatalogEngine {
 		ArrayList<String> csvFieldNames = new ArrayList<>();
 		
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
+		csvParserSettings.setDelimiterDetectionEnabled(true);
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(sourceCsvFileName));
@@ -1152,6 +1155,7 @@ public class StaticCatalogEngine {
 		
 		/* Generate */
 		CsvParserSettings csvParserSettings = new CsvParserSettings();
+		csvParserSettings.setDelimiterDetectionEnabled(true);
 		csvParserSettings.setLineSeparatorDetectionEnabled(true);
 		CsvParser csvParser = new CsvParser(csvParserSettings);
 		csvParser.beginParsing(new File(sourceCsvFileName));
