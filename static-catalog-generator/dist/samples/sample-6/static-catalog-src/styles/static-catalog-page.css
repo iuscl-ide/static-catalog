@@ -23,12 +23,12 @@ body {
 	margin-top: 0em;
 }
 
-div[data-name=scp-name--tile-grid] {
+div[data-name=scp-name--result--grid] {
 	padding-top: 1em !important;
 	padding-bottom: 1em !important;
 }
 
-#scp-id--tile-field-template {
+#scp-id--result--field-template {
 	padding-top: 0em;
 	padding-bottom: 0em;
 }

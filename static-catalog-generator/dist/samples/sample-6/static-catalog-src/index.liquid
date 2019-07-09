@@ -279,17 +279,8 @@
 								</div>
 							</div>
 						</div>
-						<div class="row ptb0">
-							<div class="right aligned sixteen wide column">
-								<div class="ui compact menu">
-									<a class="th popup icon active item" id="scp-id--see-as-tiles" data-content="See as tiles"><i
-										class="th icon"></i></a> <a class="list popup icon item" id="scp-id--see-as-list" data-content="See as list"><i
-										class="list icon"></i></a>
-								</div>
-							</div>
-						</div>
 					</div>
-					<div id="scp-id--tiles-or-list" class="ui three column grid"></div>
+					<div id="scp-id--results-list" class="ui one column grid"></div>
 				</div>
 			</div>
 		</div>
@@ -351,14 +342,24 @@
 		<div class="ui hidden clearing divider"></div>
 	</div>
 	<div style="display: none">
-		<div id="scp-id--tile-template" class="column">
+		<div id="scp-id--result-template" class="column">
 			<div class="ui bottom attached grey segment">
-				<div data-name="scp-name--tile-grid" class="ui one column grid"></div>
+				<div data-name="scp-name--result-grid" class="ui grid">
+					<div class="eleven wide column">
+						<span data-name="scp-name--result-field-title" class="ui tiny header"></span>
+						<span data-name="scp-name--result-field-given-name" class="ui tiny header"></span>
+						<span data-name="scp-name--result-field-middle-initial" class="ui tiny header"></span>.
+						<span data-name="scp-name--result-field-surname" class="ui tiny header"></span>
+					</div>
+					<div class="five wide column">
+					b
+					</div>
+				</div>
 			</div>
 		</div>
-		<div id="scp-id--tile-field-template" class="column">
-			<span data-name="scp-name--tile-field-name" class="ui tiny header"></span> &nbsp; <span data-name="scp-name--tile-field-value"></span>
-		</div>
+<!-- 		<div id="scp-id--result-field-template" class="column"> -->
+<!-- 			<span data-name="scp-name--result-field-name" class="ui tiny header"></span> &nbsp; <span data-name="scp-name--result-field-value"></span> -->
+<!-- 		</div> -->
 		<div  id="scp-id--filter-count-template" class="ui label">
 			<a data-name="scp-name--filter-count-name"></a>
 			<div data-name="scp-name--filter-count-sum" class="detail"></div>
@@ -367,7 +368,7 @@
 	</div>
 	<script type="text/javascript">
 		$(() => {
-			StaticCatalogDev.init();			
+			StaticCatalogPage.init();			
 		});
 	</script>
 </body>

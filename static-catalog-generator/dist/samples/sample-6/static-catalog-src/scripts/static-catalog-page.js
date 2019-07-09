@@ -7,7 +7,7 @@
 "use strict";
 
 /* Particular to the page */
-const StaticCatalogDev = (() => {
+const StaticCatalogPage = (() => {
 
 	/*
 	Parameters of a search:
@@ -77,9 +77,9 @@ const StaticCatalogDev = (() => {
 	/* Results */
 	var $resultsPanel;
 	var $noResultsPanel;
-	var $tilesOrList;
-	var $tileTemplate;
-	var $tileFieldTemplate; 
+	var $resultsList;
+	var $resultTemplate;
+	var $resultFieldTemplate; 
 	
 	/* Messages */
 	var $messageArea;
@@ -278,9 +278,9 @@ const StaticCatalogDev = (() => {
 		$filterCheckboxes = $("input[id*='sc_filter__']");
 		$filtersCount = $("#scp-id--filters-count");
 		$filterCountTemplate = $("#scp-id--filter-count-template");
-		$tilesOrList = $("#scp-id--tiles-or-list");
-		$tileTemplate = $("#scp-id--tile-template");
-		$tileFieldTemplate = $("#scp-id--tile-field-template");
+		$resultsList = $("#scp-id--results-list");
+		$resultTemplate = $("#scp-id--result-template");
+		$resultFieldTemplate = $("#scp-id--result-field-template");
 		
 		$messageArea = $("#scp-id--message-area");
 		$welcomeMessage = $("#scp-id--welcome-message");
@@ -430,30 +430,6 @@ const StaticCatalogDev = (() => {
 //				}
 //			});
 //        });
-
-		/* Results list / tiles */
-		const $seeAsTiles = $("#scp-id--see-as-tiles");
-		const $seeAsList = $("#scp-id--see-as-list");
-		
-		$seeAsTiles.click( clickEvent => {
-			
-			const $tileGrid = $("div[data-name=scp-name--tile-grid]");
-			
-			$seeAsList.removeClass("active");
-			$tilesOrList.removeClass().addClass("ui three column grid");
-			$tileGrid.removeClass().addClass("ui one column grid");
-			$seeAsTiles.removeClass("item").addClass("active item");
-        });
-		
-		$seeAsList.click( clickEvent => {
-			
-			const $tileGrid = $("div[data-name=scp-name--tile-grid]");
-			
-			$seeAsTiles.removeClass("active");
-			$tilesOrList.removeClass().addClass("ui one column grid");
-			$tileGrid.removeClass().addClass("ui four column grid");
-			$seeAsList.removeClass("item").addClass("active item");
-        });
 
 		/* Filter count close - check false all */
 		filterCountCloseClickEvent = (fieldName) => {
@@ -798,19 +774,25 @@ const StaticCatalogDev = (() => {
 		
 		/* Result lines */
 		for (let line of lines) {
-			let $tile = $tileTemplate.clone();
-			$tile.appendTo($tilesOrList);
+			let $result = $resultTemplate.clone();
+			$result.appendTo($resultsList);
 			
-			let $tileFields = $tile.find("div[data-name=scp-name--tile-grid]")[0];
+			//let resultFields = $result.find("div[data-name=scp-name--result-grid]")[0];
 			
-			for (let lineField in line) {
-				let $tileField = $tileFieldTemplate.clone();
-				$tileField.appendTo($tileFields);
-				$tileField.find("span[data-name=scp-name--tile-field-name]").html(pageFieldsProp[lineField].label);
-				$tileField.find("span[data-name=scp-name--tile-field-value]").html(line[pageFieldsProp[lineField].csvIndex - 1]);
-			}
+			$result.find("span[data-name=scp-name--result-field-title]").html(line[3]);
+			$result.find("span[data-name=scp-name--result-field-given-name]").html(line[4]);
+			$result.find("span[data-name=scp-name--result-field-middle-initial]").html(line[5]);
+			$result.find("span[data-name=scp-name--result-field-surname]").html(line[6]);
+			
+//			for (let lineField in line) {
+//				let $resultField = $resultFieldTemplate.clone();
+//				$resultField.appendTo($resultFields);
+//				$resultField.find("span[data-name=scp-name--result-field-name]").html(pageFieldsProp[lineField].label);
+//				$resultField.find("span[data-name=scp-name--result-field-value]").html(line[pageFieldsProp[lineField].csvIndex - 1]);
+//			}
+			
 //			let $map = $('<div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=' + line[43] + '%2C%20%20' + line[44] + '&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>Google Maps Generator by <a href="https://www.embedgooglemap.net">embedgooglemap.net</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>');
-//			$map.appendTo($tile);
+//			$map.appendTo($result);
 		}
 		$resultsPanel.show();
 	}
@@ -823,7 +805,7 @@ const StaticCatalogDev = (() => {
 		$successMessage.hide();
 		$searchingMessage.show();
 		$resultsPanel.hide()
-		$tilesOrList.empty();
+		$resultsList.empty();
 		
 		let searchFieldsValues = findSearchFieldValues();
 		let searchFieldKeywords = findSearchFieldKeywords();
@@ -843,3 +825,53 @@ const StaticCatalogDev = (() => {
 		apply: apply
 	}
 })();
+
+/*
+
+0: "Number", csvIndex: 1
+1: "Gender", csvIndex: 2​
+2: "Name Set", csvIndex: 3​
+3: "Title", csvIndex: 4​
+4: "Given Name", csvIndex: 5​
+5: "Middle Initial", csvIndex: 6​
+6: "Surname", csvIndex: 7​
+7: "Street Address", csvIndex: 8​
+8: "City", csvIndex: 9​
+9: "State", csvIndex: 10​
+10: "State Full", csvIndex: 11​
+11: "Zip Code", csvIndex: 12​
+12: "Country", csvIndex: 13​
+13: "Country Full", csvIndex: 14​
+14: "Email Address", csvIndex: 15​
+15: "Username", csvIndex: 16​
+16: "Password", csvIndex: 17​
+17: "Browser User Agent", csvIndex: 18​
+18: "Telephone Number", csvIndex: 19​
+19: "Telephone Country Code", csvIndex: 20​
+20: "Mothers Maiden", csvIndex: 21​
+21: "Birthday", csvIndex: 22​
+22: "Age", csvIndex: 23​
+23: "Tropical Zodiac", csvIndex: 24​
+24: "CC Type", csvIndex: 25​
+25: "CC Number", csvIndex: 26​
+26: "CVV2", csvIndex: 27​
+27: "CC Expires", csvIndex: 28​
+28: "National ID", csvIndex: 29​
+29: "UPS", csvIndex: 30​
+30: "Western Union MTCN", csvIndex: 31​
+31: "Money Gram MTCN", csvIndex: 32​
+32: "Color", csvIndex: 33​
+33: "Occupation", csvIndex: 34​
+34: "Company", csvIndex: 35​
+35: "Vehicle", csvIndex: 36​
+36: "Domain", csvIndex: 37​
+37: "Blood Type", csvIndex: 38​
+38: "Pounds", csvIndex: 39​
+39: "Kilograms", csvIndex: 40​
+40: "Feet Inches", csvIndex: 41​
+41: "Centimeters", csvIndex: 42​
+42: "GUID", csvIndex: 43​
+43: "Latitude", csvIndex: 44​
+44: "Longitude", csvIndex: 45​
+
+*/
