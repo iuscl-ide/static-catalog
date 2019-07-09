@@ -1,0 +1,60 @@
+/*	
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog 500000 people sample                static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+*/
+
+body {
+	background-color: #FFFFFF;
+}
+
+.ui.menu .item img.logo {
+	margin-right: 1.14286em;
+}
+
+.overlay {
+	visibility: hidden;
+}
+.fixed.overlay {
+	visibility: visible;
+}
+
+.ui.message {
+	margin-top: 0em;
+}
+
+div[data-name=scp-name--tile-grid] {
+	padding-top: 1em !important;
+	padding-bottom: 1em !important;
+}
+
+#scp-id--tile-field-template {
+	padding-top: 0em;
+	padding-bottom: 0em;
+}
+
+.ptb0 {
+	padding-top: 0em !important;
+	padding-bottom: 0em !important;
+}
+
+.pr0 {
+	padding-right: 0em !important;
+}
+
+.pl0 {
+	padding-left: 0em !important;
+}
+
+/* .main.container { */
+/* 	margin-top: 7em; */
+/* } */
+
+/* .wireframe { */
+/* 	margin-top: 2em; */
+/* } */
+
+/* .ui.footer.segment { */
+/* 	margin: 5em 0em 0em; */
+/* 	padding: 5em 0em; */
+/* } */
