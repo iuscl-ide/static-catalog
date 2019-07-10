@@ -1,4 +1,4 @@
-package org.static_catalog.test.json;
+package org.static_catalog.other.json;
 
 import liqp.Template;
 
