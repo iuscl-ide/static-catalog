@@ -48,6 +48,19 @@ const StaticCatalogPage = (() => {
 		"indexLinesModulo": -1
 	};
 	
+	const colorCor = {
+		"Black": "black",
+		"Blue": "blue",
+		"Brown": "brown",
+		"Green": "green",
+		"Orange": "orange",
+		"Purple": "purple",
+		"Red": "red",
+		"Silver": "grey",
+		"White": "",
+		"Yellow": "yellow"
+	}
+	
 	/* 8<---------------------------------------- */
 	
 	/* Catalog */
@@ -779,10 +792,40 @@ const StaticCatalogPage = (() => {
 			
 			//let resultFields = $result.find("div[data-name=scp-name--result-grid]")[0];
 			
+			$($result.find("div[data-name=scp-name--result-segment]")[0]).addClass("ui bottom attached").addClass(colorCor[line[32]]).addClass("segment");
+			
 			$result.find("span[data-name=scp-name--result-field-title]").html(line[3]);
 			$result.find("span[data-name=scp-name--result-field-given-name]").html(line[4]);
 			$result.find("span[data-name=scp-name--result-field-middle-initial]").html(line[5]);
 			$result.find("span[data-name=scp-name--result-field-surname]").html(line[6]);
+			
+			$result.find("span[data-name=scp-name--result-mothers-maiden]").html(line[20]);
+
+			$result.find("span[data-name=scp-name--result-field-vehicle]").html(line[35]);
+			
+			
+
+			$result.find("span[data-name=scp-name--result-field-street-address]").html(line[7]);
+			$result.find("span[data-name=scp-name--result-field-city]").html(line[8]);
+			$result.find("span[data-name=scp-name--result-field-state-full]").html(line[10]);
+			$result.find("span[data-name=scp-name--result-field-zip-code]").html(line[11]);
+
+			$result.find("#gmap_canvas").prop("src", "https://maps.google.com/maps?q=" + line[43] + "%2C%20%20" + line[44] + "&t=&z=7&ie=UTF8&iwloc=&output=embed");
+
+			$result.find("span[data-name=scp-name--result-field-domain]").html(line[36]);
+			$result.find("span[data-name=scp-name--result-field-email-address]").html(line[14]);
+			$result.find("span[data-name=scp-name--result-field-telephone-number]").html(line[18]);
+
+			
+			
+//			fetch("https://www.google.com/search?q=2012+Land+Rover+LR4&tbm=isch").then( (response) => {
+//				
+//				response.text().then( (data) => {
+//					
+//					console.log(data);
+//				});
+//			});
+			
 			
 //			for (let lineField in line) {
 //				let $resultField = $resultFieldTemplate.clone();
