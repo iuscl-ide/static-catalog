@@ -46,6 +46,10 @@ div[data-name=scp-name--tile-grid] {
 	padding-left: 0em !important;
 }
 
+.p0 {
+	padding: 0em !important;
+}
+
 /* .main.container { */
 /* 	margin-top: 7em; */
 /* } */
