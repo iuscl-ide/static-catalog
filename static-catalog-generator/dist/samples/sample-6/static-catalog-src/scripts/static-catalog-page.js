@@ -4,6 +4,56 @@
 ╰──────────────────────────────────────────────────────────────────────────────╯
 */
 
+/*
+
+0: "Number", csvIndex: 1
+1: "Gender", csvIndex: 2​
+2: "Name Set", csvIndex: 3​
+3: "Title", csvIndex: 4​
+4: "Given Name", csvIndex: 5​
+5: "Middle Initial", csvIndex: 6​
+6: "Surname", csvIndex: 7​
+7: "Street Address", csvIndex: 8​
+8: "City", csvIndex: 9​
+9: "State", csvIndex: 10​
+10: "State Full", csvIndex: 11​
+11: "Zip Code", csvIndex: 12​
+12: "Country", csvIndex: 13​
+13: "Country Full", csvIndex: 14​
+14: "Email Address", csvIndex: 15​
+15: "Username", csvIndex: 16​
+16: "Password", csvIndex: 17​
+17: "Browser User Agent", csvIndex: 18​
+18: "Telephone Number", csvIndex: 19​
+19: "Telephone Country Code", csvIndex: 20​
+20: "Mothers Maiden", csvIndex: 21​
+21: "Birthday", csvIndex: 22​
+22: "Age", csvIndex: 23​
+23: "Tropical Zodiac", csvIndex: 24​
+24: "CC Type", csvIndex: 25​
+25: "CC Number", csvIndex: 26​
+26: "CVV2", csvIndex: 27​
+27: "CC Expires", csvIndex: 28​
+28: "National ID", csvIndex: 29​
+29: "UPS", csvIndex: 30​
+30: "Western Union MTCN", csvIndex: 31​
+31: "Money Gram MTCN", csvIndex: 32​
+32: "Color", csvIndex: 33​
+33: "Occupation", csvIndex: 34​
+34: "Company", csvIndex: 35​
+35: "Vehicle", csvIndex: 36​
+36: "Domain", csvIndex: 37​
+37: "Blood Type", csvIndex: 38​
+38: "Pounds", csvIndex: 39​
+39: "Kilograms", csvIndex: 40​
+40: "Feet Inches", csvIndex: 41​
+41: "Centimeters", csvIndex: 42​
+42: "GUID", csvIndex: 43​
+43: "Latitude", csvIndex: 44​
+44: "Longitude", csvIndex: 45​
+
+*/
+
 "use strict";
 
 /* Particular to the page */
@@ -790,52 +840,43 @@ const StaticCatalogPage = (() => {
 			let $result = $resultTemplate.clone();
 			$result.appendTo($resultsList);
 			
-			//let resultFields = $result.find("div[data-name=scp-name--result-grid]")[0];
-			
 			$($result.find("div[data-name=scp-name--result-segment]")[0]).addClass("ui bottom attached").addClass(colorCor[line[32]]).addClass("segment");
 			
 			$result.find("span[data-name=scp-name--result-field-title]").html(line[3]);
 			$result.find("span[data-name=scp-name--result-field-given-name]").html(line[4]);
 			$result.find("span[data-name=scp-name--result-field-middle-initial]").html(line[5]);
 			$result.find("span[data-name=scp-name--result-field-surname]").html(line[6]);
-			
-			$result.find("span[data-name=scp-name--result-mothers-maiden]").html(line[20]);
+			$result.find("span[data-name=scp-name--result-field-national-id]").html(line[28]);
 
-			$result.find("span[data-name=scp-name--result-field-vehicle]").html(line[35]);
-			
-			
+			$result.find("span[data-name=scp-name--result-field-birthday]").html(line[21]);
+			$result.find("span[data-name=scp-name--result-field-age]").html(line[22]);
+			$result.find("span[data-name=scp-name--result-field-tropical-zodiac]").html(line[23]);
+			$result.find("span[data-name=scp-name--result-field--mothers-maiden]").html(line[20]);
 
+			$result.find("span[data-name=scp-name--result-field-occupation]").html(line[33]);
+			$result.find("span[data-name=scp-name--result-field-company]").html(line[34]);
+			$result.find("span[data-name=scp-name--result-field-domain]").html(line[36]);
+
+			$result.find("span[data-name=scp-name--result-field-blood-type]").html(line[37]);
+			$result.find("span[data-name=scp-name--result-field-pounds]").html(line[38]);
+			$result.find("span[data-name=scp-name--result-field-kilograms]").html(line[39]);
+			$result.find("span[data-name=scp-name--result-field-feet-inches]").html(line[40]);
+			$result.find("span[data-name=scp-name--result-field-centimeters]").html(line[41]);
+			let vehicle = line[35];
+			$result.find("span[data-name=scp-name--result-field-vehicle]").html(vehicle);
+			$($result.find("a[data-name=scp-name--result-field-vehicle-href]")[0]).attr("href",
+					"https://www.google.com/search?q=" + vehicle.replace(/ /gi, "-") + "&tbm=isch");
+			
 			$result.find("span[data-name=scp-name--result-field-street-address]").html(line[7]);
 			$result.find("span[data-name=scp-name--result-field-city]").html(line[8]);
 			$result.find("span[data-name=scp-name--result-field-state-full]").html(line[10]);
 			$result.find("span[data-name=scp-name--result-field-zip-code]").html(line[11]);
 
-			$result.find("#gmap_canvas").prop("src", "https://maps.google.com/maps?q=" + line[43] + "%2C%20%20" + line[44] + "&t=&z=7&ie=UTF8&iwloc=&output=embed");
+			$result.find("#gmap_canvas").prop("src", "https://maps.google.com/maps?q=" + line[43] +
+					"%2C%20%20" + line[44] + "&t=&z=7&ie=UTF8&iwloc=&output=embed");
 
-			$result.find("span[data-name=scp-name--result-field-domain]").html(line[36]);
 			$result.find("span[data-name=scp-name--result-field-email-address]").html(line[14]);
 			$result.find("span[data-name=scp-name--result-field-telephone-number]").html(line[18]);
-
-			
-			
-//			fetch("https://www.google.com/search?q=2012+Land+Rover+LR4&tbm=isch").then( (response) => {
-//				
-//				response.text().then( (data) => {
-//					
-//					console.log(data);
-//				});
-//			});
-			
-			
-//			for (let lineField in line) {
-//				let $resultField = $resultFieldTemplate.clone();
-//				$resultField.appendTo($resultFields);
-//				$resultField.find("span[data-name=scp-name--result-field-name]").html(pageFieldsProp[lineField].label);
-//				$resultField.find("span[data-name=scp-name--result-field-value]").html(line[pageFieldsProp[lineField].csvIndex - 1]);
-//			}
-			
-//			let $map = $('<div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=' + line[43] + '%2C%20%20' + line[44] + '&t=&z=7&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>Google Maps Generator by <a href="https://www.embedgooglemap.net">embedgooglemap.net</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>');
-//			$map.appendTo($result);
 		}
 		$resultsPanel.show();
 	}
@@ -868,53 +909,3 @@ const StaticCatalogPage = (() => {
 		apply: apply
 	}
 })();
-
-/*
-
-0: "Number", csvIndex: 1
-1: "Gender", csvIndex: 2​
-2: "Name Set", csvIndex: 3​
-3: "Title", csvIndex: 4​
-4: "Given Name", csvIndex: 5​
-5: "Middle Initial", csvIndex: 6​
-6: "Surname", csvIndex: 7​
-7: "Street Address", csvIndex: 8​
-8: "City", csvIndex: 9​
-9: "State", csvIndex: 10​
-10: "State Full", csvIndex: 11​
-11: "Zip Code", csvIndex: 12​
-12: "Country", csvIndex: 13​
-13: "Country Full", csvIndex: 14​
-14: "Email Address", csvIndex: 15​
-15: "Username", csvIndex: 16​
-16: "Password", csvIndex: 17​
-17: "Browser User Agent", csvIndex: 18​
-18: "Telephone Number", csvIndex: 19​
-19: "Telephone Country Code", csvIndex: 20​
-20: "Mothers Maiden", csvIndex: 21​
-21: "Birthday", csvIndex: 22​
-22: "Age", csvIndex: 23​
-23: "Tropical Zodiac", csvIndex: 24​
-24: "CC Type", csvIndex: 25​
-25: "CC Number", csvIndex: 26​
-26: "CVV2", csvIndex: 27​
-27: "CC Expires", csvIndex: 28​
-28: "National ID", csvIndex: 29​
-29: "UPS", csvIndex: 30​
-30: "Western Union MTCN", csvIndex: 31​
-31: "Money Gram MTCN", csvIndex: 32​
-32: "Color", csvIndex: 33​
-33: "Occupation", csvIndex: 34​
-34: "Company", csvIndex: 35​
-35: "Vehicle", csvIndex: 36​
-36: "Domain", csvIndex: 37​
-37: "Blood Type", csvIndex: 38​
-38: "Pounds", csvIndex: 39​
-39: "Kilograms", csvIndex: 40​
-40: "Feet Inches", csvIndex: 41​
-41: "Centimeters", csvIndex: 42​
-42: "GUID", csvIndex: 43​
-43: "Latitude", csvIndex: 44​
-44: "Longitude", csvIndex: 45​
-
-*/
