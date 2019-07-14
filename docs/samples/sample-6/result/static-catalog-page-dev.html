@@ -1,0 +1,5294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog development/demo                    static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic-button-github.css">
+
+<script src="scripts/jquery-3.4.0.js"></script>
+<script src="semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="styles/static-catalog-page-dev.css">
+
+<script src="scripts/static-catalog-page-dev.js"></script>
+
+<!-- _catalog -->
+<script src="_catalog/scripts/papaparse.js"></script>
+<script src="_catalog/scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+		<div class="ui vertical basic segment">Search-able catalog for static generated sites - <em>static-catalog.org</em> 2019</div>
+
+		<div class="ui message">Sample 6: FakeNameGenerator.com_100000.csv - <a href="https://www.fakenamegenerator.com/"  target="_blank">Fake Name Generator</a></div>
+
+		<div class="ui inverted menu">
+			<div class="header item">
+				<img class="logo" src="assets/images/logo.png" width="35" height="35">
+				static-catalog
+			</div>
+			<a id="sc-id--home-menu" class="item" href="https://static-catalog.org" target="_blank">
+				<i class="home icon"></i>
+				Home
+			</a>
+			<a id="sc-id--repo-menu" class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank">
+				<i class="github icon"></i>
+				GitHub Repo
+			</a>
+			<div class="right menu" style="display: none;">
+				<div class="header item">
+					Debug 
+				</div>
+				<div class="item" style="width: 150px;">
+					<div id="sc-id--debug-all-values-button" class="ui fluid red button">All checks</div>
+				</div>				
+			</div>
+		</div>
+		<div class="overlay">
+			<div class="ui left close rail">
+				<div class="ui right aligned fluid container" style="padding-top: 2em">
+					<div class="ui labeled icon vertical menu">
+						<a id="sc-id--filter-menu" class="item"><i class="filter icon"></i> Search </a>
+						<a id="sc-id--clear-menu" class="item"><i class="trash alternate outline icon"></i> Clear All </a>
+						<a id="sc-id--expand-collapse-menu" class="item"><i class="compress icon"></i> Collapse </a>
+						<a id="sc-id--top-menu" class="item"><i class="long arrow alternate up icon"></i> Top </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui black segment">
+			<div class="ui divided grid">
+				<div class="thirteen wide column" style="min-height: 100px;">
+					<div class="ui gray labels">
+						<div class="ui label">
+							Total lines
+							<div class="detail">100,000</div>
+						</div>
+						<div class="ui label">
+							Data size
+							<div class="detail">54 MB</div>
+						</div>
+						<div class="ui label">
+							Fields
+							<div class="detail">45</div>
+						</div>
+						<div class="ui label">
+							Filters
+							<div class="detail">21</div>
+						</div>
+					</div>
+					<div id="scp-id--filters-count" class="ui black labels"></div>					
+				</div>
+				<div class="right aligned three wide column">
+					<div id="sc-id--search-button" class="ui fluid primary button">Search</div>
+<!-- 					<div class="ui hidden clearing divider"></div> -->
+				</div>
+			</div>
+		</div>
+		<div class="ui grid">
+			<div class="five wide column">
+				<div style="display: flex; align-items: center;">
+					<div class="ui label" style="margin-right: 0.5em;">Sort by</div>
+					<div style="flex-grow: 1;">
+						<div id="scp-id--sort" class="ui selection fluid dropdown" tabindex="0">
+							<input type="hidden" name="scp-name--sort" value="initial"><i class="dropdown icon"></i>
+							<div class="text">CSV order</div>
+							<div class="menu" tabindex="-1">
+								<div class="item active selected" data-sort-field-index="-1" data-sort-direction="">CSV order</div>
+								    
+								<div class="item" data-sort-field-index="1" data-sort-direction="asc">Given Name <em>Asc</em></div>
+								 
+								<div class="item" data-sort-field-index="1" data-sort-direction="desc">Given Name <em>Desc</em></div>
+								  
+								<div class="item" data-sort-field-index="2" data-sort-direction="asc">Surname <em>Asc</em></div>
+								 
+								<div class="item" data-sort-field-index="2" data-sort-direction="desc">Surname <em>Desc</em></div>
+								                                                                                                                               
+							</div>
+						</div>
+					</div>
+				</div>
+				   
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Given Name <span
+							class="ui left pointing basic horizontal label">42</span>
+						</a>
+						<div class="active content">
+							
+							
+							<div id="sc_field__1__GivenName" class="ui selection fluid dropdown" tabindex="0" data-filter-display-type="dropdown">
+								<input type="hidden" name="sc_field__1__GivenName" value="initial"><i class="dropdown icon"></i>
+								<div class="text" style="display: block;"></div>
+								<div class="menu" tabindex="-1">
+									<div class="item active selected"></div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__0__Aaron_to_Alice" data-value="sc_filter__1__GivenName__0__Aaron_to_Alice">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Aaron to Alice" data-position="top right">
+												1,693
+											</div>
+										</div>
+										Aaron - Alice
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__1__Alicia_to_Annabel" data-value="sc_filter__1__GivenName__1__Alicia_to_Annabel">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Alicia to Annabel" data-position="top right">
+												2,974
+											</div>
+										</div>
+										Alicia - Annabel
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__2__Annabelle_to_Audra" data-value="sc_filter__1__GivenName__2__Annabelle_to_Audra">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Annabelle to Audra" data-position="top right">
+												1,790
+											</div>
+										</div>
+										Annabelle - Audra
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__3__Audrey_to_Bianca" data-value="sc_filter__1__GivenName__3__Audrey_to_Bianca">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Audrey to Bianca" data-position="top right">
+												2,509
+											</div>
+										</div>
+										Audrey - Bianca
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__4__Bill_to_Burton" data-value="sc_filter__1__GivenName__4__Bill_to_Burton">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Bill to Burton" data-position="top right">
+												2,388
+											</div>
+										</div>
+										Bill - Burton
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__5__Buster_to_Cathryn" data-value="sc_filter__1__GivenName__5__Buster_to_Cathryn">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Buster to Cathryn" data-position="top right">
+												2,107
+											</div>
+										</div>
+										Buster - Cathryn
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__6__Cathy_to_Christiane" data-value="sc_filter__1__GivenName__6__Cathy_to_Christiane">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Cathy to Christiane" data-position="top right">
+												1,989
+											</div>
+										</div>
+										Cathy - Christiane
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__7__Christie_to_Corinna" data-value="sc_filter__1__GivenName__7__Christie_to_Corinna">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Christie to Corinna" data-position="top right">
+												2,325
+											</div>
+										</div>
+										Christie - Corinna
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__8__Corinne_to_Dave" data-value="sc_filter__1__GivenName__8__Corinne_to_Dave">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Corinne to Dave" data-position="top right">
+												2,355
+											</div>
+										</div>
+										Corinne - Dave
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__9__David_to_Dianna" data-value="sc_filter__1__GivenName__9__David_to_Dianna">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="David to Dianna" data-position="top right">
+												3,446
+											</div>
+										</div>
+										David - Dianna
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__10__Dianne_to_Earnest" data-value="sc_filter__1__GivenName__10__Dianne_to_Earnest">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Dianne to Earnest" data-position="top right">
+												2,510
+											</div>
+										</div>
+										Dianne - Earnest
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__11__Earnestine_to_Elsie" data-value="sc_filter__1__GivenName__11__Earnestine_to_Elsie">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Earnestine to Elsie" data-position="top right">
+												2,440
+											</div>
+										</div>
+										Earnestine - Elsie
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__12__Elton_to_Evalyn" data-value="sc_filter__1__GivenName__12__Elton_to_Evalyn">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Elton to Evalyn" data-position="top right">
+												1,886
+											</div>
+										</div>
+										Elton - Evalyn
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__13__Evan_to_Freddie" data-value="sc_filter__1__GivenName__13__Evan_to_Freddie">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Evan to Freddie" data-position="top right">
+												1,772
+											</div>
+										</div>
+										Evan - Freddie
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__14__Freddy_to_Gladys" data-value="sc_filter__1__GivenName__14__Freddy_to_Gladys">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Freddy to Gladys" data-position="top right">
+												2,117
+											</div>
+										</div>
+										Freddy - Gladys
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__15__Glen_to_Herta" data-value="sc_filter__1__GivenName__15__Glen_to_Herta">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Glen to Herta" data-position="top right">
+												2,957
+											</div>
+										</div>
+										Glen - Herta
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__16__Hester_to_Isaiah" data-value="sc_filter__1__GivenName__16__Hester_to_Isaiah">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Hester to Isaiah" data-position="top right">
+												1,099
+											</div>
+										</div>
+										Hester - Isaiah
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__17__Isaias_to_Jasmin" data-value="sc_filter__1__GivenName__17__Isaias_to_Jasmin">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Isaias to Jasmin" data-position="top right">
+												3,433
+											</div>
+										</div>
+										Isaias - Jasmin
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__18__Jasmine_to_Joanie" data-value="sc_filter__1__GivenName__18__Jasmine_to_Joanie">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Jasmine to Joanie" data-position="top right">
+												3,787
+											</div>
+										</div>
+										Jasmine - Joanie
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__19__Joann_to_June" data-value="sc_filter__1__GivenName__19__Joann_to_June">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Joann to June" data-position="top right">
+												5,760
+											</div>
+										</div>
+										Joann - June
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__20__Jung_to_Keena" data-value="sc_filter__1__GivenName__20__Jung_to_Keena">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Jung to Keena" data-position="top right">
+												1,878
+											</div>
+										</div>
+										Jung - Keena
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__21__Keenan_to_Kurtis" data-value="sc_filter__1__GivenName__21__Keenan_to_Kurtis">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Keenan to Kurtis" data-position="top right">
+												2,428
+											</div>
+										</div>
+										Keenan - Kurtis
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__22__Kyla_to_Lawanna" data-value="sc_filter__1__GivenName__22__Kyla_to_Lawanna">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Kyla to Lawanna" data-position="top right">
+												1,245
+											</div>
+										</div>
+										Kyla - Lawanna
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__23__Lawerence_to_Lily" data-value="sc_filter__1__GivenName__23__Lawerence_to_Lily">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Lawerence to Lily" data-position="top right">
+												1,505
+											</div>
+										</div>
+										Lawerence - Lily
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__24__Lin_to_Lucas" data-value="sc_filter__1__GivenName__24__Lin_to_Lucas">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Lin to Lucas" data-position="top right">
+												2,362
+											</div>
+										</div>
+										Lin - Lucas
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__25__Lucia_to_Mandy" data-value="sc_filter__1__GivenName__25__Lucia_to_Mandy">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Lucia to Mandy" data-position="top right">
+												1,114
+											</div>
+										</div>
+										Lucia - Mandy
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__26__Manie_to_Marlena" data-value="sc_filter__1__GivenName__26__Manie_to_Marlena">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Manie to Marlena" data-position="top right">
+												2,912
+											</div>
+										</div>
+										Manie - Marlena
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__27__Marlene_to_Melina" data-value="sc_filter__1__GivenName__27__Marlene_to_Melina">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Marlene to Melina" data-position="top right">
+												3,268
+											</div>
+										</div>
+										Marlene - Melina
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__28__Melinda_to_Mohammad" data-value="sc_filter__1__GivenName__28__Melinda_to_Mohammad">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Melinda to Mohammad" data-position="top right">
+												3,136
+											</div>
+										</div>
+										Melinda - Mohammad
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__29__Mohammed_to_Nicki" data-value="sc_filter__1__GivenName__29__Mohammed_to_Nicki">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Mohammed to Nicki" data-position="top right">
+												1,676
+											</div>
+										</div>
+										Mohammed - Nicki
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__30__Nickie_to_Owen" data-value="sc_filter__1__GivenName__30__Nickie_to_Owen">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Nickie to Owen" data-position="top right">
+												1,142
+											</div>
+										</div>
+										Nickie - Owen
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__31__Ozell_to_Raelene" data-value="sc_filter__1__GivenName__31__Ozell_to_Raelene">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Ozell to Raelene" data-position="top right">
+												3,486
+											</div>
+										</div>
+										Ozell - Raelene
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__32__Rafael_to_Rikki" data-value="sc_filter__1__GivenName__32__Rafael_to_Rikki">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Rafael to Rikki" data-position="top right">
+												2,850
+											</div>
+										</div>
+										Rafael - Rikki
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__33__Riley_to_Roy" data-value="sc_filter__1__GivenName__33__Riley_to_Roy">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Riley to Roy" data-position="top right">
+												3,775
+											</div>
+										</div>
+										Riley - Roy
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__34__Royal_to_Shamika" data-value="sc_filter__1__GivenName__34__Royal_to_Shamika">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Royal to Shamika" data-position="top right">
+												2,895
+											</div>
+										</div>
+										Royal - Shamika
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__35__Shana_to_Shiela" data-value="sc_filter__1__GivenName__35__Shana_to_Shiela">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Shana to Shiela" data-position="top right">
+												1,413
+											</div>
+										</div>
+										Shana - Shiela
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__36__Shiloh_to_Susie" data-value="sc_filter__1__GivenName__36__Shiloh_to_Susie">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Shiloh to Susie" data-position="top right">
+												2,674
+											</div>
+										</div>
+										Shiloh - Susie
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__37__Suzan_to_Tessie" data-value="sc_filter__1__GivenName__37__Suzan_to_Tessie">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Suzan to Tessie" data-position="top right">
+												1,414
+											</div>
+										</div>
+										Suzan - Tessie
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__38__Thad_to_Troy" data-value="sc_filter__1__GivenName__38__Thad_to_Troy">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Thad to Troy" data-position="top right">
+												2,832
+											</div>
+										</div>
+										Thad - Troy
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__39__Trudi_to_Violette" data-value="sc_filter__1__GivenName__39__Trudi_to_Violette">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Trudi to Violette" data-position="top right">
+												1,299
+											</div>
+										</div>
+										Trudi - Violette
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__40__Virgie_to_Yolando" data-value="sc_filter__1__GivenName__40__Virgie_to_Yolando">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Virgie to Yolando" data-position="top right">
+												3,107
+											</div>
+										</div>
+										Virgie - Yolando
+									</div>
+									  
+									<div class="item" id="sc_filter__1__GivenName__41__Yolonda_to_Zulma" data-value="sc_filter__1__GivenName__41__Yolonda_to_Zulma">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" data-tooltip="Yolonda to Zulma" data-position="top right">
+												252
+											</div>
+										</div>
+										Yolonda - Zulma
+									</div>
+									
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Surname <span
+							class="ui left pointing basic horizontal label">15366</span>
+						</a>
+						<div class="active content">
+							
+							
+							
+							<div id="sc_field__2__Surname" class="ui search" data-filter-display-type="searchbox">
+								<div class="ui fluid icon input">
+									<input class="prompt" type="text" placeholder="Search Surname...">
+									<i class="search icon"></i>
+								</div>
+								<div class="results"></div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> State <span
+							class="ui left pointing basic horizontal label">52</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__0__AK" type="checkbox" name="sc_field__3__State" value="AK">
+										<label for="sc_filter__3__State__0__AK" >AK</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											365
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__1__AL" type="checkbox" name="sc_field__3__State" value="AL">
+										<label for="sc_filter__3__State__1__AL" >AL</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,542
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__2__AR" type="checkbox" name="sc_field__3__State" value="AR">
+										<label for="sc_filter__3__State__2__AR" >AR</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,176
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__3__AZ" type="checkbox" name="sc_field__3__State" value="AZ">
+										<label for="sc_filter__3__State__3__AZ" >AZ</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,466
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__4__CA" type="checkbox" name="sc_field__3__State" value="CA">
+										<label for="sc_filter__3__State__4__CA" >CA</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											10,835
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__5__CO" type="checkbox" name="sc_field__3__State" value="CO">
+										<label for="sc_filter__3__State__5__CO" >CO</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,580
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__6__CT" type="checkbox" name="sc_field__3__State" value="CT">
+										<label for="sc_filter__3__State__6__CT" >CT</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,080
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__7__DC" type="checkbox" name="sc_field__3__State" value="DC">
+										<label for="sc_filter__3__State__7__DC" >DC</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											421
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__8__DE" type="checkbox" name="sc_field__3__State" value="DE">
+										<label for="sc_filter__3__State__8__DE" >DE</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											311
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__3__State__9__FL" type="checkbox" name="sc_field__3__State" value="FL">
+										<label for="sc_filter__3__State__9__FL" >FL</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,131
+										</div>
+									</div>
+								</div>
+								                                                                                                                               
+								
+								<div class="item">
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">42</span></a>
+									<div class="content">
+										<div class="ui list">
+											                                           
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__10__GA" type="checkbox" name="sc_field__3__State" value="GA">
+													<label for="sc_filter__3__State__10__GA" >GA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,809
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__11__HI" type="checkbox" name="sc_field__3__State" value="HI">
+													<label for="sc_filter__3__State__11__HI" >HI</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														377
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__12__IA" type="checkbox" name="sc_field__3__State" value="IA">
+													<label for="sc_filter__3__State__12__IA" >IA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,007
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__13__ID" type="checkbox" name="sc_field__3__State" value="ID">
+													<label for="sc_filter__3__State__13__ID" >ID</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														464
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__14__IL" type="checkbox" name="sc_field__3__State" value="IL">
+													<label for="sc_filter__3__State__14__IL" >IL</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,728
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__15__IN" type="checkbox" name="sc_field__3__State" value="IN">
+													<label for="sc_filter__3__State__15__IN" >IN</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,140
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__16__KS" type="checkbox" name="sc_field__3__State" value="KS">
+													<label for="sc_filter__3__State__16__KS" >KS</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,237
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__17__KY" type="checkbox" name="sc_field__3__State" value="KY">
+													<label for="sc_filter__3__State__17__KY" >KY</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,662
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__18__LA" type="checkbox" name="sc_field__3__State" value="LA">
+													<label for="sc_filter__3__State__18__LA" >LA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,561
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__19__MA" type="checkbox" name="sc_field__3__State" value="MA">
+													<label for="sc_filter__3__State__19__MA" >MA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,933
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__20__MD" type="checkbox" name="sc_field__3__State" value="MD">
+													<label for="sc_filter__3__State__20__MD" >MD</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,940
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__21__ME" type="checkbox" name="sc_field__3__State" value="ME">
+													<label for="sc_filter__3__State__21__ME" >ME</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														449
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__22__MI" type="checkbox" name="sc_field__3__State" value="MI">
+													<label for="sc_filter__3__State__22__MI" >MI</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,924
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__23__MN" type="checkbox" name="sc_field__3__State" value="MN">
+													<label for="sc_filter__3__State__23__MN" >MN</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,993
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__24__MO" type="checkbox" name="sc_field__3__State" value="MO">
+													<label for="sc_filter__3__State__24__MO" >MO</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,313
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__25__MP" type="checkbox" name="sc_field__3__State" value="MP">
+													<label for="sc_filter__3__State__25__MP" >MP</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														18
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__26__MS" type="checkbox" name="sc_field__3__State" value="MS">
+													<label for="sc_filter__3__State__26__MS" >MS</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,214
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__27__MT" type="checkbox" name="sc_field__3__State" value="MT">
+													<label for="sc_filter__3__State__27__MT" >MT</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														432
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__28__NC" type="checkbox" name="sc_field__3__State" value="NC">
+													<label for="sc_filter__3__State__28__NC" >NC</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,741
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__29__ND" type="checkbox" name="sc_field__3__State" value="ND">
+													<label for="sc_filter__3__State__29__ND" >ND</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														438
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__30__NE" type="checkbox" name="sc_field__3__State" value="NE">
+													<label for="sc_filter__3__State__30__NE" >NE</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														812
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__31__NH" type="checkbox" name="sc_field__3__State" value="NH">
+													<label for="sc_filter__3__State__31__NH" >NH</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														440
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__32__NJ" type="checkbox" name="sc_field__3__State" value="NJ">
+													<label for="sc_filter__3__State__32__NJ" >NJ</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,983
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__33__NM" type="checkbox" name="sc_field__3__State" value="NM">
+													<label for="sc_filter__3__State__33__NM" >NM</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														574
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__34__NV" type="checkbox" name="sc_field__3__State" value="NV">
+													<label for="sc_filter__3__State__34__NV" >NV</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														702
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__35__NY" type="checkbox" name="sc_field__3__State" value="NY">
+													<label for="sc_filter__3__State__35__NY" >NY</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														5,794
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__36__OH" type="checkbox" name="sc_field__3__State" value="OH">
+													<label for="sc_filter__3__State__36__OH" >OH</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,901
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__37__OK" type="checkbox" name="sc_field__3__State" value="OK">
+													<label for="sc_filter__3__State__37__OK" >OK</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,359
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__38__OR" type="checkbox" name="sc_field__3__State" value="OR">
+													<label for="sc_filter__3__State__38__OR" >OR</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,116
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__39__PA" type="checkbox" name="sc_field__3__State" value="PA">
+													<label for="sc_filter__3__State__39__PA" >PA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,222
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__40__RI" type="checkbox" name="sc_field__3__State" value="RI">
+													<label for="sc_filter__3__State__40__RI" >RI</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														400
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__41__SC" type="checkbox" name="sc_field__3__State" value="SC">
+													<label for="sc_filter__3__State__41__SC" >SC</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,130
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__42__SD" type="checkbox" name="sc_field__3__State" value="SD">
+													<label for="sc_filter__3__State__42__SD" >SD</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														359
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__43__TN" type="checkbox" name="sc_field__3__State" value="TN">
+													<label for="sc_filter__3__State__43__TN" >TN</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,910
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__44__TX" type="checkbox" name="sc_field__3__State" value="TX">
+													<label for="sc_filter__3__State__44__TX" >TX</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														7,659
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__45__UT" type="checkbox" name="sc_field__3__State" value="UT">
+													<label for="sc_filter__3__State__45__UT" >UT</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														824
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__46__VA" type="checkbox" name="sc_field__3__State" value="VA">
+													<label for="sc_filter__3__State__46__VA" >VA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,243
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__47__VT" type="checkbox" name="sc_field__3__State" value="VT">
+													<label for="sc_filter__3__State__47__VT" >VT</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														379
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__48__WA" type="checkbox" name="sc_field__3__State" value="WA">
+													<label for="sc_filter__3__State__48__WA" >WA</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,076
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__49__WI" type="checkbox" name="sc_field__3__State" value="WI">
+													<label for="sc_filter__3__State__49__WI" >WI</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,024
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__50__WV" type="checkbox" name="sc_field__3__State" value="WV">
+													<label for="sc_filter__3__State__50__WV" >WV</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														540
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__3__State__51__WY" type="checkbox" name="sc_field__3__State" value="WY">
+													<label for="sc_filter__3__State__51__WY" >WY</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														266
+													</div>
+												</div>
+											</div>
+											 
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> State Full <span
+							class="ui left pointing basic horizontal label">52</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__e_0__NULL" type="checkbox" name="sc_field__4__StateFull" value="NULL">
+										<label for="sc_filter__4__StateFull__e_0__NULL"  style="font-style: italic;" >NULL</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											18
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__1__Alabama" type="checkbox" name="sc_field__4__StateFull" value="Alabama">
+										<label for="sc_filter__4__StateFull__1__Alabama" >Alabama</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,542
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__2__Alaska" type="checkbox" name="sc_field__4__StateFull" value="Alaska">
+										<label for="sc_filter__4__StateFull__2__Alaska" >Alaska</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											365
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__3__Arizona" type="checkbox" name="sc_field__4__StateFull" value="Arizona">
+										<label for="sc_filter__4__StateFull__3__Arizona" >Arizona</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,466
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__4__Arkansas" type="checkbox" name="sc_field__4__StateFull" value="Arkansas">
+										<label for="sc_filter__4__StateFull__4__Arkansas" >Arkansas</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,176
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__5__California" type="checkbox" name="sc_field__4__StateFull" value="California">
+										<label for="sc_filter__4__StateFull__5__California" >California</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											10,835
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__6__Colorado" type="checkbox" name="sc_field__4__StateFull" value="Colorado">
+										<label for="sc_filter__4__StateFull__6__Colorado" >Colorado</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,580
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__7__Connecticut" type="checkbox" name="sc_field__4__StateFull" value="Connecticut">
+										<label for="sc_filter__4__StateFull__7__Connecticut" >Connecticut</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,080
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__8__Delaware" type="checkbox" name="sc_field__4__StateFull" value="Delaware">
+										<label for="sc_filter__4__StateFull__8__Delaware" >Delaware</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											311
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__4__StateFull__9__Florida" type="checkbox" name="sc_field__4__StateFull" value="Florida">
+										<label for="sc_filter__4__StateFull__9__Florida" >Florida</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,131
+										</div>
+									</div>
+								</div>
+								                                                                                                                               
+								
+								<div class="item">
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">42</span></a>
+									<div class="content">
+										<div class="ui list">
+											                                           
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__10__Georgia" type="checkbox" name="sc_field__4__StateFull" value="Georgia">
+													<label for="sc_filter__4__StateFull__10__Georgia" >Georgia</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,809
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__11__Hawaii" type="checkbox" name="sc_field__4__StateFull" value="Hawaii">
+													<label for="sc_filter__4__StateFull__11__Hawaii" >Hawaii</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														377
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__12__Idaho" type="checkbox" name="sc_field__4__StateFull" value="Idaho">
+													<label for="sc_filter__4__StateFull__12__Idaho" >Idaho</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														464
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__13__Illinois" type="checkbox" name="sc_field__4__StateFull" value="Illinois">
+													<label for="sc_filter__4__StateFull__13__Illinois" >Illinois</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,728
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__14__Indiana" type="checkbox" name="sc_field__4__StateFull" value="Indiana">
+													<label for="sc_filter__4__StateFull__14__Indiana" >Indiana</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,140
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__15__Iowa" type="checkbox" name="sc_field__4__StateFull" value="Iowa">
+													<label for="sc_filter__4__StateFull__15__Iowa" >Iowa</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,007
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__16__Kansas" type="checkbox" name="sc_field__4__StateFull" value="Kansas">
+													<label for="sc_filter__4__StateFull__16__Kansas" >Kansas</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,237
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__17__Kentucky" type="checkbox" name="sc_field__4__StateFull" value="Kentucky">
+													<label for="sc_filter__4__StateFull__17__Kentucky" >Kentucky</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,662
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__18__Louisiana" type="checkbox" name="sc_field__4__StateFull" value="Louisiana">
+													<label for="sc_filter__4__StateFull__18__Louisiana" >Louisiana</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,561
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__19__Maine" type="checkbox" name="sc_field__4__StateFull" value="Maine">
+													<label for="sc_filter__4__StateFull__19__Maine" >Maine</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														449
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__20__Maryland" type="checkbox" name="sc_field__4__StateFull" value="Maryland">
+													<label for="sc_filter__4__StateFull__20__Maryland" >Maryland</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,940
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__21__Massachusetts" type="checkbox" name="sc_field__4__StateFull" value="Massachusetts">
+													<label for="sc_filter__4__StateFull__21__Massachusetts" >Massachusetts</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,933
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__22__Michigan" type="checkbox" name="sc_field__4__StateFull" value="Michigan">
+													<label for="sc_filter__4__StateFull__22__Michigan" >Michigan</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,924
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__23__Minnesota" type="checkbox" name="sc_field__4__StateFull" value="Minnesota">
+													<label for="sc_filter__4__StateFull__23__Minnesota" >Minnesota</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,993
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__24__Mississippi" type="checkbox" name="sc_field__4__StateFull" value="Mississippi">
+													<label for="sc_filter__4__StateFull__24__Mississippi" >Mississippi</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,214
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__25__Missouri" type="checkbox" name="sc_field__4__StateFull" value="Missouri">
+													<label for="sc_filter__4__StateFull__25__Missouri" >Missouri</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,313
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__26__Montana" type="checkbox" name="sc_field__4__StateFull" value="Montana">
+													<label for="sc_filter__4__StateFull__26__Montana" >Montana</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														432
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__27__Nebraska" type="checkbox" name="sc_field__4__StateFull" value="Nebraska">
+													<label for="sc_filter__4__StateFull__27__Nebraska" >Nebraska</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														812
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__28__Nevada" type="checkbox" name="sc_field__4__StateFull" value="Nevada">
+													<label for="sc_filter__4__StateFull__28__Nevada" >Nevada</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														702
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__29__New_Hampshire" type="checkbox" name="sc_field__4__StateFull" value="New Hampshire">
+													<label for="sc_filter__4__StateFull__29__New_Hampshire" >New Hampshire</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														440
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__30__New_Jersey" type="checkbox" name="sc_field__4__StateFull" value="New Jersey">
+													<label for="sc_filter__4__StateFull__30__New_Jersey" >New Jersey</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,983
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__31__New_Mexico" type="checkbox" name="sc_field__4__StateFull" value="New Mexico">
+													<label for="sc_filter__4__StateFull__31__New_Mexico" >New Mexico</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														574
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__32__New_York" type="checkbox" name="sc_field__4__StateFull" value="New York">
+													<label for="sc_filter__4__StateFull__32__New_York" >New York</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														5,794
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__33__North_Carolina" type="checkbox" name="sc_field__4__StateFull" value="North Carolina">
+													<label for="sc_filter__4__StateFull__33__North_Carolina" >North Carolina</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,741
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__34__North_Dakota" type="checkbox" name="sc_field__4__StateFull" value="North Dakota">
+													<label for="sc_filter__4__StateFull__34__North_Dakota" >North Dakota</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														438
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__35__Ohio" type="checkbox" name="sc_field__4__StateFull" value="Ohio">
+													<label for="sc_filter__4__StateFull__35__Ohio" >Ohio</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,901
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__36__Oklahoma" type="checkbox" name="sc_field__4__StateFull" value="Oklahoma">
+													<label for="sc_filter__4__StateFull__36__Oklahoma" >Oklahoma</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,359
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__37__Oregon" type="checkbox" name="sc_field__4__StateFull" value="Oregon">
+													<label for="sc_filter__4__StateFull__37__Oregon" >Oregon</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,116
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__38__Pennsylvania" type="checkbox" name="sc_field__4__StateFull" value="Pennsylvania">
+													<label for="sc_filter__4__StateFull__38__Pennsylvania" >Pennsylvania</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,222
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__39__Rhode_Island" type="checkbox" name="sc_field__4__StateFull" value="Rhode Island">
+													<label for="sc_filter__4__StateFull__39__Rhode_Island" >Rhode Island</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														400
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__40__South_Carolina" type="checkbox" name="sc_field__4__StateFull" value="South Carolina">
+													<label for="sc_filter__4__StateFull__40__South_Carolina" >South Carolina</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,130
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__41__South_Dakota" type="checkbox" name="sc_field__4__StateFull" value="South Dakota">
+													<label for="sc_filter__4__StateFull__41__South_Dakota" >South Dakota</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														359
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__42__Tennessee" type="checkbox" name="sc_field__4__StateFull" value="Tennessee">
+													<label for="sc_filter__4__StateFull__42__Tennessee" >Tennessee</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,910
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__43__Texas" type="checkbox" name="sc_field__4__StateFull" value="Texas">
+													<label for="sc_filter__4__StateFull__43__Texas" >Texas</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														7,659
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__44__Utah" type="checkbox" name="sc_field__4__StateFull" value="Utah">
+													<label for="sc_filter__4__StateFull__44__Utah" >Utah</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														824
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__45__Vermont" type="checkbox" name="sc_field__4__StateFull" value="Vermont">
+													<label for="sc_filter__4__StateFull__45__Vermont" >Vermont</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														379
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__46__Virginia" type="checkbox" name="sc_field__4__StateFull" value="Virginia">
+													<label for="sc_filter__4__StateFull__46__Virginia" >Virginia</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,243
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__47__Washington" type="checkbox" name="sc_field__4__StateFull" value="Washington">
+													<label for="sc_filter__4__StateFull__47__Washington" >Washington</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,076
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__48__Washington_DC" type="checkbox" name="sc_field__4__StateFull" value="Washington DC">
+													<label for="sc_filter__4__StateFull__48__Washington_DC" >Washington DC</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														421
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__49__West_Virginia" type="checkbox" name="sc_field__4__StateFull" value="West Virginia">
+													<label for="sc_filter__4__StateFull__49__West_Virginia" >West Virginia</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														540
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__50__Wisconsin" type="checkbox" name="sc_field__4__StateFull" value="Wisconsin">
+													<label for="sc_filter__4__StateFull__50__Wisconsin" >Wisconsin</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,024
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__4__StateFull__51__Wyoming" type="checkbox" name="sc_field__4__StateFull" value="Wyoming">
+													<label for="sc_filter__4__StateFull__51__Wyoming" >Wyoming</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														266
+													</div>
+												</div>
+											</div>
+											 
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				    
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Age <span
+							class="ui left pointing basic horizontal label">8</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__0___19" type="checkbox" name="sc_field__6__Age" value="19">
+										<label for="sc_filter__6__Age__0___19" >19 - 19</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="19" data-position="top right">
+											1,514
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__1___20_to__29" type="checkbox" name="sc_field__6__Age" value="20 to 29">
+										<label for="sc_filter__6__Age__1___20_to__29" >20 - 29</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="20 to 29" data-position="top right">
+											14,949
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__2___30_to__39" type="checkbox" name="sc_field__6__Age" value="30 to 39">
+										<label for="sc_filter__6__Age__2___30_to__39" >30 - 39</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="30 to 39" data-position="top right">
+											15,088
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__3___40_to__49" type="checkbox" name="sc_field__6__Age" value="40 to 49">
+										<label for="sc_filter__6__Age__3___40_to__49" >40 - 49</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="40 to 49" data-position="top right">
+											14,741
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__4___50_to__59" type="checkbox" name="sc_field__6__Age" value="50 to 59">
+										<label for="sc_filter__6__Age__4___50_to__59" >50 - 59</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="50 to 59" data-position="top right">
+											14,927
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__5___60_to__69" type="checkbox" name="sc_field__6__Age" value="60 to 69">
+										<label for="sc_filter__6__Age__5___60_to__69" >60 - 69</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="60 to 69" data-position="top right">
+											14,898
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__6___70_to__79" type="checkbox" name="sc_field__6__Age" value="70 to 79">
+										<label for="sc_filter__6__Age__6___70_to__79" >70 - 79</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="70 to 79" data-position="top right">
+											14,961
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__6__Age__7___80_to__85" type="checkbox" name="sc_field__6__Age" value="80 to 85">
+										<label for="sc_filter__6__Age__7___80_to__85" >80 - 85</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="80 to 85" data-position="top right">
+											8,922
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Zip Code <span
+							class="ui left pointing basic horizontal label">10</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__0___00084_to__08901" type="checkbox" name="sc_field__7__ZipCode" value="00084 to 08901">
+										<label for="sc_filter__7__ZipCode__0___00084_to__08901" >00084 - 08901</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="00084 to 08901" data-position="top right">
+											8,650
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__1___10001_to__19971" type="checkbox" name="sc_field__7__ZipCode" value="10001 to 19971">
+										<label for="sc_filter__7__ZipCode__1___10001_to__19971" >10001 - 19971</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="10001 to 19971" data-position="top right">
+											10,279
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__2___20002_to__29936" type="checkbox" name="sc_field__7__ZipCode" value="20002 to 29936">
+										<label for="sc_filter__7__ZipCode__2___20002_to__29936" >20002 - 29936</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="20002 to 29936" data-position="top right">
+											8,983
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__3___30001_to__39848" type="checkbox" name="sc_field__7__ZipCode" value="30001 to 39848">
+										<label for="sc_filter__7__ZipCode__3___30001_to__39848" >30001 - 39848</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="30001 to 39848" data-position="top right">
+											12,634
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__4___40003_to__49970" type="checkbox" name="sc_field__7__ZipCode" value="40003 to 49970">
+										<label for="sc_filter__7__ZipCode__4___40003_to__49970" >40003 - 49970</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="40003 to 49970" data-position="top right">
+											11,601
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__5___50003_to__59937" type="checkbox" name="sc_field__7__ZipCode" value="50003 to 59937">
+										<label for="sc_filter__7__ZipCode__5___50003_to__59937" >50003 - 59937</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="50003 to 59937" data-position="top right">
+											6,298
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__6___60002_to__69361" type="checkbox" name="sc_field__7__ZipCode" value="60002 to 69361">
+										<label for="sc_filter__7__ZipCode__6___60002_to__69361" >60002 - 69361</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="60002 to 69361" data-position="top right">
+											9,103
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__7___70001_to__79938" type="checkbox" name="sc_field__7__ZipCode" value="70001 to 79938">
+										<label for="sc_filter__7__ZipCode__7___70001_to__79938" >70001 - 79938</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="70001 to 79938" data-position="top right">
+											11,732
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__8___80002_to__89883" type="checkbox" name="sc_field__7__ZipCode" value="80002 to 89883">
+										<label for="sc_filter__7__ZipCode__8___80002_to__89883" >80002 - 89883</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="80002 to 89883" data-position="top right">
+											5,877
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__7__ZipCode__9___90007_to__99926" type="checkbox" name="sc_field__7__ZipCode" value="90007 to 99926">
+										<label for="sc_filter__7__ZipCode__9___90007_to__99926" >90007 - 99926</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="90007 to 99926" data-position="top right">
+											14,843
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Kilograms <span
+							class="ui left pointing basic horizontal label">8</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__0___44_0_to__49_9" type="checkbox" name="sc_field__8__Kilograms" value="44.0 to 49.9">
+										<label for="sc_filter__8__Kilograms__0___44_0_to__49_9" >44.0 - 49.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="44.0 to 49.9" data-position="top right">
+											1,283
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__1___50_0_to__59_9" type="checkbox" name="sc_field__8__Kilograms" value="50.0 to 59.9">
+										<label for="sc_filter__8__Kilograms__1___50_0_to__59_9" >50.0 - 59.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="50.0 to 59.9" data-position="top right">
+											10,411
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__2___60_0_to__69_9" type="checkbox" name="sc_field__8__Kilograms" value="60.0 to 69.9">
+										<label for="sc_filter__8__Kilograms__2___60_0_to__69_9" >60.0 - 69.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="60.0 to 69.9" data-position="top right">
+											17,839
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__3___70_0_to__79_9" type="checkbox" name="sc_field__8__Kilograms" value="70.0 to 79.9">
+										<label for="sc_filter__8__Kilograms__3___70_0_to__79_9" >70.0 - 79.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="70.0 to 79.9" data-position="top right">
+											19,139
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__4___80_0_to__89_9" type="checkbox" name="sc_field__8__Kilograms" value="80.0 to 89.9">
+										<label for="sc_filter__8__Kilograms__4___80_0_to__89_9" >80.0 - 89.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="80.0 to 89.9" data-position="top right">
+											19,327
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__5___90_0_to__99_9" type="checkbox" name="sc_field__8__Kilograms" value="90.0 to 99.9">
+										<label for="sc_filter__8__Kilograms__5___90_0_to__99_9" >90.0 - 99.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="90.0 to 99.9" data-position="top right">
+											18,460
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__6___100_0_to__109_9" type="checkbox" name="sc_field__8__Kilograms" value="100.0 to 109.9">
+										<label for="sc_filter__8__Kilograms__6___100_0_to__109_9" >100.0 - 109.9</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="100.0 to 109.9" data-position="top right">
+											11,107
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__8__Kilograms__7___110_0_to__117_0" type="checkbox" name="sc_field__8__Kilograms" value="110.0 to 117.0">
+										<label for="sc_filter__8__Kilograms__7___110_0_to__117_0" >110.0 - 117.0</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											data-tooltip="110.0 to 117.0" data-position="top right">
+											2,434
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Gender <span
+							class="ui left pointing basic horizontal label">2</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__9__Gender__0__female" type="checkbox" name="sc_field__9__Gender" value="female">
+										<label for="sc_filter__9__Gender__0__female" >female</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											54,418
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__9__Gender__1__male" type="checkbox" name="sc_field__9__Gender" value="male">
+										<label for="sc_filter__9__Gender__1__male" >male</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											45,582
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Name Set <span
+							class="ui left pointing basic horizontal label">1</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__10__NameSet__0__American" type="checkbox" name="sc_field__10__NameSet" value="American">
+										<label for="sc_filter__10__NameSet__0__American" >American</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											100,000
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Title <span
+							class="ui left pointing basic horizontal label">4</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__11__Title__0__Dr_" type="checkbox" name="sc_field__11__Title" value="Dr.">
+										<label for="sc_filter__11__Title__0__Dr_" >Dr.</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											3,038
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__11__Title__1__Mr_" type="checkbox" name="sc_field__11__Title" value="Mr.">
+										<label for="sc_filter__11__Title__1__Mr_" >Mr.</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											44,252
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__11__Title__2__Mrs_" type="checkbox" name="sc_field__11__Title" value="Mrs.">
+										<label for="sc_filter__11__Title__2__Mrs_" >Mrs.</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											25,094
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__11__Title__3__Ms_" type="checkbox" name="sc_field__11__Title" value="Ms.">
+										<label for="sc_filter__11__Title__3__Ms_" >Ms.</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											27,616
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Middle Initial <span
+							class="ui left pointing basic horizontal label">26</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__0__A" type="checkbox" name="sc_field__12__MiddleInitial" value="A">
+										<label for="sc_filter__12__MiddleInitial__0__A" >A</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											6,297
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__1__B" type="checkbox" name="sc_field__12__MiddleInitial" value="B">
+										<label for="sc_filter__12__MiddleInitial__1__B" >B</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,595
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__2__C" type="checkbox" name="sc_field__12__MiddleInitial" value="C">
+										<label for="sc_filter__12__MiddleInitial__2__C" >C</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,219
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__3__D" type="checkbox" name="sc_field__12__MiddleInitial" value="D">
+										<label for="sc_filter__12__MiddleInitial__3__D" >D</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,437
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__4__E" type="checkbox" name="sc_field__12__MiddleInitial" value="E">
+										<label for="sc_filter__12__MiddleInitial__4__E" >E</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,509
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__5__F" type="checkbox" name="sc_field__12__MiddleInitial" value="F">
+										<label for="sc_filter__12__MiddleInitial__5__F" >F</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,772
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__6__G" type="checkbox" name="sc_field__12__MiddleInitial" value="G">
+										<label for="sc_filter__12__MiddleInitial__6__G" >G</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											3,330
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__7__H" type="checkbox" name="sc_field__12__MiddleInitial" value="H">
+										<label for="sc_filter__12__MiddleInitial__7__H" >H</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,299
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__8__I" type="checkbox" name="sc_field__12__MiddleInitial" value="I">
+										<label for="sc_filter__12__MiddleInitial__8__I" >I</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											714
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__9__J" type="checkbox" name="sc_field__12__MiddleInitial" value="J">
+										<label for="sc_filter__12__MiddleInitial__9__J" >J</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											13,659
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__10__K" type="checkbox" name="sc_field__12__MiddleInitial" value="K">
+										<label for="sc_filter__12__MiddleInitial__10__K" >K</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,110
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__11__L" type="checkbox" name="sc_field__12__MiddleInitial" value="L">
+										<label for="sc_filter__12__MiddleInitial__11__L" >L</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,512
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__12__M" type="checkbox" name="sc_field__12__MiddleInitial" value="M">
+										<label for="sc_filter__12__MiddleInitial__12__M" >M</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											9,902
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__13__N" type="checkbox" name="sc_field__12__MiddleInitial" value="N">
+										<label for="sc_filter__12__MiddleInitial__13__N" >N</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,775
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__14__O" type="checkbox" name="sc_field__12__MiddleInitial" value="O">
+										<label for="sc_filter__12__MiddleInitial__14__O" >O</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											468
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__15__P" type="checkbox" name="sc_field__12__MiddleInitial" value="P">
+										<label for="sc_filter__12__MiddleInitial__15__P" >P</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											3,030
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__16__Q" type="checkbox" name="sc_field__12__MiddleInitial" value="Q">
+										<label for="sc_filter__12__MiddleInitial__16__Q" >Q</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											46
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__17__R" type="checkbox" name="sc_field__12__MiddleInitial" value="R">
+										<label for="sc_filter__12__MiddleInitial__17__R" >R</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,378
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__18__S" type="checkbox" name="sc_field__12__MiddleInitial" value="S">
+										<label for="sc_filter__12__MiddleInitial__18__S" >S</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,942
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__19__T" type="checkbox" name="sc_field__12__MiddleInitial" value="T">
+										<label for="sc_filter__12__MiddleInitial__19__T" >T</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,234
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__20__U" type="checkbox" name="sc_field__12__MiddleInitial" value="U">
+										<label for="sc_filter__12__MiddleInitial__20__U" >U</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											26
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__21__V" type="checkbox" name="sc_field__12__MiddleInitial" value="V">
+										<label for="sc_filter__12__MiddleInitial__21__V" >V</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,463
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__22__W" type="checkbox" name="sc_field__12__MiddleInitial" value="W">
+										<label for="sc_filter__12__MiddleInitial__22__W" >W</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,953
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__23__X" type="checkbox" name="sc_field__12__MiddleInitial" value="X">
+										<label for="sc_filter__12__MiddleInitial__23__X" >X</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											9
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__24__Y" type="checkbox" name="sc_field__12__MiddleInitial" value="Y">
+										<label for="sc_filter__12__MiddleInitial__24__Y" >Y</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											205
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__12__MiddleInitial__25__Z" type="checkbox" name="sc_field__12__MiddleInitial" value="Z">
+										<label for="sc_filter__12__MiddleInitial__25__Z" >Z</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											116
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				    
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Country <span
+							class="ui left pointing basic horizontal label">1</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__14__Country__0__US" type="checkbox" name="sc_field__14__Country" value="US">
+										<label for="sc_filter__14__Country__0__US" >US</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											100,000
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Country Full <span
+							class="ui left pointing basic horizontal label">1</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__15__CountryFull__0__United_States" type="checkbox" name="sc_field__15__CountryFull" value="United States">
+										<label for="sc_filter__15__CountryFull__0__United_States" >United States</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											100,000
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				            
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Telephone Country Code <span
+							class="ui left pointing basic horizontal label">1</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__21__TelephoneCountryCode__0___1" type="checkbox" name="sc_field__21__TelephoneCountryCode" value="1">
+										<label for="sc_filter__21__TelephoneCountryCode__0___1" >1</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											100,000
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				      
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Tropical Zodiac <span
+							class="ui left pointing basic horizontal label">12</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__0__Aquarius" type="checkbox" name="sc_field__24__TropicalZodiac" value="Aquarius">
+										<label for="sc_filter__24__TropicalZodiac__0__Aquarius" >Aquarius</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,201
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__1__Aries" type="checkbox" name="sc_field__24__TropicalZodiac" value="Aries">
+										<label for="sc_filter__24__TropicalZodiac__1__Aries" >Aries</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,227
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__2__Cancer" type="checkbox" name="sc_field__24__TropicalZodiac" value="Cancer">
+										<label for="sc_filter__24__TropicalZodiac__2__Cancer" >Cancer</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,781
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__3__Capricorn" type="checkbox" name="sc_field__24__TropicalZodiac" value="Capricorn">
+										<label for="sc_filter__24__TropicalZodiac__3__Capricorn" >Capricorn</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,921
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__4__Gemini" type="checkbox" name="sc_field__24__TropicalZodiac" value="Gemini">
+										<label for="sc_filter__24__TropicalZodiac__4__Gemini" >Gemini</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,634
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__5__Leo" type="checkbox" name="sc_field__24__TropicalZodiac" value="Leo">
+										<label for="sc_filter__24__TropicalZodiac__5__Leo" >Leo</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,398
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__6__Libra" type="checkbox" name="sc_field__24__TropicalZodiac" value="Libra">
+										<label for="sc_filter__24__TropicalZodiac__6__Libra" >Libra</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,274
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__7__Pisces" type="checkbox" name="sc_field__24__TropicalZodiac" value="Pisces">
+										<label for="sc_filter__24__TropicalZodiac__7__Pisces" >Pisces</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,309
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__8__Sagittarius" type="checkbox" name="sc_field__24__TropicalZodiac" value="Sagittarius">
+										<label for="sc_filter__24__TropicalZodiac__8__Sagittarius" >Sagittarius</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,235
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__9__Scorpio" type="checkbox" name="sc_field__24__TropicalZodiac" value="Scorpio">
+										<label for="sc_filter__24__TropicalZodiac__9__Scorpio" >Scorpio</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,277
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__10__Taurus" type="checkbox" name="sc_field__24__TropicalZodiac" value="Taurus">
+										<label for="sc_filter__24__TropicalZodiac__10__Taurus" >Taurus</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,291
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__24__TropicalZodiac__11__Virgo" type="checkbox" name="sc_field__24__TropicalZodiac" value="Virgo">
+										<label for="sc_filter__24__TropicalZodiac__11__Virgo" >Virgo</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,452
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> CC Type <span
+							class="ui left pointing basic horizontal label">2</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__25__CCType__0__MasterCard" type="checkbox" name="sc_field__25__CCType" value="MasterCard">
+										<label for="sc_filter__25__CCType__0__MasterCard" >MasterCard</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											50,331
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__25__CCType__1__Visa" type="checkbox" name="sc_field__25__CCType" value="Visa">
+										<label for="sc_filter__25__CCType__1__Visa" >Visa</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											49,669
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				      
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> CC Expires <span
+							class="ui left pointing basic horizontal label">60</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__0___1_2020" type="checkbox" name="sc_field__28__CCExpires" value="1/2020">
+										<label for="sc_filter__28__CCExpires__0___1_2020" >1/2020</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,667
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__1___1_2021" type="checkbox" name="sc_field__28__CCExpires" value="1/2021">
+										<label for="sc_filter__28__CCExpires__1___1_2021" >1/2021</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,733
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__2___1_2022" type="checkbox" name="sc_field__28__CCExpires" value="1/2022">
+										<label for="sc_filter__28__CCExpires__2___1_2022" >1/2022</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,723
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__3___1_2023" type="checkbox" name="sc_field__28__CCExpires" value="1/2023">
+										<label for="sc_filter__28__CCExpires__3___1_2023" >1/2023</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,660
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__4___1_2024" type="checkbox" name="sc_field__28__CCExpires" value="1/2024">
+										<label for="sc_filter__28__CCExpires__4___1_2024" >1/2024</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,646
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__5___2_2020" type="checkbox" name="sc_field__28__CCExpires" value="2/2020">
+										<label for="sc_filter__28__CCExpires__5___2_2020" >2/2020</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,559
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__6___2_2021" type="checkbox" name="sc_field__28__CCExpires" value="2/2021">
+										<label for="sc_filter__28__CCExpires__6___2_2021" >2/2021</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,694
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__7___2_2022" type="checkbox" name="sc_field__28__CCExpires" value="2/2022">
+										<label for="sc_filter__28__CCExpires__7___2_2022" >2/2022</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,717
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__8___2_2023" type="checkbox" name="sc_field__28__CCExpires" value="2/2023">
+										<label for="sc_filter__28__CCExpires__8___2_2023" >2/2023</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,646
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__28__CCExpires__9___2_2024" type="checkbox" name="sc_field__28__CCExpires" value="2/2024">
+										<label for="sc_filter__28__CCExpires__9___2_2024" >2/2024</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,670
+										</div>
+									</div>
+								</div>
+								                                                                                                                                                       
+								
+								<div class="item">
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">50</span></a>
+									<div class="content">
+										<div class="ui list">
+											                                           
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__10___3_2020" type="checkbox" name="sc_field__28__CCExpires" value="3/2020">
+													<label for="sc_filter__28__CCExpires__10___3_2020" >3/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,633
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__11___3_2021" type="checkbox" name="sc_field__28__CCExpires" value="3/2021">
+													<label for="sc_filter__28__CCExpires__11___3_2021" >3/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,646
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__12___3_2022" type="checkbox" name="sc_field__28__CCExpires" value="3/2022">
+													<label for="sc_filter__28__CCExpires__12___3_2022" >3/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,708
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__13___3_2023" type="checkbox" name="sc_field__28__CCExpires" value="3/2023">
+													<label for="sc_filter__28__CCExpires__13___3_2023" >3/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,647
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__14___3_2024" type="checkbox" name="sc_field__28__CCExpires" value="3/2024">
+													<label for="sc_filter__28__CCExpires__14___3_2024" >3/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,592
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__15___4_2020" type="checkbox" name="sc_field__28__CCExpires" value="4/2020">
+													<label for="sc_filter__28__CCExpires__15___4_2020" >4/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,613
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__16___4_2021" type="checkbox" name="sc_field__28__CCExpires" value="4/2021">
+													<label for="sc_filter__28__CCExpires__16___4_2021" >4/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,691
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__17___4_2022" type="checkbox" name="sc_field__28__CCExpires" value="4/2022">
+													<label for="sc_filter__28__CCExpires__17___4_2022" >4/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,660
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__18___4_2023" type="checkbox" name="sc_field__28__CCExpires" value="4/2023">
+													<label for="sc_filter__28__CCExpires__18___4_2023" >4/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,647
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__19___4_2024" type="checkbox" name="sc_field__28__CCExpires" value="4/2024">
+													<label for="sc_filter__28__CCExpires__19___4_2024" >4/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,638
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__20___5_2020" type="checkbox" name="sc_field__28__CCExpires" value="5/2020">
+													<label for="sc_filter__28__CCExpires__20___5_2020" >5/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,629
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__21___5_2021" type="checkbox" name="sc_field__28__CCExpires" value="5/2021">
+													<label for="sc_filter__28__CCExpires__21___5_2021" >5/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,648
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__22___5_2022" type="checkbox" name="sc_field__28__CCExpires" value="5/2022">
+													<label for="sc_filter__28__CCExpires__22___5_2022" >5/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,665
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__23___5_2023" type="checkbox" name="sc_field__28__CCExpires" value="5/2023">
+													<label for="sc_filter__28__CCExpires__23___5_2023" >5/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,654
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__24___5_2024" type="checkbox" name="sc_field__28__CCExpires" value="5/2024">
+													<label for="sc_filter__28__CCExpires__24___5_2024" >5/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,663
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__25___6_2020" type="checkbox" name="sc_field__28__CCExpires" value="6/2020">
+													<label for="sc_filter__28__CCExpires__25___6_2020" >6/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,750
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__26___6_2021" type="checkbox" name="sc_field__28__CCExpires" value="6/2021">
+													<label for="sc_filter__28__CCExpires__26___6_2021" >6/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,657
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__27___6_2022" type="checkbox" name="sc_field__28__CCExpires" value="6/2022">
+													<label for="sc_filter__28__CCExpires__27___6_2022" >6/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,665
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__28___6_2023" type="checkbox" name="sc_field__28__CCExpires" value="6/2023">
+													<label for="sc_filter__28__CCExpires__28___6_2023" >6/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,717
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__29___6_2024" type="checkbox" name="sc_field__28__CCExpires" value="6/2024">
+													<label for="sc_filter__28__CCExpires__29___6_2024" >6/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,612
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__30___7_2020" type="checkbox" name="sc_field__28__CCExpires" value="7/2020">
+													<label for="sc_filter__28__CCExpires__30___7_2020" >7/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,701
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__31___7_2021" type="checkbox" name="sc_field__28__CCExpires" value="7/2021">
+													<label for="sc_filter__28__CCExpires__31___7_2021" >7/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,714
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__32___7_2022" type="checkbox" name="sc_field__28__CCExpires" value="7/2022">
+													<label for="sc_filter__28__CCExpires__32___7_2022" >7/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,705
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__33___7_2023" type="checkbox" name="sc_field__28__CCExpires" value="7/2023">
+													<label for="sc_filter__28__CCExpires__33___7_2023" >7/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,632
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__34___7_2024" type="checkbox" name="sc_field__28__CCExpires" value="7/2024">
+													<label for="sc_filter__28__CCExpires__34___7_2024" >7/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,724
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__35___8_2020" type="checkbox" name="sc_field__28__CCExpires" value="8/2020">
+													<label for="sc_filter__28__CCExpires__35___8_2020" >8/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,695
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__36___8_2021" type="checkbox" name="sc_field__28__CCExpires" value="8/2021">
+													<label for="sc_filter__28__CCExpires__36___8_2021" >8/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,642
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__37___8_2022" type="checkbox" name="sc_field__28__CCExpires" value="8/2022">
+													<label for="sc_filter__28__CCExpires__37___8_2022" >8/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,699
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__38___8_2023" type="checkbox" name="sc_field__28__CCExpires" value="8/2023">
+													<label for="sc_filter__28__CCExpires__38___8_2023" >8/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,595
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__39___8_2024" type="checkbox" name="sc_field__28__CCExpires" value="8/2024">
+													<label for="sc_filter__28__CCExpires__39___8_2024" >8/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,730
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__40___9_2020" type="checkbox" name="sc_field__28__CCExpires" value="9/2020">
+													<label for="sc_filter__28__CCExpires__40___9_2020" >9/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,637
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__41___9_2021" type="checkbox" name="sc_field__28__CCExpires" value="9/2021">
+													<label for="sc_filter__28__CCExpires__41___9_2021" >9/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,717
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__42___9_2022" type="checkbox" name="sc_field__28__CCExpires" value="9/2022">
+													<label for="sc_filter__28__CCExpires__42___9_2022" >9/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,698
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__43___9_2023" type="checkbox" name="sc_field__28__CCExpires" value="9/2023">
+													<label for="sc_filter__28__CCExpires__43___9_2023" >9/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,615
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__44___9_2024" type="checkbox" name="sc_field__28__CCExpires" value="9/2024">
+													<label for="sc_filter__28__CCExpires__44___9_2024" >9/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,587
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__45___10_2020" type="checkbox" name="sc_field__28__CCExpires" value="10/2020">
+													<label for="sc_filter__28__CCExpires__45___10_2020" >10/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,654
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__46___10_2021" type="checkbox" name="sc_field__28__CCExpires" value="10/2021">
+													<label for="sc_filter__28__CCExpires__46___10_2021" >10/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,624
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__47___10_2022" type="checkbox" name="sc_field__28__CCExpires" value="10/2022">
+													<label for="sc_filter__28__CCExpires__47___10_2022" >10/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,710
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__48___10_2023" type="checkbox" name="sc_field__28__CCExpires" value="10/2023">
+													<label for="sc_filter__28__CCExpires__48___10_2023" >10/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,670
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__49___10_2024" type="checkbox" name="sc_field__28__CCExpires" value="10/2024">
+													<label for="sc_filter__28__CCExpires__49___10_2024" >10/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,639
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__50___11_2020" type="checkbox" name="sc_field__28__CCExpires" value="11/2020">
+													<label for="sc_filter__28__CCExpires__50___11_2020" >11/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,645
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__51___11_2021" type="checkbox" name="sc_field__28__CCExpires" value="11/2021">
+													<label for="sc_filter__28__CCExpires__51___11_2021" >11/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,696
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__52___11_2022" type="checkbox" name="sc_field__28__CCExpires" value="11/2022">
+													<label for="sc_filter__28__CCExpires__52___11_2022" >11/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,688
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__53___11_2023" type="checkbox" name="sc_field__28__CCExpires" value="11/2023">
+													<label for="sc_filter__28__CCExpires__53___11_2023" >11/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,729
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__54___11_2024" type="checkbox" name="sc_field__28__CCExpires" value="11/2024">
+													<label for="sc_filter__28__CCExpires__54___11_2024" >11/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,613
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__55___12_2020" type="checkbox" name="sc_field__28__CCExpires" value="12/2020">
+													<label for="sc_filter__28__CCExpires__55___12_2020" >12/2020</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,690
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__56___12_2021" type="checkbox" name="sc_field__28__CCExpires" value="12/2021">
+													<label for="sc_filter__28__CCExpires__56___12_2021" >12/2021</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,687
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__57___12_2022" type="checkbox" name="sc_field__28__CCExpires" value="12/2022">
+													<label for="sc_filter__28__CCExpires__57___12_2022" >12/2022</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,642
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__58___12_2023" type="checkbox" name="sc_field__28__CCExpires" value="12/2023">
+													<label for="sc_filter__28__CCExpires__58___12_2023" >12/2023</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,708
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__28__CCExpires__59___12_2024" type="checkbox" name="sc_field__28__CCExpires" value="12/2024">
+													<label for="sc_filter__28__CCExpires__59___12_2024" >12/2024</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,664
+													</div>
+												</div>
+											</div>
+											 
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				          
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Color <span
+							class="ui left pointing basic horizontal label">10</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__0__Black" type="checkbox" name="sc_field__33__Color" value="Black">
+										<label for="sc_filter__33__Color__0__Black" >Black</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,299
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__1__Blue" type="checkbox" name="sc_field__33__Color" value="Blue">
+										<label for="sc_filter__33__Color__1__Blue" >Blue</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											45,102
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__2__Brown" type="checkbox" name="sc_field__33__Color" value="Brown">
+										<label for="sc_filter__33__Color__2__Brown" >Brown</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,551
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__3__Green" type="checkbox" name="sc_field__33__Color" value="Green">
+										<label for="sc_filter__33__Color__3__Green" >Green</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											13,921
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__4__Orange" type="checkbox" name="sc_field__33__Color" value="Orange">
+										<label for="sc_filter__33__Color__4__Orange" >Orange</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,852
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__5__Purple" type="checkbox" name="sc_field__33__Color" value="Purple">
+										<label for="sc_filter__33__Color__5__Purple" >Purple</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											12,599
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__6__Red" type="checkbox" name="sc_field__33__Color" value="Red">
+										<label for="sc_filter__33__Color__6__Red" >Red</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,182
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__7__Silver" type="checkbox" name="sc_field__33__Color" value="Silver">
+										<label for="sc_filter__33__Color__7__Silver" >Silver</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,901
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__8__White" type="checkbox" name="sc_field__33__Color" value="White">
+										<label for="sc_filter__33__Color__8__White" >White</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,502
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__33__Color__9__Yellow" type="checkbox" name="sc_field__33__Color" value="Yellow">
+										<label for="sc_filter__33__Color__9__Yellow" >Yellow</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,091
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				          
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Blood Type <span
+							class="ui left pointing basic horizontal label">8</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__0__A_" type="checkbox" name="sc_field__38__BloodType" value="A+">
+										<label for="sc_filter__38__BloodType__0__A_" >A+</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											26,239
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__1__A_" type="checkbox" name="sc_field__38__BloodType" value="A-">
+										<label for="sc_filter__38__BloodType__1__A_" >A-</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											3,487
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__2__AB_" type="checkbox" name="sc_field__38__BloodType" value="AB+">
+										<label for="sc_filter__38__BloodType__2__AB_" >AB+</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,026
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__3__AB_" type="checkbox" name="sc_field__38__BloodType" value="AB-">
+										<label for="sc_filter__38__BloodType__3__AB_" >AB-</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											476
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__4__B_" type="checkbox" name="sc_field__38__BloodType" value="B+">
+										<label for="sc_filter__38__BloodType__4__B_" >B+</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											22,722
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__5__B_" type="checkbox" name="sc_field__38__BloodType" value="B-">
+										<label for="sc_filter__38__BloodType__5__B_" >B-</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,429
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__6__O_" type="checkbox" name="sc_field__38__BloodType" value="O+">
+										<label for="sc_filter__38__BloodType__6__O_" >O+</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											36,307
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__38__BloodType__7__O_" type="checkbox" name="sc_field__38__BloodType" value="O-">
+										<label for="sc_filter__38__BloodType__7__O_" >O-</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,314
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				    
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Feet Inches <span
+							class="ui left pointing basic horizontal label">17</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__0___4__11_" type="checkbox" name="sc_field__40__FeetInches" value="4' 11"">
+										<label for="sc_filter__40__FeetInches__0___4__11_" >4' 11"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,296
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__1___5__0_" type="checkbox" name="sc_field__40__FeetInches" value="5' 0"">
+										<label for="sc_filter__40__FeetInches__1___5__0_" >5' 0"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,727
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__2___5__1_" type="checkbox" name="sc_field__40__FeetInches" value="5' 1"">
+										<label for="sc_filter__40__FeetInches__2___5__1_" >5' 1"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,442
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__3___5__2_" type="checkbox" name="sc_field__40__FeetInches" value="5' 2"">
+										<label for="sc_filter__40__FeetInches__3___5__2_" >5' 2"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,091
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__4___5__3_" type="checkbox" name="sc_field__40__FeetInches" value="5' 3"">
+										<label for="sc_filter__40__FeetInches__4___5__3_" >5' 3"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,543
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__5___5__4_" type="checkbox" name="sc_field__40__FeetInches" value="5' 4"">
+										<label for="sc_filter__40__FeetInches__5___5__4_" >5' 4"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											6,188
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__6___5__5_" type="checkbox" name="sc_field__40__FeetInches" value="5' 5"">
+										<label for="sc_filter__40__FeetInches__6___5__5_" >5' 5"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											10,130
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__7___5__6_" type="checkbox" name="sc_field__40__FeetInches" value="5' 6"">
+										<label for="sc_filter__40__FeetInches__7___5__6_" >5' 6"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,688
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__8___5__7_" type="checkbox" name="sc_field__40__FeetInches" value="5' 7"">
+										<label for="sc_filter__40__FeetInches__8___5__7_" >5' 7"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											13,177
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__9___5__8_" type="checkbox" name="sc_field__40__FeetInches" value="5' 8"">
+										<label for="sc_filter__40__FeetInches__9___5__8_" >5' 8"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											7,311
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__10___5__9_" type="checkbox" name="sc_field__40__FeetInches" value="5' 9"">
+										<label for="sc_filter__40__FeetInches__10___5__9_" >5' 9"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											8,138
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__11___5__10_" type="checkbox" name="sc_field__40__FeetInches" value="5' 10"">
+										<label for="sc_filter__40__FeetInches__11___5__10_" >5' 10"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,956
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__12___5__11_" type="checkbox" name="sc_field__40__FeetInches" value="5' 11"">
+										<label for="sc_filter__40__FeetInches__12___5__11_" >5' 11"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											4,009
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__13___6__0_" type="checkbox" name="sc_field__40__FeetInches" value="6' 0"">
+										<label for="sc_filter__40__FeetInches__13___6__0_" >6' 0"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											5,888
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__14___6__1_" type="checkbox" name="sc_field__40__FeetInches" value="6' 1"">
+										<label for="sc_filter__40__FeetInches__14___6__1_" >6' 1"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,907
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__15___6__2_" type="checkbox" name="sc_field__40__FeetInches" value="6' 2"">
+										<label for="sc_filter__40__FeetInches__15___6__2_" >6' 2"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											3,021
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__40__FeetInches__16___6__3_" type="checkbox" name="sc_field__40__FeetInches" value="6' 3"">
+										<label for="sc_filter__40__FeetInches__16___6__3_" >6' 3"</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											488
+										</div>
+									</div>
+								</div>
+								 
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				  
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> Centimeters <span
+							class="ui left pointing basic horizontal label">41</span>
+						</a>
+						<div class="active content">
+							
+							<div class="ui list">
+								
+								
+									
+								
+								
+								  
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__0___150" type="checkbox" name="sc_field__41__Centimeters" value="150">
+										<label for="sc_filter__41__Centimeters__0___150" >150</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											400
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__1___151" type="checkbox" name="sc_field__41__Centimeters" value="151">
+										<label for="sc_filter__41__Centimeters__1___151" >151</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											896
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__2___152" type="checkbox" name="sc_field__41__Centimeters" value="152">
+										<label for="sc_filter__41__Centimeters__2___152" >152</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,171
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__3___153" type="checkbox" name="sc_field__41__Centimeters" value="153">
+										<label for="sc_filter__41__Centimeters__3___153" >153</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											1,556
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__4___154" type="checkbox" name="sc_field__41__Centimeters" value="154">
+										<label for="sc_filter__41__Centimeters__4___154" >154</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,528
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__5___155" type="checkbox" name="sc_field__41__Centimeters" value="155">
+										<label for="sc_filter__41__Centimeters__5___155" >155</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,500
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__6___156" type="checkbox" name="sc_field__41__Centimeters" value="156">
+										<label for="sc_filter__41__Centimeters__6___156" >156</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,414
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__7___157" type="checkbox" name="sc_field__41__Centimeters" value="157">
+										<label for="sc_filter__41__Centimeters__7___157" >157</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,612
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__8___158" type="checkbox" name="sc_field__41__Centimeters" value="158">
+										<label for="sc_filter__41__Centimeters__8___158" >158</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,479
+										</div>
+									</div>
+								</div>
+								   
+								<div class="item">
+									<div class="ui checkbox">
+										<input id="sc_filter__41__Centimeters__9___159" type="checkbox" name="sc_field__41__Centimeters" value="159">
+										<label for="sc_filter__41__Centimeters__9___159" >159</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											>
+											2,478
+										</div>
+									</div>
+								</div>
+								                                                                                              
+								
+								<div class="item">
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">31</span></a>
+									<div class="content">
+										<div class="ui list">
+											                                           
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__10___160" type="checkbox" name="sc_field__41__Centimeters" value="160">
+													<label for="sc_filter__41__Centimeters__10___160" >160</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,523
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__11___161" type="checkbox" name="sc_field__41__Centimeters" value="161">
+													<label for="sc_filter__41__Centimeters__11___161" >161</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,542
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__12___162" type="checkbox" name="sc_field__41__Centimeters" value="162">
+													<label for="sc_filter__41__Centimeters__12___162" >162</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,874
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__13___163" type="checkbox" name="sc_field__41__Centimeters" value="163">
+													<label for="sc_filter__41__Centimeters__13___163" >163</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,314
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__14___164" type="checkbox" name="sc_field__41__Centimeters" value="164">
+													<label for="sc_filter__41__Centimeters__14___164" >164</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,155
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__15___165" type="checkbox" name="sc_field__41__Centimeters" value="165">
+													<label for="sc_filter__41__Centimeters__15___165" >165</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,350
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__16___166" type="checkbox" name="sc_field__41__Centimeters" value="166">
+													<label for="sc_filter__41__Centimeters__16___166" >166</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,625
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__17___167" type="checkbox" name="sc_field__41__Centimeters" value="167">
+													<label for="sc_filter__41__Centimeters__17___167" >167</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,249
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__18___168" type="checkbox" name="sc_field__41__Centimeters" value="168">
+													<label for="sc_filter__41__Centimeters__18___168" >168</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,439
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__19___169" type="checkbox" name="sc_field__41__Centimeters" value="169">
+													<label for="sc_filter__41__Centimeters__19___169" >169</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,589
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__20___170" type="checkbox" name="sc_field__41__Centimeters" value="170">
+													<label for="sc_filter__41__Centimeters__20___170" >170</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,451
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__21___171" type="checkbox" name="sc_field__41__Centimeters" value="171">
+													<label for="sc_filter__41__Centimeters__21___171" >171</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														4,137
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__22___172" type="checkbox" name="sc_field__41__Centimeters" value="172">
+													<label for="sc_filter__41__Centimeters__22___172" >172</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,764
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__23___173" type="checkbox" name="sc_field__41__Centimeters" value="173">
+													<label for="sc_filter__41__Centimeters__23___173" >173</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,547
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__24___174" type="checkbox" name="sc_field__41__Centimeters" value="174">
+													<label for="sc_filter__41__Centimeters__24___174" >174</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														3,298
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__25___175" type="checkbox" name="sc_field__41__Centimeters" value="175">
+													<label for="sc_filter__41__Centimeters__25___175" >175</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,854
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__26___176" type="checkbox" name="sc_field__41__Centimeters" value="176">
+													<label for="sc_filter__41__Centimeters__26___176" >176</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,986
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__27___177" type="checkbox" name="sc_field__41__Centimeters" value="177">
+													<label for="sc_filter__41__Centimeters__27___177" >177</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,042
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__28___178" type="checkbox" name="sc_field__41__Centimeters" value="178">
+													<label for="sc_filter__41__Centimeters__28___178" >178</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,961
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__29___179" type="checkbox" name="sc_field__41__Centimeters" value="179">
+													<label for="sc_filter__41__Centimeters__29___179" >179</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,953
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__30___180" type="checkbox" name="sc_field__41__Centimeters" value="180">
+													<label for="sc_filter__41__Centimeters__30___180" >180</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,993
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__31___181" type="checkbox" name="sc_field__41__Centimeters" value="181">
+													<label for="sc_filter__41__Centimeters__31___181" >181</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,016
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__32___182" type="checkbox" name="sc_field__41__Centimeters" value="182">
+													<label for="sc_filter__41__Centimeters__32___182" >182</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,972
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__33___183" type="checkbox" name="sc_field__41__Centimeters" value="183">
+													<label for="sc_filter__41__Centimeters__33___183" >183</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														2,045
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__34___184" type="checkbox" name="sc_field__41__Centimeters" value="184">
+													<label for="sc_filter__41__Centimeters__34___184" >184</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,871
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__35___185" type="checkbox" name="sc_field__41__Centimeters" value="185">
+													<label for="sc_filter__41__Centimeters__35___185" >185</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,573
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__36___186" type="checkbox" name="sc_field__41__Centimeters" value="186">
+													<label for="sc_filter__41__Centimeters__36___186" >186</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,334
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__37___187" type="checkbox" name="sc_field__41__Centimeters" value="187">
+													<label for="sc_filter__41__Centimeters__37___187" >187</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,219
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__38___188" type="checkbox" name="sc_field__41__Centimeters" value="188">
+													<label for="sc_filter__41__Centimeters__38___188" >188</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														1,048
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__39___189" type="checkbox" name="sc_field__41__Centimeters" value="189">
+													<label for="sc_filter__41__Centimeters__39___189" >189</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														754
+													</div>
+												</div>
+											</div>
+											    
+											<div class="item">
+												<div class="ui checkbox">
+													<input id="sc_filter__41__Centimeters__40___190" type="checkbox" name="sc_field__41__Centimeters" value="190">
+													<label for="sc_filter__41__Centimeters__40___190" >190</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														>
+														488
+													</div>
+												</div>
+											</div>
+											 
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+				       
+			</div>
+			<div class="eleven wide column">
+				<div id="scp-id--welcome-message" class="ui icon message">
+					<i class="info circle icon"></i>
+					<div class="content">
+						<div class="header">Welcome</div>
+						<p>Please check some filters and do a search.</p>
+					</div>
+				</div>
+				<div id="scp-id--searching-message" class="ui icon message" style="display: none">
+					<i class="notched circle loading icon"></i>
+					<div class="content">
+						<div class="header">Searching</div>
+						<p>We're fetching that content for you.</p>
+					</div>
+				</div>
+				<div id="scp-id--no-results-message" class="ui negative icon message" style="display: none">
+					<i class="ban icon"></i>
+					<div class="content">
+						<div class="header">No results</div>
+						<p>There were no lines found after applying the filters. The search took <strong><span id="scp-id--no-results-seconds"></span></strong> seconds.</p>
+					</div>
+				</div>
+				<div id="scp-id--success-message" class="ui positive icon message" style="display: none">
+					<i class="flag checkered icon"></i>
+					<div class="content">
+						<div class="header">Search successful</div>
+						<p>The search returned <strong><span id="scp-id--returned-lines"></span></strong>
+						lines from <strong><span id="scp-id--found-lines"></span></strong> found. The search took <strong><span id="scp-id--seconds"></span></strong> seconds.</p>
+					</div>
+				</div>
+				<div id="scp-id--results" style="display: none">
+					<div class="ui grid">
+						<div class="row">
+							<div class="stretched column pr0" style="width: 150px;">
+								<div>
+									<div class="ui label">Lines</div>
+									<div id="scp-id--pagination-results-per-page" class="ui selection compact dropdown" style="width: 70px;">
+										<input type="hidden" name="scp-name--lines-per-page" value="10"><i class="dropdown icon"></i>
+										<div class="text">10</div>
+										<div class="menu">
+											<div class="item" data-value="10">10</div>
+											<div class="item" data-value="25">25</div>
+											<div class="item" data-value="50">50</div>
+											<div class="item" data-value="100">100</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="right aligned column pl0" style="width: calc(100% - 150px);">
+								<div>
+									<div class="ui label">
+										Pages
+										<div id="scp-id--pagination-pages" class="detail"></div>	
+									</div>
+									<div class="ui pagination menu">
+										<a id="scp-id--pagination-first" class="item"><i class="fitted fast backward icon"></i></a>
+										<a id="scp-id--pagination-previous" class="item"><i class="fitted step backward icon"></i></a>
+										<div id="scp-id--pagination-ellipsis-1" class="disabled item">...</div>
+										<a id="scp-id--pagination-page-1" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-2" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-3" class="item">9,999,999</a>
+										<div id="scp-id--pagination-ellipsis-2" class="disabled item">...</div>
+										<a id="scp-id--pagination-next" class="item"><i class="fitted step forward icon"></i></a>
+										<a id="scp-id--pagination-last" class="item"><i class="fitted fast forward icon"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row ptb0">
+							<div class="right aligned sixteen wide column">
+								<div class="ui compact menu">
+									<a class="th popup icon active item" id="scp-id--see-as-tiles" data-content="See as tiles"><i
+										class="th icon"></i></a> <a class="list popup icon item" id="scp-id--see-as-list" data-content="See as list"><i
+										class="list icon"></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="scp-id--tiles-or-list" class="ui three column grid"></div>
+				</div>
+			</div>
+		</div>
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<h4 class="ui inverted header">Distribution Requirements</h4>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">
+								Papaparse
+							</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<h4 class="ui inverted header">Development Requirements</h4>
+						<h5 class="ui inverted header">Java</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">
+								SWT
+							</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">
+								Datetime
+							</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">
+								liqp
+							</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">
+								Univocity CSV Parser
+							</a>
+						</div>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">
+								jQuery
+							</a>
+						</div>
+						<h5 class="ui inverted header">CSS</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">
+								Semantic-UI
+							</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<h4 class="ui inverted header">About static-catalog</h4>
+						<p>The missing piece of static generated sites.</p>
+						<p>All the searches in this page are done on static data, without any server side code, microservices, APIs or database.</p>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+	<div style="display: none">
+		<div id="scp-id--tile-template" class="column">
+			<div class="ui bottom attached grey segment">
+				<div data-name="scp-name--tile-grid" class="ui one column grid"></div>
+			</div>
+		</div>
+		<div id="scp-id--tile-field-template" class="column">
+			<span data-name="scp-name--tile-field-name" class="ui tiny header"></span> &nbsp; <span data-name="scp-name--tile-field-value"></span>
+		</div>
+		<div  id="scp-id--filter-count-template" class="ui label">
+			<a data-name="scp-name--filter-count-name"></a>
+			<div data-name="scp-name--filter-count-sum" class="detail"></div>
+			<i data-name="scp-name--filter-count-close" class="icon close"></i>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalogDev.init();			
+		});
+	</script>
+</body>
+</html>
