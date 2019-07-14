@@ -1,0 +1,2350 @@
+{
+  "description" : "Sample 3: 1500000 Sales Records.csv - <a href=\"http://eforexcel.com/wp/downloads-18-sample-csv-files-data-sets-for-testing-sales/\"  target=\"_blank\">1500000-sales-records</a>",
+  "fields" : [ {
+    "index" : 0,
+    "identifier" : "sc_field__0__Order_ID",
+    "csvIndex" : 7,
+    "name" : "Order ID",
+    "type" : "long",
+    "label" : "Order ID",
+    "filter" : true,
+    "filterType" : "value_intervals",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 9,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__0__Order_ID__0___100001180_to__199999940",
+      "name" : "100001180 to 199999940",
+      "count" : 166431,
+      "label" : "100001180 - 199999940",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__0__Order_ID__1___200001227_to__299999558",
+      "name" : "200001227 to 299999558",
+      "count" : 167029,
+      "label" : "200001227 - 299999558",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__0__Order_ID__2___300000846_to__399999606",
+      "name" : "300000846 to 399999606",
+      "count" : 167351,
+      "label" : "300000846 - 399999606",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__0__Order_ID__3___400000035_to__499999654",
+      "name" : "400000035 to 499999654",
+      "count" : 165944,
+      "label" : "400000035 - 499999654",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__0__Order_ID__4___500000083_to__599999701",
+      "name" : "500000083 to 599999701",
+      "count" : 166649,
+      "label" : "500000083 - 599999701",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__0__Order_ID__5___600000560_to__699998891",
+      "name" : "600000560 to 699998891",
+      "count" : 165851,
+      "label" : "600000560 - 699998891",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__0__Order_ID__6___700000178_to__799998939",
+      "name" : "700000178 to 799998939",
+      "count" : 166663,
+      "label" : "700000178 - 799998939",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__0__Order_ID__7___800000226_to__899999845",
+      "name" : "800000226 to 899999845",
+      "count" : 167020,
+      "label" : "800000226 - 899999845",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__0__Order_ID__8___900000274_to__999999892",
+      "name" : "900000274 to 999999892",
+      "count" : 167062,
+      "label" : "900000274 - 999999892",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 1,
+    "identifier" : "sc_field__1__Item_Type",
+    "csvIndex" : 3,
+    "name" : "Item Type",
+    "type" : "text",
+    "label" : "Item Type",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 12,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__1__Item_Type__0__Baby_Food",
+      "name" : "Baby Food",
+      "count" : 125072,
+      "label" : "Baby Food",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__1__Item_Type__1__Beverages",
+      "name" : "Beverages",
+      "count" : 125022,
+      "label" : "Beverages",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__1__Item_Type__2__Cereal",
+      "name" : "Cereal",
+      "count" : 124906,
+      "label" : "Cereal",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__1__Item_Type__3__Clothes",
+      "name" : "Clothes",
+      "count" : 124853,
+      "label" : "Clothes",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__1__Item_Type__4__Cosmetics",
+      "name" : "Cosmetics",
+      "count" : 125046,
+      "label" : "Cosmetics",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__1__Item_Type__5__Fruits",
+      "name" : "Fruits",
+      "count" : 125310,
+      "label" : "Fruits",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__1__Item_Type__6__Household",
+      "name" : "Household",
+      "count" : 124935,
+      "label" : "Household",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__1__Item_Type__7__Meat",
+      "name" : "Meat",
+      "count" : 124877,
+      "label" : "Meat",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__1__Item_Type__8__Office_Supplies",
+      "name" : "Office Supplies",
+      "count" : 124868,
+      "label" : "Office Supplies",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__1__Item_Type__9__Personal_Care",
+      "name" : "Personal Care",
+      "count" : 125143,
+      "label" : "Personal Care",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__1__Item_Type__10__Snacks",
+      "name" : "Snacks",
+      "count" : 125137,
+      "label" : "Snacks",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__1__Item_Type__11__Vegetables",
+      "name" : "Vegetables",
+      "count" : 124831,
+      "label" : "Vegetables",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 2,
+    "identifier" : "sc_field__2__Order_Date",
+    "csvIndex" : 6,
+    "name" : "Order Date",
+    "type" : "date",
+    "label" : "Order Date",
+    "filter" : true,
+    "filterType" : "length_intervals",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : true,
+    "sortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 28,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__2__Order_Date__0___1_1_2010_to__4_10_2010",
+      "name" : "1/1/2010 to 4/10/2010",
+      "count" : 54097,
+      "label" : "1/1/2010 - 4/10/2010",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__2__Order_Date__1___4_11_2010_to__7_19_2010",
+      "name" : "4/11/2010 to 7/19/2010",
+      "count" : 53836,
+      "label" : "4/11/2010 - 7/19/2010",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__2__Order_Date__2___7_20_2010_to__10_27_2010",
+      "name" : "7/20/2010 to 10/27/2010",
+      "count" : 54097,
+      "label" : "7/20/2010 - 10/27/2010",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__2__Order_Date__3___10_28_2010_to__2_4_2011",
+      "name" : "10/28/2010 to 2/4/2011",
+      "count" : 54227,
+      "label" : "10/28/2010 - 2/4/2011",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__2__Order_Date__4___2_5_2011_to__5_15_2011",
+      "name" : "2/5/2011 to 5/15/2011",
+      "count" : 54545,
+      "label" : "2/5/2011 - 5/15/2011",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__2__Order_Date__5___5_16_2011_to__8_23_2011",
+      "name" : "5/16/2011 to 8/23/2011",
+      "count" : 54191,
+      "label" : "5/16/2011 - 8/23/2011",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__2__Order_Date__6___8_24_2011_to__12_1_2011",
+      "name" : "8/24/2011 to 12/1/2011",
+      "count" : 54284,
+      "label" : "8/24/2011 - 12/1/2011",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__2__Order_Date__7___12_2_2011_to__3_10_2012",
+      "name" : "12/2/2011 to 3/10/2012",
+      "count" : 54213,
+      "label" : "12/2/2011 - 3/10/2012",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__2__Order_Date__8___3_11_2012_to__6_18_2012",
+      "name" : "3/11/2012 to 6/18/2012",
+      "count" : 54358,
+      "label" : "3/11/2012 - 6/18/2012",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__2__Order_Date__9___6_19_2012_to__9_26_2012",
+      "name" : "6/19/2012 to 9/26/2012",
+      "count" : 54175,
+      "label" : "6/19/2012 - 9/26/2012",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__2__Order_Date__10___9_27_2012_to__1_4_2013",
+      "name" : "9/27/2012 to 1/4/2013",
+      "count" : 53937,
+      "label" : "9/27/2012 - 1/4/2013",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__2__Order_Date__11___1_5_2013_to__4_14_2013",
+      "name" : "1/5/2013 to 4/14/2013",
+      "count" : 54302,
+      "label" : "1/5/2013 - 4/14/2013",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__2__Order_Date__12___4_15_2013_to__7_23_2013",
+      "name" : "4/15/2013 to 7/23/2013",
+      "count" : 53793,
+      "label" : "4/15/2013 - 7/23/2013",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__2__Order_Date__13___7_24_2013_to__10_31_2013",
+      "name" : "7/24/2013 to 10/31/2013",
+      "count" : 54547,
+      "label" : "7/24/2013 - 10/31/2013",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__2__Order_Date__14___11_1_2013_to__2_8_2014",
+      "name" : "11/1/2013 to 2/8/2014",
+      "count" : 54203,
+      "label" : "11/1/2013 - 2/8/2014",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__2__Order_Date__15___2_9_2014_to__5_19_2014",
+      "name" : "2/9/2014 to 5/19/2014",
+      "count" : 54313,
+      "label" : "2/9/2014 - 5/19/2014",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__2__Order_Date__16___5_20_2014_to__8_27_2014",
+      "name" : "5/20/2014 to 8/27/2014",
+      "count" : 54336,
+      "label" : "5/20/2014 - 8/27/2014",
+      "isException" : false
+    }, {
+      "index" : 17,
+      "identifier" : "sc_filter__2__Order_Date__17___8_28_2014_to__12_5_2014",
+      "name" : "8/28/2014 to 12/5/2014",
+      "count" : 54219,
+      "label" : "8/28/2014 - 12/5/2014",
+      "isException" : false
+    }, {
+      "index" : 18,
+      "identifier" : "sc_filter__2__Order_Date__18___12_6_2014_to__3_15_2015",
+      "name" : "12/6/2014 to 3/15/2015",
+      "count" : 54260,
+      "label" : "12/6/2014 - 3/15/2015",
+      "isException" : false
+    }, {
+      "index" : 19,
+      "identifier" : "sc_filter__2__Order_Date__19___3_16_2015_to__6_23_2015",
+      "name" : "3/16/2015 to 6/23/2015",
+      "count" : 53800,
+      "label" : "3/16/2015 - 6/23/2015",
+      "isException" : false
+    }, {
+      "index" : 20,
+      "identifier" : "sc_filter__2__Order_Date__20___6_24_2015_to__10_1_2015",
+      "name" : "6/24/2015 to 10/1/2015",
+      "count" : 54173,
+      "label" : "6/24/2015 - 10/1/2015",
+      "isException" : false
+    }, {
+      "index" : 21,
+      "identifier" : "sc_filter__2__Order_Date__21___10_2_2015_to__1_9_2016",
+      "name" : "10/2/2015 to 1/9/2016",
+      "count" : 54073,
+      "label" : "10/2/2015 - 1/9/2016",
+      "isException" : false
+    }, {
+      "index" : 22,
+      "identifier" : "sc_filter__2__Order_Date__22___1_10_2016_to__4_18_2016",
+      "name" : "1/10/2016 to 4/18/2016",
+      "count" : 54450,
+      "label" : "1/10/2016 - 4/18/2016",
+      "isException" : false
+    }, {
+      "index" : 23,
+      "identifier" : "sc_filter__2__Order_Date__23___4_19_2016_to__7_27_2016",
+      "name" : "4/19/2016 to 7/27/2016",
+      "count" : 54316,
+      "label" : "4/19/2016 - 7/27/2016",
+      "isException" : false
+    }, {
+      "index" : 24,
+      "identifier" : "sc_filter__2__Order_Date__24___7_28_2016_to__11_4_2016",
+      "name" : "7/28/2016 to 11/4/2016",
+      "count" : 54117,
+      "label" : "7/28/2016 - 11/4/2016",
+      "isException" : false
+    }, {
+      "index" : 25,
+      "identifier" : "sc_filter__2__Order_Date__25___11_5_2016_to__2_12_2017",
+      "name" : "11/5/2016 to 2/12/2017",
+      "count" : 54412,
+      "label" : "11/5/2016 - 2/12/2017",
+      "isException" : false
+    }, {
+      "index" : 26,
+      "identifier" : "sc_filter__2__Order_Date__26___2_13_2017_to__5_23_2017",
+      "name" : "2/13/2017 to 5/23/2017",
+      "count" : 54516,
+      "label" : "2/13/2017 - 5/23/2017",
+      "isException" : false
+    }, {
+      "index" : 27,
+      "identifier" : "sc_filter__2__Order_Date__27___5_24_2017_to__7_29_2017",
+      "name" : "5/24/2017 to 7/29/2017",
+      "count" : 36210,
+      "label" : "5/24/2017 - 7/29/2017",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 3,
+    "identifier" : "sc_field__3__Ship_Date",
+    "csvIndex" : 8,
+    "name" : "Ship Date",
+    "type" : "date",
+    "label" : "Ship Date",
+    "filter" : true,
+    "filterType" : "length_intervals",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : true,
+    "sortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 29,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__3__Ship_Date__0___1_1_2010_to__4_10_2010",
+      "name" : "1/1/2010 to 4/10/2010",
+      "count" : 40515,
+      "label" : "1/1/2010 - 4/10/2010",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__3__Ship_Date__1___4_11_2010_to__7_19_2010",
+      "name" : "4/11/2010 to 7/19/2010",
+      "count" : 53916,
+      "label" : "4/11/2010 - 7/19/2010",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__3__Ship_Date__2___7_20_2010_to__10_27_2010",
+      "name" : "7/20/2010 to 10/27/2010",
+      "count" : 54222,
+      "label" : "7/20/2010 - 10/27/2010",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__3__Ship_Date__3___10_28_2010_to__2_4_2011",
+      "name" : "10/28/2010 to 2/4/2011",
+      "count" : 54007,
+      "label" : "10/28/2010 - 2/4/2011",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__3__Ship_Date__4___2_5_2011_to__5_15_2011",
+      "name" : "2/5/2011 to 5/15/2011",
+      "count" : 54508,
+      "label" : "2/5/2011 - 5/15/2011",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__3__Ship_Date__5___5_16_2011_to__8_23_2011",
+      "name" : "5/16/2011 to 8/23/2011",
+      "count" : 54289,
+      "label" : "5/16/2011 - 8/23/2011",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__3__Ship_Date__6___8_24_2011_to__12_1_2011",
+      "name" : "8/24/2011 to 12/1/2011",
+      "count" : 54202,
+      "label" : "8/24/2011 - 12/1/2011",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__3__Ship_Date__7___12_2_2011_to__3_10_2012",
+      "name" : "12/2/2011 to 3/10/2012",
+      "count" : 54282,
+      "label" : "12/2/2011 - 3/10/2012",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__3__Ship_Date__8___3_11_2012_to__6_18_2012",
+      "name" : "3/11/2012 to 6/18/2012",
+      "count" : 54392,
+      "label" : "3/11/2012 - 6/18/2012",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__3__Ship_Date__9___6_19_2012_to__9_26_2012",
+      "name" : "6/19/2012 to 9/26/2012",
+      "count" : 54222,
+      "label" : "6/19/2012 - 9/26/2012",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__3__Ship_Date__10___9_27_2012_to__1_4_2013",
+      "name" : "9/27/2012 to 1/4/2013",
+      "count" : 53906,
+      "label" : "9/27/2012 - 1/4/2013",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__3__Ship_Date__11___1_5_2013_to__4_14_2013",
+      "name" : "1/5/2013 to 4/14/2013",
+      "count" : 54221,
+      "label" : "1/5/2013 - 4/14/2013",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__3__Ship_Date__12___4_15_2013_to__7_23_2013",
+      "name" : "4/15/2013 to 7/23/2013",
+      "count" : 53959,
+      "label" : "4/15/2013 - 7/23/2013",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__3__Ship_Date__13___7_24_2013_to__10_31_2013",
+      "name" : "7/24/2013 to 10/31/2013",
+      "count" : 54293,
+      "label" : "7/24/2013 - 10/31/2013",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__3__Ship_Date__14___11_1_2013_to__2_8_2014",
+      "name" : "11/1/2013 to 2/8/2014",
+      "count" : 54373,
+      "label" : "11/1/2013 - 2/8/2014",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__3__Ship_Date__15___2_9_2014_to__5_19_2014",
+      "name" : "2/9/2014 to 5/19/2014",
+      "count" : 54010,
+      "label" : "2/9/2014 - 5/19/2014",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__3__Ship_Date__16___5_20_2014_to__8_27_2014",
+      "name" : "5/20/2014 to 8/27/2014",
+      "count" : 54551,
+      "label" : "5/20/2014 - 8/27/2014",
+      "isException" : false
+    }, {
+      "index" : 17,
+      "identifier" : "sc_filter__3__Ship_Date__17___8_28_2014_to__12_5_2014",
+      "name" : "8/28/2014 to 12/5/2014",
+      "count" : 54317,
+      "label" : "8/28/2014 - 12/5/2014",
+      "isException" : false
+    }, {
+      "index" : 18,
+      "identifier" : "sc_filter__3__Ship_Date__18___12_6_2014_to__3_15_2015",
+      "name" : "12/6/2014 to 3/15/2015",
+      "count" : 54184,
+      "label" : "12/6/2014 - 3/15/2015",
+      "isException" : false
+    }, {
+      "index" : 19,
+      "identifier" : "sc_filter__3__Ship_Date__19___3_16_2015_to__6_23_2015",
+      "name" : "3/16/2015 to 6/23/2015",
+      "count" : 53925,
+      "label" : "3/16/2015 - 6/23/2015",
+      "isException" : false
+    }, {
+      "index" : 20,
+      "identifier" : "sc_filter__3__Ship_Date__20___6_24_2015_to__10_1_2015",
+      "name" : "6/24/2015 to 10/1/2015",
+      "count" : 54108,
+      "label" : "6/24/2015 - 10/1/2015",
+      "isException" : false
+    }, {
+      "index" : 21,
+      "identifier" : "sc_filter__3__Ship_Date__21___10_2_2015_to__1_9_2016",
+      "name" : "10/2/2015 to 1/9/2016",
+      "count" : 54023,
+      "label" : "10/2/2015 - 1/9/2016",
+      "isException" : false
+    }, {
+      "index" : 22,
+      "identifier" : "sc_filter__3__Ship_Date__22___1_10_2016_to__4_18_2016",
+      "name" : "1/10/2016 to 4/18/2016",
+      "count" : 54254,
+      "label" : "1/10/2016 - 4/18/2016",
+      "isException" : false
+    }, {
+      "index" : 23,
+      "identifier" : "sc_filter__3__Ship_Date__23___4_19_2016_to__7_27_2016",
+      "name" : "4/19/2016 to 7/27/2016",
+      "count" : 54523,
+      "label" : "4/19/2016 - 7/27/2016",
+      "isException" : false
+    }, {
+      "index" : 24,
+      "identifier" : "sc_filter__3__Ship_Date__24___7_28_2016_to__11_4_2016",
+      "name" : "7/28/2016 to 11/4/2016",
+      "count" : 54064,
+      "label" : "7/28/2016 - 11/4/2016",
+      "isException" : false
+    }, {
+      "index" : 25,
+      "identifier" : "sc_filter__3__Ship_Date__25___11_5_2016_to__2_12_2017",
+      "name" : "11/5/2016 to 2/12/2017",
+      "count" : 54559,
+      "label" : "11/5/2016 - 2/12/2017",
+      "isException" : false
+    }, {
+      "index" : 26,
+      "identifier" : "sc_filter__3__Ship_Date__26___2_13_2017_to__5_23_2017",
+      "name" : "2/13/2017 to 5/23/2017",
+      "count" : 54301,
+      "label" : "2/13/2017 - 5/23/2017",
+      "isException" : false
+    }, {
+      "index" : 27,
+      "identifier" : "sc_filter__3__Ship_Date__27___5_24_2017_to__8_31_2017",
+      "name" : "5/24/2017 to 8/31/2017",
+      "count" : 48300,
+      "label" : "5/24/2017 - 8/31/2017",
+      "isException" : false
+    }, {
+      "index" : 28,
+      "identifier" : "sc_filter__3__Ship_Date__28___9_1_2017_to__9_17_2017",
+      "name" : "9/1/2017 to 9/17/2017",
+      "count" : 1574,
+      "label" : "9/1/2017 - 9/17/2017",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 4,
+    "identifier" : "sc_field__4__Country",
+    "csvIndex" : 2,
+    "name" : "Country",
+    "type" : "text",
+    "label" : "Country",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "dropdown",
+    "sortAsc" : true,
+    "sortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 185,
+    "totalMoreValuesCount" : 180,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__4__Country__0__Afghanistan",
+      "name" : "Afghanistan",
+      "count" : 8084,
+      "label" : "Afghanistan",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__4__Country__1__Albania",
+      "name" : "Albania",
+      "count" : 8131,
+      "label" : "Albania",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__4__Country__2__Algeria",
+      "name" : "Algeria",
+      "count" : 8224,
+      "label" : "Algeria",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__4__Country__3__Andorra",
+      "name" : "Andorra",
+      "count" : 8015,
+      "label" : "Andorra",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__4__Country__4__Angola",
+      "name" : "Angola",
+      "count" : 8070,
+      "label" : "Angola",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__4__Country__5__Antigua_and_Barbuda",
+      "name" : "Antigua and Barbuda",
+      "count" : 8066,
+      "label" : "Antigua and Barbuda",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__4__Country__6__Armenia",
+      "name" : "Armenia",
+      "count" : 8069,
+      "label" : "Armenia",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__4__Country__7__Australia",
+      "name" : "Australia",
+      "count" : 8203,
+      "label" : "Australia",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__4__Country__8__Austria",
+      "name" : "Austria",
+      "count" : 8033,
+      "label" : "Austria",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__4__Country__9__Azerbaijan",
+      "name" : "Azerbaijan",
+      "count" : 8058,
+      "label" : "Azerbaijan",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__4__Country__10__Bahrain",
+      "name" : "Bahrain",
+      "count" : 8117,
+      "label" : "Bahrain",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__4__Country__11__Bangladesh",
+      "name" : "Bangladesh",
+      "count" : 8045,
+      "label" : "Bangladesh",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__4__Country__12__Barbados",
+      "name" : "Barbados",
+      "count" : 8162,
+      "label" : "Barbados",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__4__Country__13__Belarus",
+      "name" : "Belarus",
+      "count" : 8196,
+      "label" : "Belarus",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__4__Country__14__Belgium",
+      "name" : "Belgium",
+      "count" : 8104,
+      "label" : "Belgium",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__4__Country__15__Belize",
+      "name" : "Belize",
+      "count" : 7937,
+      "label" : "Belize",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__4__Country__16__Benin",
+      "name" : "Benin",
+      "count" : 8102,
+      "label" : "Benin",
+      "isException" : false
+    }, {
+      "index" : 17,
+      "identifier" : "sc_filter__4__Country__17__Bhutan",
+      "name" : "Bhutan",
+      "count" : 8085,
+      "label" : "Bhutan",
+      "isException" : false
+    }, {
+      "index" : 18,
+      "identifier" : "sc_filter__4__Country__18__Bosnia_and_Herzegovina",
+      "name" : "Bosnia and Herzegovina",
+      "count" : 8113,
+      "label" : "Bosnia and Herzegovina",
+      "isException" : false
+    }, {
+      "index" : 19,
+      "identifier" : "sc_filter__4__Country__19__Botswana",
+      "name" : "Botswana",
+      "count" : 8154,
+      "label" : "Botswana",
+      "isException" : false
+    }, {
+      "index" : 20,
+      "identifier" : "sc_filter__4__Country__20__Brunei",
+      "name" : "Brunei",
+      "count" : 8217,
+      "label" : "Brunei",
+      "isException" : false
+    }, {
+      "index" : 21,
+      "identifier" : "sc_filter__4__Country__21__Bulgaria",
+      "name" : "Bulgaria",
+      "count" : 8065,
+      "label" : "Bulgaria",
+      "isException" : false
+    }, {
+      "index" : 22,
+      "identifier" : "sc_filter__4__Country__22__Burkina_Faso",
+      "name" : "Burkina Faso",
+      "count" : 8157,
+      "label" : "Burkina Faso",
+      "isException" : false
+    }, {
+      "index" : 23,
+      "identifier" : "sc_filter__4__Country__23__Burundi",
+      "name" : "Burundi",
+      "count" : 8087,
+      "label" : "Burundi",
+      "isException" : false
+    }, {
+      "index" : 24,
+      "identifier" : "sc_filter__4__Country__24__Cambodia",
+      "name" : "Cambodia",
+      "count" : 8050,
+      "label" : "Cambodia",
+      "isException" : false
+    }, {
+      "index" : 25,
+      "identifier" : "sc_filter__4__Country__25__Cameroon",
+      "name" : "Cameroon",
+      "count" : 8081,
+      "label" : "Cameroon",
+      "isException" : false
+    }, {
+      "index" : 26,
+      "identifier" : "sc_filter__4__Country__26__Canada",
+      "name" : "Canada",
+      "count" : 8066,
+      "label" : "Canada",
+      "isException" : false
+    }, {
+      "index" : 27,
+      "identifier" : "sc_filter__4__Country__27__Cape_Verde",
+      "name" : "Cape Verde",
+      "count" : 8229,
+      "label" : "Cape Verde",
+      "isException" : false
+    }, {
+      "index" : 28,
+      "identifier" : "sc_filter__4__Country__28__Central_African_Republic",
+      "name" : "Central African Republic",
+      "count" : 8064,
+      "label" : "Central African Republic",
+      "isException" : false
+    }, {
+      "index" : 29,
+      "identifier" : "sc_filter__4__Country__29__Chad",
+      "name" : "Chad",
+      "count" : 8175,
+      "label" : "Chad",
+      "isException" : false
+    }, {
+      "index" : 30,
+      "identifier" : "sc_filter__4__Country__30__China",
+      "name" : "China",
+      "count" : 8134,
+      "label" : "China",
+      "isException" : false
+    }, {
+      "index" : 31,
+      "identifier" : "sc_filter__4__Country__31__Comoros",
+      "name" : "Comoros",
+      "count" : 8116,
+      "label" : "Comoros",
+      "isException" : false
+    }, {
+      "index" : 32,
+      "identifier" : "sc_filter__4__Country__32__Costa_Rica",
+      "name" : "Costa Rica",
+      "count" : 8002,
+      "label" : "Costa Rica",
+      "isException" : false
+    }, {
+      "index" : 33,
+      "identifier" : "sc_filter__4__Country__33__Cote_d_Ivoire",
+      "name" : "Cote d'Ivoire",
+      "count" : 8056,
+      "label" : "Cote d'Ivoire",
+      "isException" : false
+    }, {
+      "index" : 34,
+      "identifier" : "sc_filter__4__Country__34__Croatia",
+      "name" : "Croatia",
+      "count" : 8118,
+      "label" : "Croatia",
+      "isException" : false
+    }, {
+      "index" : 35,
+      "identifier" : "sc_filter__4__Country__35__Cuba",
+      "name" : "Cuba",
+      "count" : 8003,
+      "label" : "Cuba",
+      "isException" : false
+    }, {
+      "index" : 36,
+      "identifier" : "sc_filter__4__Country__36__Cyprus",
+      "name" : "Cyprus",
+      "count" : 8128,
+      "label" : "Cyprus",
+      "isException" : false
+    }, {
+      "index" : 37,
+      "identifier" : "sc_filter__4__Country__37__Czech_Republic",
+      "name" : "Czech Republic",
+      "count" : 8194,
+      "label" : "Czech Republic",
+      "isException" : false
+    }, {
+      "index" : 38,
+      "identifier" : "sc_filter__4__Country__38__Democratic_Republic_of_the_Congo",
+      "name" : "Democratic Republic of the Congo",
+      "count" : 8198,
+      "label" : "Democratic Republic of the Congo",
+      "isException" : false
+    }, {
+      "index" : 39,
+      "identifier" : "sc_filter__4__Country__39__Denmark",
+      "name" : "Denmark",
+      "count" : 8154,
+      "label" : "Denmark",
+      "isException" : false
+    }, {
+      "index" : 40,
+      "identifier" : "sc_filter__4__Country__40__Djibouti",
+      "name" : "Djibouti",
+      "count" : 8093,
+      "label" : "Djibouti",
+      "isException" : false
+    }, {
+      "index" : 41,
+      "identifier" : "sc_filter__4__Country__41__Dominica",
+      "name" : "Dominica",
+      "count" : 8086,
+      "label" : "Dominica",
+      "isException" : false
+    }, {
+      "index" : 42,
+      "identifier" : "sc_filter__4__Country__42__Dominican_Republic",
+      "name" : "Dominican Republic",
+      "count" : 8162,
+      "label" : "Dominican Republic",
+      "isException" : false
+    }, {
+      "index" : 43,
+      "identifier" : "sc_filter__4__Country__43__East_Timor",
+      "name" : "East Timor",
+      "count" : 8085,
+      "label" : "East Timor",
+      "isException" : false
+    }, {
+      "index" : 44,
+      "identifier" : "sc_filter__4__Country__44__Egypt",
+      "name" : "Egypt",
+      "count" : 8263,
+      "label" : "Egypt",
+      "isException" : false
+    }, {
+      "index" : 45,
+      "identifier" : "sc_filter__4__Country__45__El_Salvador",
+      "name" : "El Salvador",
+      "count" : 8120,
+      "label" : "El Salvador",
+      "isException" : false
+    }, {
+      "index" : 46,
+      "identifier" : "sc_filter__4__Country__46__Equatorial_Guinea",
+      "name" : "Equatorial Guinea",
+      "count" : 8047,
+      "label" : "Equatorial Guinea",
+      "isException" : false
+    }, {
+      "index" : 47,
+      "identifier" : "sc_filter__4__Country__47__Eritrea",
+      "name" : "Eritrea",
+      "count" : 8045,
+      "label" : "Eritrea",
+      "isException" : false
+    }, {
+      "index" : 48,
+      "identifier" : "sc_filter__4__Country__48__Estonia",
+      "name" : "Estonia",
+      "count" : 8023,
+      "label" : "Estonia",
+      "isException" : false
+    }, {
+      "index" : 49,
+      "identifier" : "sc_filter__4__Country__49__Ethiopia",
+      "name" : "Ethiopia",
+      "count" : 8198,
+      "label" : "Ethiopia",
+      "isException" : false
+    }, {
+      "index" : 50,
+      "identifier" : "sc_filter__4__Country__50__Federated_States_of_Micronesia",
+      "name" : "Federated States of Micronesia",
+      "count" : 8147,
+      "label" : "Federated States of Micronesia",
+      "isException" : false
+    }, {
+      "index" : 51,
+      "identifier" : "sc_filter__4__Country__51__Fiji",
+      "name" : "Fiji",
+      "count" : 8092,
+      "label" : "Fiji",
+      "isException" : false
+    }, {
+      "index" : 52,
+      "identifier" : "sc_filter__4__Country__52__Finland",
+      "name" : "Finland",
+      "count" : 8161,
+      "label" : "Finland",
+      "isException" : false
+    }, {
+      "index" : 53,
+      "identifier" : "sc_filter__4__Country__53__France",
+      "name" : "France",
+      "count" : 8132,
+      "label" : "France",
+      "isException" : false
+    }, {
+      "index" : 54,
+      "identifier" : "sc_filter__4__Country__54__Gabon",
+      "name" : "Gabon",
+      "count" : 8161,
+      "label" : "Gabon",
+      "isException" : false
+    }, {
+      "index" : 55,
+      "identifier" : "sc_filter__4__Country__55__Georgia",
+      "name" : "Georgia",
+      "count" : 7992,
+      "label" : "Georgia",
+      "isException" : false
+    }, {
+      "index" : 56,
+      "identifier" : "sc_filter__4__Country__56__Germany",
+      "name" : "Germany",
+      "count" : 8049,
+      "label" : "Germany",
+      "isException" : false
+    }, {
+      "index" : 57,
+      "identifier" : "sc_filter__4__Country__57__Ghana",
+      "name" : "Ghana",
+      "count" : 8241,
+      "label" : "Ghana",
+      "isException" : false
+    }, {
+      "index" : 58,
+      "identifier" : "sc_filter__4__Country__58__Greece",
+      "name" : "Greece",
+      "count" : 8071,
+      "label" : "Greece",
+      "isException" : false
+    }, {
+      "index" : 59,
+      "identifier" : "sc_filter__4__Country__59__Greenland",
+      "name" : "Greenland",
+      "count" : 8217,
+      "label" : "Greenland",
+      "isException" : false
+    }, {
+      "index" : 60,
+      "identifier" : "sc_filter__4__Country__60__Grenada",
+      "name" : "Grenada",
+      "count" : 8164,
+      "label" : "Grenada",
+      "isException" : false
+    }, {
+      "index" : 61,
+      "identifier" : "sc_filter__4__Country__61__Guatemala",
+      "name" : "Guatemala",
+      "count" : 8193,
+      "label" : "Guatemala",
+      "isException" : false
+    }, {
+      "index" : 62,
+      "identifier" : "sc_filter__4__Country__62__Guinea",
+      "name" : "Guinea",
+      "count" : 8206,
+      "label" : "Guinea",
+      "isException" : false
+    }, {
+      "index" : 63,
+      "identifier" : "sc_filter__4__Country__63__Guinea_Bissau",
+      "name" : "Guinea-Bissau",
+      "count" : 8009,
+      "label" : "Guinea-Bissau",
+      "isException" : false
+    }, {
+      "index" : 64,
+      "identifier" : "sc_filter__4__Country__64__Haiti",
+      "name" : "Haiti",
+      "count" : 8192,
+      "label" : "Haiti",
+      "isException" : false
+    }, {
+      "index" : 65,
+      "identifier" : "sc_filter__4__Country__65__Honduras",
+      "name" : "Honduras",
+      "count" : 8071,
+      "label" : "Honduras",
+      "isException" : false
+    }, {
+      "index" : 66,
+      "identifier" : "sc_filter__4__Country__66__Hungary",
+      "name" : "Hungary",
+      "count" : 8148,
+      "label" : "Hungary",
+      "isException" : false
+    }, {
+      "index" : 67,
+      "identifier" : "sc_filter__4__Country__67__Iceland",
+      "name" : "Iceland",
+      "count" : 8049,
+      "label" : "Iceland",
+      "isException" : false
+    }, {
+      "index" : 68,
+      "identifier" : "sc_filter__4__Country__68__India",
+      "name" : "India",
+      "count" : 8111,
+      "label" : "India",
+      "isException" : false
+    }, {
+      "index" : 69,
+      "identifier" : "sc_filter__4__Country__69__Indonesia",
+      "name" : "Indonesia",
+      "count" : 8215,
+      "label" : "Indonesia",
+      "isException" : false
+    }, {
+      "index" : 70,
+      "identifier" : "sc_filter__4__Country__70__Iran",
+      "name" : "Iran",
+      "count" : 8066,
+      "label" : "Iran",
+      "isException" : false
+    }, {
+      "index" : 71,
+      "identifier" : "sc_filter__4__Country__71__Iraq",
+      "name" : "Iraq",
+      "count" : 8086,
+      "label" : "Iraq",
+      "isException" : false
+    }, {
+      "index" : 72,
+      "identifier" : "sc_filter__4__Country__72__Ireland",
+      "name" : "Ireland",
+      "count" : 8125,
+      "label" : "Ireland",
+      "isException" : false
+    }, {
+      "index" : 73,
+      "identifier" : "sc_filter__4__Country__73__Israel",
+      "name" : "Israel",
+      "count" : 8133,
+      "label" : "Israel",
+      "isException" : false
+    }, {
+      "index" : 74,
+      "identifier" : "sc_filter__4__Country__74__Italy",
+      "name" : "Italy",
+      "count" : 8174,
+      "label" : "Italy",
+      "isException" : false
+    }, {
+      "index" : 75,
+      "identifier" : "sc_filter__4__Country__75__Jamaica",
+      "name" : "Jamaica",
+      "count" : 8080,
+      "label" : "Jamaica",
+      "isException" : false
+    }, {
+      "index" : 76,
+      "identifier" : "sc_filter__4__Country__76__Japan",
+      "name" : "Japan",
+      "count" : 8044,
+      "label" : "Japan",
+      "isException" : false
+    }, {
+      "index" : 77,
+      "identifier" : "sc_filter__4__Country__77__Jordan",
+      "name" : "Jordan",
+      "count" : 8160,
+      "label" : "Jordan",
+      "isException" : false
+    }, {
+      "index" : 78,
+      "identifier" : "sc_filter__4__Country__78__Kazakhstan",
+      "name" : "Kazakhstan",
+      "count" : 8047,
+      "label" : "Kazakhstan",
+      "isException" : false
+    }, {
+      "index" : 79,
+      "identifier" : "sc_filter__4__Country__79__Kenya",
+      "name" : "Kenya",
+      "count" : 8079,
+      "label" : "Kenya",
+      "isException" : false
+    }, {
+      "index" : 80,
+      "identifier" : "sc_filter__4__Country__80__Kiribati",
+      "name" : "Kiribati",
+      "count" : 8083,
+      "label" : "Kiribati",
+      "isException" : false
+    }, {
+      "index" : 81,
+      "identifier" : "sc_filter__4__Country__81__Kosovo",
+      "name" : "Kosovo",
+      "count" : 8076,
+      "label" : "Kosovo",
+      "isException" : false
+    }, {
+      "index" : 82,
+      "identifier" : "sc_filter__4__Country__82__Kuwait",
+      "name" : "Kuwait",
+      "count" : 7959,
+      "label" : "Kuwait",
+      "isException" : false
+    }, {
+      "index" : 83,
+      "identifier" : "sc_filter__4__Country__83__Kyrgyzstan",
+      "name" : "Kyrgyzstan",
+      "count" : 8088,
+      "label" : "Kyrgyzstan",
+      "isException" : false
+    }, {
+      "index" : 84,
+      "identifier" : "sc_filter__4__Country__84__Laos",
+      "name" : "Laos",
+      "count" : 8088,
+      "label" : "Laos",
+      "isException" : false
+    }, {
+      "index" : 85,
+      "identifier" : "sc_filter__4__Country__85__Latvia",
+      "name" : "Latvia",
+      "count" : 8071,
+      "label" : "Latvia",
+      "isException" : false
+    }, {
+      "index" : 86,
+      "identifier" : "sc_filter__4__Country__86__Lebanon",
+      "name" : "Lebanon",
+      "count" : 8058,
+      "label" : "Lebanon",
+      "isException" : false
+    }, {
+      "index" : 87,
+      "identifier" : "sc_filter__4__Country__87__Lesotho",
+      "name" : "Lesotho",
+      "count" : 8145,
+      "label" : "Lesotho",
+      "isException" : false
+    }, {
+      "index" : 88,
+      "identifier" : "sc_filter__4__Country__88__Liberia",
+      "name" : "Liberia",
+      "count" : 8249,
+      "label" : "Liberia",
+      "isException" : false
+    }, {
+      "index" : 89,
+      "identifier" : "sc_filter__4__Country__89__Libya",
+      "name" : "Libya",
+      "count" : 8021,
+      "label" : "Libya",
+      "isException" : false
+    }, {
+      "index" : 90,
+      "identifier" : "sc_filter__4__Country__90__Liechtenstein",
+      "name" : "Liechtenstein",
+      "count" : 8250,
+      "label" : "Liechtenstein",
+      "isException" : false
+    }, {
+      "index" : 91,
+      "identifier" : "sc_filter__4__Country__91__Lithuania",
+      "name" : "Lithuania",
+      "count" : 8157,
+      "label" : "Lithuania",
+      "isException" : false
+    }, {
+      "index" : 92,
+      "identifier" : "sc_filter__4__Country__92__Luxembourg",
+      "name" : "Luxembourg",
+      "count" : 7947,
+      "label" : "Luxembourg",
+      "isException" : false
+    }, {
+      "index" : 93,
+      "identifier" : "sc_filter__4__Country__93__Macedonia",
+      "name" : "Macedonia",
+      "count" : 7930,
+      "label" : "Macedonia",
+      "isException" : false
+    }, {
+      "index" : 94,
+      "identifier" : "sc_filter__4__Country__94__Madagascar",
+      "name" : "Madagascar",
+      "count" : 7990,
+      "label" : "Madagascar",
+      "isException" : false
+    }, {
+      "index" : 95,
+      "identifier" : "sc_filter__4__Country__95__Malawi",
+      "name" : "Malawi",
+      "count" : 8184,
+      "label" : "Malawi",
+      "isException" : false
+    }, {
+      "index" : 96,
+      "identifier" : "sc_filter__4__Country__96__Malaysia",
+      "name" : "Malaysia",
+      "count" : 8207,
+      "label" : "Malaysia",
+      "isException" : false
+    }, {
+      "index" : 97,
+      "identifier" : "sc_filter__4__Country__97__Maldives",
+      "name" : "Maldives",
+      "count" : 8097,
+      "label" : "Maldives",
+      "isException" : false
+    }, {
+      "index" : 98,
+      "identifier" : "sc_filter__4__Country__98__Mali",
+      "name" : "Mali",
+      "count" : 8089,
+      "label" : "Mali",
+      "isException" : false
+    }, {
+      "index" : 99,
+      "identifier" : "sc_filter__4__Country__99__Malta",
+      "name" : "Malta",
+      "count" : 8048,
+      "label" : "Malta",
+      "isException" : false
+    }, {
+      "index" : 100,
+      "identifier" : "sc_filter__4__Country__100__Marshall_Islands",
+      "name" : "Marshall Islands",
+      "count" : 8034,
+      "label" : "Marshall Islands",
+      "isException" : false
+    }, {
+      "index" : 101,
+      "identifier" : "sc_filter__4__Country__101__Mauritania",
+      "name" : "Mauritania",
+      "count" : 8112,
+      "label" : "Mauritania",
+      "isException" : false
+    }, {
+      "index" : 102,
+      "identifier" : "sc_filter__4__Country__102__Mauritius",
+      "name" : "Mauritius",
+      "count" : 8081,
+      "label" : "Mauritius",
+      "isException" : false
+    }, {
+      "index" : 103,
+      "identifier" : "sc_filter__4__Country__103__Mexico",
+      "name" : "Mexico",
+      "count" : 8147,
+      "label" : "Mexico",
+      "isException" : false
+    }, {
+      "index" : 104,
+      "identifier" : "sc_filter__4__Country__104__Moldova",
+      "name" : "Moldova",
+      "count" : 8095,
+      "label" : "Moldova",
+      "isException" : false
+    }, {
+      "index" : 105,
+      "identifier" : "sc_filter__4__Country__105__Monaco",
+      "name" : "Monaco",
+      "count" : 8096,
+      "label" : "Monaco",
+      "isException" : false
+    }, {
+      "index" : 106,
+      "identifier" : "sc_filter__4__Country__106__Mongolia",
+      "name" : "Mongolia",
+      "count" : 8053,
+      "label" : "Mongolia",
+      "isException" : false
+    }, {
+      "index" : 107,
+      "identifier" : "sc_filter__4__Country__107__Montenegro",
+      "name" : "Montenegro",
+      "count" : 8161,
+      "label" : "Montenegro",
+      "isException" : false
+    }, {
+      "index" : 108,
+      "identifier" : "sc_filter__4__Country__108__Morocco",
+      "name" : "Morocco",
+      "count" : 8196,
+      "label" : "Morocco",
+      "isException" : false
+    }, {
+      "index" : 109,
+      "identifier" : "sc_filter__4__Country__109__Mozambique",
+      "name" : "Mozambique",
+      "count" : 8061,
+      "label" : "Mozambique",
+      "isException" : false
+    }, {
+      "index" : 110,
+      "identifier" : "sc_filter__4__Country__110__Myanmar",
+      "name" : "Myanmar",
+      "count" : 8213,
+      "label" : "Myanmar",
+      "isException" : false
+    }, {
+      "index" : 111,
+      "identifier" : "sc_filter__4__Country__111__Namibia",
+      "name" : "Namibia",
+      "count" : 8143,
+      "label" : "Namibia",
+      "isException" : false
+    }, {
+      "index" : 112,
+      "identifier" : "sc_filter__4__Country__112__Nauru",
+      "name" : "Nauru",
+      "count" : 7977,
+      "label" : "Nauru",
+      "isException" : false
+    }, {
+      "index" : 113,
+      "identifier" : "sc_filter__4__Country__113__Nepal",
+      "name" : "Nepal",
+      "count" : 8142,
+      "label" : "Nepal",
+      "isException" : false
+    }, {
+      "index" : 114,
+      "identifier" : "sc_filter__4__Country__114__Netherlands",
+      "name" : "Netherlands",
+      "count" : 8158,
+      "label" : "Netherlands",
+      "isException" : false
+    }, {
+      "index" : 115,
+      "identifier" : "sc_filter__4__Country__115__New_Zealand",
+      "name" : "New Zealand",
+      "count" : 8276,
+      "label" : "New Zealand",
+      "isException" : false
+    }, {
+      "index" : 116,
+      "identifier" : "sc_filter__4__Country__116__Nicaragua",
+      "name" : "Nicaragua",
+      "count" : 8051,
+      "label" : "Nicaragua",
+      "isException" : false
+    }, {
+      "index" : 117,
+      "identifier" : "sc_filter__4__Country__117__Niger",
+      "name" : "Niger",
+      "count" : 8103,
+      "label" : "Niger",
+      "isException" : false
+    }, {
+      "index" : 118,
+      "identifier" : "sc_filter__4__Country__118__Nigeria",
+      "name" : "Nigeria",
+      "count" : 8033,
+      "label" : "Nigeria",
+      "isException" : false
+    }, {
+      "index" : 119,
+      "identifier" : "sc_filter__4__Country__119__North_Korea",
+      "name" : "North Korea",
+      "count" : 8059,
+      "label" : "North Korea",
+      "isException" : false
+    }, {
+      "index" : 120,
+      "identifier" : "sc_filter__4__Country__120__Norway",
+      "name" : "Norway",
+      "count" : 8195,
+      "label" : "Norway",
+      "isException" : false
+    }, {
+      "index" : 121,
+      "identifier" : "sc_filter__4__Country__121__Oman",
+      "name" : "Oman",
+      "count" : 8033,
+      "label" : "Oman",
+      "isException" : false
+    }, {
+      "index" : 122,
+      "identifier" : "sc_filter__4__Country__122__Pakistan",
+      "name" : "Pakistan",
+      "count" : 8113,
+      "label" : "Pakistan",
+      "isException" : false
+    }, {
+      "index" : 123,
+      "identifier" : "sc_filter__4__Country__123__Palau",
+      "name" : "Palau",
+      "count" : 8068,
+      "label" : "Palau",
+      "isException" : false
+    }, {
+      "index" : 124,
+      "identifier" : "sc_filter__4__Country__124__Panama",
+      "name" : "Panama",
+      "count" : 8243,
+      "label" : "Panama",
+      "isException" : false
+    }, {
+      "index" : 125,
+      "identifier" : "sc_filter__4__Country__125__Papua_New_Guinea",
+      "name" : "Papua New Guinea",
+      "count" : 8103,
+      "label" : "Papua New Guinea",
+      "isException" : false
+    }, {
+      "index" : 126,
+      "identifier" : "sc_filter__4__Country__126__Philippines",
+      "name" : "Philippines",
+      "count" : 8060,
+      "label" : "Philippines",
+      "isException" : false
+    }, {
+      "index" : 127,
+      "identifier" : "sc_filter__4__Country__127__Poland",
+      "name" : "Poland",
+      "count" : 8064,
+      "label" : "Poland",
+      "isException" : false
+    }, {
+      "index" : 128,
+      "identifier" : "sc_filter__4__Country__128__Portugal",
+      "name" : "Portugal",
+      "count" : 8126,
+      "label" : "Portugal",
+      "isException" : false
+    }, {
+      "index" : 129,
+      "identifier" : "sc_filter__4__Country__129__Qatar",
+      "name" : "Qatar",
+      "count" : 8187,
+      "label" : "Qatar",
+      "isException" : false
+    }, {
+      "index" : 130,
+      "identifier" : "sc_filter__4__Country__130__Republic_of_the_Congo",
+      "name" : "Republic of the Congo",
+      "count" : 8128,
+      "label" : "Republic of the Congo",
+      "isException" : false
+    }, {
+      "index" : 131,
+      "identifier" : "sc_filter__4__Country__131__Romania",
+      "name" : "Romania",
+      "count" : 8079,
+      "label" : "Romania",
+      "isException" : false
+    }, {
+      "index" : 132,
+      "identifier" : "sc_filter__4__Country__132__Russia",
+      "name" : "Russia",
+      "count" : 8087,
+      "label" : "Russia",
+      "isException" : false
+    }, {
+      "index" : 133,
+      "identifier" : "sc_filter__4__Country__133__Rwanda",
+      "name" : "Rwanda",
+      "count" : 8028,
+      "label" : "Rwanda",
+      "isException" : false
+    }, {
+      "index" : 134,
+      "identifier" : "sc_filter__4__Country__134__Saint_Kitts_and_Nevis",
+      "name" : "Saint Kitts and Nevis",
+      "count" : 8158,
+      "label" : "Saint Kitts and Nevis",
+      "isException" : false
+    }, {
+      "index" : 135,
+      "identifier" : "sc_filter__4__Country__135__Saint_Lucia",
+      "name" : "Saint Lucia",
+      "count" : 8141,
+      "label" : "Saint Lucia",
+      "isException" : false
+    }, {
+      "index" : 136,
+      "identifier" : "sc_filter__4__Country__136__Saint_Vincent_and_the_Grenadines",
+      "name" : "Saint Vincent and the Grenadines",
+      "count" : 8057,
+      "label" : "Saint Vincent and the Grenadines",
+      "isException" : false
+    }, {
+      "index" : 137,
+      "identifier" : "sc_filter__4__Country__137__Samoa",
+      "name" : "Samoa",
+      "count" : 8087,
+      "label" : "Samoa",
+      "isException" : false
+    }, {
+      "index" : 138,
+      "identifier" : "sc_filter__4__Country__138__San_Marino",
+      "name" : "San Marino",
+      "count" : 8164,
+      "label" : "San Marino",
+      "isException" : false
+    }, {
+      "index" : 139,
+      "identifier" : "sc_filter__4__Country__139__Sao_Tome_and_Principe",
+      "name" : "Sao Tome and Principe",
+      "count" : 8089,
+      "label" : "Sao Tome and Principe",
+      "isException" : false
+    }, {
+      "index" : 140,
+      "identifier" : "sc_filter__4__Country__140__Saudi_Arabia",
+      "name" : "Saudi Arabia",
+      "count" : 8092,
+      "label" : "Saudi Arabia",
+      "isException" : false
+    }, {
+      "index" : 141,
+      "identifier" : "sc_filter__4__Country__141__Senegal",
+      "name" : "Senegal",
+      "count" : 8140,
+      "label" : "Senegal",
+      "isException" : false
+    }, {
+      "index" : 142,
+      "identifier" : "sc_filter__4__Country__142__Serbia",
+      "name" : "Serbia",
+      "count" : 8166,
+      "label" : "Serbia",
+      "isException" : false
+    }, {
+      "index" : 143,
+      "identifier" : "sc_filter__4__Country__143__Seychelles",
+      "name" : "Seychelles",
+      "count" : 8161,
+      "label" : "Seychelles",
+      "isException" : false
+    }, {
+      "index" : 144,
+      "identifier" : "sc_filter__4__Country__144__Sierra_Leone",
+      "name" : "Sierra Leone",
+      "count" : 8142,
+      "label" : "Sierra Leone",
+      "isException" : false
+    }, {
+      "index" : 145,
+      "identifier" : "sc_filter__4__Country__145__Singapore",
+      "name" : "Singapore",
+      "count" : 8161,
+      "label" : "Singapore",
+      "isException" : false
+    }, {
+      "index" : 146,
+      "identifier" : "sc_filter__4__Country__146__Slovakia",
+      "name" : "Slovakia",
+      "count" : 8136,
+      "label" : "Slovakia",
+      "isException" : false
+    }, {
+      "index" : 147,
+      "identifier" : "sc_filter__4__Country__147__Slovenia",
+      "name" : "Slovenia",
+      "count" : 8081,
+      "label" : "Slovenia",
+      "isException" : false
+    }, {
+      "index" : 148,
+      "identifier" : "sc_filter__4__Country__148__Solomon_Islands",
+      "name" : "Solomon Islands",
+      "count" : 8041,
+      "label" : "Solomon Islands",
+      "isException" : false
+    }, {
+      "index" : 149,
+      "identifier" : "sc_filter__4__Country__149__Somalia",
+      "name" : "Somalia",
+      "count" : 8065,
+      "label" : "Somalia",
+      "isException" : false
+    }, {
+      "index" : 150,
+      "identifier" : "sc_filter__4__Country__150__South_Africa",
+      "name" : "South Africa",
+      "count" : 8103,
+      "label" : "South Africa",
+      "isException" : false
+    }, {
+      "index" : 151,
+      "identifier" : "sc_filter__4__Country__151__South_Korea",
+      "name" : "South Korea",
+      "count" : 8104,
+      "label" : "South Korea",
+      "isException" : false
+    }, {
+      "index" : 152,
+      "identifier" : "sc_filter__4__Country__152__South_Sudan",
+      "name" : "South Sudan",
+      "count" : 8127,
+      "label" : "South Sudan",
+      "isException" : false
+    }, {
+      "index" : 153,
+      "identifier" : "sc_filter__4__Country__153__Spain",
+      "name" : "Spain",
+      "count" : 8167,
+      "label" : "Spain",
+      "isException" : false
+    }, {
+      "index" : 154,
+      "identifier" : "sc_filter__4__Country__154__Sri_Lanka",
+      "name" : "Sri Lanka",
+      "count" : 8039,
+      "label" : "Sri Lanka",
+      "isException" : false
+    }, {
+      "index" : 155,
+      "identifier" : "sc_filter__4__Country__155__Sudan",
+      "name" : "Sudan",
+      "count" : 8088,
+      "label" : "Sudan",
+      "isException" : false
+    }, {
+      "index" : 156,
+      "identifier" : "sc_filter__4__Country__156__Swaziland",
+      "name" : "Swaziland",
+      "count" : 8053,
+      "label" : "Swaziland",
+      "isException" : false
+    }, {
+      "index" : 157,
+      "identifier" : "sc_filter__4__Country__157__Sweden",
+      "name" : "Sweden",
+      "count" : 8074,
+      "label" : "Sweden",
+      "isException" : false
+    }, {
+      "index" : 158,
+      "identifier" : "sc_filter__4__Country__158__Switzerland",
+      "name" : "Switzerland",
+      "count" : 8099,
+      "label" : "Switzerland",
+      "isException" : false
+    }, {
+      "index" : 159,
+      "identifier" : "sc_filter__4__Country__159__Syria",
+      "name" : "Syria",
+      "count" : 8277,
+      "label" : "Syria",
+      "isException" : false
+    }, {
+      "index" : 160,
+      "identifier" : "sc_filter__4__Country__160__Taiwan",
+      "name" : "Taiwan",
+      "count" : 8239,
+      "label" : "Taiwan",
+      "isException" : false
+    }, {
+      "index" : 161,
+      "identifier" : "sc_filter__4__Country__161__Tajikistan",
+      "name" : "Tajikistan",
+      "count" : 8015,
+      "label" : "Tajikistan",
+      "isException" : false
+    }, {
+      "index" : 162,
+      "identifier" : "sc_filter__4__Country__162__Tanzania",
+      "name" : "Tanzania",
+      "count" : 8136,
+      "label" : "Tanzania",
+      "isException" : false
+    }, {
+      "index" : 163,
+      "identifier" : "sc_filter__4__Country__163__Thailand",
+      "name" : "Thailand",
+      "count" : 8110,
+      "label" : "Thailand",
+      "isException" : false
+    }, {
+      "index" : 164,
+      "identifier" : "sc_filter__4__Country__164__The_Bahamas",
+      "name" : "The Bahamas",
+      "count" : 8178,
+      "label" : "The Bahamas",
+      "isException" : false
+    }, {
+      "index" : 165,
+      "identifier" : "sc_filter__4__Country__165__The_Gambia",
+      "name" : "The Gambia",
+      "count" : 8163,
+      "label" : "The Gambia",
+      "isException" : false
+    }, {
+      "index" : 166,
+      "identifier" : "sc_filter__4__Country__166__Togo",
+      "name" : "Togo",
+      "count" : 8061,
+      "label" : "Togo",
+      "isException" : false
+    }, {
+      "index" : 167,
+      "identifier" : "sc_filter__4__Country__167__Tonga",
+      "name" : "Tonga",
+      "count" : 8073,
+      "label" : "Tonga",
+      "isException" : false
+    }, {
+      "index" : 168,
+      "identifier" : "sc_filter__4__Country__168__Trinidad_and_Tobago",
+      "name" : "Trinidad and Tobago",
+      "count" : 8042,
+      "label" : "Trinidad and Tobago",
+      "isException" : false
+    }, {
+      "index" : 169,
+      "identifier" : "sc_filter__4__Country__169__Tunisia",
+      "name" : "Tunisia",
+      "count" : 8135,
+      "label" : "Tunisia",
+      "isException" : false
+    }, {
+      "index" : 170,
+      "identifier" : "sc_filter__4__Country__170__Turkey",
+      "name" : "Turkey",
+      "count" : 8004,
+      "label" : "Turkey",
+      "isException" : false
+    }, {
+      "index" : 171,
+      "identifier" : "sc_filter__4__Country__171__Turkmenistan",
+      "name" : "Turkmenistan",
+      "count" : 8031,
+      "label" : "Turkmenistan",
+      "isException" : false
+    }, {
+      "index" : 172,
+      "identifier" : "sc_filter__4__Country__172__Tuvalu",
+      "name" : "Tuvalu",
+      "count" : 8063,
+      "label" : "Tuvalu",
+      "isException" : false
+    }, {
+      "index" : 173,
+      "identifier" : "sc_filter__4__Country__173__Uganda",
+      "name" : "Uganda",
+      "count" : 8180,
+      "label" : "Uganda",
+      "isException" : false
+    }, {
+      "index" : 174,
+      "identifier" : "sc_filter__4__Country__174__Ukraine",
+      "name" : "Ukraine",
+      "count" : 8191,
+      "label" : "Ukraine",
+      "isException" : false
+    }, {
+      "index" : 175,
+      "identifier" : "sc_filter__4__Country__175__United_Arab_Emirates",
+      "name" : "United Arab Emirates",
+      "count" : 8028,
+      "label" : "United Arab Emirates",
+      "isException" : false
+    }, {
+      "index" : 176,
+      "identifier" : "sc_filter__4__Country__176__United_Kingdom",
+      "name" : "United Kingdom",
+      "count" : 8070,
+      "label" : "United Kingdom",
+      "isException" : false
+    }, {
+      "index" : 177,
+      "identifier" : "sc_filter__4__Country__177__United_States_of_America",
+      "name" : "United States of America",
+      "count" : 8098,
+      "label" : "United States of America",
+      "isException" : false
+    }, {
+      "index" : 178,
+      "identifier" : "sc_filter__4__Country__178__Uzbekistan",
+      "name" : "Uzbekistan",
+      "count" : 8080,
+      "label" : "Uzbekistan",
+      "isException" : false
+    }, {
+      "index" : 179,
+      "identifier" : "sc_filter__4__Country__179__Vanuatu",
+      "name" : "Vanuatu",
+      "count" : 8073,
+      "label" : "Vanuatu",
+      "isException" : false
+    }, {
+      "index" : 180,
+      "identifier" : "sc_filter__4__Country__180__Vatican_City",
+      "name" : "Vatican City",
+      "count" : 8147,
+      "label" : "Vatican City",
+      "isException" : false
+    }, {
+      "index" : 181,
+      "identifier" : "sc_filter__4__Country__181__Vietnam",
+      "name" : "Vietnam",
+      "count" : 8148,
+      "label" : "Vietnam",
+      "isException" : false
+    }, {
+      "index" : 182,
+      "identifier" : "sc_filter__4__Country__182__Yemen",
+      "name" : "Yemen",
+      "count" : 8032,
+      "label" : "Yemen",
+      "isException" : false
+    }, {
+      "index" : 183,
+      "identifier" : "sc_filter__4__Country__183__Zambia",
+      "name" : "Zambia",
+      "count" : 8083,
+      "label" : "Zambia",
+      "isException" : false
+    }, {
+      "index" : 184,
+      "identifier" : "sc_filter__4__Country__184__Zimbabwe",
+      "name" : "Zimbabwe",
+      "count" : 8167,
+      "label" : "Zimbabwe",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 5,
+    "identifier" : "sc_field__5__Region",
+    "csvIndex" : 1,
+    "name" : "Region",
+    "type" : "text",
+    "label" : "Region",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 7,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__5__Region__0__Asia",
+      "name" : "Asia",
+      "count" : 218882,
+      "label" : "Asia",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__5__Region__1__Australia_and_Oceania",
+      "name" : "Australia and Oceania",
+      "count" : 121405,
+      "label" : "Australia and Oceania",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__5__Region__2__Central_America_and_the_Caribbean",
+      "name" : "Central America and the Caribbean",
+      "count" : 162108,
+      "label" : "Central America and the Caribbean",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__5__Region__3__Europe",
+      "name" : "Europe",
+      "count" : 389079,
+      "label" : "Europe",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__5__Region__4__Middle_East_and_North_Africa",
+      "name" : "Middle East and North Africa",
+      "count" : 186391,
+      "label" : "Middle East and North Africa",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__5__Region__5__North_America",
+      "name" : "North America",
+      "count" : 32528,
+      "label" : "North America",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__5__Region__6__Sub_Saharan_Africa",
+      "name" : "Sub-Saharan Africa",
+      "count" : 389607,
+      "label" : "Sub-Saharan Africa",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 6,
+    "identifier" : "sc_field__6__Sales_Channel",
+    "csvIndex" : 4,
+    "name" : "Sales Channel",
+    "type" : "text",
+    "label" : "Sales Channel",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 2,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__6__Sales_Channel__0__Offline",
+      "name" : "Offline",
+      "count" : 750039,
+      "label" : "Offline",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__6__Sales_Channel__1__Online",
+      "name" : "Online",
+      "count" : 749961,
+      "label" : "Online",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 7,
+    "identifier" : "sc_field__7__Order_Priority",
+    "csvIndex" : 5,
+    "name" : "Order Priority",
+    "type" : "text",
+    "label" : "Order Priority",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 4,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__7__Order_Priority__0__C",
+      "name" : "C",
+      "count" : 375378,
+      "label" : "C",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__7__Order_Priority__1__H",
+      "name" : "H",
+      "count" : 374990,
+      "label" : "H",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__7__Order_Priority__2__L",
+      "name" : "L",
+      "count" : 375169,
+      "label" : "L",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__7__Order_Priority__3__M",
+      "name" : "M",
+      "count" : 374463,
+      "label" : "M",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 8,
+    "identifier" : "sc_field__8__Units_Sold",
+    "csvIndex" : 9,
+    "name" : "Units Sold",
+    "type" : "long",
+    "label" : "Units Sold",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 9,
+    "identifier" : "sc_field__9__Unit_Price",
+    "csvIndex" : 10,
+    "name" : "Unit Price",
+    "type" : "double",
+    "label" : "Unit Price",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 12,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__9__Unit_Price__0___9_33",
+      "name" : "9.33",
+      "count" : 125310,
+      "label" : "9.33",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__9__Unit_Price__1___47_45",
+      "name" : "47.45",
+      "count" : 125022,
+      "label" : "47.45",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__9__Unit_Price__2___81_73",
+      "name" : "81.73",
+      "count" : 125143,
+      "label" : "81.73",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__9__Unit_Price__3___109_28",
+      "name" : "109.28",
+      "count" : 124853,
+      "label" : "109.28",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__9__Unit_Price__4___152_58",
+      "name" : "152.58",
+      "count" : 125137,
+      "label" : "152.58",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__9__Unit_Price__5___154_06",
+      "name" : "154.06",
+      "count" : 124831,
+      "label" : "154.06",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__9__Unit_Price__6___205_70",
+      "name" : "205.70",
+      "count" : 124906,
+      "label" : "205.70",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__9__Unit_Price__7___255_28",
+      "name" : "255.28",
+      "count" : 125072,
+      "label" : "255.28",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__9__Unit_Price__8___421_89",
+      "name" : "421.89",
+      "count" : 124877,
+      "label" : "421.89",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__9__Unit_Price__9___437_20",
+      "name" : "437.20",
+      "count" : 125046,
+      "label" : "437.20",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__9__Unit_Price__10___651_21",
+      "name" : "651.21",
+      "count" : 124868,
+      "label" : "651.21",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__9__Unit_Price__11___668_27",
+      "name" : "668.27",
+      "count" : 124935,
+      "label" : "668.27",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 10,
+    "identifier" : "sc_field__10__Unit_Cost",
+    "csvIndex" : 11,
+    "name" : "Unit Cost",
+    "type" : "double",
+    "label" : "Unit Cost",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 12,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__10__Unit_Cost__0___6_92",
+      "name" : "6.92",
+      "count" : 125310,
+      "label" : "6.92",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__10__Unit_Cost__1___31_79",
+      "name" : "31.79",
+      "count" : 125022,
+      "label" : "31.79",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__10__Unit_Cost__2___35_84",
+      "name" : "35.84",
+      "count" : 124853,
+      "label" : "35.84",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__10__Unit_Cost__3___56_67",
+      "name" : "56.67",
+      "count" : 125143,
+      "label" : "56.67",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__10__Unit_Cost__4___90_93",
+      "name" : "90.93",
+      "count" : 124831,
+      "label" : "90.93",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__10__Unit_Cost__5___97_44",
+      "name" : "97.44",
+      "count" : 125137,
+      "label" : "97.44",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__10__Unit_Cost__6___117_11",
+      "name" : "117.11",
+      "count" : 124906,
+      "label" : "117.11",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__10__Unit_Cost__7___159_42",
+      "name" : "159.42",
+      "count" : 125072,
+      "label" : "159.42",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__10__Unit_Cost__8___263_33",
+      "name" : "263.33",
+      "count" : 125046,
+      "label" : "263.33",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__10__Unit_Cost__9___364_69",
+      "name" : "364.69",
+      "count" : 124877,
+      "label" : "364.69",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__10__Unit_Cost__10___502_54",
+      "name" : "502.54",
+      "count" : 124935,
+      "label" : "502.54",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__10__Unit_Cost__11___524_96",
+      "name" : "524.96",
+      "count" : 124868,
+      "label" : "524.96",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 11,
+    "identifier" : "sc_field__11__Total_Revenue",
+    "csvIndex" : 12,
+    "name" : "Total Revenue",
+    "type" : "double",
+    "label" : "Total Revenue",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 12,
+    "identifier" : "sc_field__12__Total_Cost",
+    "csvIndex" : 13,
+    "name" : "Total Cost",
+    "type" : "double",
+    "label" : "Total Cost",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 13,
+    "identifier" : "sc_field__13__Total_Profit",
+    "csvIndex" : 14,
+    "name" : "Total Profit",
+    "type" : "double",
+    "label" : "Total Profit",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  } ],
+  "totals" : {
+    "totalLines" : 1500000,
+    "totalCsvFileSize" : 187182221,
+    "totalFields" : 14,
+    "totalFilters" : 10,
+    "blockLines" : 8000,
+    "indexLinesModulo" : 10000000
+  }
+}
