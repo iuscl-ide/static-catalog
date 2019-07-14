@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog 500000 people sample                static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="semantic-ui/semantic-button-github.css">
+
+<script src="scripts/jquery-3.4.0.js"></script>
+<script src="semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="styles/static-catalog-page.css">
+
+<script src="scripts/static-catalog-page.js"></script>
+
+<!-- _catalog -->
+<script src="_catalog/scripts/papaparse.js"></script>
+<script src="_catalog/scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+		<div class="ui vertical basic segment">Search-able catalog for static generated sites - <em>static-catalog.org</em> 2019</div>
+
+		<div class="ui message">{{ description }}</div>
+
+		<div class="ui inverted menu">
+			<div class="header item">
+				<img class="logo" src="assets/images/logo-225.png" width="35" height="35">
+				static-catalog 500,000 people sample
+			</div>
+			<a id="sc-id--home-menu" class="item" href="https://static-catalog.org" target="_blank">
+				<i class="home icon"></i>
+				Home
+			</a>
+			<a id="sc-id--repo-menu" class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank">
+				<i class="github icon"></i>
+				GitHub Repo
+			</a>
+			<div class="right menu" style="display: none;">
+				<div class="header item">
+					Debug 
+				</div>
+				<div class="item" style="width: 150px;">
+					<div id="sc-id--debug-all-values-button" class="ui fluid red button">All checks</div>
+				</div>				
+			</div>
+		</div>
+		<div class="overlay">
+			<div class="ui left close rail">
+				<div class="ui right aligned fluid container" style="padding-top: 2em">
+					<div class="ui labeled icon vertical menu">
+						<a id="sc-id--filter-menu" class="item"><i class="filter icon"></i> Search </a>
+						<a id="sc-id--clear-menu" class="item"><i class="trash alternate outline icon"></i> Clear All </a>
+						<a id="sc-id--expand-collapse-menu" class="item"><i class="compress icon"></i> Collapse </a>
+						<a id="sc-id--top-menu" class="item"><i class="long arrow alternate up icon"></i> Top </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui black segment">
+			<div class="ui divided grid">
+				<div class="thirteen wide column" style="min-height: 100px;">
+					<div class="ui gray labels">
+						<div class="ui label">
+							Total lines
+							<div class="detail">{{ totals.totalLines | w }}</div>
+						</div>
+						<div class="ui label">
+							Data size
+							<div class="detail">{{ totals.totalCsvFileSize | ws }}</div>
+						</div>
+						<div class="ui label">
+							Fields
+							<div class="detail">{{ totals.totalFields | w }}</div>
+						</div>
+						<div class="ui label">
+							Filters
+							<div class="detail">{{ totals.totalFilters | w }}</div>
+						</div>
+					</div>
+					<div id="scp-id--filters-count" class="ui black labels"></div>					
+				</div>
+				<div class="right aligned three wide column">
+					<div id="sc-id--search-button" class="ui fluid primary button">Search</div>
+<!-- 					<div class="ui hidden clearing divider"></div> -->
+				</div>
+			</div>
+		</div>
+		<div class="ui grid">
+			<div class="five wide column">
+				<div style="display: flex; align-items: center;">
+					<div class="ui label" style="margin-right: 0.5em;">Sort by</div>
+					<div style="flex-grow: 1;">
+						<div id="scp-id--sort" class="ui selection fluid dropdown" tabindex="0">
+							<input type="hidden" name="scp-name--sort" value="initial"><i class="dropdown icon"></i>
+							<div class="text">CSV order</div>
+							<div class="menu" tabindex="-1">
+								<div class="item active selected" data-sort-field-index="-1" data-sort-direction="">CSV order</div>
+								{% for field in fields %} {% if field.sortAsc  %}
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="asc">{% if field.sortAscLabel != null %}{{ field.sortAscLabel }}{% else %}{{ field.label }} <em>Asc</em>{% endif %}</div>
+								{% endif %} {% if field.sortDesc  %}
+								<div class="item" data-sort-field-index="{{ field.index }}" data-sort-direction="desc">{% if field.sortDescLabel != null %}{{ field.sortDescLabel }}{% else %}{{ field.label }} <em>Desc</em>{% endif %}</div>
+								{% endif %} {% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				{% for field in fields %} {% if field.filter %}
+				<div class="ui vertical fluid accordion menu">
+					<div class="item">
+						<a class="header active title"> <i class="dropdown icon"></i> {{ field.label }} <span
+							class="ui left pointing basic horizontal label">{{ field.totalValuesCount }}</span>
+						</a>
+						<div class="active content">
+							{% if field.filterDisplayType == 'checkboxes' or field.filterDisplayType == 'radiobuttons' %}
+							<div class="ui list">
+								{% assign display_values_count = field.totalValuesCount | minus: field.totalMoreValuesCount %}
+								{% if field.filterDisplayType == 'radiobuttons' %}
+									{% assign is_radio = true %}
+								{% else %}
+									{% assign is_radio = false %}
+								{% endif %}
+								
+								{% for field_value in field.values %} {% assign field_value_index = field_value.index | abs %} {% if field_value_index < display_values_count %}
+								<div class="item">
+									<div class="ui {% if is_radio %}radio {% endif %}checkbox">
+										<input id="{{ field_value.identifier }}" type="{% if is_radio %}radio{% else %}checkbox{% endif %}" name="{{ field.identifier }}" value="{{ field_value.name }}">
+										<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
+									</div>
+									<div class="right floated content">
+										<div class="ui basic horizontal label"
+											{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
+											{{ field_value.count | w }}
+										</div>
+									</div>
+								</div>
+								{% endif %} {% endfor %}
+								{% if field.totalMoreValuesCount > 0 %}
+								<div class="item">
+									<a class="title"> <i class="dropdown icon"></i> Show more <span class="ui left pointing basic horizontal label">{{ field.totalMoreValuesCount }}</span></a>
+									<div class="content">
+										<div class="ui list">
+											{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %} {% if field_value_index >= display_values_count %}
+											<div class="item">
+												<div class="ui {% if is_radio %}radio {% endif %}checkbox">
+													<input id="{{ field_value.identifier }}" type="{% if is_radio %}radio{% else %}checkbox{% endif %}" name="{{ field.identifier }}" value="{{ field_value.name }}">
+													<label for="{{ field_value.identifier }}" {% if field_value.isException %} style="font-style: italic;" {% endif %}>{{ field_value.label }}</label>
+												</div>
+												<div class="right floated content">
+													<div class="ui basic horizontal label"
+														{% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
+														{{ field_value.count | w }}
+													</div>
+												</div>
+											</div>
+											{% endif %} {% endfor %}
+										</div>
+									</div>
+								</div>
+								{% endif %}
+							</div>
+							{% endif %}
+							{% if field.filterDisplayType == 'dropdown' %}
+							<div id="{{ field.identifier }}" class="ui selection fluid dropdown" tabindex="0" data-filter-display-type="dropdown">
+								<input type="hidden" name="{{ field.identifier }}" value="initial"><i class="dropdown icon"></i>
+								<div class="text" style="display: block;"></div>
+								<div class="menu" tabindex="-1">
+									<div class="item active selected"></div>
+									{% for field_value in field.values %}  {% assign field_value_index = field_value.index | abs %}
+									<div class="item" id="{{ field_value.identifier }}" data-value="{{ field_value.identifier }}">
+										<div class="right floated content">
+											<div class="ui basic horizontal label" style="margin-top: -4px;" {% if (field_value.name != field_value.label) %}data-tooltip="{{ field_value.name }}" data-position="top right"{% endif %}>
+												{{ field_value.count | w }}
+											</div>
+										</div>
+										{{ field_value.label }}
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							{% endif %}
+							{% if field.filterDisplayType == 'searchbox' %}
+							<div id="{{ field.identifier }}" class="ui search" data-filter-display-type="searchbox">
+								<div class="ui fluid icon input">
+									<input class="prompt" type="text" placeholder="Search {{ field.label }}...">
+									<i class="search icon"></i>
+								</div>
+								<div class="results"></div>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				{% endif %} {% endfor %}
+			</div>
+			<div class="eleven wide column">
+				<div id="scp-id--welcome-message" class="ui icon message">
+					<i class="info circle icon"></i>
+					<div class="content">
+						<div class="header">Welcome</div>
+						<p>Please check some filters and do a search.</p>
+					</div>
+				</div>
+				<div id="scp-id--searching-message" class="ui icon message" style="display: none">
+					<i class="notched circle loading icon"></i>
+					<div class="content">
+						<div class="header">Searching</div>
+						<p>We're fetching that content for you.</p>
+					</div>
+				</div>
+				<div id="scp-id--no-results-message" class="ui negative icon message" style="display: none">
+					<i class="ban icon"></i>
+					<div class="content">
+						<div class="header">No results</div>
+						<p>There were no lines found after applying the filters. The search took <strong><span id="scp-id--no-results-seconds"></span></strong> seconds.</p>
+					</div>
+				</div>
+				<div id="scp-id--success-message" class="ui positive icon message" style="display: none">
+					<i class="flag checkered icon"></i>
+					<div class="content">
+						<div class="header">Search successful</div>
+						<p>The search returned <strong><span id="scp-id--returned-lines"></span></strong>
+						lines from <strong><span id="scp-id--found-lines"></span></strong> found. The search took <strong><span id="scp-id--seconds"></span></strong> seconds.</p>
+					</div>
+				</div>
+				<div id="scp-id--results" style="display: none">
+					<div class="ui grid">
+						<div class="row">
+							<div class="stretched column pr0" style="width: 150px;">
+								<div>
+									<div class="ui label">Lines</div>
+									<div id="scp-id--pagination-results-per-page" class="ui selection compact dropdown" style="width: 70px;">
+										<input type="hidden" name="scp-name--lines-per-page" value="10"><i class="dropdown icon"></i>
+										<div class="text">10</div>
+										<div class="menu">
+											<div class="item" data-value="10">10</div>
+											<div class="item" data-value="25">25</div>
+											<div class="item" data-value="50">50</div>
+											<div class="item" data-value="100">100</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="right aligned column pl0" style="width: calc(100% - 150px);">
+								<div>
+									<div class="ui label">
+										Pages
+										<div id="scp-id--pagination-pages" class="detail"></div>	
+									</div>
+									<div class="ui pagination menu">
+										<a id="scp-id--pagination-first" class="item"><i class="fitted fast backward icon"></i></a>
+										<a id="scp-id--pagination-previous" class="item"><i class="fitted step backward icon"></i></a>
+										<div id="scp-id--pagination-ellipsis-1" class="disabled item">...</div>
+										<a id="scp-id--pagination-page-1" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-2" class="item">9,999,999</a>
+										<a id="scp-id--pagination-page-3" class="item">9,999,999</a>
+										<div id="scp-id--pagination-ellipsis-2" class="disabled item">...</div>
+										<a id="scp-id--pagination-next" class="item"><i class="fitted step forward icon"></i></a>
+										<a id="scp-id--pagination-last" class="item"><i class="fitted fast forward icon"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="scp-id--results-list" class="ui one column grid"></div>
+				</div>
+			</div>
+		</div>
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<h4 class="ui inverted header">Distribution Requirements</h4>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">
+								Papaparse
+							</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<h4 class="ui inverted header">Development Requirements</h4>
+						<h5 class="ui inverted header">Java</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">
+								SWT
+							</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">
+								Datetime
+							</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">
+								liqp
+							</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">
+								Univocity CSV Parser
+							</a>
+						</div>
+						<h5 class="ui inverted header">Java Script</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">
+								jQuery
+							</a>
+						</div>
+						<h5 class="ui inverted header">CSS</h5>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">
+								Semantic-UI
+							</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<h4 class="ui inverted header">About static-catalog</h4>
+						<p>The missing piece of static generated sites.</p>
+						<p>All the searches in this page are done on static data, without any server side code, microservices, APIs or database.</p>
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+	<div style="display: none">
+		<div id="scp-id--result-template" class="column">
+			<div data-name="scp-name--result-segment">
+				<div data-name="scp-name--result-grid" class="ui grid">
+					<div class="nine wide column">
+						<span data-name="scp-name--result-field-title" class="ui small header"></span>
+						<span class="ui large header">
+							<span data-name="scp-name--result-field-given-name"></span>
+							<span data-name="scp-name--result-field-middle-initial"></span>.
+							<span data-name="scp-name--result-field-surname"></span>
+						</span>
+						<br>
+						<span class="ui small greu header">
+							<span data-name="scp-name--result-field-national-id"></span>
+						</span>
+						<div class="ui hidden divider"></div>
+						<span class="ui small header">
+							Born on
+							<span data-name="scp-name--result-field-birthday"></span>,
+							<span data-name="scp-name--result-field-age"></span> years old,
+							<span data-name="scp-name--result-field-tropical-zodiac"></span>,
+							mother's maiden name:
+							<span data-name="scp-name--result-field--mothers-maiden"></span>
+						</span>
+						<div class="ui hidden divider"></div>
+						<span class="ui small header">
+							Works as
+							<span data-name="scp-name--result-field-occupation"></span>
+							at
+							<span data-name="scp-name--result-field-company"></span>
+						</span>
+						<br>
+						<span data-name="scp-name--result-field-domain" class="ui small blue header"></span>
+						<div class="ui hidden divider"></div>
+						<span class="ui small header">
+							Weights
+							<span data-name="scp-name--result-field-pounds"></span> lb
+							(<span data-name="scp-name--result-field-kilograms"></span> kg), is
+							<span data-name="scp-name--result-field-feet-inches"></span>
+							(<span data-name="scp-name--result-field-centimeters"></span> cm) tall,
+							has blood type:
+							<span data-name="scp-name--result-field-blood-type"></span>
+							<br>
+							Drives a
+							<a data-name="scp-name--result-field-vehicle-href" href="" target="_blank">
+								<span data-name="scp-name--result-field-vehicle"></span>
+							</a>
+						</span>
+							
+<!-- 						<iframe id="gmap_canvasu" src="https://www.google.com/search?q=2012+Land+Rover+LR4&tbm=isch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe> -->
+							
+					</div>
+					<div class="seven wide column">
+						<span class="ui small header">
+							<span data-name="scp-name--result-field-street-address"></span>,
+							<span data-name="scp-name--result-field-city"></span>,
+							<span data-name="scp-name--result-field-state-full"></span>
+							<br>
+							<span data-name="scp-name--result-field-zip-code"></span>
+						</span>
+						<div data-name="scp-name--result-field-map" style="text-align: right; margin-top: 1rem; margin-bottom: 1rem;">
+							<iframe id="gmap_canvas" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+						</div>
+						<span data-name="scp-name--result-field-email-address" class="ui small blue header"></span>
+						<br>
+						<span data-name="scp-name--result-field-telephone-number"class="ui small header"></span>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- 		<div id="scp-id--result-field-template" class="column"> -->
+<!-- 			<span data-name="scp-name--result-field-name" class="ui tiny header"></span> &nbsp; <span data-name="scp-name--result-field-value"></span> -->
+<!-- 		</div> -->
+		<div  id="scp-id--filter-count-template" class="ui label">
+			<a data-name="scp-name--filter-count-name"></a>
+			<div data-name="scp-name--filter-count-sum" class="detail"></div>
+			<i data-name="scp-name--filter-count-close" class="icon close"></i>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalogPage.init();			
+		});
+	</script>
+</body>
+</html>

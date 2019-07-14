@@ -1,0 +1,74 @@
+/*	
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog 500000 people sample                static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+*/
+
+body {
+	background-color: #FFFFFF;
+}
+
+.ui.menu .item img.logo {
+	margin-right: 1.14286em;
+}
+
+.overlay {
+	visibility: hidden;
+}
+.fixed.overlay {
+	visibility: visible;
+}
+
+.ui.message {
+	margin-top: 0em;
+}
+
+div[data-name=scp-name--result--grid] {
+	padding-top: 1em !important;
+	padding-bottom: 1em !important;
+}
+
+#scp-id--result--field-template {
+	padding-top: 0em;
+	padding-bottom: 0em;
+}
+
+.ptb0 {
+	padding-top: 0em !important;
+	padding-bottom: 0em !important;
+}
+
+.pr0 {
+	padding-right: 0em !important;
+}
+
+.pl0 {
+	padding-left: 0em !important;
+}
+
+/* .mapouter { */
+/* 	position: relative; */
+/* 	text-align: right; */
+/* 	height: 300px; */
+/* 	width: 300px; */
+/* } */
+
+/* .gmap_canvas { */
+/* 	overflow: hidden; */
+/* 	background: none !important; */
+/* 	height: 300px; */
+/* 	width: 300px; */
+/* } */
+
+/* .main.container { */
+/* 	margin-top: 7em; */
+/* } */
+
+/* .wireframe { */
+/* 	margin-top: 2em; */
+/* } */
+
+/* .ui.footer.segment { */
+/* 	margin: 5em 0em 0em; */
+/* 	padding: 5em 0em; */
+/* } */
