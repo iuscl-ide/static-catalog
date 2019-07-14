@@ -1,0 +1,1488 @@
+{
+  "description" : "Sample 4: SampleCSVFile_53000kb.csv - <a href=\"https://sample-videos.com/download-sample-csv.php\"  target=\"_blank\">sample-csv</a>",
+  "fields" : [ {
+    "index" : 0,
+    "identifier" : "sc_field__0__Field_1",
+    "csvIndex" : 1,
+    "name" : "Field 1",
+    "type" : "text",
+    "label" : "Field 1",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 1,
+    "identifier" : "sc_field__1__Field_2",
+    "csvIndex" : 2,
+    "name" : "Field 2",
+    "type" : "text",
+    "label" : "Field 2",
+    "filter" : true,
+    "filterType" : "keywords",
+    "filterDisplayType" : "searchbox",
+    "sortAsc" : true,
+    "sortDesc" : true,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 795,
+    "totalMoreValuesCount" : 790,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__1__Field_2__0__Aa",
+      "name" : "Aa",
+      "count" : 252,
+      "label" : "Aa",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__1__Field_2__1__Ad",
+      "name" : "Ad",
+      "count" : 693,
+      "label" : "Ad",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__1__Field_2__2__Ai",
+      "name" : "Ai",
+      "count" : 24,
+      "label" : "Ai",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__1__Field_2__3__Al",
+      "name" : "Al",
+      "count" : 1629,
+      "label" : "Al",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__1__Field_2__4__Am",
+      "name" : "Am",
+      "count" : 234,
+      "label" : "Am",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__1__Field_2__5__An",
+      "name" : "An",
+      "count" : 1643,
+      "label" : "An",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__1__Field_2__6__Ar",
+      "name" : "Ar",
+      "count" : 612,
+      "label" : "Ar",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__1__Field_2__7__As",
+      "name" : "As",
+      "count" : 186,
+      "label" : "As",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__1__Field_2__8__Ba",
+      "name" : "Ba",
+      "count" : 710,
+      "label" : "Ba",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__1__Field_2__9__Be",
+      "name" : "Be",
+      "count" : 878,
+      "label" : "Be",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__1__Field_2__10__Bi",
+      "name" : "Bi",
+      "count" : 498,
+      "label" : "Bi",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__1__Field_2__11__Bo",
+      "name" : "Bo",
+      "count" : 418,
+      "label" : "Bo",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__1__Field_2__12__Br",
+      "name" : "Br",
+      "count" : 1794,
+      "label" : "Br",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__1__Field_2__13__Ca",
+      "name" : "Ca",
+      "count" : 1611,
+      "label" : "Ca",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__1__Field_2__14__Ch",
+      "name" : "Ch",
+      "count" : 2069,
+      "label" : "Ch",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__1__Field_2__15__Ci",
+      "name" : "Ci",
+      "count" : 258,
+      "label" : "Ci",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__1__Field_2__16__Cl",
+      "name" : "Cl",
+      "count" : 421,
+      "label" : "Cl",
+      "isException" : false
+    }, {
+      "index" : 17,
+      "identifier" : "sc_filter__1__Field_2__17__Co",
+      "name" : "Co",
+      "count" : 288,
+      "label" : "Co",
+      "isException" : false
+    }, {
+      "index" : 18,
+      "identifier" : "sc_filter__1__Field_2__18__Cr",
+      "name" : "Cr",
+      "count" : 294,
+      "label" : "Cr",
+      "isException" : false
+    }, {
+      "index" : 19,
+      "identifier" : "sc_filter__1__Field_2__19__Cy",
+      "name" : "Cy",
+      "count" : 414,
+      "label" : "Cy",
+      "isException" : false
+    }, {
+      "index" : 20,
+      "identifier" : "sc_filter__1__Field_2__20__Da",
+      "name" : "Da",
+      "count" : 1956,
+      "label" : "Da",
+      "isException" : false
+    }, {
+      "index" : 21,
+      "identifier" : "sc_filter__1__Field_2__21__De",
+      "name" : "De",
+      "count" : 1222,
+      "label" : "De",
+      "isException" : false
+    }, {
+      "index" : 22,
+      "identifier" : "sc_filter__1__Field_2__22__Di",
+      "name" : "Di",
+      "count" : 198,
+      "label" : "Di",
+      "isException" : false
+    }, {
+      "index" : 23,
+      "identifier" : "sc_filter__1__Field_2__23__Do",
+      "name" : "Do",
+      "count" : 570,
+      "label" : "Do",
+      "isException" : false
+    }, {
+      "index" : 24,
+      "identifier" : "sc_filter__1__Field_2__24__Du",
+      "name" : "Du",
+      "count" : 264,
+      "label" : "Du",
+      "isException" : false
+    }, {
+      "index" : 25,
+      "identifier" : "sc_filter__1__Field_2__25__Ed",
+      "name" : "Ed",
+      "count" : 642,
+      "label" : "Ed",
+      "isException" : false
+    }, {
+      "index" : 26,
+      "identifier" : "sc_filter__1__Field_2__26__Ei",
+      "name" : "Ei",
+      "count" : 36,
+      "label" : "Ei",
+      "isException" : false
+    }, {
+      "index" : 27,
+      "identifier" : "sc_filter__1__Field_2__27__El",
+      "name" : "El",
+      "count" : 215,
+      "label" : "El",
+      "isException" : false
+    }, {
+      "index" : 28,
+      "identifier" : "sc_filter__1__Field_2__28__Em",
+      "name" : "Em",
+      "count" : 303,
+      "label" : "Em",
+      "isException" : false
+    }, {
+      "index" : 29,
+      "identifier" : "sc_filter__1__Field_2__29__Er",
+      "name" : "Er",
+      "count" : 887,
+      "label" : "Er",
+      "isException" : false
+    }, {
+      "index" : 30,
+      "identifier" : "sc_filter__1__Field_2__30__Eu",
+      "name" : "Eu",
+      "count" : 264,
+      "label" : "Eu",
+      "isException" : false
+    }, {
+      "index" : 31,
+      "identifier" : "sc_filter__1__Field_2__31__Ev",
+      "name" : "Ev",
+      "count" : 312,
+      "label" : "Ev",
+      "isException" : false
+    }, {
+      "index" : 32,
+      "identifier" : "sc_filter__1__Field_2__32__Fi",
+      "name" : "Fi",
+      "count" : 54,
+      "label" : "Fi",
+      "isException" : false
+    }, {
+      "index" : 33,
+      "identifier" : "sc_filter__1__Field_2__33__Fr",
+      "name" : "Fr",
+      "count" : 969,
+      "label" : "Fr",
+      "isException" : false
+    }, {
+      "index" : 34,
+      "identifier" : "sc_filter__1__Field_2__34__Ga",
+      "name" : "Ga",
+      "count" : 234,
+      "label" : "Ga",
+      "isException" : false
+    }, {
+      "index" : 35,
+      "identifier" : "sc_filter__1__Field_2__35__Ge",
+      "name" : "Ge",
+      "count" : 396,
+      "label" : "Ge",
+      "isException" : false
+    }, {
+      "index" : 36,
+      "identifier" : "sc_filter__1__Field_2__36__Gi",
+      "name" : "Gi",
+      "count" : 312,
+      "label" : "Gi",
+      "isException" : false
+    }, {
+      "index" : 37,
+      "identifier" : "sc_filter__1__Field_2__37__Gr",
+      "name" : "Gr",
+      "count" : 821,
+      "label" : "Gr",
+      "isException" : false
+    }, {
+      "index" : 38,
+      "identifier" : "sc_filter__1__Field_2__38__Gu",
+      "name" : "Gu",
+      "count" : 204,
+      "label" : "Gu",
+      "isException" : false
+    }, {
+      "index" : 39,
+      "identifier" : "sc_filter__1__Field_2__39__Ha",
+      "name" : "Ha",
+      "count" : 750,
+      "label" : "Ha",
+      "isException" : false
+    }, {
+      "index" : 40,
+      "identifier" : "sc_filter__1__Field_2__40__He",
+      "name" : "He",
+      "count" : 516,
+      "label" : "He",
+      "isException" : false
+    }, {
+      "index" : 41,
+      "identifier" : "sc_filter__1__Field_2__41__Hi",
+      "name" : "Hi",
+      "count" : 90,
+      "label" : "Hi",
+      "isException" : false
+    }, {
+      "index" : 42,
+      "identifier" : "sc_filter__1__Field_2__42__Hu",
+      "name" : "Hu",
+      "count" : 72,
+      "label" : "Hu",
+      "isException" : false
+    }, {
+      "index" : 43,
+      "identifier" : "sc_filter__1__Field_2__43__Io",
+      "name" : "Io",
+      "count" : 108,
+      "label" : "Io",
+      "isException" : false
+    }, {
+      "index" : 44,
+      "identifier" : "sc_filter__1__Field_2__44__Ir",
+      "name" : "Ir",
+      "count" : 60,
+      "label" : "Ir",
+      "isException" : false
+    }, {
+      "index" : 45,
+      "identifier" : "sc_filter__1__Field_2__45__Iv",
+      "name" : "Iv",
+      "count" : 125,
+      "label" : "Iv",
+      "isException" : false
+    }, {
+      "index" : 46,
+      "identifier" : "sc_filter__1__Field_2__46__Ja",
+      "name" : "Ja",
+      "count" : 1280,
+      "label" : "Ja",
+      "isException" : false
+    }, {
+      "index" : 47,
+      "identifier" : "sc_filter__1__Field_2__47__Je",
+      "name" : "Je",
+      "count" : 951,
+      "label" : "Je",
+      "isException" : false
+    }, {
+      "index" : 48,
+      "identifier" : "sc_filter__1__Field_2__48__Ji",
+      "name" : "Ji",
+      "count" : 611,
+      "label" : "Ji",
+      "isException" : false
+    }, {
+      "index" : 49,
+      "identifier" : "sc_filter__1__Field_2__49__Jo",
+      "name" : "Jo",
+      "count" : 1535,
+      "label" : "Jo",
+      "isException" : false
+    }, {
+      "index" : 50,
+      "identifier" : "sc_filter__1__Field_2__50__Ju",
+      "name" : "Ju",
+      "count" : 1042,
+      "label" : "Ju",
+      "isException" : false
+    }, {
+      "index" : 51,
+      "identifier" : "sc_filter__1__Field_2__51__Ka",
+      "name" : "Ka",
+      "count" : 932,
+      "label" : "Ka",
+      "isException" : false
+    }, {
+      "index" : 52,
+      "identifier" : "sc_filter__1__Field_2__52__Ke",
+      "name" : "Ke",
+      "count" : 950,
+      "label" : "Ke",
+      "isException" : false
+    }, {
+      "index" : 53,
+      "identifier" : "sc_filter__1__Field_2__53__Kh",
+      "name" : "Kh",
+      "count" : 102,
+      "label" : "Kh",
+      "isException" : false
+    }, {
+      "index" : 54,
+      "identifier" : "sc_filter__1__Field_2__54__Ki",
+      "name" : "Ki",
+      "count" : 72,
+      "label" : "Ki",
+      "isException" : false
+    }, {
+      "index" : 55,
+      "identifier" : "sc_filter__1__Field_2__55__Kr",
+      "name" : "Kr",
+      "count" : 144,
+      "label" : "Kr",
+      "isException" : false
+    }, {
+      "index" : 56,
+      "identifier" : "sc_filter__1__Field_2__56__La",
+      "name" : "La",
+      "count" : 808,
+      "label" : "La",
+      "isException" : false
+    }, {
+      "index" : 57,
+      "identifier" : "sc_filter__1__Field_2__57__Le",
+      "name" : "Le",
+      "count" : 396,
+      "label" : "Le",
+      "isException" : false
+    }, {
+      "index" : 58,
+      "identifier" : "sc_filter__1__Field_2__58__Li",
+      "name" : "Li",
+      "count" : 1127,
+      "label" : "Li",
+      "isException" : false
+    }, {
+      "index" : 59,
+      "identifier" : "sc_filter__1__Field_2__59__Lo",
+      "name" : "Lo",
+      "count" : 162,
+      "label" : "Lo",
+      "isException" : false
+    }, {
+      "index" : 60,
+      "identifier" : "sc_filter__1__Field_2__60__Lu",
+      "name" : "Lu",
+      "count" : 210,
+      "label" : "Lu",
+      "isException" : false
+    }, {
+      "index" : 61,
+      "identifier" : "sc_filter__1__Field_2__61__Ly",
+      "name" : "Ly",
+      "count" : 186,
+      "label" : "Ly",
+      "isException" : false
+    }, {
+      "index" : 62,
+      "identifier" : "sc_filter__1__Field_2__62__Ma",
+      "name" : "Ma",
+      "count" : 2369,
+      "label" : "Ma",
+      "isException" : false
+    }, {
+      "index" : 63,
+      "identifier" : "sc_filter__1__Field_2__63__Me",
+      "name" : "Me",
+      "count" : 246,
+      "label" : "Me",
+      "isException" : false
+    }, {
+      "index" : 64,
+      "identifier" : "sc_filter__1__Field_2__64__Mi",
+      "name" : "Mi",
+      "count" : 2003,
+      "label" : "Mi",
+      "isException" : false
+    }, {
+      "index" : 65,
+      "identifier" : "sc_filter__1__Field_2__65__Mo",
+      "name" : "Mo",
+      "count" : 66,
+      "label" : "Mo",
+      "isException" : false
+    }, {
+      "index" : 66,
+      "identifier" : "sc_filter__1__Field_2__66__Mu",
+      "name" : "Mu",
+      "count" : 316,
+      "label" : "Mu",
+      "isException" : false
+    }, {
+      "index" : 67,
+      "identifier" : "sc_filter__1__Field_2__67__Na",
+      "name" : "Na",
+      "count" : 600,
+      "label" : "Na",
+      "isException" : false
+    }, {
+      "index" : 68,
+      "identifier" : "sc_filter__1__Field_2__68__Ne",
+      "name" : "Ne",
+      "count" : 336,
+      "label" : "Ne",
+      "isException" : false
+    }, {
+      "index" : 69,
+      "identifier" : "sc_filter__1__Field_2__69__Ni",
+      "name" : "Ni",
+      "count" : 473,
+      "label" : "Ni",
+      "isException" : false
+    }, {
+      "index" : 70,
+      "identifier" : "sc_filter__1__Field_2__70__No",
+      "name" : "No",
+      "count" : 644,
+      "label" : "No",
+      "isException" : false
+    }, {
+      "index" : 71,
+      "identifier" : "sc_filter__1__Field_2__71__Od",
+      "name" : "Od",
+      "count" : 96,
+      "label" : "Od",
+      "isException" : false
+    }, {
+      "index" : 72,
+      "identifier" : "sc_filter__1__Field_2__72__Ol",
+      "name" : "Ol",
+      "count" : 90,
+      "label" : "Ol",
+      "isException" : false
+    }, {
+      "index" : 73,
+      "identifier" : "sc_filter__1__Field_2__73__Pa",
+      "name" : "Pa",
+      "count" : 1328,
+      "label" : "Pa",
+      "isException" : false
+    }, {
+      "index" : 74,
+      "identifier" : "sc_filter__1__Field_2__74__Pe",
+      "name" : "Pe",
+      "count" : 408,
+      "label" : "Pe",
+      "isException" : false
+    }, {
+      "index" : 75,
+      "identifier" : "sc_filter__1__Field_2__75__Ph",
+      "name" : "Ph",
+      "count" : 362,
+      "label" : "Ph",
+      "isException" : false
+    }, {
+      "index" : 76,
+      "identifier" : "sc_filter__1__Field_2__76__Pi",
+      "name" : "Pi",
+      "count" : 54,
+      "label" : "Pi",
+      "isException" : false
+    }, {
+      "index" : 77,
+      "identifier" : "sc_filter__1__Field_2__77__Qu",
+      "name" : "Qu",
+      "count" : 192,
+      "label" : "Qu",
+      "isException" : false
+    }, {
+      "index" : 78,
+      "identifier" : "sc_filter__1__Field_2__78__Ra",
+      "name" : "Ra",
+      "count" : 736,
+      "label" : "Ra",
+      "isException" : false
+    }, {
+      "index" : 79,
+      "identifier" : "sc_filter__1__Field_2__79__Re",
+      "name" : "Re",
+      "count" : 108,
+      "label" : "Re",
+      "isException" : false
+    }, {
+      "index" : 80,
+      "identifier" : "sc_filter__1__Field_2__80__Ri",
+      "name" : "Ri",
+      "count" : 750,
+      "label" : "Ri",
+      "isException" : false
+    }, {
+      "index" : 81,
+      "identifier" : "sc_filter__1__Field_2__81__Ro",
+      "name" : "Ro",
+      "count" : 1367,
+      "label" : "Ro",
+      "isException" : false
+    }, {
+      "index" : 82,
+      "identifier" : "sc_filter__1__Field_2__82__Ru",
+      "name" : "Ru",
+      "count" : 270,
+      "label" : "Ru",
+      "isException" : false
+    }, {
+      "index" : 83,
+      "identifier" : "sc_filter__1__Field_2__83__Ry",
+      "name" : "Ry",
+      "count" : 72,
+      "label" : "Ry",
+      "isException" : false
+    }, {
+      "index" : 84,
+      "identifier" : "sc_filter__1__Field_2__84__Sa",
+      "name" : "Sa",
+      "count" : 1248,
+      "label" : "Sa",
+      "isException" : false
+    }, {
+      "index" : 85,
+      "identifier" : "sc_filter__1__Field_2__85__Sc",
+      "name" : "Sc",
+      "count" : 180,
+      "label" : "Sc",
+      "isException" : false
+    }, {
+      "index" : 86,
+      "identifier" : "sc_filter__1__Field_2__86__Se",
+      "name" : "Se",
+      "count" : 402,
+      "label" : "Se",
+      "isException" : false
+    }, {
+      "index" : 87,
+      "identifier" : "sc_filter__1__Field_2__87__Sh",
+      "name" : "Sh",
+      "count" : 734,
+      "label" : "Sh",
+      "isException" : false
+    }, {
+      "index" : 88,
+      "identifier" : "sc_filter__1__Field_2__88__Si",
+      "name" : "Si",
+      "count" : 168,
+      "label" : "Si",
+      "isException" : false
+    }, {
+      "index" : 89,
+      "identifier" : "sc_filter__1__Field_2__89__Sk",
+      "name" : "Sk",
+      "count" : 54,
+      "label" : "Sk",
+      "isException" : false
+    }, {
+      "index" : 90,
+      "identifier" : "sc_filter__1__Field_2__90__So",
+      "name" : "So",
+      "count" : 216,
+      "label" : "So",
+      "isException" : false
+    }, {
+      "index" : 91,
+      "identifier" : "sc_filter__1__Field_2__91__Sp",
+      "name" : "Sp",
+      "count" : 76,
+      "label" : "Sp",
+      "isException" : false
+    }, {
+      "index" : 92,
+      "identifier" : "sc_filter__1__Field_2__92__St",
+      "name" : "St",
+      "count" : 848,
+      "label" : "St",
+      "isException" : false
+    }, {
+      "index" : 93,
+      "identifier" : "sc_filter__1__Field_2__93__Su",
+      "name" : "Su",
+      "count" : 570,
+      "label" : "Su",
+      "isException" : false
+    }, {
+      "index" : 94,
+      "identifier" : "sc_filter__1__Field_2__94__Sy",
+      "name" : "Sy",
+      "count" : 144,
+      "label" : "Sy",
+      "isException" : false
+    }, {
+      "index" : 95,
+      "identifier" : "sc_filter__1__Field_2__95__Ta",
+      "name" : "Ta",
+      "count" : 521,
+      "label" : "Ta",
+      "isException" : false
+    }, {
+      "index" : 96,
+      "identifier" : "sc_filter__1__Field_2__96__Te",
+      "name" : "Te",
+      "count" : 48,
+      "label" : "Te",
+      "isException" : false
+    }, {
+      "index" : 97,
+      "identifier" : "sc_filter__1__Field_2__97__Th",
+      "name" : "Th",
+      "count" : 672,
+      "label" : "Th",
+      "isException" : false
+    }, {
+      "index" : 98,
+      "identifier" : "sc_filter__1__Field_2__98__Ti",
+      "name" : "Ti",
+      "count" : 185,
+      "label" : "Ti",
+      "isException" : false
+    }, {
+      "index" : 99,
+      "identifier" : "sc_filter__1__Field_2__99__To",
+      "name" : "To",
+      "count" : 1348,
+      "label" : "To",
+      "isException" : false
+    }, {
+      "index" : 100,
+      "identifier" : "sc_filter__1__Field_2__100__Tr",
+      "name" : "Tr",
+      "count" : 702,
+      "label" : "Tr",
+      "isException" : false
+    }, {
+      "index" : 101,
+      "identifier" : "sc_filter__1__Field_2__101__Va",
+      "name" : "Va",
+      "count" : 228,
+      "label" : "Va",
+      "isException" : false
+    }, {
+      "index" : 102,
+      "identifier" : "sc_filter__1__Field_2__102__Vi",
+      "name" : "Vi",
+      "count" : 828,
+      "label" : "Vi",
+      "isException" : false
+    }, {
+      "index" : 103,
+      "identifier" : "sc_filter__1__Field_2__103__Wi",
+      "name" : "Wi",
+      "count" : 138,
+      "label" : "Wi",
+      "isException" : false
+    }, {
+      "index" : 104,
+      "identifier" : "sc_filter__1__Field_2__104__Xy",
+      "name" : "Xy",
+      "count" : 84,
+      "label" : "Xy",
+      "isException" : false
+    }, {
+      "index" : 105,
+      "identifier" : "sc_filter__1__Field_2__105__Ya",
+      "name" : "Ya",
+      "count" : 47,
+      "label" : "Ya",
+      "isException" : false
+    }, {
+      "index" : 106,
+      "identifier" : "sc_filter__1__Field_2__106__Yo",
+      "name" : "Yo",
+      "count" : 99,
+      "label" : "Yo",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 2,
+    "identifier" : "sc_field__2__Field_3",
+    "csvIndex" : 3,
+    "name" : "Field 3",
+    "type" : "long",
+    "label" : "Field 3",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 3,
+    "identifier" : "sc_field__3__Field_4",
+    "csvIndex" : 4,
+    "name" : "Field 4",
+    "type" : "double",
+    "label" : "Field 4",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 4,
+    "identifier" : "sc_field__4__Field_5",
+    "csvIndex" : 5,
+    "name" : "Field 5",
+    "type" : "double",
+    "label" : "Field 5",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 5,
+    "identifier" : "sc_field__5__Field_6",
+    "csvIndex" : 6,
+    "name" : "Field 6",
+    "type" : "double",
+    "label" : "Field 6",
+    "filter" : false,
+    "filterType" : null,
+    "filterDisplayType" : null,
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 0,
+    "totalMoreValuesCount" : 0,
+    "values" : [ ]
+  }, {
+    "index" : 6,
+    "identifier" : "sc_field__6__Field_7",
+    "csvIndex" : 7,
+    "name" : "Field 7",
+    "type" : "text",
+    "label" : "Field 7",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 13,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__6__Field_7__0__Alberta",
+      "name" : "Alberta",
+      "count" : 10379,
+      "label" : "Alberta",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__6__Field_7__1__British_Columbia",
+      "name" : "British Columbia",
+      "count" : 10673,
+      "label" : "British Columbia",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__6__Field_7__2__Manitoba",
+      "name" : "Manitoba",
+      "count" : 4746,
+      "label" : "Manitoba",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__6__Field_7__3__New_Brunswick",
+      "name" : "New Brunswick",
+      "count" : 1938,
+      "label" : "New Brunswick",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__6__Field_7__4__Newfoundland",
+      "name" : "Newfoundland",
+      "count" : 492,
+      "label" : "Newfoundland",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__6__Field_7__5__Northwest_Territories",
+      "name" : "Northwest Territories",
+      "count" : 2364,
+      "label" : "Northwest Territories",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__6__Field_7__6__Nova_Scotia",
+      "name" : "Nova Scotia",
+      "count" : 2778,
+      "label" : "Nova Scotia",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__6__Field_7__7__Nunavut",
+      "name" : "Nunavut",
+      "count" : 474,
+      "label" : "Nunavut",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__6__Field_7__8__Ontario",
+      "name" : "Ontario",
+      "count" : 10950,
+      "label" : "Ontario",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__6__Field_7__9__Prince_Edward_Island",
+      "name" : "Prince Edward Island",
+      "count" : 1266,
+      "label" : "Prince Edward Island",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__6__Field_7__10__Quebec",
+      "name" : "Quebec",
+      "count" : 4674,
+      "label" : "Quebec",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__6__Field_7__11__Saskachewan",
+      "name" : "Saskachewan",
+      "count" : 5466,
+      "label" : "Saskachewan",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__6__Field_7__12__Yukon",
+      "name" : "Yukon",
+      "count" : 3240,
+      "label" : "Yukon",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 7,
+    "identifier" : "sc_field__7__Field_8",
+    "csvIndex" : 8,
+    "name" : "Field 8",
+    "type" : "text",
+    "label" : "Field 8",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 17,
+    "totalMoreValuesCount" : 0,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__7__Field_8__0__Appliances",
+      "name" : "Appliances",
+      "count" : 2993,
+      "label" : "Appliances",
+      "isException" : false
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__7__Field_8__1__Binders_and_Binder_Accessories",
+      "name" : "Binders and Binder Accessories",
+      "count" : 6547,
+      "label" : "Binders and Binder Accessories",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__7__Field_8__2__Bookcases",
+      "name" : "Bookcases",
+      "count" : 1412,
+      "label" : "Bookcases",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__7__Field_8__3__Chairs___Chairmats",
+      "name" : "Chairs & Chairmats",
+      "count" : 2729,
+      "label" : "Chairs & Chairmats",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__7__Field_8__4__Computer_Peripherals",
+      "name" : "Computer Peripherals",
+      "count" : 5251,
+      "label" : "Computer Peripherals",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__7__Field_8__5__Copiers_and_Fax",
+      "name" : "Copiers and Fax",
+      "count" : 617,
+      "label" : "Copiers and Fax",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__7__Field_8__6__Envelopes",
+      "name" : "Envelopes",
+      "count" : 1713,
+      "label" : "Envelopes",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__7__Field_8__7__Labels",
+      "name" : "Labels",
+      "count" : 2025,
+      "label" : "Labels",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__7__Field_8__8__Office_Furnishings",
+      "name" : "Office Furnishings",
+      "count" : 5515,
+      "label" : "Office Furnishings",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__7__Field_8__9__Office_Machines",
+      "name" : "Office Machines",
+      "count" : 2424,
+      "label" : "Office Machines",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__7__Field_8__10__Paper",
+      "name" : "Paper",
+      "count" : 8732,
+      "label" : "Paper",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__7__Field_8__11__Pens___Art_Supplies",
+      "name" : "Pens & Art Supplies",
+      "count" : 4494,
+      "label" : "Pens & Art Supplies",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__7__Field_8__12__Rubber_Bands",
+      "name" : "Rubber Bands",
+      "count" : 1255,
+      "label" : "Rubber Bands",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__7__Field_8__13__Scissors__Rulers_and_Trimmers",
+      "name" : "Scissors, Rulers and Trimmers",
+      "count" : 1037,
+      "label" : "Scissors, Rulers and Trimmers",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__7__Field_8__14__Storage___Organization",
+      "name" : "Storage & Organization",
+      "count" : 3757,
+      "label" : "Storage & Organization",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__7__Field_8__15__Tables",
+      "name" : "Tables",
+      "count" : 2530,
+      "label" : "Tables",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__7__Field_8__16__Telephones_and_Communication",
+      "name" : "Telephones and Communication",
+      "count" : 6409,
+      "label" : "Telephones and Communication",
+      "isException" : false
+    } ]
+  }, {
+    "index" : 8,
+    "identifier" : "sc_field__8__Field_9",
+    "csvIndex" : 9,
+    "name" : "Field 9",
+    "type" : "double",
+    "label" : "Field 9",
+    "filter" : true,
+    "filterType" : "values",
+    "filterDisplayType" : "checkboxes",
+    "sortAsc" : false,
+    "sortDesc" : false,
+    "sortAscLabel" : null,
+    "sortDescLabel" : null,
+    "totalValuesCount" : 52,
+    "totalMoreValuesCount" : 47,
+    "values" : [ {
+      "index" : 0,
+      "identifier" : "sc_filter__8__Field_9__e_0__NULL",
+      "name" : "NULL",
+      "count" : 451,
+      "label" : "NULL",
+      "isException" : true
+    }, {
+      "index" : 1,
+      "identifier" : "sc_filter__8__Field_9__1___0_35",
+      "name" : "0.35",
+      "count" : 1880,
+      "label" : "0.35",
+      "isException" : false
+    }, {
+      "index" : 2,
+      "identifier" : "sc_filter__8__Field_9__2___0_36",
+      "name" : "0.36",
+      "count" : 4348,
+      "label" : "0.36",
+      "isException" : false
+    }, {
+      "index" : 3,
+      "identifier" : "sc_filter__8__Field_9__3___0_37",
+      "name" : "0.37",
+      "count" : 5399,
+      "label" : "0.37",
+      "isException" : false
+    }, {
+      "index" : 4,
+      "identifier" : "sc_filter__8__Field_9__4___0_38",
+      "name" : "0.38",
+      "count" : 4910,
+      "label" : "0.38",
+      "isException" : false
+    }, {
+      "index" : 5,
+      "identifier" : "sc_filter__8__Field_9__5___0_39",
+      "name" : "0.39",
+      "count" : 3385,
+      "label" : "0.39",
+      "isException" : false
+    }, {
+      "index" : 6,
+      "identifier" : "sc_filter__8__Field_9__6___0_4",
+      "name" : "0.4",
+      "count" : 2902,
+      "label" : "0.4",
+      "isException" : false
+    }, {
+      "index" : 7,
+      "identifier" : "sc_filter__8__Field_9__7___0_41",
+      "name" : "0.41",
+      "count" : 685,
+      "label" : "0.41",
+      "isException" : false
+    }, {
+      "index" : 8,
+      "identifier" : "sc_filter__8__Field_9__8___0_42",
+      "name" : "0.42",
+      "count" : 634,
+      "label" : "0.42",
+      "isException" : false
+    }, {
+      "index" : 9,
+      "identifier" : "sc_filter__8__Field_9__9___0_43",
+      "name" : "0.43",
+      "count" : 687,
+      "label" : "0.43",
+      "isException" : false
+    }, {
+      "index" : 10,
+      "identifier" : "sc_filter__8__Field_9__10___0_44",
+      "name" : "0.44",
+      "count" : 672,
+      "label" : "0.44",
+      "isException" : false
+    }, {
+      "index" : 11,
+      "identifier" : "sc_filter__8__Field_9__11___0_45",
+      "name" : "0.45",
+      "count" : 370,
+      "label" : "0.45",
+      "isException" : false
+    }, {
+      "index" : 12,
+      "identifier" : "sc_filter__8__Field_9__12___0_46",
+      "name" : "0.46",
+      "count" : 587,
+      "label" : "0.46",
+      "isException" : false
+    }, {
+      "index" : 13,
+      "identifier" : "sc_filter__8__Field_9__13___0_47",
+      "name" : "0.47",
+      "count" : 317,
+      "label" : "0.47",
+      "isException" : false
+    }, {
+      "index" : 14,
+      "identifier" : "sc_filter__8__Field_9__14___0_48",
+      "name" : "0.48",
+      "count" : 502,
+      "label" : "0.48",
+      "isException" : false
+    }, {
+      "index" : 15,
+      "identifier" : "sc_filter__8__Field_9__15___0_49",
+      "name" : "0.49",
+      "count" : 678,
+      "label" : "0.49",
+      "isException" : false
+    }, {
+      "index" : 16,
+      "identifier" : "sc_filter__8__Field_9__16___0_5",
+      "name" : "0.5",
+      "count" : 513,
+      "label" : "0.5",
+      "isException" : false
+    }, {
+      "index" : 17,
+      "identifier" : "sc_filter__8__Field_9__17___0_51",
+      "name" : "0.51",
+      "count" : 443,
+      "label" : "0.51",
+      "isException" : false
+    }, {
+      "index" : 18,
+      "identifier" : "sc_filter__8__Field_9__18___0_52",
+      "name" : "0.52",
+      "count" : 1035,
+      "label" : "0.52",
+      "isException" : false
+    }, {
+      "index" : 19,
+      "identifier" : "sc_filter__8__Field_9__19___0_53",
+      "name" : "0.53",
+      "count" : 173,
+      "label" : "0.53",
+      "isException" : false
+    }, {
+      "index" : 20,
+      "identifier" : "sc_filter__8__Field_9__20___0_54",
+      "name" : "0.54",
+      "count" : 627,
+      "label" : "0.54",
+      "isException" : false
+    }, {
+      "index" : 21,
+      "identifier" : "sc_filter__8__Field_9__21___0_55",
+      "name" : "0.55",
+      "count" : 2202,
+      "label" : "0.55",
+      "isException" : false
+    }, {
+      "index" : 22,
+      "identifier" : "sc_filter__8__Field_9__22___0_56",
+      "name" : "0.56",
+      "count" : 3291,
+      "label" : "0.56",
+      "isException" : false
+    }, {
+      "index" : 23,
+      "identifier" : "sc_filter__8__Field_9__23___0_57",
+      "name" : "0.57",
+      "count" : 3223,
+      "label" : "0.57",
+      "isException" : false
+    }, {
+      "index" : 24,
+      "identifier" : "sc_filter__8__Field_9__24___0_58",
+      "name" : "0.58",
+      "count" : 2693,
+      "label" : "0.58",
+      "isException" : false
+    }, {
+      "index" : 25,
+      "identifier" : "sc_filter__8__Field_9__25___0_59",
+      "name" : "0.59",
+      "count" : 3520,
+      "label" : "0.59",
+      "isException" : false
+    }, {
+      "index" : 26,
+      "identifier" : "sc_filter__8__Field_9__26___0_6",
+      "name" : "0.6",
+      "count" : 2099,
+      "label" : "0.6",
+      "isException" : false
+    }, {
+      "index" : 27,
+      "identifier" : "sc_filter__8__Field_9__27___0_61",
+      "name" : "0.61",
+      "count" : 524,
+      "label" : "0.61",
+      "isException" : false
+    }, {
+      "index" : 28,
+      "identifier" : "sc_filter__8__Field_9__28___0_62",
+      "name" : "0.62",
+      "count" : 613,
+      "label" : "0.62",
+      "isException" : false
+    }, {
+      "index" : 29,
+      "identifier" : "sc_filter__8__Field_9__29___0_63",
+      "name" : "0.63",
+      "count" : 244,
+      "label" : "0.63",
+      "isException" : false
+    }, {
+      "index" : 30,
+      "identifier" : "sc_filter__8__Field_9__30___0_64",
+      "name" : "0.64",
+      "count" : 667,
+      "label" : "0.64",
+      "isException" : false
+    }, {
+      "index" : 31,
+      "identifier" : "sc_filter__8__Field_9__31___0_65",
+      "name" : "0.65",
+      "count" : 744,
+      "label" : "0.65",
+      "isException" : false
+    }, {
+      "index" : 32,
+      "identifier" : "sc_filter__8__Field_9__32___0_66",
+      "name" : "0.66",
+      "count" : 573,
+      "label" : "0.66",
+      "isException" : false
+    }, {
+      "index" : 33,
+      "identifier" : "sc_filter__8__Field_9__33___0_67",
+      "name" : "0.67",
+      "count" : 279,
+      "label" : "0.67",
+      "isException" : false
+    }, {
+      "index" : 34,
+      "identifier" : "sc_filter__8__Field_9__34___0_68",
+      "name" : "0.68",
+      "count" : 436,
+      "label" : "0.68",
+      "isException" : false
+    }, {
+      "index" : 35,
+      "identifier" : "sc_filter__8__Field_9__35___0_69",
+      "name" : "0.69",
+      "count" : 532,
+      "label" : "0.69",
+      "isException" : false
+    }, {
+      "index" : 36,
+      "identifier" : "sc_filter__8__Field_9__36___0_7",
+      "name" : "0.7",
+      "count" : 237,
+      "label" : "0.7",
+      "isException" : false
+    }, {
+      "index" : 37,
+      "identifier" : "sc_filter__8__Field_9__37___0_71",
+      "name" : "0.71",
+      "count" : 378,
+      "label" : "0.71",
+      "isException" : false
+    }, {
+      "index" : 38,
+      "identifier" : "sc_filter__8__Field_9__38___0_72",
+      "name" : "0.72",
+      "count" : 280,
+      "label" : "0.72",
+      "isException" : false
+    }, {
+      "index" : 39,
+      "identifier" : "sc_filter__8__Field_9__39___0_73",
+      "name" : "0.73",
+      "count" : 366,
+      "label" : "0.73",
+      "isException" : false
+    }, {
+      "index" : 40,
+      "identifier" : "sc_filter__8__Field_9__40___0_74",
+      "name" : "0.74",
+      "count" : 737,
+      "label" : "0.74",
+      "isException" : false
+    }, {
+      "index" : 41,
+      "identifier" : "sc_filter__8__Field_9__41___0_75",
+      "name" : "0.75",
+      "count" : 589,
+      "label" : "0.75",
+      "isException" : false
+    }, {
+      "index" : 42,
+      "identifier" : "sc_filter__8__Field_9__42___0_76",
+      "name" : "0.76",
+      "count" : 356,
+      "label" : "0.76",
+      "isException" : false
+    }, {
+      "index" : 43,
+      "identifier" : "sc_filter__8__Field_9__43___0_77",
+      "name" : "0.77",
+      "count" : 454,
+      "label" : "0.77",
+      "isException" : false
+    }, {
+      "index" : 44,
+      "identifier" : "sc_filter__8__Field_9__44___0_78",
+      "name" : "0.78",
+      "count" : 639,
+      "label" : "0.78",
+      "isException" : false
+    }, {
+      "index" : 45,
+      "identifier" : "sc_filter__8__Field_9__45___0_79",
+      "name" : "0.79",
+      "count" : 465,
+      "label" : "0.79",
+      "isException" : false
+    }, {
+      "index" : 46,
+      "identifier" : "sc_filter__8__Field_9__46___0_8",
+      "name" : "0.8",
+      "count" : 341,
+      "label" : "0.8",
+      "isException" : false
+    }, {
+      "index" : 47,
+      "identifier" : "sc_filter__8__Field_9__47___0_81",
+      "name" : "0.81",
+      "count" : 507,
+      "label" : "0.81",
+      "isException" : false
+    }, {
+      "index" : 48,
+      "identifier" : "sc_filter__8__Field_9__48___0_82",
+      "name" : "0.82",
+      "count" : 210,
+      "label" : "0.82",
+      "isException" : false
+    }, {
+      "index" : 49,
+      "identifier" : "sc_filter__8__Field_9__49___0_83",
+      "name" : "0.83",
+      "count" : 609,
+      "label" : "0.83",
+      "isException" : false
+    }, {
+      "index" : 50,
+      "identifier" : "sc_filter__8__Field_9__50___0_84",
+      "name" : "0.84",
+      "count" : 168,
+      "label" : "0.84",
+      "isException" : false
+    }, {
+      "index" : 51,
+      "identifier" : "sc_filter__8__Field_9__51___0_85",
+      "name" : "0.85",
+      "count" : 266,
+      "label" : "0.85",
+      "isException" : false
+    } ]
+  } ],
+  "totals" : {
+    "totalLines" : 59440,
+    "totalCsvFileSize" : 6455198,
+    "totalFields" : 9,
+    "totalFilters" : 4,
+    "blockLines" : 9200,
+    "indexLinesModulo" : 100000
+  }
+}
