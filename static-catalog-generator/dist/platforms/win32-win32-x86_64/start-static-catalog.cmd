@@ -6,5 +6,6 @@ echo " \__ \ || (_| | |_| | (_|_____| (_| (_| | || (_| | | (_) | (_| | "
 echo " |___/\__\__,_|\__|_|\___|     \___\__,_|\__\__,_|_|\___/ \__, | "
 echo "                                                          |___/  "
 echo "                                                                 "
-start javaw -jar lib/static-catalog.jar
+SET start_path=%~dp0
+start javaw -jar %start_path%/lib/static-catalog.jar
 exit

@@ -1258,6 +1258,7 @@ public class StaticCatalogEngine {
 				indexValueCntLines.put(indexValueCnt, lines);
 				indexValueCnt++;
 			}
+			indexCnt++;
 			S.saveObjectToJsonFileName(indexValueCntLines, indexesValueFileNamePrefix + "-" + indexNameCnt + ".json");
 		}
 
