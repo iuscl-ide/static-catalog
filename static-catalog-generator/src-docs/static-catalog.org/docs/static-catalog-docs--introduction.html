@@ -78,14 +78,14 @@
 
 				<div class="ui placeholder basic segment">
 					<div class="ui icon header">
-						<i class="book icon"></i>
+						<i class="info icon"></i>
 						<div class="content">
 							Introduction
 						</div>
 					</div>
 				</div>
 
-<h1 id="introduction" class="ui dividing header">Introduction</h1>
+			<h2 id="introduction" class="ui dividing header">Introduction</h2>
 <p>A lot of the data we encounter is static, meaning that it will not change anymore. Some examples are:</p>
 <ul>
 <li>The results of an exam</li>
@@ -95,7 +95,7 @@
 <li>The books entered in a library in specific period of time</li>
 <li>A catalog of products until changed</li>
 </ul>
-<p>This data is usually kept in a data base in order to be searched by a client with different filters, or in other cases just offered as download of an XLS or CSV, in order to be opened in Excel and searched there.
+<p>This data is usually kept in a database in order to be searched by a client with different filters, or in other cases just offered as download of an XLS or CSV, in order to be opened in Excel and searched there.
 However this data is read only, it cannot be modified by the client or the server because by its nature would make no sense</p>
 <p>The idea here is to leave the data on server, but put it in such a format that would be possible to be searched from the client (from browser) without server intervention other than transmitting the data to the client. In fact the data will follow the format of database, with index files, keyword files, sort files and data block files, but instead of these files to be used on server, they will be transferred as need and used on browser, this way the server will see them as any other static data (images, styles, pages), and the browser will do the actual search processing.</p>
 <p>The advantages are clear:</p>
