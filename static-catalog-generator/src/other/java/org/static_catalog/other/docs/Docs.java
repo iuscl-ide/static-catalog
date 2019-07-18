@@ -5,12 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.static_catalog.main.S;
-import org.static_catalog.main.U;
 
 public class Docs {
 
 	/** */
-	private final static String loc = "../../../../../../../../"; 
+	//private final static String loc = "../../../../../../../../"; 
 
 	/** */
 	public static void main(String[] args) {

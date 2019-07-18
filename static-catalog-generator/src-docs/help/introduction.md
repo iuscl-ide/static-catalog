@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 
 A lot of the data we encounter is static, meaning that it will not change anymore. Some examples are:
 * The results of an exam

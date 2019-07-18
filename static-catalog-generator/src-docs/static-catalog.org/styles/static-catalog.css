@@ -58,6 +58,12 @@ div[data-name=scp-name--tile-grid] {
 	max-width: 100% !important;
 }
 
+.centeredImageMDSE {
+	padding: 0.2rem 0rem;
+	max-width: 100%;
+	display: block;
+	margin: auto;
+}
 
 /* .main.container { */
 /* 	margin-top: 7em; */
