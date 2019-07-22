@@ -79,6 +79,15 @@ blockquote {
     line-height: 1.5 !important;
 }
 
+.inlinecodeMDSE {
+	border-radius: 0.5rem;
+	padding: 0.2rem 0.5rem;
+	vertical-align: baseline;
+}
+
+.grayercodeMDSE {
+	background-color: rgb(246, 248, 250) !important;
+}
 
 /* .main.container { */
 /* 	margin-top: 7em; */

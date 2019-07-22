@@ -42,34 +42,50 @@
 						</div>
 					</div>
 				</div>
-				<div class="ui hidden divider"></div>
-				<div class="ui items">
-					<div class="item">
-						<div class="content">
-							<div class="header">What is static data?</div>
-							<div class="description">
-								<p>Answer</p>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="content">
-							<div class="header">What are the advantages of static-catalog?</div>
-							<div class="description">
-								<p>Answer</p>
-							</div>
-						</div>
-					</div>
-					<div class="item">
-						<div class="content">
-							<div class="header">How to improve performance?</div>
-							<div class="description">
-								<p>Answer</p>
-							</div>
-						</div>
-					</div>
-				</div>
-	
+				
+		<div class="ui text container bodyContainerMDSE">
+			<h2 id="generate-the-catalog-files" class="ui dividing header">Generate the Catalog Files</h2>
+<p>The catalog generation is the last step in having a search-able catalog of static data. It needs to take the settings made in the previous step and apply it to the CSV data in order to produce the structure of files that can be downloaded and processed on the browser.</p>
+<p>There are four necessary elements that must be provided to the generate-catalog engine</p>
+<p><a href="../screenshots/static-catalog--generate.png" target="_blank"><img src="../screenshots/static-catalog--generate.png" alt="Generate Catalog" class="centeredImageMDSE" /></a></p>
+<h3 id="the-source-csv-data-file" class="ui dividing header">The <strong>source</strong> CSV data file</h3>
+<p>This is the initial file, it can be viewed in the first tab and examined in the second tab</p>
+<h3 id="the-fields-filters-file" class="ui dividing header">The <strong>fields-filters</strong> file</h3>
+<p>This is the settings file which was created (edited) in the third tab during the &ldquo;Fields and Filters&rdquo; step</p>
+<h3 id="the-template-file" class="ui dividing header">The <strong>template</strong> file</h3>
+<p>A .liquid HTML template file to be personalized for the search (by default the dev one)</p>
+<h3 id="the-result-folder" class="ui dividing header">The result folder</h3>
+<p>This folder will contain the generated catalog. Its content will be deleted on the start of each generation</p>
+<p>The generation step will create several files and folders, inside a root folder (usually named &ldquo;result&rdquo;), on the following structure:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">_catalog</code></p>
+<p>This folder contains the data necessary for the search. Normally its content should never be modified after it is created. For information purposes only, here is its content:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">data</code></p>
+<p>Here is the source CSV data, split into pieces, each one less than one megabyte</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">indexes</code></p>
+<p>Here are the values for values and interval indexes. There is one file per filter (field)</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">keywords</code></p>
+<p>The keywords filters are kept here as a folder for each filter and a file for each two letters which are the begging of a word</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">scripts</code></p>
+<p>This folder contains the scripts that do the actual search in the data. These scripts should not be modified</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">sort</code></p>
+<p>The data sorts are kept here as one per field and direction (so maximum two per field – ascending and descending)</p>
+<p>Again, this &ldquo;_catalog&rdquo; folder should be taken as it is, it will be re-generated (deleted, re-created and written) at each generate operation</p>
+<p>Another generated folder is:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">_catalog-page</code></p>
+<p>This folder contains the search data which should be used in the html page, in order to display to the user the search options. It will contain:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">keywords</code></p>
+<p>This folder will contain the possible values (words) of the keyword filters
+The structure is one folder per filter and inside it one file for each two letters pair which is the beginning of a keyword. Each file will contain all the words starting with a pair and for each word the number (counter) of lines (results) it appears.
+These files can be used by specially written page controls to display to the user the possible words while the first letters are typed.
+A complete example is given for the &ldquo;Search Box&rdquo; control (see below)</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">static-catalog-page.json</code></p>
+<p>This file is the main setting file for the entire search page. It contains all the fields, and for each filed the settings from the file <strong>fields-filters</strong>, and if the field is a filter all possible filter values and for each value the number (counter) of lines (results) it appears on.</p>
+<p>Is this file that have to be used to show the filters inside the page in order to allow the user to do a selection for search</p>
+<p>This file offers all the necessary data in order to create the search controls, the way it will be used is up to the developer. It can be used in the page: to be used by a script that will dynamically create the controls, it could be used for already created controls to be filled with data, or it can be used as an entry for a templating system. By default Static-Catalog supports the Liquid template system, if a liquid file is provided the application will execute the directives inside on the data from static-catalog-page.json file.
+A complete example for such a file is provided in the folder static-catalog-dev in the file static-catalog-page-dev.liquid
+This file is part of a complete example with a style library (Semantic-UI) and own style/scripts. This default generation using the example template page can be used as a starting point in order to customize the result to match the containing site.
+The idea is to use the default generation and then test the result, and when all will be OK, such as the controls, the result of the search, the performance etc. to start and customize the styles to match the desired look.</p>
+	</div>
 		<!-- 8< 2 -->
 </body>
 </html>
