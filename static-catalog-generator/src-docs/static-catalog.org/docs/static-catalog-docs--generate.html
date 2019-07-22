@@ -85,19 +85,18 @@
 					</div>
 				</div>
 				
-		<div class="ui text container bodyContainerMDSE">
 			<h2 id="generate-the-catalog-files" class="ui dividing header">Generate the Catalog Files</h2>
 <p>The catalog generation is the last step in having a search-able catalog of static data. It needs to take the settings made in the previous step and apply it to the CSV data in order to produce the structure of files that can be downloaded and processed on the browser.</p>
 <p>There are four necessary elements that must be provided to the generate-catalog engine</p>
-<p><a href="../screenshots/static-catalog--generate.png" target="_blank"><img src="../screenshots/static-catalog--generate.png" alt="Generate Catalog" class="centeredImageMDSE" /></a></p>
 <h3 id="the-source-csv-data-file" class="ui dividing header">The <strong>source</strong> CSV data file</h3>
 <p>This is the initial file, it can be viewed in the first tab and examined in the second tab</p>
 <h3 id="the-fields-filters-file" class="ui dividing header">The <strong>fields-filters</strong> file</h3>
-<p>This is the settings file which was created (edited) in the third tab during the &ldquo;Fields and Filters&rdquo; step</p>
+<p>This is the <strong>fields-filters</strong> file which was created (edited) in the third tab during the &ldquo;Fields and Filters&rdquo; step</p>
 <h3 id="the-template-file" class="ui dividing header">The <strong>template</strong> file</h3>
-<p>A .liquid HTML template file to be personalized for the search (by default the dev one)</p>
+<p>A &ldquo;.liquid&rdquo; HTML template file to be personalized for the search (by default the dev one)</p>
 <h3 id="the-result-folder" class="ui dividing header">The result folder</h3>
 <p>This folder will contain the generated catalog. Its content will be deleted on the start of each generation</p>
+<p><a href="../screenshots/static-catalog--generate.png" target="_blank"><img src="../screenshots/static-catalog--generate.png" alt="Generate Catalog" class="centeredImageMDSE" /></a></p>
 <p>The generation step will create several files and folders, inside a root folder (usually named &ldquo;result&rdquo;), on the following structure:</p>
 <p><code class="ui inlinecodeMDSE grayercodeMDSE">_catalog</code></p>
 <p>This folder contains the data necessary for the search. Normally its content should never be modified after it is created. For information purposes only, here is its content:</p>
@@ -121,13 +120,25 @@ The structure is one folder per filter and inside it one file for each two lette
 These files can be used by specially written page controls to display to the user the possible words while the first letters are typed.
 A complete example is given for the &ldquo;Search Box&rdquo; control (see below)</p>
 <p><code class="ui inlinecodeMDSE grayercodeMDSE">static-catalog-page.json</code></p>
-<p>This file is the main setting file for the entire search page. It contains all the fields, and for each filed the settings from the file <strong>fields-filters</strong>, and if the field is a filter all possible filter values and for each value the number (counter) of lines (results) it appears on.</p>
-<p>Is this file that have to be used to show the filters inside the page in order to allow the user to do a selection for search</p>
-<p>This file offers all the necessary data in order to create the search controls, the way it will be used is up to the developer. It can be used in the page: to be used by a script that will dynamically create the controls, it could be used for already created controls to be filled with data, or it can be used as an entry for a templating system. By default Static-Catalog supports the Liquid template system, if a liquid file is provided the application will execute the directives inside on the data from static-catalog-page.json file.
-A complete example for such a file is provided in the folder static-catalog-dev in the file static-catalog-page-dev.liquid
-This file is part of a complete example with a style library (Semantic-UI) and own style/scripts. This default generation using the example template page can be used as a starting point in order to customize the result to match the containing site.
-The idea is to use the default generation and then test the result, and when all will be OK, such as the controls, the result of the search, the performance etc. to start and customize the styles to match the desired look.</p>
-	</div>
+<p>This file is the main settings file for the entire search page. It contains all the fields, for each field the settings from the file <strong>fields-filters</strong>, and if the field is a filter all possible filter values and for each value the counter number of result lines it appears on.</p>
+<p>Is this file that has to be used to show the filters inside the page in order to allow the user to do a selection for a search</p>
+<p>This file offers all the necessary data for creating the search controls and the way it will be used is up to the developer. It can be used in the page:</p>
+<ul>
+<li>By a script that will dynamically create the controls</li>
+<li>For already created controls to be filled with data</li>
+<li>As an entry for a templating system</li>
+</ul>
+<p>By default Static-Catalog supports the &ldquo;Liquid&rdquo; template system and if a &ldquo;.liquid&rdquo; file is provided the application will execute the directives inside of it on the data from <strong>static-catalog-page.json</strong> file.</p>
+<p><a href="../screenshots/static-catalog--sample-1.png" target="_blank"><img src="../screenshots/static-catalog--sample-1.png" alt="Sample 1" class="centeredImageMDSE" /></a></p>
+<p>A complete example for such a file is provided in the folder <strong>static-catalog-dev</strong> in the file <strong>static-catalog-page-dev.liquid</strong>
+This file is part of a complete example with a style library (Semantic-UI) and has its own style/script. This default generation using the example template page can be used as a starting point in order to customize the result to match the containing site.</p>
+<p>The idea is to use the default generation and then test the result, and when everything will be OK (such as the controls, the result of the search, the performance etc.) to start and customize the styles to match the desired look.</p>
+<p>After generation, the HTML file which resulted from the liquid template will be opened in the default browser. This will allow to have a rapid view of the result, but this local file is not going to be functional, because of the browser domain constraints. For local files the current browsers do not allow for other resources to be opened by code. At the time of this writing Chrome is not allowing local JSON files to be loaded, by it allows for example custom local font files to load OK; for Firefox, it doesn’t allow anything.</p>
+<blockquote>
+<p>For Firefox <a href="https://support.mozilla.org/en-US/questions/1264312" target="_blank">there is a way</a> to allow the local files access; when applied everything will work fine and this way the search can be tested at maximum speed, but this modification is not recommended to be permanent, for security reasons</p>
+</blockquote>
+<p>As such, in order to test the generation a web server is needed (the good news is that any server will work, as the web site is static). The application was mainly tested with <a href="http://www.wampserver.com/en/" target="_blank">WAMP</a>. Create a folder inside the server &ldquo;www&rdquo; folder and set it as the result of the generate</p>
+
 		<!-- 8< 2 -->
 				</div>
 				<div class="ui placeholder basic segment"></div>
