@@ -9,7 +9,9 @@ import org.static_catalog.main.S;
 public class Docs {
 
 	/** */
-	//private final static String loc = "../../../../../../../../"; 
+	//private final static String loc = "../../../../../../../../";
+	// about:config
+	// privacy.file_unique_origin
 
 	/** */
 	public static void main(String[] args) {
