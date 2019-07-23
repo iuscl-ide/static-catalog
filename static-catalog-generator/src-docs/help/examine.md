@@ -11,7 +11,7 @@ Considering as "values" all the rest of the non-exception values found for a fie
 3. If all the values can be converted to an integer, then the field type is "Integer".
 4. If the values cannot be all converted to one of the above, the type is "Text".
 
-[![Examine CSV]( ../screenshots/static-catalog--examine-csv.png)]( ../screenshots/static-catalog--examin-csv.png)
+[![Examine CSV]( ../screenshots/static-catalog--examine-csv.png)]( ../screenshots/static-catalog--examine-csv.png)
 
 In order to use a field as a filter, the number of its distinct values must be known and will be displayed next. In order for a filter to be used by a user it has to have a reduced number of values, usually less than 100 (default 50) because more would be difficult to understand. For the fields with less distinct values than the maximum filter values, the values will be displayed next with the count for each value. First will be displayed the exceptions (if exists – and will always be the first on the filter) and then all the values (double click to see them all).
 

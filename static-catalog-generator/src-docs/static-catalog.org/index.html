@@ -147,9 +147,9 @@ This way, the server is used as a normal static HTTP server, with no server side
 <ul>
 <li>The site generation part is done in the application
 <ul>
-<li>First, a <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a> file must be obtained/created and it should contain all the data. This file will be the catalog. It could come from any source, usually an Excel sheet or an SQL query. The CSV file will be then used in the application in order to transform it in a search-able format</li>
-<li>Then the file will be examined in order to identify the data value types and which fields/columns will be used as filters, in order to have the data filtered by these fields’ values. For each filter there are different options depending on the data type, the number of values and what makes sense to be presented to the user</li>
-<li>The application will then need to have a <a href="https://shopify.github.io/liquid/basics/introduction/" target="_blank">Liquid</a> (&ldquo;.liquid&rdquo;) template file provided as model for how the search page will look like. An example is provided which contains all the current possibilities</li>
+<li>First, a <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a> file must be obtained/created and it should contain all the data. This file will be the catalog. It could come from any source, usually an Excel sheet or an SQL query. The CSV file will be then used in the application in order to transform it into a search-able format</li>
+<li>Then the file will be examined in order to identify the data value types and which fields/columns will be used as filters, in order to have the data filtered by these fields&rsquo; values. For each filter there are different options depending on the data type, the number of values and what makes sense to be presented to the user</li>
+<li>The application will then need to have a <a href="https://shopify.github.io/liquid/basics/introduction/" target="_blank">Liquid</a> (&ldquo;.liquid&rdquo;) template file provided as model for how the search page will look like. An example is provided that contains all the current possibilities</li>
 <li>Using these elements, the application will generate a static site with a structure adapted for searching the data, the CSV will be split in smaller blocks, files will be created for value indexes, sort possibilities, keywords and scripts to search them all. The page will be generated with all the filters, sort options and keyword controls</li>
 </ul>
 </li>
@@ -169,8 +169,7 @@ This way, the server is used as a normal static HTTP server, with no server side
 <blockquote>
 <p>In order to start the application on Linux or MacOS the starting script &ldquo;start-static-catalog.sh&rdquo; should be manually made executable</p>
 </blockquote>
-<p>After starting the application, the next step is to provide a CSV file. It could be any CSV file with a catalog-like structure, download one from Internet, export an Excel sheet or create it from a database by exporting a table or the result of a query
-Then, follow the steps from the documentation in order to get a search page based on the template <strong>static-catalog-dev/static-catalog-page-dev.liquid</strong></p>
+<p>After starting the application, the next step is to provide a CSV file. It could be any CSV file with a catalog-like structure; download one from Internet, export an Excel sheet or create it from a database by exporting a table or the result of a query. Then, follow the steps from the <a href="docs/static-catalog-docs--introduction.html" target="_blank">documentation</a> in order to get a search page based on the template <strong>static-catalog-dev/static-catalog-page-dev.liquid</strong></p>
 <h3 id="about" class="ui dividing header">About</h3>
 <p>The free components used by this application are listed on the bottom of each page of this site with a link to their respective page/license</p>
 <p>This site, the application code, and the static web sites for samples are all hosted at GitHub</p>
