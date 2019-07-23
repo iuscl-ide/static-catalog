@@ -1,3 +1,7 @@
+<p align="center">
+	<big><big>static-catalog</big></big>
+</p>
+
 # static-catalog
 Searchable catalog for static generated sites (research)
 
