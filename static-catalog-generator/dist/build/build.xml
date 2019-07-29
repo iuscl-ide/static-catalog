@@ -51,13 +51,13 @@
    			</fileset>
        	</copy>
 
-    	<!-- samples -->
+    	<!-- samples
        	<copy todir="${zip.folder}">
    			<fileset dir="${project.folder}/dist">
    				<include name="samples/**/*"/>
    			</fileset>
-       	</copy>
-
+       	</copy> -->
+		
     	<!-- dev -->
        	<copy todir="${zip.folder}">
    			<fileset dir="${project.folder}/dist">
@@ -71,6 +71,10 @@
    				<include name="start*.*"/>
    			</fileset>
        	</copy>
+		<replace dir="${zip.folder}" value="${dist.version}">
+			<include name="start*.*"/>
+			<replacetoken>{% version %}</replacetoken>
+		</replace>
 
     	<!-- swt -->
        	<copy todir="${zip.folder}/lib">

@@ -5,5 +5,6 @@ echo " \__ \ || (_| | |_| | (_|_____| (_| (_| | || (_| | | (_) | (_| | "
 echo " |___/\__\__,_|\__|_|\___|     \___\__,_|\__\__,_|_|\___/ \__, | "
 echo "                                                          |___/  "
 echo "                                                                 "
+echo Version {% version %}
 java -jar lib/static-catalog.jar
 
