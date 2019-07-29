@@ -5,7 +5,7 @@ Static data represents any data which will no longer going to be modified
 Some examples are:
 
 * The data is the result of a past event (an exam, a census, an experiment)
-* The values of the data are for a specific period (the store prices of articles for the current day, the books entered in a library before the current month)
+* The values of the data are for a specific period (the card activity for the last month, the store prices of articles for the current day, the books entered in a library before the current month)
 * The data values are constants (scientific values and tables, internal standard procedures)
 
 Any data can be used in **static-catalog** generation as long as it is clear that only this data will be available for search and if the data changes then the catalog has to be re-generated
@@ -26,7 +26,8 @@ The first use case is for small businesses which maintain an Excel file with the
 
 Another use case is for a teacher that after an exam or after grading some papers to have the results list exported as an CSV, and then with **static-catalog** to create a catalog, and then publish it on the internal intranet in his own pages (blog, wiki) that the institution provided. This way the students will just enter into the page and search for their name in order to find their grades. Again, this is very easy to do as is just a matter of uploading (copy) some files, there is no database
 
-And finally, any data could be treated as static if it is clear that it contains a certain period, this way any scenario can be implemented, for example: for the phone numbers of the residents of a city, if the catalog is changed every week it can be consider as static data for that week as long as clearly mentioned that any modification will be available the following week.
+And finally, any data could be treated as static if it is clear that it contains a certain period, this way any scenario can be implemented, for example: for the phone numbers of the residents of a city, if the catalog is changed every week it can be consider as static data for that week as long as clearly mentioned that any modification will be available the following week.<br>
+Another example, a card data activity for the last month and the latest three months can be generated on the start of a new month for the user can search it; and only for the current month it can be a different (simpler) page which will search in the database, this way the system can be faster, the current activity to be searched differently from the past activity
 
 ### What about performance optimization such as data compression and local caching?
 

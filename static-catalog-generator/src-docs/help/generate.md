@@ -75,7 +75,7 @@ This file offers all the necessary data for creating the search controls and the
 * For already created controls to be filled with data
 * As an entry for a templating system
 
-By default **Static-Catalog** supports the "Liquid" template system and if a ".liquid" file is provided then the application will execute the template inside of it, on the data from **static-catalog-page.json** file
+By default **static-Catalog** supports the "Liquid" template system and if a ".liquid" file is provided then the application will execute the template inside of it, on the data from **static-catalog-page.json** file
 
 [![Sample 1]( ../screenshots/static-catalog--sample-1.png)]( ../screenshots/static-catalog--sample-1.png)
 
