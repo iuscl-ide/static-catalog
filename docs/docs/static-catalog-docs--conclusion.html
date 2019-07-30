@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog.org                                 static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic-button-github.css">
+
+<script src="../scripts/jquery-3.4.0.js"></script>
+<script src="../semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="../styles/static-catalog.css">
+
+<script src="../scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+		<div class="ui hidden divider"></div>
+		<div class="ui segments">
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<a class="item" href="../index.html"><i class="home icon"></i>Home</a>
+							<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"> <i class="github icon"></i> GitHub Repo</a>
+						</div>
+					</div>
+					<div class="center aligned six wide column p0">
+						<span class="ui small header"><i class="book icon"></i>static-catalog Documentation</span>
+					</div>
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<div class="right menu">
+								<a class="item" href="https://github.com/iuscl-ide/static-catalog/releases" target="_blank"><i class="download icon"></i>Download</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="center aligned sixteen wide column p0">
+						<div class="ui compact secondary menu m0">
+							<a class="item" href="static-catalog-docs--introduction.html">Introduction</a>
+							<a class="item" href="static-catalog-docs--source.html">Source CSV</a>
+							<a class="item" href="static-catalog-docs--examine.html">Examine &amp; Decide</a>
+							<a class="item" href="static-catalog-docs--fields-filters.html">Fields &amp; Filters</a>
+							<a class="item" href="static-catalog-docs--generate.html">Generate</a>
+							<a class="active item" href="static-catalog-docs--conclusion.html">Conclusion</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="ui grid">
+			<div class="eleven wide column">
+				<div class="mainText">
+		<!-- 8< 1 -->
+
+				<div class="ui placeholder basic segment">
+					<div class="ui icon header">
+						<i class="flag checkered icon"></i>
+						<div class="content">
+							Conclusion
+						</div>
+					</div>
+				</div>
+				
+			<h3 id="conclusions" class="ui dividing header">Conclusions</h3>
+<p>The most important points to consider when creating a static catalog are:</p>
+<h4 id="careful-creation-of-the-csv-file" class="ui dividing header">Careful creation of the CSV file</h4>
+<ul>
+<li>The file should contain only the necessary data. For example, if a field has only one value there is no point for it to be included, its value can be included as a constant in the results. As stated in the initial requirements, all the lines should be distinct, so is better to re-verify that directly in the CSV if possible</li>
+<li>The data should be the same type on a field column with one or just a few exceptions</li>
+<li>Each value should be a label and not an ID, as the CSV should be seen as the only available table, there are no other sheets or tables to do a join. If not possible (the CSV is provided and not possible to be changed – for example because it is a database dump and is too big to be edited) the values can be replaced at the generation phase, but this is easy to be done only for a few values, not to replace an entire table</li>
+<li>Even if the catalog can have almost ten million lines, the performance degrades for large data. The simplest way to have a much better performance is to split the data by the values of a field (a form of data sharding) by partitioning it in smaller CSVs each one representing a value of the field. This way a search page can be creating for each CSV; however this should be done only if the data for the field and its values makes sense to be split (for example for a super category field with values such as &ldquo;Electronics&rdquo; and &ldquo;Clothes&rdquo; it makes sense to be partitioned because the user will search for one or the other and not both at once)</li>
+</ul>
+<h4 id="no-more-sorting-than-necessary" class="ui dividing header">No more sorting than necessary</h4>
+<ul>
+<li>By their nature the sort files could be very large, for input CSV data with millions of lines, a sort file size could approach 100 megabytes. GitHub will not accept files over 100 MB (it will give a warning for files over 50 MB but will accept them)</li>
+<li>If no sorting is used the result lines will be returned in the order the lines are in the CSV file. This is also the fastest way to display the results as no sorting is done. So, put the CSV data in the sort order the most often used by the user</li>
+<li>For some data fields it doesn’t makes sense to have both ascending and descending sorting (for example it makes sense to have the &ldquo;Given Name&rdquo; sorted ascending but not so to have it sorted descending, and the same could be sid for &ldquo;Popularity&rdquo; or &ldquo;Number of Reviews&rdquo;)</li>
+<li>Also, a big number of sort options could be disconcerting for the user</li>
+</ul>
+<h4 id="the-filter-values-should-make-sense" class="ui dividing header">The filter values should make sense</h4>
+<ul>
+<li>Too many values and checkboxes will confuse the user. Try creating intervals by grouping the values reasonably</li>
+<li>There is not a very big performance difference between one or more checked values for a field but for a lot of data it counts; so, if it&rsquo;s possible (the data makes sense) to have radio buttons or a dropdown and choose only one value, it could help</li>
+</ul>
+<h4 id="always-use-the-default-template-to-test" class="ui dividing header">Always use the default template to test</h4>
+<ul>
+<li>The default template is the reference point for the correct functionality, use it and get back to it until it works as desired, and then use a personalized template</li>
+</ul>
+<h4 id="do-a-full-re-generation-do-not-try-to-manually-replace-pieces" class="ui dividing header">Do a full re-generation, do not try to manually replace pieces</h4>
+<ul>
+<li>Even if a single value (such a price) changes and the temptation is to just modify it inside the generated block data files, do not do it, modify the input data CSV and re-generate everything. After all, <em>it is static data</em></li>
+</ul>
+	
+		<!-- 8< 2 -->
+				</div>
+				<div class="ui placeholder basic segment"></div>
+			</div>
+			<div class="five wide column"></div>
+		</div>
+		
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<div class="ui inverted small header">Distribution Requirements</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">Papaparse</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<div class="ui inverted small header">Development Requirements</div>
+						<div class="ui inverted tiny header">Java</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">SWT</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">Datetime</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">liqp</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">Univocity CSV Parser</a>
+						</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">jQuery</a>
+						</div>
+						<div class="ui inverted tiny header">CSS</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">Semantic-UI</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<div class="ui inverted small header">About static-catalog</div>
+						<p>The missing piece of static generated sites.</p>
+						<p>static-catalog.org - 2019</p>
+						<p>For contact, send private message on <a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a></p>
+						
+						<!-- 								<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a> -->
+						
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="../assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalog.init();			
+		});
+	</script>
+</body>
+</html>

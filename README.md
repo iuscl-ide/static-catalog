@@ -1,35 +1,13 @@
-<h1 align="center">Research, not ready yet!</h1>
 <h1 align="center">static-catalog</h1>
 <p align="center"><img src="missing-piece.png"><br><strong>The missing piece of static generated sites</strong><br>Search server static data from a web page without any server side code, microservices, APIs or database</p>
-	
 
+# static-catalog repository
+Search-able catalog for static generated sites
 
-# static-catalog
-Searchable catalog for static generated sites (research)
+Detailed information about the application can be found on the [site (static-catalog.org)](https://static-catalog.org) along with some [screenshots](https://static-catalog.org/screenshots.html). The application can be [downloaded](https://github.com/iuscl-ide/static-catalog/releases) from **releases** and the first recommended step is to read the [documentation](https://static-catalog.org/docs/static-catalog-docs--introduction.html)
 
-Data origin:
+Or, go directly to the samples, starting with [sample 1](https://static-catalog.org/samples/sample-1/result/index.html)
 
-1. Sample 1  
-  flights-2008  
-  https://old.datahub.io/dataset/us-airline-on-time-performance/resource/37834910-8634-45a9-aed4-9d59dac7f1d6  
-  2008.csv.bz2
+The site, the application code, and all the static web sites of the samples are hosted at GitHub
 
-2. Sample 2  
-  1500000-sales-records  
-  http://eforexcel.com/wp/downloads-18-sample-csv-files-data-sets-for-testing-sales/  
-  1500000 Sales Records.csv
-
-3. Sample 3  
-  names-generator  
-  https://www.fakenamegenerator.com/  
-  FakeNameGenerator.com_26317008.csv  
-
-4. Sample 4  
-  sample-csv-file-53000kb  
-  https://sample-videos.com/download-sample-csv.php  
-  SampleCSVFile_53000kb.csv  
-
-5. Sample 5  
-  geneva-transport-2012  
-  https://github.com/GerHobbelt/Developing-a-D3.js-Edge/tree/master/data_sources/geneva  
-  schedule-real-time.csv  
+<p align="center">static-catalog.org – 2019</p>

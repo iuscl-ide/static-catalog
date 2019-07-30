@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog.org                                 static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic-button-github.css">
+
+<script src="../scripts/jquery-3.4.0.js"></script>
+<script src="../semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="../styles/static-catalog.css">
+
+<script src="../scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+		<div class="ui hidden divider"></div>
+		<div class="ui segments">
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<a class="item" href="../index.html"><i class="home icon"></i>Home</a>
+							<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"> <i class="github icon"></i> GitHub Repo</a>
+						</div>
+					</div>
+					<div class="center aligned six wide column p0">
+						<span class="ui small header"><i class="book icon"></i>static-catalog Documentation</span>
+					</div>
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<div class="right menu">
+								<a class="item" href="https://github.com/iuscl-ide/static-catalog/releases" target="_blank"><i class="download icon"></i>Download</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="center aligned sixteen wide column p0">
+						<div class="ui compact secondary menu m0">
+							<a class="item" href="static-catalog-docs--introduction.html">Introduction</a>
+							<a class="active item" href="static-catalog-docs--source.html">Source CSV</a>
+							<a class="item" href="static-catalog-docs--examine.html">Examine &amp; Decide</a>
+							<a class="item" href="static-catalog-docs--fields-filters.html">Fields &amp; Filters</a>
+							<a class="item" href="static-catalog-docs--generate.html">Generate</a>
+							<a class="item" href="static-catalog-docs--conclusion.html">Conclusion</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="ui grid">
+			<div class="eleven wide column">
+				<div class="mainText">
+		<!-- 8< 1 -->
+
+				<div class="ui placeholder basic segment">
+					<div class="ui icon header">
+						<i class="database icon"></i>
+						<div class="content">
+							Source CSV data
+						</div>
+					</div>
+				</div>
+
+			<h3 id="catalog-source-the-csv-file" class="ui dividing header">Catalog source (the CSV File)</h3>
+<p>A CSV (Comma Separated Values) file is a type of data which can be compared to an Excel sheet, with rows of text containing values separated by a separator (the separator does not have to mandatory be a comma). It is a simple file format, but it has its own rules, for example values containing the separator should be enclosed in quotes</p>
+<p>It is a very common format, normally any data dealing application should have a way to export its data into CSV, and from these what interest us are databases and Excel files.
+In the case of databases, it is important to see the catalog CSV as the result of a query (SQL) which brings all the needed data, links (joins) all the tables that have the data, and filters and sorts them. It is important to note that this include also all the parametrical tables (the ones that only keep names/labels for keys) such as country and state names, department names etc. So, the resulting query will repeat the name (label) of a record (not the key).
+In case of Excel, is important to have each column of the same data type (with exceptions) for the result to be a like a table of the data</p>
+<p>Is important that the first line in the CSV file to be a header line, with the desired names of the columns. In SQL this could be done by using &ldquo;AS&rdquo; in &ldquo;SELECT&rdquo; and in Excel it should be the first line of the sheet. If it is not possible to have the header line (the CSV is provided by a third party and is too big to be edited) the application will still work, but it should be specified that there is no header line</p>
+<p>After the CSV is created (obtained from somewhere) it can be viewed (displayed) in the application in order to see if it&rsquo;s OK and how the data looks like</p>
+<p><a href="../screenshots/static-catalog--view-csv.png" target="_blank"><img src="../screenshots/static-catalog--view-csv.png" alt="View CSV" class="centeredImageMDSE" /></a></p>
+<p>The application was designed to be able to handle large data, so the viewer will not display whole files, but only the first lines (default 1001 meaning 1 header line and 1000 data lines, and for data up to this count the columns will have their widths sized, and maximum 100001 meaning 1 header line and 100000 data lines). However, even if not entirely displayed, the whole file will be parsed, and the total number of lines will be shown, and if the parsing is not OK an error will be provided. This step gives a preview of the data and prepares for the next step, the examination of the data</p>
+<p>During this preparation, please consider:</p>
+<ol>
+<li>Decide what data is intended to be searched/displayed on the final HTML page. If a field will not be used it is recommended to remove it from the CSV, as it will only take up space</li>
+<li>Try to decide what fields (columns) will be used to filter the data</li>
+<li>Try to decide what fields (columns) will be used to sort the data</li>
+</ol>
+	
+		<!-- 8< 2 -->
+				</div>
+				<div class="ui placeholder basic segment"></div>
+			</div>
+			<div class="five wide column"></div>
+		</div>
+		
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<div class="ui inverted small header">Distribution Requirements</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">Papaparse</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<div class="ui inverted small header">Development Requirements</div>
+						<div class="ui inverted tiny header">Java</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">SWT</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">Datetime</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">liqp</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">Univocity CSV Parser</a>
+						</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">jQuery</a>
+						</div>
+						<div class="ui inverted tiny header">CSS</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">Semantic-UI</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<div class="ui inverted small header">About static-catalog</div>
+						<p>The missing piece of static generated sites.</p>
+						<p>static-catalog.org - 2019</p>
+						<p>For contact, send private message on <a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a></p>
+						
+						<!-- 								<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a> -->
+						
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="../assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalog.init();			
+		});
+	</script>
+</body>
+</html>

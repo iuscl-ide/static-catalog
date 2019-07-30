@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ static-catalog.org                                 static-catalog.org - 2019 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+-->
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>static-catalog</title>
+
+<link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+<link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+
+<!-- semantic-ui -->
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic.css">
+<link rel="stylesheet" type="text/css" href="../semantic-ui/semantic-button-github.css">
+
+<script src="../scripts/jquery-3.4.0.js"></script>
+<script src="../semantic-ui/semantic.js"></script>
+
+<!-- page -->
+<link rel="stylesheet" type="text/css" href="../styles/static-catalog.css">
+
+<script src="../scripts/static-catalog.js"></script>
+
+</head>
+<body>
+	<div class="main ui container">
+		<div class="ui hidden divider"></div>
+		<div class="ui segments">
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<a class="item" href="../index.html"><i class="home icon"></i>Home</a>
+							<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"> <i class="github icon"></i> GitHub Repo</a>
+						</div>
+					</div>
+					<div class="center aligned six wide column p0">
+						<span class="ui small header"><i class="book icon"></i>static-catalog Documentation</span>
+					</div>
+					<div class="five wide column p0">
+						<div class="ui secondary menu m0">
+							<div class="right menu">
+								<a class="item" href="https://github.com/iuscl-ide/static-catalog/releases" target="_blank"><i class="download icon"></i>Download</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui segment">
+				<div class="ui middle aligned grid">
+					<div class="center aligned sixteen wide column p0">
+						<div class="ui compact secondary menu m0">
+							<a class="item" href="static-catalog-docs--introduction.html">Introduction</a>
+							<a class="item" href="static-catalog-docs--source.html">Source CSV</a>
+							<a class="item" href="static-catalog-docs--examine.html">Examine &amp; Decide</a>
+							<a class="item" href="static-catalog-docs--fields-filters.html">Fields &amp; Filters</a>
+							<a class="active item" href="static-catalog-docs--generate.html">Generate</a>
+							<a class="item" href="static-catalog-docs--conclusion.html">Conclusion</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="ui grid">
+			<div class="eleven wide column">
+				<div class="mainText">
+		<!-- 8< 1 -->
+
+				<div class="ui placeholder basic segment">
+					<div class="ui icon header">
+						<i class="cogs icon"></i>
+						<div class="content">
+							Generate
+						</div>
+					</div>
+				</div>
+				
+			<h3 id="generate-the-catalog-files" class="ui dividing header">Generate the Catalog Files</h3>
+<p>The catalog generation is the last step in having a search-able catalog of static data. It will take the settings made in the previous step and apply each setting to the CSV data in order to produce the structure of files that will be downloaded and processed in the browser</p>
+<p>There are four necessary elements that must be provided to the generate-catalog engine</p>
+<h4 id="the-source-csv-data-file" class="ui dividing header">The <strong>source</strong> CSV data file</h4>
+<p>This is the initial file, it can be viewed in the first tab and examined in the second tab</p>
+<h4 id="the-fields-filters-file" class="ui dividing header">The <strong>fields-filters</strong> file</h4>
+<p>This is the <strong>fields-filters</strong> file which was created (edited) in the third tab during the &ldquo;Fields and Filters&rdquo; step</p>
+<h4 id="the-template-file" class="ui dividing header">The <strong>template</strong> file</h4>
+<p>A &ldquo;.liquid&rdquo; HTML template file to be personalized for the search (by default the dev one)</p>
+<h4 id="the-result-folder" class="ui dividing header">The result folder</h4>
+<p>This folder will contain the generated catalog. Its content will be deleted on the start of each generation</p>
+<p><a href="../screenshots/static-catalog--generate.png" target="_blank"><img src="../screenshots/static-catalog--generate.png" alt="Generate Catalog" class="centeredImageMDSE" /></a></p>
+<p>The generation step will create several files and folders, inside a root folder (usually named &ldquo;result&rdquo;), with the following structure:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">_catalog</code></p>
+<p>This folder contains the data necessary for the search. Normally its content should never be modified after it is created. For information purposes only, here is its content:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">data</code></p>
+<p>Here is the source CSV data, split into pieces, each piece less than one megabyte</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">indexes</code></p>
+<p>Here are the values for values and interval indexes. There is one file per filter (field)</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">keywords</code></p>
+<p>The keywords filters are kept here as a folder for each filter and a file for each two letters that are the starting two letters of a word</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">scripts</code></p>
+<p>This folder contains the scripts that do the actual search inside the data. These scripts should not be modified</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">sort</code></p>
+<p>The data sorts are kept here as one per field and direction (so maximum two per field – ascending and descending)</p>
+<p>Again, this &ldquo;_catalog&rdquo; folder should be taken as it is, it will be re-generated (deleted, re-created and written) at each new generate operation</p>
+<p>Another generated folder is:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">_catalog-page</code></p>
+<p>This folder contains the search data which should be used in the HTML page, in order to display the search options to the user. It will contain:</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">keywords</code></p>
+<p>This folder will contain the possible values (words) of the keyword filters. The structure is one folder per filter and inside it one file for each two letters pair which is the beginning of a keyword. Each file will contain all the words starting with a pair and for each word the number (counter) of lines (results) it appears on.
+These files can be used by specially written page controls for displaying to the user the possible words while the first letters are typed.
+A complete example is given for the &ldquo;Search Box&rdquo; control (see below)</p>
+<p><code class="ui inlinecodeMDSE grayercodeMDSE">static-catalog-page.json</code></p>
+<p>This file is the main settings file for the entire HTML search page. It contains all the fields, for each field the settings from the file <strong>fields-filters</strong>, and if the field is a filter all possible filter values and for each value the counter number of the result lines it appears on</p>
+<p>This file that must be used to show the filters inside the page in order to allow the user to do a selection for a search</p>
+<p>This file offers all the necessary data for creating the search controls and the way it will be used is up to the developer. It can be used in the page:</p>
+<ul>
+<li>By a script that will dynamically create the controls</li>
+<li>For already created controls to be filled with data</li>
+<li>As an entry for a templating system</li>
+</ul>
+<p>By default <strong>static-Catalog</strong> supports the &ldquo;Liquid&rdquo; template system and if a &ldquo;.liquid&rdquo; file is provided then the application will execute the template inside of it, on the data from <strong>static-catalog-page.json</strong> file</p>
+<p><a href="../screenshots/static-catalog--sample-1.png" target="_blank"><img src="../screenshots/static-catalog--sample-1.png" alt="Sample 1" class="centeredImageMDSE" /></a></p>
+<p>A complete example for such a file is provided in the folder <strong>static-catalog-dev</strong> in the file <strong>static-catalog-page-dev.liquid</strong>
+This file is part of a complete example together with a style library (Semantic-UI), and it has its own style/script. This default generation using the example template page can be used as a starting point in order to customize the result to match the containing site</p>
+<p>The idea is to use the default generation and then test the result, and when everything will be OK (such as the controls, the result of the search, the performance etc.) to start and customize the styles to match the desired look</p>
+<p>After generation, the HTML file which resulted from the liquid template will be opened in the default browser. This will allow to have a rapid view of the result, but this local file is not going to be functional, because of the browser domain constraints. For local files the current browsers do not allow for other resources to be opened by code. At the time of this writing Chrome is not allowing local JSON files to be loaded, by it allows for example custom local font files to be loaded OK; for Firefox, it doesn&rsquo;t allow anything</p>
+<blockquote>
+<p>For Firefox <a href="https://support.mozilla.org/en-US/questions/1264312" target="_blank">there is a way</a> to allow the local files access; when this is applied everything will work fine and this way the search can be tested at maximum speed, but this modification is not recommended to be permanent, for security reasons</p>
+</blockquote>
+<p>As such, in order to test the generate step, a web server is needed (the good news is that any server will work, as the web site is static). The application was mainly tested with <a href="http://www.wampserver.com/en/" target="_blank">WAMP</a>. Create a folder inside the server &ldquo;www&rdquo; folder and set it as the result of the generate step</p>
+
+		<!-- 8< 2 -->
+				</div>
+				<div class="ui placeholder basic segment"></div>
+			</div>
+			<div class="five wide column"></div>
+		</div>
+		
+		<div class="ui inverted segment">
+			<div class="ui center aligned container">
+				<div class="ui stackable inverted divided grid">
+					<div class="four wide column">
+						<div class="ui inverted small header">Distribution Requirements</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.papaparse.com/" target="_blank">Papaparse</a>
+						</div>
+					</div>
+					<div class="four wide column">
+						<div class="ui inverted small header">Development Requirements</div>
+						<div class="ui inverted tiny header">Java</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://www.eclipse.org/swt/" target="_blank">SWT</a>
+							<a class="item" href="https://mvnrepository.com/artifact/org.pojava/datetime/3.0.2" target="_blank">Datetime</a>
+							<a class="item" href="https://github.com/bkiers/Liqp" target="_blank">liqp</a>
+							<a class="item" href="https://www.univocity.com/pages/univocity_parsers_download" target="_blank">Univocity CSV Parser</a>
+						</div>
+						<div class="ui inverted tiny header">Java Script</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://jquery.com/" target="_blank">jQuery</a>
+						</div>
+						<div class="ui inverted tiny header">CSS</div>
+						<div class="ui inverted link list">
+							<a class="item" href="https://semantic-ui.com/" target="_blank">Semantic-UI</a>
+						</div>
+					</div>
+					<div class="eight wide column">
+						<div class="ui inverted small header">About static-catalog</div>
+						<p>The missing piece of static generated sites.</p>
+						<p>static-catalog.org - 2019</p>
+						<p>For contact, send private message on <a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a></p>
+						
+						<!-- 								<a class="item" href="https://github.com/iuscl-ide/static-catalog" target="_blank"><i class="facebook icon"></i>Contact</a> -->
+						
+					</div>
+				</div>
+				<div class="ui inverted section divider"></div>
+				<img src="../assets/images/logo.png" class="ui centered mini image">
+				<div class="ui horizontal inverted small divided link list">
+					<a class="item" href="http://semantic-ui.mit-license.org/" target="_blank">Free &amp; Open Source (MIT)</a>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden clearing divider"></div>
+	</div>
+
+	<script type="text/javascript">
+		$(() => {
+			StaticCatalog.init();			
+		});
+	</script>
+</body>
+</html>
